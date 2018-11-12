@@ -1,4 +1,3 @@
-# noinspection PyMethodMayBeStatic
 import json
 import os
 
@@ -15,6 +14,7 @@ from products.nativescript.tns import Tns
 
 
 # noinspection PyUnusedLocal
+# noinspection PyMethodMayBeStatic
 class TemplateTests(TnsTest):
     # IF env. variable UPDATE=False is set then apps will be not updated (test as is).
     update = json.loads(os.environ.get('UPDATE', 'True').lower())

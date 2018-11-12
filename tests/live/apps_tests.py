@@ -1,4 +1,3 @@
-# noinspection PyMethodMayBeStatic
 import os
 import unittest
 
@@ -14,6 +13,7 @@ from products.nativescript.tns import Tns
 
 
 # noinspection PyUnusedLocal
+# noinspection PyMethodMayBeStatic
 class SampleAppsTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)

@@ -9,3 +9,4 @@ Pillow>=4.0.0
 numpy>=1.11.1
 opencv-python>=3.4.3.18
 pytesseract>=0.1.6
+atomac>=1.1.0
