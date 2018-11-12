@@ -2,7 +2,7 @@ import os
 
 from nose.tools import timed
 
-from core.base_test.base_test import BaseTest
+from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
@@ -11,7 +11,7 @@ from core.utils.wait import Wait
 from products.nativescript.tns import Tns
 
 
-class TnsTests(BaseTest):
+class TnsTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
     emu = None
@@ -19,22 +19,22 @@ class TnsTests(BaseTest):
 
     @classmethod
     def setUpClass(cls):
-        BaseTest.setUpClass()
+        TnsTest.setUpClass()
         Tns.create(app_name=cls.app_name)
         cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
         if Settings.HOST_OS is OSType.OSX:
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
     def setUp(self):
-        BaseTest.setUp(self)
+        TnsTest.setUp(self)
 
     def tearDown(self):
         Tns.kill()
-        BaseTest.tearDown(self)
+        TnsTest.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseTest.tearDownClass()
+        TnsTest.tearDownClass()
 
     @timed(300)
     def test_001_tns_run_android(self):

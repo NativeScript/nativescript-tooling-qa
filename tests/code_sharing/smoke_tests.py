@@ -1,6 +1,6 @@
 import os
 
-from core.base_test.base_test import BaseTest
+from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
@@ -13,7 +13,7 @@ from products.nativescript.tns_assert import TnsAssert
 
 
 # noinspection PyMethodMayBeStatic
-class SmokeTests(BaseTest):
+class SmokeTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
     emu = None
@@ -21,21 +21,21 @@ class SmokeTests(BaseTest):
 
     @classmethod
     def setUpClass(cls):
-        BaseTest.setUpClass()
+        TnsTest.setUpClass()
         cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
         if Settings.HOST_OS is OSType.OSX:
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
     def setUp(self):
-        BaseTest.setUp(self)
+        TnsTest.setUp(self)
         Folder.clean(self.app_folder)
 
     def tearDown(self):
-        BaseTest.tearDown(self)
+        TnsTest.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseTest.tearDownClass()
+        TnsTest.tearDownClass()
 
     def test_001_simple(self):
         # Create simple NS app and verify it is created properly

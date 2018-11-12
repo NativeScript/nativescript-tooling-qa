@@ -33,6 +33,18 @@ class App(object):
         return False
 
     @staticmethod
+    def install_dependency(app_name, dependency, version='latest'):
+        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        Npm.uninstall(package=dependency, option='--save', folder=app_path)
+        Npm.install(package='{0}@{1}'.format(dependency, version), option='--save', folder=app_path)
+
+    @staticmethod
+    def install_dev_dependency(app_name, dependency, version='latest'):
+        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        Npm.uninstall(package=dependency, option='--save-dev', folder=app_path)
+        Npm.install(package='{0}@{1}'.format(dependency, version), option='--save-dev', folder=app_path)
+
+    @staticmethod
     def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, ns_plugins=False):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):

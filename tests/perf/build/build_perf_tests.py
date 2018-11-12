@@ -4,7 +4,7 @@ import unittest
 
 from parameterized import parameterized
 
-from core.base_test.base_test import BaseTest
+from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
@@ -22,91 +22,11 @@ from products.nativescript.tns import Tns
 retry_count = 3
 tolerance = 0.20
 app_name = Settings.AppName.DEFAULT
-expected_results = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 'perf', 'build', 'perf_data.json'))
-
-
-# noinspection PyMethodMayBeStatic
-class CreateAppPerfTests(BaseTest):
-
-    @classmethod
-    def setUpClass(cls):
-        BaseTest.setUpClass()
-
-    def setUp(self):
-        BaseTest.setUp(self)
-        Npm.cache_clean()
-
-    @classmethod
-    def tearDownClass(cls):
-        BaseTest.tearDownClass()
-
-    def test_001_create_js_app(self):
-        actual = PerfUtils.get_average_time(
-            lambda: Tns.create(app_name=app_name, template=Template.HELLO_WORLD_JS.local_package, update=False),
-            retry_count=retry_count)
-        expected = expected_results['hello-world-js']['create']
-        assert PerfUtils.is_value_in_range(actual, expected, tolerance), 'JS Hello Word project create time is not OK.'
-
-    def test_002_create_ng_app(self):
-        actual = PerfUtils.get_average_time(
-            lambda: Tns.create(app_name=app_name, template=Template.HELLO_WORLD_NG.local_package, update=False),
-            retry_count=retry_count)
-        expected = expected_results['hello-world-ng']['create']
-        assert PerfUtils.is_value_in_range(actual, expected, tolerance), 'NG Hello Word project create time is not OK.'
-
-    def test_010_create_master_detail_app(self):
-        local_folder = os.path.join(Settings.TEST_SUT_HOME, Template.MASTER_DETAIL_NG.name)
-        local_package = os.path.join(Settings.TEST_SUT_HOME, Template.MASTER_DETAIL_NG.name + '.tgz')
-        Folder.clean(local_folder)
-        Git.clone(repo_url=Template.MASTER_DETAIL_NG.repo, local_folder=local_folder)
-        Npm.pack(folder=local_folder, output_file=local_package)
-        Folder.clean(local_folder)
-        actual = PerfUtils.get_average_time(lambda: Tns.create(app_name=app_name, template=local_package, update=False),
-                                            retry_count=retry_count)
-        expected = expected_results['master-detail-ng']['create']
-        assert PerfUtils.is_value_in_range(actual, expected, tolerance), 'MasterDetailNG project create time is not OK.'
-
-
-# noinspection PyMethodMayBeStatic
-class PlatformAddPerfTests(BaseTest):
-
-    @classmethod
-    def setUpClass(cls):
-        BaseTest.setUpClass()
-
-    def setUp(self):
-        BaseTest.setUp(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        BaseTest.tearDownClass()
-
-    def test_100_platform_add_android(self):
-        total_time = 0
-        for i in range(retry_count):
-            Npm.cache_clean()
-            Tns.create(app_name=app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
-            time = Tns.platform_add_android(app_name=app_name, framework_path=Settings.Android.FRAMEWORK_PATH).duration
-            total_time = total_time + time
-        actual = total_time / retry_count
-        expected = expected_results['hello-world-js']['platform_add_android']
-        assert PerfUtils.is_value_in_range(actual, expected, tolerance), 'Time for platform add android is not OK.'
-
-    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_101_platform_add_ios(self):
-        total_time = 0
-        for i in range(retry_count):
-            Npm.cache_clean()
-            Tns.create(app_name=app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
-            time = Tns.platform_add_ios(app_name=app_name, framework_path=Settings.IOS.FRAMEWORK_PATH).duration
-            total_time = total_time + time
-        actual = total_time / retry_count
-        expected = expected_results['hello-world-js']['platform_add_ios']
-        assert PerfUtils.is_value_in_range(actual, expected, tolerance), 'Time for platform add ios is not OK.'
+expected_results = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 'perf', 'data.json'))
 
 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
-class PrepareAndBuildPerfTests(BaseTest):
+class PrepareAndBuildPerfTests(TnsTest):
     TEST_DATA = [
         ('hello-world-js', Template.HELLO_WORLD_JS.local_package, Changes.JSHelloWord.JS, False),
         ('hello-world-ng', Template.HELLO_WORLD_NG.local_package, Changes.NGHelloWorld.TS, False),
@@ -118,7 +38,7 @@ class PrepareAndBuildPerfTests(BaseTest):
 
     @classmethod
     def setUpClass(cls):
-        BaseTest.setUpClass()
+        TnsTest.setUpClass()
 
         # Get master detail template locally.
         local_folder = os.path.join(Settings.TEST_SUT_HOME, Template.MASTER_DETAIL_NG.name)
@@ -130,11 +50,11 @@ class PrepareAndBuildPerfTests(BaseTest):
         Template.MASTER_DETAIL_NG.local_package = local_package
 
     def setUp(self):
-        BaseTest.setUp(self)
+        TnsTest.setUp(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseTest.tearDownClass()
+        TnsTest.tearDownClass()
 
     @parameterized.expand(TEST_DATA)
     def test_001_prepare_data(self, template, template_package, change_set, bundle):
@@ -209,47 +129,6 @@ class PrepareAndBuildPerfTests(BaseTest):
         actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'build_incremental')
         expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'build_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, tolerance), 'Incremental ios build time is not OK.'
-
-
-# noinspection PyMethodMayBeStatic
-class DoctorPerformance(BaseTest):
-    @classmethod
-    def setUpClass(cls):
-        BaseTest.setUpClass()
-        Tns.create(app_name=app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
-        Tns.platform_add_android(app_name=app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        Tns.platform_add_ios(app_name=app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
-        Tns.prepare_android(app_name=app_name)
-        Tns.prepare_ios(app_name=app_name)
-
-    def setUp(self):
-        BaseTest.setUp(self)
-        Npm.cache_clean()
-
-    @classmethod
-    def tearDownClass(cls):
-        BaseTest.tearDownClass()
-
-    def test_001_doctor_outside_project(self):
-        time = PerfUtils.get_average_time(lambda: Tns.doctor(), retry_count=retry_count)
-        assert PerfUtils.is_value_in_range(actual=time, expected=7.67), 'Doctor exec time is not OK.'
-
-    def test_002_doctor_inside_project(self):
-        time = PerfUtils.get_average_time(lambda: Tns.doctor(app_name=app_name), retry_count=retry_count)
-        assert PerfUtils.is_value_in_range(actual=time, expected=9.85), 'Doctor exec time is not OK.'
-
-    def test_100_prepare_with_doctor_do_not_make_it_much_slower(self):
-        pa_d_time = PerfUtils.get_average_time(lambda: Tns.prepare_android(app_name=app_name), retry_count=retry_count)
-        pi_d_time = PerfUtils.get_average_time(lambda: Tns.prepare_ios(app_name=app_name), retry_count=retry_count)
-
-        os.environ['NS_SKIP_ENV_CHECK'] = 'true'
-        pa_nd_time = PerfUtils.get_average_time(lambda: Tns.prepare_android(app_name=app_name), retry_count=retry_count)
-        pi_nd_time = PerfUtils.get_average_time(lambda: Tns.prepare_ios(app_name=app_name), retry_count=retry_count)
-
-        android_diff = pa_d_time - pa_nd_time
-        ios_diff = pi_d_time - pi_nd_time
-        assert PerfUtils.is_value_in_range(android_diff, 3, tolerance=1.0), 'Prepare android with doctor is slower.'
-        assert PerfUtils.is_value_in_range(ios_diff, 6, tolerance=0.5), 'Prepare ios with doctor is slower.'
 
 
 class PrepareBuildInfo(object):

@@ -4,7 +4,7 @@ import os
 
 from nose_parameterized import parameterized
 
-from core.base_test.base_test import BaseTest
+from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
@@ -15,7 +15,7 @@ from products.nativescript.tns import Tns
 
 
 # noinspection PyUnusedLocal
-class TemplateTests(BaseTest):
+class TemplateTests(TnsTest):
     # IF env. variable UPDATE=False is set then apps will be not updated (test as is).
     update = json.loads(os.environ.get('UPDATE', 'True').lower())
 
@@ -54,20 +54,20 @@ class TemplateTests(BaseTest):
 
     @classmethod
     def setUpClass(cls):
-        BaseTest.setUpClass()
+        TnsTest.setUpClass()
         cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
         if Settings.HOST_OS is OSType.OSX:
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
     def setUp(self):
-        BaseTest.setUp(self)
+        TnsTest.setUp(self)
 
     def tearDown(self):
-        BaseTest.tearDown(self)
+        TnsTest.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseTest.tearDownClass()
+        TnsTest.tearDownClass()
 
     @parameterized.expand(test_data)
     def test(self, template_name, template_info):

@@ -14,7 +14,7 @@ from core.utils.xcode import Xcode
 from products.nativescript.tns import Tns
 
 
-class BaseTest(unittest.TestCase):
+class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
@@ -24,7 +24,7 @@ class BaseTest(unittest.TestCase):
         # Kill processes
         Tns.kill()
         Gradle.kill()
-        BaseTest.kill_emulators()
+        TnsTest.kill_emulators()
 
         # Ensure log folders are create
         Folder.create(Settings.TEST_OUT_HOME)
@@ -65,7 +65,7 @@ class BaseTest(unittest.TestCase):
         Logic executed after all core_tests in class.
         """
         Tns.kill()
-        BaseTest.kill_emulators()
+        TnsTest.kill_emulators()
         for process in TestContext.STARTED_PROCESSES:
             Log.info("Kill Process: " + os.linesep + process.commandline)
             Process.kill_pid(process.pid)

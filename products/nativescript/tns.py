@@ -16,7 +16,7 @@ class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, path=None, device=None, release=False,
                      for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False, aot=False, uglify=False,
-                     snapshot=False, log_trace=False, justlaunch=False, wait=True):
+                     snapshot=False, log_trace=False, justlaunch=False, wait=True, timeout=600):
         """
         Execute tns command.
         :param command: Tns command.
@@ -34,6 +34,7 @@ class Tns(object):
         :param log_trace: If true pass `--log trace` to command.
         :param justlaunch: If true pass `--justlaunch` to command.
         :param wait: If true it will wait until command is complete.
+        :param timeout: Timeout for CLI command (respected only if wait=True).
         :return: ProcessInfo object.
         :rtype: core.utils.process_info.ProcessInfo
         """
@@ -68,7 +69,7 @@ class Tns(object):
             cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
-        return Run.command(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO)
+        return Run.command(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
 
     @staticmethod
     def create(app_name=Settings.AppName.DEFAULT, template=None, path=None, app_id=None,
@@ -128,9 +129,18 @@ class Tns(object):
         return result
 
     @staticmethod
+    def platform_remove(app_name=Settings.AppName.DEFAULT, platform=Platform.NONE, verify=True,
+                        log_trace=False):
+        command = 'platform remove ' + str(platform) + ' --path ' + app_name
+        result = Tns.exec_command(command=command, log_trace=log_trace)
+        if verify:
+            # TODO: Implement it!
+            pass
+        return result
+
+    @staticmethod
     def platform_add(app_name=Settings.AppName.DEFAULT, platform=Platform.NONE, framework_path=None, version=None,
-                     verify=True,
-                     log_trace=False):
+                     verify=True, log_trace=False):
         platform_add_string = str(platform)
         if version is not None:
             platform_add_string = platform_add_string + '@' + version
@@ -257,13 +267,25 @@ class Tns(object):
     def doctor(app_name=None):
         """
         Execute `tns doctor`
-        :param app_name: App where command will be executed (by default None -> doctor will be executed outside app).
+        :param app_name: App where command will be executed (by default None -> common will be executed outside app).
         :return: Result of `tns doctor` command.
         """
         cwd = Settings.TEST_RUN_HOME
         if app_name is not None:
             cwd = os.path.join(cwd, app_name)
-        return Tns.exec_command(command='doctor', cwd=cwd)
+        return Tns.exec_command(command='doctor', cwd=cwd, timeout=60)
+
+    @staticmethod
+    def info(app_name=None):
+        """
+        Execute `tns info`
+        :param app_name: App where command will be executed (by default None -> common will be executed outside app).
+        :return: Result of `tns info` command.
+        """
+        cwd = Settings.TEST_RUN_HOME
+        if app_name is not None:
+            cwd = os.path.join(cwd, app_name)
+        return Tns.exec_command(command='info', cwd=cwd, timeout=60)
 
     @staticmethod
     def version():

@@ -47,7 +47,6 @@ def __get_templates():
             raise IOError("Failed to clone and pack template: " + app.repo)
 
 
-# noinspection SpellCheckingInspection
 def __get_packages():
     """
     Get NativeScript CLI and runtimes in TEST_SUT_HOME.

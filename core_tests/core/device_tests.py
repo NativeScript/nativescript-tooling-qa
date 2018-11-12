@@ -1,6 +1,6 @@
 import os
 
-from core.base_test.base_test import BaseTest
+from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
@@ -8,23 +8,23 @@ from core.utils.device.emulator_info import EmulatorInfo
 
 
 # noinspection PyMethodMayBeStatic
-class DeviceTests(BaseTest):
+class DeviceTests(TnsTest):
 
     @classmethod
     def setUpClass(cls):
-        BaseTest.setUpClass()
+        TnsTest.setUpClass()
 
     def setUp(self):
-        BaseTest.setUp(self)
+        TnsTest.setUp(self)
 
     def tearDown(self):
         DeviceManager.Emulator.stop()
         DeviceManager.Simulator.stop()
-        BaseTest.tearDown(self)
+        TnsTest.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        BaseTest.tearDownClass()
+        TnsTest.tearDownClass()
 
     def test_01_emulator(self):
         # Verify emulator is started properly

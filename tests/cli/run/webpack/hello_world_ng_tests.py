@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from core.base_test.base_test import BaseTest
+from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
@@ -14,7 +14,7 @@ from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
 
-class TnsRunNGTests(BaseTest):
+class TnsRunNGTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
@@ -23,7 +23,7 @@ class TnsRunNGTests(BaseTest):
 
     @classmethod
     def setUpClass(cls):
-        BaseTest.setUpClass()
+        TnsTest.setUpClass()
 
         # Boot emulator and simulator
         cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
@@ -41,7 +41,7 @@ class TnsRunNGTests(BaseTest):
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):
-        BaseTest.setUp(self)
+        TnsTest.setUp(self)
 
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.
@@ -52,7 +52,7 @@ class TnsRunNGTests(BaseTest):
 
     @classmethod
     def tearDownClass(cls):
-        BaseTest.tearDownClass()
+        TnsTest.tearDownClass()
 
 
 class RunAndroidNGTests(TnsRunNGTests):
