@@ -68,7 +68,7 @@ class ImageUtils(object):
         Get count of pixels of specific color.
         :param image_path: Image path.
         :param color: Color as numpy array. Example: numpy.array([255, 217, 141])
-        :param rdb_tolerance If diff or rgb values is less then this count pixels will be counted as equal.
+        :param rdb_tolerance If diff of sums of rgb values is less then specified count pixels will be counted as equal.
         :return: Count of pixels.
         """
         img = ImageUtils.read_image(image_path=image_path)

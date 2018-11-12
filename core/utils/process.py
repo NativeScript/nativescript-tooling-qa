@@ -54,7 +54,7 @@ class Run(object):
             output = (str(out) + os.linesep + str(err)).rstrip()
             complete = True
             end = time.time()
-            duration = end - start;
+            duration = end - start
         else:
             process = Popen(cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True, cwd=cwd)
 
@@ -78,7 +78,9 @@ class Run(object):
 class Process(object):
     @staticmethod
     def is_running(proc_name):
-        """Check if process is running"""
+        """
+        Check if process is running.
+        """
         result = False
         for proc in psutil.process_iter():
             if proc_name in str(proc):
@@ -88,7 +90,9 @@ class Process(object):
 
     @staticmethod
     def is_running_by_commandline(commandline):
-        """Check if process with specified commandline is running"""
+        """
+        Check if process with specified commandline is running.
+        """
         proc = Process.get_proc_by_commandline(commandline=commandline)
         if proc is not None:
             return True
@@ -116,7 +120,8 @@ class Process(object):
 
     @staticmethod
     def wait_until_running(proc_name, timeout=60):
-        """Wait until process is running
+        """
+        Wait until process is running
         :param proc_name: Process name.
         :param timeout: Timeout in seconds.
         :return: True if running, false if not running.
@@ -177,8 +182,11 @@ class Process(object):
 
     @staticmethod
     def kill_pid(pid):
-        p = psutil.Process(pid)
-        p.terminate()
+        try:
+            p = psutil.Process(pid)
+            p.terminate()
+        except Exception:
+            pass
 
     @staticmethod
     def kill_by_handle(file_path):

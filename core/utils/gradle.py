@@ -1,6 +1,4 @@
-# noinspection SpellCheckingInspection
 """
-# noinspection SpellCheckingInspection
 A wrapper around Gradle.
 """
 
@@ -12,7 +10,6 @@ from core.settings import Settings
 from core.utils.process import Run, Process
 
 
-# noinspection SpellCheckingInspection
 class Gradle(object):
     @staticmethod
     def kill():

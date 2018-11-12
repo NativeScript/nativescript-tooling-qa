@@ -8,5 +8,9 @@ from core.utils.version import Version
 class Java(object):
     @staticmethod
     def version():
+        """
+        Java version.
+        :rtype: float
+        """
         result = Run.command('java -version')
         return Version.get(result.output.split('"')[1])
