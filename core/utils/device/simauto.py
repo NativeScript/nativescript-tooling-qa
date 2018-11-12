@@ -1,0 +1,48 @@
+import atomac
+
+
+class SimAuto(object):
+
+    @staticmethod
+    def find(device_info, text):
+        # Get list of iOS Simulator Windows
+        simulator = atomac.getAppRefByBundleId("com.apple.iphonesimulator")
+        windows = simulator.findAll(AXRole='AXWindow')
+        names = list()
+
+        # Get all simulator's windows names
+        for window in windows:
+            names.append(window.AXTitle)
+
+        # Get the full name of the window where the click will be performed
+        for name in names:
+            if device_info.name in name:
+                window = simulator.findFirstR(AXTitle=name)
+                elements = window.findAllR()
+                for element in elements:
+                    if 'AXValue' in element.getAttributes():
+                        if text in str(element.AXValue):
+                            return element
+                        elif 'AXTitle' in element.getAttributes():
+                            if text in str(element.AXTitle):
+                                return element
+        return None
+
+    @staticmethod
+    def is_text_visible(device_info, text):
+        element = SimAuto.find(device_info=device_info, text=text)
+        if element is not None:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def click(device_info, text):
+        element = SimAuto.find(device_info=device_info, text=text)
+        if element is not None:
+            element_position = element.AXPosition
+            element_size = element.AXSize
+            clickpoint = ((element_position[0] + element_size[0] / 2), (element_position[1] + element_size[1] / 2))
+            element.clickMouseButtonLeft(clickpoint)
+        else:
+            raise Exception('Can not locate "{0}" in {1} simulator.'.format(text, device_info.name))
