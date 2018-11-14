@@ -6,6 +6,13 @@
 - [x] No dependencies on internal network shares
 - [x] Execute command to return not only output, but also exit code, pid and others.
 - [x] Multiple simultaneous emulators and simulators 
+    - [x] FindByText
+    - [x] Compare screens (pixel-by-pixel)
+    - [ ] Click on element
+- [ ] Real iOS devices 
+    - [ ] Find by text
+    - [ ] Compare screens
+    - [ ] Click on element
 - [x] Improve Test Settings
    - [x] Split on multiple sub-classes
    - [ ] Comply on 100% with ns-ci-build-tool variables
@@ -35,6 +42,7 @@
    - [ ] App under test (to be able to backup it on test fail)
    - [ ] Started emulators, simulators or device ids (to be able to take picture on fail)
 - [x] Tests for core itself
+- [ ] Force linter rules
 - [ ] Docs
     - [ ] Docstring everywhere
     - [ ] Accurate readme and other mds.
