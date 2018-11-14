@@ -59,12 +59,7 @@ class DeviceTests(TnsTest):
         is_running = DeviceManager.Emulator.is_running(wrong_version_emu)
         assert is_running is False, 'Emulator.is_running() should return false if os_version is different.'
 
-        # TODO: Emulator.is_running() currently respect only id and os version. Make it respect avd name.
-        # wrong_name_emu = EmulatorInfo(avd=Settings.Emulators.EMU_API_19.avd,
-        #                              os_version=Settings.Emulators.DEFAULT.os_version,
-        #                              id=emu.id)
-        # is_running = DeviceManager.Emulator.is_running(wrong_name_emu)
-        # assert is_running is False, 'Emulator.is_running() should return false if avd name is different.'
+        # TODO: Emulator.is_running() currently respect only id and os version. Make it respect avd name and add test.
 
     def test_02_multiple_emulators(self):
         # Verify multiple emulators can be started properly

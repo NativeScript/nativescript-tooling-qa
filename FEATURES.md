@@ -9,6 +9,7 @@
     - [x] FindByText
     - [x] Compare screens (pixel-by-pixel)
     - [ ] Click on element
+    - [ ] Use emulator snapshots
 - [ ] Real iOS devices 
     - [ ] Find by text
     - [ ] Compare screens
@@ -33,6 +34,7 @@
 - [x] Image utils
    - [X] Get pixels by color
    - [X] Get main color
+   - [ ] OCR
    - [ ] Picture comparison
    - [ ] Picture matching by template matching
 - [x] Wait helper
@@ -94,6 +96,6 @@ Acceptance Criteria:
 - [ ] Groceries
 - [ ] QSF
 
-- [ ] Hello Wolrd Templates
+- [ ] Hello World Templates
 - [ ] SideKick Templates (including blank and health)
 - [ ] Vue Templates
