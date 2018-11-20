@@ -173,6 +173,7 @@ class Device(object):
         self.get_screen(image_path)
         return ImageUtils.get_main_color(image_path)
 
+    # noinspection PyUnresolvedReferences
     def wait_for_main_color(self, color, timeout=30):
         result = Wait.until(lambda: (self.get_main_color() == color).all(), timeout=timeout)
         assert result, "Expected main color: " + str(color) + os.linesep + \

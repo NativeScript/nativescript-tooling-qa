@@ -1,0 +1,2 @@
+-r requirements.txt --user
+atomac>=1.1.0

@@ -300,6 +300,7 @@ class Tns(object):
         """
         Kill all tns related processes.
         """
+        Process.kill(proc_name='adb')
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill(proc_name='node')
         else:

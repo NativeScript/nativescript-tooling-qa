@@ -1,3 +1,4 @@
+from core.enums.log_level import LogLevel
 from core.settings import Settings
 from core.utils.process import Run, Process
 
@@ -16,10 +17,10 @@ class NG(object):
         :rtype: core.utils.process_info.ProcessInfo
         """
         cmd = '{0} {1}'.format(Settings.Executables.NG, command)
-        return Run.command(cmd=cmd, wait=wait)
+        return Run.command(cmd=cmd, wait=wait, log_level=LogLevel.INFO)
 
     @staticmethod
-    def new(collection=None, project=Settings.AppName.DEFAULT, shared=True, sample=False):
+    def new(collection=NS_SCHEMATICS, project=Settings.AppName.DEFAULT, shared=True, sample=False):
         """
         Execute `ng new`
         :param collection: Schematics collection.

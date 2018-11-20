@@ -34,18 +34,29 @@ class ProcessTests(unittest.TestCase):
         assert 'Desktop' in result.output, 'Listing home do not include Desktop folder.'
 
     @timed(5)
-    @unittest.skipIf(Settings.HOST_OS is OSType.WINDOWS, 'tail is not available on Windows')
     def test_02_run_command_without_wait_for_completion(self):
-        file_path = os.path.join(Settings.TEST_OUT_HOME, 'temp.txt')
-        File.write(path=file_path, text='test')
-        result = Run.command(cmd='tail -f ' + file_path, wait=False)
-        time.sleep(1)
-        assert result.exit_code is None, 'exit code should be None when command is not complete.'
-        assert result.complete is False, 'tail command should not exit.'
-        assert result.duration is None, 'duration should be None in case process is not complete'
-        assert result.output is '', 'output should be empty string.'
-        assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
-        assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'
+        if Settings.HOST_OS == OSType.WINDOWS:
+            result = Run.command(cmd='pause', wait=False)
+            time.sleep(1)
+            assert result.exit_code is None, 'exit code should be None when command is not complete.'
+            assert result.complete is False, 'tail command should not exit.'
+            assert result.duration is None, 'duration should be None in case process is not complete'
+            assert result.output is '', 'output should be empty string.'
+            assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
+            assert 'pause' in File.read(result.log_file), 'Log file should contains cmd of the command.'
+            assert 'Press any key' in File.read(result.log_file), 'Log file should contains output of the command.'
+        else:
+            file_path = os.path.join(Settings.TEST_OUT_HOME, 'temp.txt')
+            File.write(path=file_path, text='test')
+            result = Run.command(cmd='tail -f ' + file_path, wait=False)
+            time.sleep(1)
+            assert result.exit_code is None, 'exit code should be None when command is not complete.'
+            assert result.complete is False, 'tail command should not exit.'
+            assert result.duration is None, 'duration should be None in case process is not complete'
+            assert result.output is '', 'output should be empty string.'
+            assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
+            assert 'tail' in File.read(result.log_file), 'Log file should contains cmd of the command.'
+            assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'
 
     @timed(5)
     def test_10_wait(self):

@@ -38,81 +38,16 @@ class SmokeTests(TnsTest):
         TnsTest.tearDownClass()
 
     def test_001_simple(self):
-        # Create simple NS app and verify it is created properly
-        NG.new(collection=NS_SCHEMATICS, project=self.app_name, shared=False, sample=False)
-        TnsAssert.created(app_name=self.app_name, app_data=Apps.SHEMATICS_NS)
-
-        # Build in release
-        Tns.build(app_name=self.app_name, platform=Platform.ANDROID, release=True,
-                  bundle=True, aot=True, uglify=True, snapshot=True)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.build(app_name=self.app_name, platform=Platform.IOS, release=True, for_device=True,
-                      bundle=True, aot=True, uglify=True)
-
-        # Run and sync changes
-        Tns.run(app_name=self.app_name, platform=Platform.ANDROID, bundle=True)
-        self.emu.wait_for_text(texts=Apps.SHEMATICS_NS.texts, timeout=300)
-        Tns.kill()
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.run(app_name=self.app_name, platform=Platform.IOS, bundle=True)
-            self.sim.wait_for_text(texts=Apps.SHEMATICS_NS.texts, timeout=300)
+        SmokeTests.create_build_run(shared=False, sample=False)
 
     def test_002_simple_with_sample(self):
-        # Create NS with sample data
-        NG.new(collection=NS_SCHEMATICS, project=self.app_name, shared=False, sample=True)
-        TnsAssert.created(app_name=self.app_name, app_data=Apps.SHEMATICS_NS)
-
-        # Build in release
-        Tns.build(app_name=self.app_name, platform=Platform.ANDROID, release=True,
-                  bundle=True, aot=True, uglify=True, snapshot=True)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.build(app_name=self.app_name, platform=Platform.IOS, release=True, for_device=True,
-                      bundle=True, aot=True, uglify=True)
-
-        # Run and sync changes
-        Tns.run(app_name=self.app_name, platform=Platform.ANDROID, bundle=True)
-        self.emu.wait_for_text(texts=Apps.SHEMATICS_NS.texts, timeout=30)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.run(app_name=self.app_name, platform=Platform.IOS, bundle=True)
-            self.sim.wait_for_text(texts=Apps.SHEMATICS_NS.texts, timeout=30)
+        SmokeTests.create_build_run(shared=False, sample=True)
 
     def test_003_shared(self):
-        # Create simple shared project
-        NG.new(collection=NS_SCHEMATICS, project=self.app_name, shared=True, sample=False)
-        TnsAssert.created(app_name=self.app_name, app_data=Apps.SHEMATICS_SHARED)
-
-        # Build in release
-        Tns.build(app_name=self.app_name, platform=Platform.ANDROID, release=True,
-                  bundle=True, aot=True, uglify=True, snapshot=True)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.build(app_name=self.app_name, platform=Platform.IOS, release=True, for_device=True,
-                      bundle=True, aot=True, uglify=True)
-
-        # Run and sync changes
-        Tns.run(app_name=self.app_name, platform=Platform.ANDROID, bundle=True)
-        self.emu.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.run(app_name=self.app_name, platform=Platform.IOS, bundle=True)
-            self.sim.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
+        SmokeTests.create_build_run(shared=True, sample=False)
 
     def test_004_shared_with_sample(self):
-        # Create shared project with sample data
-        NG.new(collection=NS_SCHEMATICS, project=self.app_name, shared=True, sample=True)
-        TnsAssert.created(app_name=self.app_name, app_data=Apps.SHEMATICS_SHARED)
-
-        # Build in release
-        Tns.build(app_name=self.app_name, platform=Platform.ANDROID, release=True,
-                  bundle=True, aot=True, uglify=True, snapshot=True)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.build(app_name=self.app_name, platform=Platform.IOS, release=True, for_device=True,
-                      bundle=True, aot=True, uglify=True)
-
-        # Run and sync changes
-        Tns.run(app_name=self.app_name, platform=Platform.ANDROID, bundle=True)
-        self.emu.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.run(app_name=self.app_name, platform=Platform.IOS, bundle=True)
-            self.sim.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
+        SmokeTests.create_build_run(shared=True, sample=True)
 
     def test_300_help_ng_new(self):
         output = NG.exec_command('new --collection={0} --help'.format(NS_SCHEMATICS)).output
@@ -128,3 +63,23 @@ class SmokeTests(TnsTest):
         assert 'Specifies whether the {N} theme for styling should be included' in output
         assert '--webpack' in output
         assert 'Specifies whether the new application has webpack set up' in output
+
+    @staticmethod
+    def create_build_run(shared=True, sample=True):
+        # Create shared project with sample data
+        NG.new(collection=NS_SCHEMATICS, project=SmokeTests.app_name, shared=shared, sample=sample)
+        TnsAssert.created(app_name=SmokeTests.app_name, app_data=Apps.SHEMATICS_SHARED)
+
+        # Build in release
+        Tns.build(app_name=SmokeTests.app_name, platform=Platform.ANDROID, release=True,
+                  bundle=True, aot=True, uglify=True, snapshot=True)
+        if Settings.HOST_OS is OSType.OSX:
+            Tns.build(app_name=SmokeTests.app_name, platform=Platform.IOS, release=True, for_device=True,
+                      bundle=True, aot=True, uglify=True)
+
+        # Run and sync changes
+        Tns.run(app_name=SmokeTests.app_name, platform=Platform.ANDROID, bundle=True)
+        SmokeTests.emu.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
+        if Settings.HOST_OS is OSType.OSX:
+            Tns.run(app_name=SmokeTests.app_name, platform=Platform.IOS, bundle=True)
+            SmokeTests.sim.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)

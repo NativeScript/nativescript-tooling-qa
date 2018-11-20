@@ -69,12 +69,13 @@ def __get_packages():
         Npm.download(package=Settings.Packages.ANDROID, output_file=android_package)
 
     # Copy or download tns-ios
-    ios_package = os.path.join(Settings.TEST_SUT_HOME, 'tns-ios.tgz')
-    if '.tgz' in Settings.Packages.IOS:
-        File.copy(src=Settings.Packages.IOS, target=ios_package)
-        Settings.Packages.IOS = ios_package
-    else:
-        Npm.download(package=Settings.Packages.IOS, output_file=ios_package)
+    if Settings.HOST_OS == OSType.OSX:
+        ios_package = os.path.join(Settings.TEST_SUT_HOME, 'tns-ios.tgz')
+        if '.tgz' in Settings.Packages.IOS:
+            File.copy(src=Settings.Packages.IOS, target=ios_package)
+            Settings.Packages.IOS = ios_package
+        else:
+            Npm.download(package=Settings.Packages.IOS, output_file=ios_package)
 
 
 def __install_ns_cli():
