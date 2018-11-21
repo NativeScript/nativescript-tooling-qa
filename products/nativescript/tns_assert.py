@@ -2,10 +2,10 @@ import os
 
 from core.enums.app_type import AppType
 from core.enums.platform_type import Platform
-from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
+from core.utils.perf_utils import PerfUtils
 
 
 class TnsAssert(object):
@@ -41,9 +41,8 @@ class TnsAssert(object):
             # Assert size
             if app_data.size is not None:
                 app_size = Folder.get_size(app_path)
-                Log.info("{0} initial size: {1}".format(app_name, app_size))
-                assert app_size < app_data.size.init * 1.2, 'Project size is too high.'
-                assert app_size > app_data.size.init * 0.8, 'Project size is too low.'
+                assert PerfUtils.is_value_in_range(actual=app_size, expected=app_data.size.init,
+                                                   tolerance=10), 'Actual project size is not expected!'
 
     @staticmethod
     def platform_added(app_name, platform, output):

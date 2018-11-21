@@ -77,9 +77,13 @@ class SmokeTests(TnsTest):
             Tns.build(app_name=SmokeTests.app_name, platform=Platform.IOS, release=True, for_device=True,
                       bundle=True, aot=True, uglify=True)
 
-        # Run and sync changes
+        # Run android
         Tns.run(app_name=SmokeTests.app_name, platform=Platform.ANDROID, bundle=True)
-        SmokeTests.emu.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
+        for text in Apps.SHEMATICS_SHARED.texts:
+            SmokeTests.emu.wait_for_text(text=text, timeout=30)
+
+        # Run ios
         if Settings.HOST_OS is OSType.OSX:
             Tns.run(app_name=SmokeTests.app_name, platform=Platform.IOS, bundle=True)
-            SmokeTests.sim.wait_for_text(texts=Apps.SHEMATICS_SHARED.texts, timeout=30)
+            for text in Apps.SHEMATICS_SHARED.texts:
+                SmokeTests.sim.wait_for_text(text=text, timeout=30)
