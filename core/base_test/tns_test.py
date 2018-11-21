@@ -2,10 +2,11 @@ import inspect
 import os
 import unittest
 
-from core.base_test.run_context import TestContext
+from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from core.utils.gradle import Gradle
@@ -22,6 +23,7 @@ class TnsTest(unittest.TestCase):
         Log.test_class_start(class_name=caller_class)
 
         # Kill processes
+        Adb.restart()
         Tns.kill()
         Gradle.kill()
         TnsTest.kill_emulators()
@@ -47,7 +49,7 @@ class TnsTest(unittest.TestCase):
     def tearDown(self):
         Tns.kill()
 
-        for process in TestContext.STARTED_PROCESSES:
+        for process in TestContext.Processes.STARTED_PROCESSES:
             Log.info("Kill Process: " + os.linesep + process.commandline)
             Process.kill_pid(process.pid)
 
@@ -57,7 +59,7 @@ class TnsTest(unittest.TestCase):
         if result.errors == [] and result.failures == []:
             outcome = 'PASSED'
 
-        Log.test_end(test_name=TestContext.TEST_NAME, outcome=outcome)
+        Log.test_end(test_name=TestContext.CurrentTest.TEST_NAME, outcome=outcome)
 
     @classmethod
     def tearDownClass(cls):
@@ -66,7 +68,7 @@ class TnsTest(unittest.TestCase):
         """
         Tns.kill()
         TnsTest.kill_emulators()
-        for process in TestContext.STARTED_PROCESSES:
+        for process in TestContext.Processes.STARTED_PROCESSES:
             Log.info("Kill Process: " + os.linesep + process.commandline)
             Process.kill_pid(process.pid)
         Log.test_class_end(class_name=cls.__name__)

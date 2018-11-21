@@ -7,7 +7,7 @@ from subprocess import Popen, PIPE
 
 import psutil
 
-from core.base_test.run_context import TestContext
+from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
@@ -44,6 +44,8 @@ class Run(object):
                 process = Popen(args, stdout=PIPE, stderr=PIPE, cwd=cwd, shell=False)
             p = psutil.Process(process.pid)
 
+            # TODO: On Windows we hang if command do not complete for specified time
+            # See: https://stackoverflow.com/questions/2408650/why-does-python-subprocess-hang-after-proc-communicate
             if Settings.HOST_OS is not OSType.WINDOWS:
                 try:
                     p.wait(timeout=timeout)
@@ -70,7 +72,7 @@ class Run(object):
         result = ProcessInfo(cmd=cmd, pid=pid, exit_code=exit_code, output=output, log_file=log_file, complete=complete,
                              duration=duration)
         if psutil.pid_exists(result.pid) and register_for_cleanup:
-            TestContext.STARTED_PROCESSES.append(result)
+            TestContext.Processes.STARTED_PROCESSES.append(result)
         return result
 
 
@@ -167,7 +169,6 @@ class Process(object):
         for proc in psutil.process_iter():
             cmd = ""
             try:
-                name = str(proc.name())
                 cmd = str(proc.cmdline())
             except Exception:
                 continue

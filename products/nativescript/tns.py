@@ -2,7 +2,7 @@ import logging
 import os
 import time
 
-from core.base_test.run_context import TestContext
+from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
@@ -120,7 +120,7 @@ class Tns(object):
             App.update(app_name=app_name)
 
         # Let TestContext know app is created
-        TestContext.TEST_APP_NAME = app_name
+        TestContext.CurrentTest.TEST_APP_NAME = app_name
 
         # Verify app is created properly
         if verify is not False:
@@ -300,7 +300,6 @@ class Tns(object):
         """
         Kill all tns related processes.
         """
-        Process.kill(proc_name='adb')
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill(proc_name='node')
         else:

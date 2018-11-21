@@ -54,5 +54,5 @@ class Apps(object):
                                texts=['Wellcome'])
 
     SHEMATICS_NS = AppInfo(type=AppType.NG, id=None,
-                           size=SizeInfo(init=176506780, apk=15743753, ipa=15743753),
+                           size=SizeInfo(init=273331094, apk=15743753, ipa=15743753),
                            texts=['Tap the button'])
