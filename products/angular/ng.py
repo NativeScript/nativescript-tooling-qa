@@ -22,7 +22,7 @@ class NG(object):
 
     @staticmethod
     def new(collection=NS_SCHEMATICS, project=Settings.AppName.DEFAULT, shared=True, sample=False, prefix=None,
-            theme=True, style=None, webpack=True):
+            source_dir=None, theme=True, style=None, webpack=True):
         """
         Execute `ng new`
         :param collection: Schematics collection.
@@ -30,6 +30,7 @@ class NG(object):
         :param shared: If true pass --shared flag.
         :param sample: If true pass --sample flag.
         :param prefix: The prefix to apply to generated selectors (default value is `app`)
+        :param source_dir: The name of the source directory (default value is `src`)
         :param theme: If false pass --no-theme flag.
         :param style: If style is not None pass --style flag (default value is `css`)
         :param webpack: If false pass --no-webpack flag.
@@ -46,6 +47,8 @@ class NG(object):
             command = command + ' --sample'
         if prefix is not None:
             command = command + ' --prefix={0}'.format(str(prefix))
+        if source_dir is not None:
+            command = command + ' --sourceDir={0}'.format(str(source_dir))
         if style is not None:
             command = command + ' --style={0}'.format(str(style))
         if not webpack:
