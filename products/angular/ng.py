@@ -1,5 +1,6 @@
 import logging
 
+from core.base_test.test_context import TestContext
 from core.settings import Settings
 from core.utils.process import Run, Process
 
@@ -55,6 +56,8 @@ class NG(object):
             command = command + ' --no-webpack'
         if not theme:
             command = command + ' --no-theme'
+
+        TestContext.TEST_APP_NAME = project
         return NG.exec_command(command)
 
     @staticmethod

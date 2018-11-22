@@ -72,7 +72,7 @@ class Run(object):
         result = ProcessInfo(cmd=cmd, pid=pid, exit_code=exit_code, output=output, log_file=log_file, complete=complete,
                              duration=duration)
         if psutil.pid_exists(result.pid) and register_for_cleanup:
-            TestContext.Processes.STARTED_PROCESSES.append(result)
+            TestContext.STARTED_PROCESSES.append(result)
         return result
 
 

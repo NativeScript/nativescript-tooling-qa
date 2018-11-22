@@ -23,8 +23,15 @@ Please see [Setup](SETUP.md) document.
    
 ## Run Tests
 
+### {N} CLI Tests
+
+```bash
+python run_ns.py tests/cli
 ```
-nosetests -v -s --nologcapture --with-xunit --xunit-file out/nosetests.xml --with-html --html-report-template=core/report/template.html --html-file=out/nosetests.html --all-modules tests/cli/build/
+### Schematics Tests
+
+```bash
+python run_schematics.py tests/code_sharing
 ```
 
 ## Contribute

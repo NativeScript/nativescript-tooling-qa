@@ -120,7 +120,7 @@ class Tns(object):
             App.update(app_name=app_name)
 
         # Let TestContext know app is created
-        TestContext.CurrentTest.TEST_APP_NAME = app_name
+        TestContext.TEST_APP_NAME = app_name
 
         # Verify app is created properly
         if verify is not False:

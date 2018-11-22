@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType
@@ -26,6 +27,7 @@ class DeviceTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
 
+    @unittest.skip('')
     def test_01_emulator(self):
         # Verify emulator is started properly
         emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
@@ -71,5 +73,5 @@ class DeviceTests(TnsTest):
         # Verify screen_match() method
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, 'temp.png')
         emu1.get_screen(path=image_path)
-        emu1.screen_match(expected_image=image_path, tolerance=1.0, timeout=30)
-        emu2.screen_match(expected_image=image_path, tolerance=95.0, timeout=30)
+        emu1.screen_match(expected_image=image_path, tolerance=1.0, timeout=10)
+        emu2.screen_match(expected_image=image_path, tolerance=1.0, timeout=10)

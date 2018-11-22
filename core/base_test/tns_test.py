@@ -19,8 +19,8 @@ class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
-        caller_class = inspect.stack()[1][0].f_locals['cls'].__name__
-        Log.test_class_start(class_name=caller_class)
+        TestContext.CLASS_NAME = inspect.stack()[1][0].f_locals['cls'].__name__
+        Log.test_class_start(class_name=TestContext.CLASS_NAME)
 
         # Kill processes
         Adb.restart()
@@ -49,7 +49,7 @@ class TnsTest(unittest.TestCase):
     def tearDown(self):
         Tns.kill()
 
-        for process in TestContext.Processes.STARTED_PROCESSES:
+        for process in TestContext.STARTED_PROCESSES:
             Log.info("Kill Process: " + os.linesep + process.commandline)
             Process.kill_pid(process.pid)
 
@@ -58,8 +58,10 @@ class TnsTest(unittest.TestCase):
         outcome = 'FAILED'
         if result.errors == [] and result.failures == []:
             outcome = 'PASSED'
-
-        Log.test_end(test_name=TestContext.CurrentTest.TEST_NAME, outcome=outcome)
+        else:
+            self.get_screenshots()
+            self.archive_apps()
+        Log.test_end(test_name=TestContext.TEST_NAME, outcome=outcome)
 
     @classmethod
     def tearDownClass(cls):
@@ -68,7 +70,7 @@ class TnsTest(unittest.TestCase):
         """
         Tns.kill()
         TnsTest.kill_emulators()
-        for process in TestContext.Processes.STARTED_PROCESSES:
+        for process in TestContext.STARTED_PROCESSES:
             Log.info("Kill Process: " + os.linesep + process.commandline)
             Process.kill_pid(process.pid)
         Log.test_class_end(class_name=cls.__name__)
@@ -78,6 +80,20 @@ class TnsTest(unittest.TestCase):
         DeviceManager.Emulator.stop()
         if Settings.HOST_OS is OSType.OSX:
             DeviceManager.Simulator.stop()
+
+    @staticmethod
+    def get_screenshots():
+        for device in TestContext.STARTED_DEVICES:
+            base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
+            device.get_screen(path=os.path.join(base_path, device.name + '.png'))
+
+    @staticmethod
+    def archive_apps():
+        app_path = os.path.join(Settings.TEST_RUN_HOME, TestContext.TEST_APP_NAME)
+        if Folder.exists(app_path):
+            archive_path = os.path.join(Settings.TEST_OUT_HOME, TestContext.CLASS_NAME, TestContext.TEST_NAME,
+                                        TestContext.TEST_APP_NAME)
+            Log.info('Archive app under test at: {0}'.format(archive_path))
 
 
 if __name__ == '__main__':

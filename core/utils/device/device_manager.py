@@ -1,5 +1,6 @@
 import os
 
+from core.base_test.test_context import TestContext
 from core.enums.device_type import DeviceType
 from core.log.log import Log
 from core.utils.device.adb import Adb, ANDROID_HOME
@@ -61,7 +62,9 @@ class DeviceManager(object):
             booted = Adb.wait_until_boot(id=emulator.id)
             if booted:
                 Log.info('{0} is up and running!'.format(emulator.avd))
-                return Device(id=emulator.id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
+                device = Device(id=emulator.id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
+                TestContext.STARTED_DEVICES.append(device)
+                return device
             else:
                 raise Exception('Failed to boot {0}!'.format(emulator.avd))
 
@@ -123,6 +126,7 @@ class DeviceManager(object):
         @staticmethod
         def start(simulator_info):
             # Start iOS Simulator
+            Log.info('Booting {0} ...'.format(simulator_info.name))
             simulator_info = Simctl.start(simulator_info=simulator_info)
 
             # Start GUI
@@ -133,10 +137,10 @@ class DeviceManager(object):
                 Run.command(cmd='open -a Simulator')
 
             # Return result
-            return Device(id=simulator_info.id,
-                          name=simulator_info.name,
-                          type=DeviceType.SIM,
-                          version=simulator_info.sdk)
+            device = Device(id=simulator_info.id, name=simulator_info.name, type=DeviceType.SIM,
+                            version=simulator_info.sdk)
+            TestContext.STARTED_DEVICES.append(device)
+            return device
 
         @staticmethod
         def is_available(simulator_info):

@@ -42,10 +42,10 @@ class SmokeTests(TnsTest):
         TnsTest.tearDownClass()
 
     def test_001_simple(self):
-        SmokeTests.create_build_run(shared=False, sample=False)
+        SmokeTests.create_build_run(shared=False)
 
     def test_010_shared(self):
-        SmokeTests.create_build_run(shared=True, sample=False)
+        SmokeTests.create_build_run(shared=True)
 
     def test_100_shared_with_sample(self):
         SmokeTests.create_build_run(shared=True, sample=True)
@@ -56,11 +56,11 @@ class SmokeTests(TnsTest):
     def test_201_shared_with_sass(self):
         SmokeTests.create_build_run(shared=False, style=StylingType.SCSS)
 
-    def test_202_shared_with_custom_sourcedir_and_prefix(self):
-        SmokeTests.create_build_run(shared=False, prefix='myapp', source_dir='mysrc')
+    def test_202_shared_with_custom_source_dir_and_prefix(self):
+        SmokeTests.create_build_run(shared=False, prefix='myapp', source_dir='mysrc', style=StylingType.CSS)
 
     def test_300_simple_no_webpack(self):
-        SmokeTests.create_build_run(shared=False, webpack=False)
+        SmokeTests.create_build_run(shared=False, webpack=False, prefix='app', source_dir='src')
 
     @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-schematics/issues/157')
     def test_300_help_ng_new(self):
@@ -79,8 +79,7 @@ class SmokeTests(TnsTest):
         assert 'Specifies whether the new application has webpack set up' in output
 
     @staticmethod
-    def create_build_run(shared=True, sample=False, theme=True, style=StylingType.CSS, prefix=None, source_dir=None,
-                         webpack=True):
+    def create_build_run(shared=True, sample=False, theme=True, style=None, prefix=None, source_dir=None, webpack=True):
 
         app_data = Apps.SHEMATICS_NS
         if shared:
@@ -105,12 +104,32 @@ class SmokeTests(TnsTest):
             assert not App.is_dependency(app_name=SmokeTests.app_name, dependency='nativescript-theme-core')
 
         # Check styling
-        if style is not None:
+        if style is None or style is StylingType.CSS:
+            # TODO: Implement it
+            pass
+        else:
             # TODO: Implement it
             pass
 
         # Check webpack
         if webpack:
+            assert App.is_dev_dependency(app_name=SmokeTests.app_name, dependency='nativescript-dev-webpack')
+        else:
+            assert not App.is_dev_dependency(app_name=SmokeTests.app_name, dependency='nativescript-dev-webpack')
+
+        # Check prefix
+        if prefix is None or source_dir == 'app':
+            # TODO: Implement it
+            pass
+        else:
+            # TODO: Implement it
+            pass
+
+        # Check source dir
+        if source_dir is None or source_dir == 'src':
+            # TODO: Implement it
+            pass
+        else:
             # TODO: Implement it
             pass
 
