@@ -31,7 +31,7 @@ class Tns(object):
         :param aot: If true pass `--env.aot` to command.
         :param uglify: If true pass `--env.uglify` to command.
         :param snapshot: If true pass `--env.snapshot` to command.
-        :param log_trace: If true pass `--log trace` to command.
+        :param log_trace: If not None pass `--log <level>` to command.
         :param justlaunch: If true pass `--justlaunch` to command.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
@@ -78,7 +78,8 @@ class Tns(object):
                update=True,
                force_clean=True,
                log_trace=False,
-               verify=True):
+               verify=True,
+               app_data=None):
         """
         Create {N} application.
         :param app_name: Application name (TestApp by default).
@@ -91,6 +92,7 @@ class Tns(object):
         :param force_clean: If True clean app folder before creating a project.
         :param log_trace: If True runs tns command with '--log trace'.
         :param verify: If True assert app is created properly.
+        :param app_data: AppInfo object with expected data (used to verify app is created properly).
         """
 
         # Cleanup app folder
@@ -124,7 +126,7 @@ class Tns(object):
 
         # Verify app is created properly
         if verify is not False:
-            TnsAssert.created(app_name=app_name, output=result.output)
+            TnsAssert.created(app_name=app_name, output=result.output, app_data=app_data)
 
         return result
 
@@ -184,26 +186,29 @@ class Tns(object):
 
     @staticmethod
     def build(app_name, platform, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False, bundle=False,
-              aot=False, uglify=False, snapshot=False, log_trace=False, verify=True):
+              aot=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None):
         result = Tns.exec_command(command='build', path=app_name, platform=platform, release=release,
                                   provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
                                   snapshot=snapshot, wait=True, log_trace=log_trace)
         if verify:
             assert result.exit_code is 0, 'Build failed with non zero exit code.'
-            assert 'Project successfully built.' in result.output
+            TnsAssert.build(app_name=app_name, platform=platform, release=False, provision=Settings.IOS.DEV_PROVISION,
+                            for_device=False, bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False,
+                            output=result.output, app_data=app_data)
         return result
 
     @staticmethod
     def build_android(app_name, release=False, bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False,
-                      verify=True):
-        return Tns.build(app_name=app_name, platform=Platform.ANDROID, release=release,
-                         bundle=bundle, aot=aot, uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify)
+                      verify=True, app_data=None):
+        return Tns.build(app_name=app_name, platform=Platform.ANDROID, release=release, bundle=bundle, aot=aot,
+                         uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify, app_data=app_data)
 
     @staticmethod
     def build_ios(app_name, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
-                  bundle=False, aot=False, uglify=False, log_trace=False, verify=True):
+                  bundle=False, aot=False, uglify=False, log_trace=False, verify=True, app_data=None):
         return Tns.build(app_name=app_name, platform=Platform.IOS, release=release, for_device=for_device,
-                         provision=provision, bundle=bundle, aot=aot, uglify=uglify, log_trace=log_trace, verify=verify)
+                         provision=provision, bundle=bundle, aot=aot, uglify=uglify, log_trace=log_trace, verify=verify,
+                         app_data=app_data)
 
     @staticmethod
     def run(app_name, platform, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,

@@ -7,8 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
-from data.changes import Changes, Sync
-from data.const import Colors
+from data.sync_helpers import SyncHelpers
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -55,79 +54,41 @@ class TnsRunMasterDetailTests(TnsTest):
 
 class RunAndroidMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_100_run_android(self):
-        sync(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu)
 
     def test_200_run_android_bundle(self):
-        sync(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu,
+                                          bundle=True)
 
     def test_300_run_android_bundle_aot(self):
-        sync(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True, aot=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu,
+                                          bundle=True, aot=True)
 
     def test_310_run_android_bundle_uglify(self):
-        sync(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True, uglify=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu,
+                                          bundle=True, uglify=True)
 
     def test_320_run_android_bundle_aot_and_uglify(self):
-        sync(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True, aot=True, uglify=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu,
+                                          bundle=True, aot=True, uglify=True)
 
 
 @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
 class RunIOSMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_100_run_ios(self):
-        sync(app_name=self.app_name, platform=Platform.IOS, device=self.sim)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim)
 
     def test_200_run_ios_bundle(self):
-        sync(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True)
 
     def test_300_run_ios_bundle_aot(self):
-        sync(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True, aot=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
+                                          aot=True)
 
     def test_310_run_ios_bundle_uglify(self):
-        sync(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True, uglify=True)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
+                                          uglify=True)
 
     def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True, aot=True, uglify=True)
-
-
-def sync(app_name, platform, device, bundle=False, uglify=False, aot=False):
-    Tns.run(app_name=app_name, platform=platform, device=device.id, wait=False, bundle=bundle, aot=aot, uglify=uglify)
-
-    # Verify it looks properly
-    device.wait_for_text(text=Changes.MASTER_DETAIL_NG.TS.old_value, timeout=60, retry_delay=5)
-    device.wait_for_main_color(color=Colors.WHITE)
-
-    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
-    device.get_screen(path=initial_state)
-
-    # Edit TS file and verify changes are applied
-    Sync.replace(app_name=app_name, change_set=Changes.MASTER_DETAIL_NG.TS)
-    device.wait_for_text(text=Changes.MASTER_DETAIL_NG.TS.new_value)
-
-    # Edit HTML file and verify changes are applied
-    Sync.replace(app_name=app_name, change_set=Changes.MASTER_DETAIL_NG.HTML)
-    for number in ["8", "9"]:
-        device.wait_for_text(text=number)
-    assert not device.is_text_visible(text=Changes.MASTER_DETAIL_NG.TS.new_value)
-
-    # Edit CSS file and verify changes are applied
-    Sync.replace(app_name=app_name, change_set=Changes.MASTER_DETAIL_NG.CSS)
-    device.wait_for_main_color(color=Colors.DARK)
-    for number in ["8", "9"]:
-        device.wait_for_text(text=number)
-    assert not device.is_text_visible(text=Changes.MASTER_DETAIL_NG.TS.new_value)
-
-    # Revert HTML
-    Sync.revert(app_name=app_name, change_set=Changes.MASTER_DETAIL_NG.HTML)
-    device.wait_for_text(text=Changes.MASTER_DETAIL_NG.TS.new_value)
-
-    # Revert TS
-    Sync.revert(app_name=app_name, change_set=Changes.MASTER_DETAIL_NG.TS)
-    device.wait_for_text(text=Changes.MASTER_DETAIL_NG.TS.old_value)
-    device.wait_for_main_color(color=Colors.DARK)
-
-    # Revert CSS
-    Sync.revert(app_name=app_name, change_set=Changes.MASTER_DETAIL_NG.CSS)
-    device.wait_for_main_color(color=Colors.WHITE)
-    device.wait_for_text(text=Changes.MASTER_DETAIL_NG.TS.old_value)
-
-    # Assert final and initial states are same
-    device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
+        SyncHelpers.sync_master_detail_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
+                                          aot=True, uglify=True)

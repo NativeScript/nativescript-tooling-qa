@@ -1,7 +1,6 @@
 import os
 
 from core.enums.app_type import AppType
-from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
@@ -42,7 +41,7 @@ class TnsAssert(object):
             if app_data.size is not None:
                 app_size = Folder.get_size(app_path)
                 assert PerfUtils.is_value_in_range(actual=app_size, expected=app_data.size.init,
-                                                   tolerance=10), 'Actual project size is not expected!'
+                                                   tolerance=0.25), 'Actual project size is not expected!'
 
     @staticmethod
     def platform_added(app_name, platform, output):
@@ -58,10 +57,23 @@ class TnsAssert(object):
             'tns-' + platform_string + ' not available in package.json of the app.'
 
     @staticmethod
-    def build(app_name, platform, output):
-        print output
-        print app_name
-        if platform == Platform.ANDROID:
-            pass
-        if platform == Platform.IOS:
-            pass
+    def build(app_name, platform=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
+              bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False, output=None, app_data=None):
+        # Verify output and exit code
+        assert 'Project successfully built.' in output
+
+        # Assert app data
+        if app_data is not None:
+            # Assert app type
+            if app_data.type is AppType.JS:
+                pass
+            elif app_data.type is AppType.TS:
+                pass
+            elif app_data.type is AppType.NG:
+                pass
+            elif app_data.type is AppType.SHARED_NG:
+                pass
+
+            # Assert size
+            if app_data.size is not None:
+                pass
