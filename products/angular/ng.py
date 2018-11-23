@@ -1,8 +1,11 @@
 import logging
+import os
 
 from core.base_test.test_context import TestContext
 from core.settings import Settings
+from core.utils.file_utils import File
 from core.utils.process import Run, Process
+from core.utils.wait import Wait
 
 NS_SCHEMATICS = "@nativescript/schematics"
 
@@ -59,6 +62,22 @@ class NG(object):
 
         TestContext.TEST_APP_NAME = project
         return NG.exec_command(command)
+
+    @staticmethod
+    def serve(project=Settings.AppName.DEFAULT, verify=True):
+        """
+        Execute `ng serve`
+        :param project: Project name.
+        :param verify: If true assert project compiled successfully.
+        :return: ProcessInfo object.
+        :rtype: core.utils.process_info.ProcessInfo
+        """
+        command = 'serve {0}'.format(os.path.join(Settings.TEST_RUN_HOME, project))
+        result = NG.exec_command(command, wait=False)
+        if verify:
+            compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file))
+            assert compiled, 'Failed to compile NG app at {0}'.format(project)
+        return result
 
     @staticmethod
     def kill():

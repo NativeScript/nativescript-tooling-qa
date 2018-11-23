@@ -2,6 +2,7 @@ import logging
 import os
 import platform
 
+from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.utils.device.emulator_info import EmulatorInfo
 from core.utils.device.simulator_info import SimulatorInfo
@@ -14,6 +15,16 @@ def get_os():
         return OSType.OSX
     else:
         return OSType.LINUX
+
+
+def get_env():
+    env = os.environ.get('TEST_ENV', 'next')
+    if 'next' in env:
+        return EnvironmentType.NEXT
+    elif 'rc' in env:
+        return EnvironmentType.RC
+    else:
+        return EnvironmentType.LIVE
 
 
 def get_project_home():
@@ -29,8 +40,11 @@ NS_GIT_ORG = 'NativeScript'
 
 HOST_OS = get_os()
 
+ENV = get_env()
+
 TEST_RUN_HOME = get_project_home()
 TEST_SUT_HOME = os.path.join(TEST_RUN_HOME, 'sut')
+
 TEST_OUT_HOME = os.path.join(TEST_RUN_HOME, 'out')
 TEST_OUT_LOGS = os.path.join(TEST_OUT_HOME, 'logs')
 TEST_OUT_IMAGES = os.path.join(TEST_OUT_HOME, 'images')
@@ -38,7 +52,7 @@ TEST_OUT_IMAGES = os.path.join(TEST_OUT_HOME, 'images')
 SSH_CLONE = os.environ.get('SSH_CLONE', False)
 
 
-def resolve_package(name, variable, default='next'):
+def resolve_package(name, variable, default=str(ENV)):
     tag = os.environ.get(variable, default)
     if '.tgz' not in tag:
         return name + '@' + tag
@@ -55,9 +69,9 @@ class Executables(object):
 
 # noinspection SpellCheckingInspection
 class Packages(object):
-    NS_CLI = resolve_package(name='nativescript', variable="CLI_PATH")
-    NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable="NATIVESCRIPT_SCHEMATICS")
-    NG_CLI = resolve_package(name='@angular/cli', variable="NG_CLI_PATH", default="latest")
+    NS_CLI = resolve_package(name='nativescript', variable='CLI_PATH')
+    NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable='NATIVESCRIPT_SCHEMATICS')
+    NG_CLI = resolve_package(name='@angular/cli', variable='NG_CLI_PATH', default='latest')
     ANDROID = resolve_package(name='tns-android', variable='ANDROID_PATH')
     IOS = resolve_package(name='tns-ios', variable='IOS_PATH')
     MODULES = resolve_package(name='tns-core-modules', variable='MODULES_PATH')

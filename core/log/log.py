@@ -77,6 +77,7 @@ class Log(object):
     def settings():
         Log.info('==================== General Info ====================')
         Log.info('Host OS: ' + str(Settings.HOST_OS))
+        Log.info('Env: ' + str(Settings.ENV))
         Log.info('====================== Packages ======================')
         Log.info('NS CLI: ' + str(Settings.Packages.NS_CLI))
         Log.info('NG CLI: ' + str(Settings.Packages.NG_CLI))

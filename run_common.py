@@ -3,6 +3,7 @@ import os
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.utils.git import Git
@@ -20,6 +21,7 @@ def __cleanup():
     if Settings.HOST_OS == OSType.OSX:
         DeviceManager.Simulator.stop()
 
+    Adb.restart()
     Tns.kill()
     Gradle.kill()
     Gradle.cache_clean()
