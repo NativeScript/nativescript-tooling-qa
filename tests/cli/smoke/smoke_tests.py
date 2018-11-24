@@ -11,7 +11,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-class SmokeTests(TnsTest):
+class CLISmokeTests(TnsTest):
     js_app_name = Settings.AppName.DEFAULT + 'JS'
     js_source_project_dir = os.path.join(Settings.TEST_RUN_HOME, js_app_name)
     js_target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', js_app_name)
