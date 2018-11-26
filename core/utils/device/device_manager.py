@@ -50,9 +50,9 @@ class DeviceManager(object):
             Process.kill('qemu-system-i38')
 
         @staticmethod
-        def start(emulator, use_snapshot=True):
+        def start(emulator, use_snapshot=False):
             emulator_path = os.path.join(ANDROID_HOME, 'emulator', 'emulator')
-            options = '-port {0} -wipe-data -no-snapshot-load -no-boot-anim -no-audio'.format(emulator.port)
+            options = '-port {0} -wipe-data -no-snapshot-load -no-snapshot-save -no-audio'.format(emulator.port)
             if use_snapshot:
                 options = '-port {0} -no-snapshot-save -no-boot-anim -no-audio'.format(emulator.port)
             command = '{0} @{1} {2}'.format(emulator_path, emulator.avd, options)

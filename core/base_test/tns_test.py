@@ -89,11 +89,12 @@ class TnsTest(unittest.TestCase):
 
     @staticmethod
     def archive_apps():
-        app_path = os.path.join(Settings.TEST_RUN_HOME, TestContext.TEST_APP_NAME)
-        if Folder.exists(app_path):
-            archive_path = os.path.join(Settings.TEST_OUT_HOME, TestContext.CLASS_NAME, TestContext.TEST_NAME,
-                                        TestContext.TEST_APP_NAME)
-            Log.info('Archive app under test at: {0}'.format(archive_path))
+        if TestContext.TEST_APP_NAME is not None:
+            app_path = os.path.join(Settings.TEST_RUN_HOME, TestContext.TEST_APP_NAME)
+            if Folder.exists(app_path):
+                archive_path = os.path.join(Settings.TEST_OUT_HOME, TestContext.CLASS_NAME, TestContext.TEST_NAME,
+                                            TestContext.TEST_APP_NAME)
+                Log.info('Archive app under test at: {0}'.format(archive_path))
 
 
 if __name__ == '__main__':
