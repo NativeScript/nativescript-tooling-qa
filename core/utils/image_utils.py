@@ -9,6 +9,7 @@ Notes: OpenCV color order is:
 
 import cv2
 import numpy
+import pytesseract
 from PIL import Image
 
 
@@ -95,3 +96,8 @@ class ImageUtils(object):
                 max_count = count
                 main_color = color
         return main_color
+
+    @staticmethod
+    def get_text(image_path):
+        image = Image.open(image_path).convert('LA')
+        return pytesseract.image_to_string(image, lang='eng')
