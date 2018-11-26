@@ -28,3 +28,9 @@ You can achieve it by starting it with custom user profile:
 ```
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir=c:\temp-user-data
 ```
+
+## OCR and Image Recognition
+
+- [tesserocr](https://github.com/sirfz/tesserocr)
+
+- [opencv-ocr-and-text-recognition-with-tesseract](https://www.pyimagesearch.com/2018/09/17/opencv-ocr-and-text-recognition-with-tesseract/)
