@@ -45,15 +45,15 @@ class Device(object):
         else:
             raise Exception('are_texts_visible needs array as texts param.')
 
-    def is_text_visible(self, text, method="atomac"):
+    def is_text_visible(self, text):
         is_visible = False
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             is_visible = Adb.is_text_visible(id=self.id, text=text)
         if self.type is DeviceType.SIM:
-            if method == "atomac":
-                if SimAuto.is_text_visible(self, text):
-                    is_visible = True
-            else:
+            # Try to find text with macOS automation
+            is_visible = SimAuto.is_text_visible(self, text)
+            # Retry find with ORC if macOS automation fails
+            if not is_visible:
                 is_visible = Simctl.is_text_visible(id=self.id, text=text)
         if self.type is DeviceType.IOS:
             is_visible = IDevice.is_text_visible(id=self.id, text=text)

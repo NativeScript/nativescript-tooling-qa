@@ -52,9 +52,10 @@ class DeviceManager(object):
         @staticmethod
         def start(emulator, use_snapshot=False):
             emulator_path = os.path.join(ANDROID_HOME, 'emulator', 'emulator')
-            options = '-port {0} -wipe-data -no-snapshot-load -no-snapshot-save -no-audio'.format(emulator.port)
+            base_options = '-no-snapshot-save -no-boot-anim -no-audio'
+            options = '-port {0} -wipe-data -no-snapshot-load {1}'.format(emulator.port, base_options)
             if use_snapshot:
-                options = '-port {0} -no-snapshot-save -no-boot-anim -no-audio'.format(emulator.port)
+                options = '-port {0} {1}'.format(emulator.port, base_options)
             command = '{0} @{1} {2}'.format(emulator_path, emulator.avd, options)
             Log.info('Booting {0} with cmd:'.format(emulator.avd))
             Log.info(command)
