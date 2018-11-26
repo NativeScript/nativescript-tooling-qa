@@ -4,6 +4,8 @@ package-lock.json
 nosetests.*
 node_modules
 TestApp
+TestAppJS
+TestAppNG
 out/*
 nativescript-sdk-*
 sample-Groceries
@@ -15,9 +17,6 @@ tab-navigation*
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
-*.so
 
 # Distribution / packaging
 .Python

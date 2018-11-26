@@ -4,9 +4,13 @@
 
 ### macOS Setup
 
+Find by text on iOS Simulator is based on macOS Accessibility.
+In order to get tests working you should allow program that execute tests to be able to control your computer.
+```
 System Preferences -> Security & Privacy ->  Privacy -> Accessibility -> 
 - Add Terminal to list of apps allowed to control your computer (to be able to run tests via Terminal)
 - Add PyCharm to list of apps allowed to control your computer (to be able to run tests via IDE)
+```
 
 ## Environment Variables 
 In order to run tests some environment variables should be set.
