@@ -6,7 +6,7 @@ from random import randint
 
 from nose.tools import timed
 
-from core.base_test.run_context import TestContext
+from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
