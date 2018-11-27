@@ -7,20 +7,26 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.image_utils import ImageUtils
 from core.utils.process import Run
+from core.utils.wait import Wait
 
 
 # noinspection PyShadowingBuiltins
 class Simctl(object):
 
     @staticmethod
-    def __run_simctl_command(command, timeout=30):
+    def __run_simctl_command(command, wait=True, timeout=30):
         command = '{0} {1}'.format('xcrun simctl', command)
-        return Run.command(cmd=command, wait=True, timeout=timeout)
+        return Run.command(cmd=command, wait=wait, timeout=timeout)
 
     @staticmethod
     def __get_simulators():
-        devices = Simctl.__run_simctl_command(command='list --json devices').output
-        return json.loads(devices)
+        logs = Simctl.__run_simctl_command(command='list --json devices', wait=False).log_file
+        found = Wait.until(lambda: 'iPhone' in File.read(logs), time=30)
+        if found:
+            return json.loads(File.read(logs))
+        else:
+            Log.error(File.read(logs))
+            raise Exception('Failed to list iOS Devices!')
 
     @staticmethod
     def start(simulator_info):
