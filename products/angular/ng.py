@@ -74,15 +74,14 @@ class NG(object):
     @staticmethod
     def serve(project=Settings.AppName.DEFAULT, verify=True):
         """
-        Execute `ng serve`
+        Execute `ng serve` inside project dir.
         :param project: Project name.
         :param verify: If true assert project compiled successfully.
         :return: ProcessInfo object.
         :rtype: core.utils.process_info.ProcessInfo
         """
         project_path = os.path.join(Settings.TEST_RUN_HOME, project)
-        command = 'serve {0}'.format(project_path)
-        result = NG.exec_command(command, cwd=project_path, wait=False)
+        result = NG.exec_command(command='serve', cwd=project_path, wait=False)
         if verify:
             compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file))
             assert compiled, 'Failed to compile NG app at {0}'.format(project)
