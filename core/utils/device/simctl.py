@@ -21,7 +21,7 @@ class Simctl(object):
     @staticmethod
     def __get_simulators():
         logs = Simctl.__run_simctl_command(command='list --json devices', wait=False).log_file
-        found = Wait.until(lambda: 'iPhone' in File.read(logs), time=30)
+        found = Wait.until(lambda: 'iPhone' in File.read(logs), timeout=30)
         if found:
             return json.loads(File.read(logs))
         else:
