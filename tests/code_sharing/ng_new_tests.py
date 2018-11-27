@@ -143,7 +143,7 @@ class SmokeTests(TnsTest):
         if Settings.ENV != EnvironmentType.LIVE:
             App.update(app_name=SmokeTests.app_name)
 
-        # Run android (if webpack is availalbe -> use --bundle)
+        # Run android (if webpack is available -> use --bundle)
         Tns.run(app_name=SmokeTests.app_name, platform=Platform.ANDROID, bundle=webpack)
         for text in app_data.texts:
             SmokeTests.emu.wait_for_text(text=text, timeout=30)
@@ -155,7 +155,7 @@ class SmokeTests(TnsTest):
                 else:
                     assert blue_pixels == 0, 'Default {N} theme is applied, but it should not.'
 
-        # Run ios (if webpack is availalbe -> use --bundle)
+        # Run ios (if webpack is available -> use --bundle)
         if Settings.HOST_OS is OSType.OSX:
             Tns.run(app_name=SmokeTests.app_name, platform=Platform.IOS, bundle=webpack)
             for text in app_data.texts:

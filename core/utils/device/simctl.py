@@ -18,13 +18,18 @@ class Simctl(object):
         command = '{0} {1}'.format('xcrun simctl', command)
         return Run.command(cmd=command, wait=wait, timeout=timeout)
 
+    # noinspection PyBroadException
     @staticmethod
     def __get_simulators():
         logs = Simctl.__run_simctl_command(command='list --json devices', wait=False).log_file
         found = Wait.until(lambda: 'iPhone' in File.read(logs), timeout=30)
         if found:
             json_content = '{' + File.read(logs).split('{', 1)[-1]
-            return json.loads(json_content)
+            try:
+                return json.loads(json_content)
+            except ValueError:
+                Log.error('Failed to parse json ' + os.linesep + json_content)
+                return json.loads('{}')
         else:
             Log.error(File.read(logs))
             raise Exception('Failed to list iOS Devices!')
