@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -50,14 +51,26 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             is_visible = Adb.is_text_visible(id=self.id, text=text)
         if self.type is DeviceType.SIM:
-            # Try to find text with macOS automation
             is_visible = SimAuto.is_text_visible(self, text)
-            # Retry find with ORC if macOS automation fails
-            if not is_visible:
-                is_visible = Simctl.is_text_visible(id=self.id, text=text)
         if self.type is DeviceType.IOS:
             is_visible = IDevice.is_text_visible(id=self.id, text=text)
+
+        # Retry find with ORC if macOS automation fails
+        if not is_visible:
+            actual_text = self.get_text()
+            if text in actual_text:
+                is_visible = True
+            else:
+                Log.info('Current text on {0}: {1}{2}'.format(self.id, os.linesep, actual_text))
+
         return is_visible
+
+    def get_text(self):
+        img_name = "actual_{0}_{1}.png".format(self.id, time.time())
+        actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, img_name)
+        File.clean(actual_image_path)
+        self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
+        return ImageUtils.get_text(image_path=actual_image_path)
 
     def wait_for_text(self, text, timeout=30, retry_delay=1):
         t_end = time.time() + timeout
@@ -72,12 +85,16 @@ class Device(object):
             else:
                 Log.info(error_msg + ' Waiting ...')
                 time.sleep(retry_delay)
+        if not found:
+            text = self.get_text()
+            Log.info('Current text: {0}'.format(text))
         assert found, error_msg
 
-    def get_screen(self, path):
+    def get_screen(self, path, log_level=logging.INFO):
         """
         Save screen of mobile device.
         :param path: Path to image that will be saved.
+        :param log_level: Log level.
         """
         File.clean(path)
         base_path, file_name = os.path.split(path)
@@ -96,7 +113,8 @@ class Device(object):
             if size > 10:
                 image_saved = True
         if image_saved:
-            Log.info("Image of {0} saved at {1}".format(self.id, path))
+            message = "Image of {0} saved at {1}".format(self.id, path)
+            Log.log(level=log_level, message=message)
         else:
             message = "Failed to save image of {0} saved at {1}".format(self.id, path)
             Log.error(message)
@@ -117,7 +135,7 @@ class Device(object):
             diff_image = None
             while time.time() < t_end:
                 actual_image = expected_image.replace('.png', '_actual.png')
-                self.get_screen(path=actual_image)
+                self.get_screen(path=actual_image, log_level=logging.DEBUG)
                 result = ImageUtils.image_match(actual_image=actual_image,
                                                 expected_image=expected_image,
                                                 tolerance=tolerance)
@@ -139,13 +157,13 @@ class Device(object):
             Log.info('Expected image not found!')
             Log.info('Actual image will be saved as expected: ' + expected_image)
             time.sleep(timeout)
-            self.get_screen(path=expected_image)
+            self.get_screen(path=expected_image, log_level=logging.DEBUG)
             assert False, "Expected image not found!"
 
     def get_pixels_by_color(self, color):
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, self.name,
                                   'screen_{0}.png'.format(int(time.time() * 1000)))
-        self.get_screen(image_path)
+        self.get_screen(image_path, log_level=logging.DEBUG)
         return ImageUtils.get_pixels_by_color(image_path, color)
 
     # noinspection PyShadowingBuiltins
@@ -170,7 +188,7 @@ class Device(object):
 
     def get_main_color(self):
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, self.name, 'screen_{0}.png'.format(int(time.time() * 1000)))
-        self.get_screen(image_path)
+        self.get_screen(image_path, log_level=logging.DEBUG)
         return ImageUtils.get_main_color(image_path)
 
     # noinspection PyUnresolvedReferences

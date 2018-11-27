@@ -3,9 +3,7 @@ import os
 import time
 
 from core.log.log import Log
-from core.settings import Settings
 from core.utils.file_utils import File
-from core.utils.image_utils import ImageUtils
 from core.utils.process import Run
 from core.utils.wait import Wait
 
@@ -109,24 +107,3 @@ class Simctl(object):
         result = Simctl.__run_simctl_command('io {0} screenshot {1}'.format(id, file_path))
         assert result.exit_code == 0, 'Failed to get screenshot of {0}'.format(id)
         assert File.exists(file_path), 'Failed to get screenshot of {0}'.format(id)
-
-    @staticmethod
-    def get_screen_text(id):
-        img_name = "actual_{0}_{1}.png".format(id, time.time())
-        actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, img_name)
-        File.clean(actual_image_path)
-        Simctl.get_screen(id=id, file_path=actual_image_path)
-        return ImageUtils.get_text(image_path=actual_image_path)
-
-    @staticmethod
-    def is_text_visible(id, text, case_sensitive=False):
-        if case_sensitive:
-            if text in Simctl.get_screen_text(id=id):
-                return True
-            else:
-                return False
-        else:
-            if text.lower() in Simctl.get_screen_text(id=id).lower():
-                return True
-            else:
-                return False
