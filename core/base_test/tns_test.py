@@ -50,8 +50,9 @@ class TnsTest(unittest.TestCase):
         Tns.kill()
 
         for process in TestContext.STARTED_PROCESSES:
-            Log.info("Kill Process: " + os.linesep + process.commandline)
-            Process.kill_pid(process.pid)
+            if Process.is_running(process.pid):
+                Log.info("Kill Process: " + os.linesep + process.commandline)
+                Process.kill_pid(process.pid)
 
         # Analise test result
         result = self._resultForDoCleanups

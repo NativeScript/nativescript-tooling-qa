@@ -82,7 +82,15 @@ class Run(object):
 # noinspection PyBroadException,PyUnusedLocal
 class Process(object):
     @staticmethod
-    def is_running(proc_name):
+    def is_running(pid):
+        try:
+            os.kill(pid, 0)
+            return True
+        except OSError:
+            return False
+
+    @staticmethod
+    def is_running_by_name(proc_name):
         """
         Check if process is running.
         """
@@ -135,7 +143,7 @@ class Process(object):
         end_time = time.time() + timeout
         while not running:
             time.sleep(5)
-            running = Process.is_running(proc_name)
+            running = Process.is_running_by_name(proc_name)
             if running:
                 running = True
                 break
@@ -189,6 +197,7 @@ class Process(object):
         try:
             p = psutil.Process(pid)
             p.terminate()
+            Log.log(level=logging.DEBUG, message="Process has been killed: {0}{1}".format(os.linesep, p.cmdline()))
         except Exception:
             pass
 

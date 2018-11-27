@@ -84,6 +84,7 @@ class NG(object):
         result = NG.exec_command(command='serve', cwd=project_path, wait=False)
         if verify:
             compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file))
+            Process.kill_pid(result.pid)
             assert compiled, 'Failed to compile NG app at {0}'.format(project)
         return result
 

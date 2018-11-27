@@ -13,7 +13,7 @@ class Folder(object):
     @staticmethod
     def clean(folder):
         if Folder.exists(folder=folder):
-            Log.info("Clean folder: " + folder)
+            Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
             except OSError as e:
@@ -33,7 +33,7 @@ class Folder(object):
 
     @staticmethod
     def create(folder):
-        Log.info("Create folder: " + folder)
+        Log.debug("Create folder: " + folder)
         if not os.path.exists(folder):
             try:
                 os.makedirs(folder)

@@ -4,7 +4,7 @@ import time
 
 from core.log.log import Log
 from core.utils.file_utils import File
-from core.utils.process import Run
+from core.utils.process import Run, Process
 from core.utils.wait import Wait
 
 
@@ -19,8 +19,10 @@ class Simctl(object):
     # noinspection PyBroadException
     @staticmethod
     def __get_simulators():
-        logs = Simctl.__run_simctl_command(command='list --json devices', wait=False).log_file
+        result = Simctl.__run_simctl_command(command='list --json devices', wait=False)
+        logs = result.log_file
         found = Wait.until(lambda: 'iPhone' in File.read(logs), timeout=30)
+        Process.kill_pid(result.pid)
         if found:
             json_content = '{' + File.read(logs).split('{', 1)[-1]
             try:

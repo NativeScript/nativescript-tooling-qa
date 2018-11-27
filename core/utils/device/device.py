@@ -57,7 +57,7 @@ class Device(object):
 
         # Retry find with ORC if macOS automation fails
         if not is_visible:
-            actual_text = self.get_text()
+            actual_text = self.get_text().encode('utf-8').strip()
             if text in actual_text:
                 is_visible = True
             else:
