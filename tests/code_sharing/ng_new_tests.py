@@ -149,9 +149,9 @@ class SmokeTests(TnsTest):
             SmokeTests.emu.wait_for_text(text=text, timeout=30)
             # Check if theme is really applied (only for non shared projects, shared is not good example to check)
             if not shared:
-                blue_pixels = SmokeTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE_ANDROID)
+                blue_pixels = SmokeTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
                 if theme:
-                    assert blue_pixels > 1000, 'Default {N} theme is NOT applied.'
+                    assert blue_pixels > 1000, 'Default {N} theme is NOT applied on Android.'
                 else:
                     assert blue_pixels == 0, 'Default {N} theme is applied, but it should not.'
 
@@ -162,9 +162,9 @@ class SmokeTests(TnsTest):
                 SmokeTests.sim.wait_for_text(text=text, timeout=30)
                 # Check if theme is really applied (only for non shared projects, shared is not good example to check)
                 if not shared:
-                    blue_pixels = SmokeTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE_IOS)
+                    blue_pixels = SmokeTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
                     if theme:
-                        assert blue_pixels > 1000, 'Default {N} theme is NOT applied.'
+                        assert blue_pixels > 1000, 'Default {N} theme is NOT applied on iOS.'
                     else:
                         assert blue_pixels == 0, 'Default {N} theme is applied, but it should not.'
 

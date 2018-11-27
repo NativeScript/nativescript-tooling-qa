@@ -25,7 +25,7 @@ class SyncHelpers(object):
         # Verify it looks properly
         device.wait_for_text(text=Changes.JSHelloWord.JS.old_value, timeout=180, retry_delay=5)
         device.wait_for_text(text=Changes.JSHelloWord.XML.old_value)
-        blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE_ANDROID)
+        blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
         assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
         initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
         device.get_screen(path=initial_state)
@@ -43,7 +43,7 @@ class SyncHelpers(object):
         Sync.replace(app_name=app_name, change_set=Changes.JSHelloWord.CSS)
         device.wait_for_text(text=Changes.JSHelloWord.XML.new_value)
         device.wait_for_text(text=Changes.JSHelloWord.JS.new_value)
-        device.wait_for_color(color=Colors.LIGHT_BLUE_ANDROID, pixel_count=blue_count * 2, delta=25)
+        device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
 
         # Revert all the changes
         Sync.revert(app_name=app_name, change_set=Changes.JSHelloWord.JS)
@@ -55,7 +55,7 @@ class SyncHelpers(object):
         device.wait_for_text(text=Changes.JSHelloWord.JS.old_value)
 
         Sync.revert(app_name=app_name, change_set=Changes.JSHelloWord.CSS)
-        device.wait_for_color(color=Colors.LIGHT_BLUE_ANDROID, pixel_count=blue_count)
+        device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
         device.wait_for_text(text=Changes.JSHelloWord.XML.old_value)
         device.wait_for_text(text=Changes.JSHelloWord.JS.old_value)
 
