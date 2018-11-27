@@ -13,13 +13,14 @@ from core.utils.process import Run
 class Simctl(object):
 
     @staticmethod
-    def __run_simctl_command(command):
+    def __run_simctl_command(command, timeout=30):
         command = '{0} {1}'.format('xcrun simctl', command)
-        return Run.command(cmd=command, wait=True)
+        return Run.command(cmd=command, wait=True, timeout=timeout)
 
     @staticmethod
     def __get_simulators():
-        return json.loads(Simctl.__run_simctl_command(command='list devices --json').output)
+        devices = Simctl.__run_simctl_command(command='list --json devices').output
+        return json.loads(devices)
 
     @staticmethod
     def start(simulator_info):
