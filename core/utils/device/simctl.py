@@ -23,7 +23,8 @@ class Simctl(object):
         logs = Simctl.__run_simctl_command(command='list --json devices', wait=False).log_file
         found = Wait.until(lambda: 'iPhone' in File.read(logs), timeout=30)
         if found:
-            return json.loads(File.read(logs))
+            json_content = '{' + File.read(logs).split('{', 1)[-1]
+            return json.loads(json_content)
         else:
             Log.error(File.read(logs))
             raise Exception('Failed to list iOS Devices!')
