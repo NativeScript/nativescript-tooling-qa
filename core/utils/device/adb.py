@@ -14,12 +14,12 @@ ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
 # noinspection PyShadowingBuiltins
 class Adb(object):
     @staticmethod
-    def __run_adb_command(command, id=None, wait=True, log_level=logging.DEBUG):
+    def __run_adb_command(command, id=None, wait=True, timeout=60, fail_safe=False, log_level=logging.DEBUG):
         if id is None:
             command = '{0} {1}'.format(ADB_PATH, command)
         else:
             command = '{0} -s {1} {2}'.format(ADB_PATH, id, command)
-        return Run.command(cmd=command, wait=wait, log_level=log_level)
+        return Run.command(cmd=command, wait=wait, timeout=timeout, fail_safe=fail_safe, log_level=log_level)
 
     @staticmethod
     def __get_ids(include_emulator=False):
@@ -61,7 +61,7 @@ class Adb(object):
             command = "shell dumpsys window windows | findstr mFocusedApp"
         else:
             command = "shell dumpsys window windows | grep -E 'mFocusedApp'"
-        result = Adb.__run_adb_command(command=command, id=id)
+        result = Adb.__run_adb_command(command=command, id=id, timeout=10, fail_safe=True)
         if 'ActivityRecord' in result.output:
             return True
         else:

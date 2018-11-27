@@ -17,7 +17,7 @@ from core.utils.process_info import ProcessInfo
 
 class Run(object):
     @staticmethod
-    def command(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, register_for_cleanup=True, timeout=600,
+    def command(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, fail_safe=False, register_for_cleanup=True, timeout=600,
                 log_level=logging.DEBUG):
         # Init result values
         log_file = None
@@ -51,7 +51,10 @@ class Run(object):
                     p.wait(timeout=timeout)
                 except psutil.TimeoutExpired:
                     p.kill()
-                    raise
+                    if not fail_safe:
+                        raise
+                    else:
+                        Log.error('Command reached timeout limit: {0}'.format(cmd))
             out, err = process.communicate()
             output = (str(out) + os.linesep + str(err)).rstrip()
             complete = True
