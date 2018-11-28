@@ -14,14 +14,16 @@ from products.nativescript.tns_assert import TnsAssert
 
 class Tns(object):
     @staticmethod
-    def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, path=None, device=None, release=False,
-                     for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False, aot=False, uglify=False,
-                     snapshot=False, log_trace=False, justlaunch=False, wait=True, timeout=600):
+    def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
+                     device=None, release=False, for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False,
+                     aot=False, uglify=False, snapshot=False, log_trace=False, justlaunch=False, wait=True,
+                     timeout=600):
         """
         Execute tns command.
         :param command: Tns command.
         :param cwd: Working directory.
         :param platform: Pass `platform <value>` to command.
+        :param emulator: If true pass `--emulator` flag.
         :param path: Pass `--path <value>` to command.
         :param device: Pass `--device <value>` to command.
         :param release: If true pass `--release <all signing options>` to command.
@@ -43,6 +45,8 @@ class Tns(object):
             cmd = cmd + ' ' + str(platform)
         if path is not None:
             cmd = cmd + ' --path ' + path
+        if emulator:
+            cmd += ' --emulator'
         if device is not None:
             cmd = cmd + ' --device ' + device
         if release:
@@ -211,12 +215,13 @@ class Tns(object):
                          app_data=app_data)
 
     @staticmethod
-    def run(app_name, platform, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
-            bundle=False, aot=False, uglify=False, snapshot=False, wait=False, log_trace=False, justlaunch=False,
-            verify=True):
-        result = Tns.exec_command(command='run', path=app_name, platform=platform, device=device, release=release,
-                                  provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
-                                  snapshot=snapshot, wait=wait, log_trace=log_trace, justlaunch=justlaunch)
+    def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
+            for_device=False, bundle=False, aot=False, uglify=False, snapshot=False, wait=False, log_trace=False,
+            justlaunch=False, verify=True):
+        result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
+                                  release=release, provision=provision, for_device=for_device,
+                                  bundle=bundle, aot=aot, uglify=uglify, snapshot=snapshot,
+                                  wait=wait, log_trace=log_trace, justlaunch=justlaunch)
         if verify:
             if wait:
                 assert result.exit_code is 0, 'tns run failed with non zero exit code.'
@@ -243,27 +248,29 @@ class Tns(object):
         return result
 
     @staticmethod
-    def run_android(app_name, device=None, release=False, bundle=False, aot=False, uglify=False, snapshot=False,
-                    wait=False, log_trace=False, justlaunch=False, verify=True):
-        return Tns.run(app_name=app_name, platform=Platform.ANDROID, device=device, release=release,
+    def run_android(app_name, emulator=False, device=None, release=False, bundle=False, aot=False, uglify=False,
+                    snapshot=False, wait=False, log_trace=False, justlaunch=False, verify=True):
+        return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
                        bundle=bundle, aot=aot, uglify=uglify, snapshot=snapshot,
                        wait=wait, log_trace=log_trace, justlaunch=justlaunch, verify=verify)
 
     @staticmethod
-    def run_ios(app_name, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
-                bundle=False, aot=False, uglify=False, wait=False, log_trace=False, justlaunch=False, verify=True):
-        return Tns.run(app_name=app_name, platform=Platform.IOS, device=device, release=release, provision=provision,
-                       for_device=for_device, bundle=bundle, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace,
+    def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
+                for_device=False, bundle=False, aot=False, uglify=False, wait=False, log_trace=False, justlaunch=False,
+                verify=True):
+        return Tns.run(app_name=app_name, platform=Platform.IOS, emulator=emulator, device=device, release=release,
+                       provision=provision, for_device=for_device,
+                       bundle=bundle, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace,
                        justlaunch=justlaunch, verify=verify)
 
     @staticmethod
-    def debug(app_name, platform, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
-              bundle=False,
-              aot=False, uglify=False, snapshot=False, wait=False,
-              log_trace=False, verify=True):
-        result = Tns.exec_command(command='debug', path=app_name, platform=platform, device=device, release=release,
-                                  provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
-                                  snapshot=snapshot, wait=wait, log_trace=log_trace)
+    def debug(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
+              for_device=False, bundle=False, aot=False, uglify=False, snapshot=False, wait=False, log_trace=False,
+              verify=True):
+        result = Tns.exec_command(command='debug', path=app_name, platform=platform, emulator=emulator, device=device,
+                                  release=release, provision=provision, for_device=for_device,
+                                  bundle=bundle, aot=aot, uglify=uglify, snapshot=snapshot,
+                                  wait=wait, log_trace=log_trace)
         if verify:
             pass
         return result

@@ -144,7 +144,7 @@ class SmokeTests(TnsTest):
             App.update(app_name=SmokeTests.app_name)
 
         # Run android (if webpack is available -> use --bundle)
-        Tns.run(app_name=SmokeTests.app_name, platform=Platform.ANDROID, bundle=webpack)
+        Tns.run(app_name=SmokeTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
         for text in app_data.texts:
             SmokeTests.emu.wait_for_text(text=text, timeout=60)
             # Check if theme is really applied (only for non shared projects, shared is not good example to check)
@@ -157,7 +157,7 @@ class SmokeTests(TnsTest):
 
         # Run ios (if webpack is available -> use --bundle)
         if Settings.HOST_OS is OSType.OSX:
-            Tns.run(app_name=SmokeTests.app_name, platform=Platform.IOS, bundle=webpack)
+            Tns.run(app_name=SmokeTests.app_name, platform=Platform.IOS, emulator=True, bundle=webpack)
             for text in app_data.texts:
                 SmokeTests.sim.wait_for_text(text=text, timeout=60)
                 # Check if theme is really applied (only for non shared projects, shared is not good example to check)

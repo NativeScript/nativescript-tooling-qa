@@ -9,7 +9,7 @@ class IDevice(object):
 
     @staticmethod
     def is_text_visible(id, text):
-        return True
+        return False
 
     @staticmethod
     def get_screen(id, file_path):
