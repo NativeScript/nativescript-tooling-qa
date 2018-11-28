@@ -87,7 +87,7 @@ class Device(object):
                 time.sleep(retry_delay)
         if not found:
             text = self.get_text()
-            Log.info('Current text: {0}'.format(text))
+            Log.info('Current text: {0}{1}'.format(os.linesep, text))
         assert found, error_msg
 
     def get_screen(self, path, log_level=logging.INFO):

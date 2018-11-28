@@ -146,7 +146,7 @@ class SmokeTests(TnsTest):
         # Run android (if webpack is available -> use --bundle)
         Tns.run(app_name=SmokeTests.app_name, platform=Platform.ANDROID, bundle=webpack)
         for text in app_data.texts:
-            SmokeTests.emu.wait_for_text(text=text, timeout=30)
+            SmokeTests.emu.wait_for_text(text=text, timeout=60)
             # Check if theme is really applied (only for non shared projects, shared is not good example to check)
             if not shared:
                 blue_pixels = SmokeTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
