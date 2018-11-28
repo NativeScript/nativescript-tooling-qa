@@ -27,6 +27,7 @@ class TnsTest(unittest.TestCase):
         Tns.kill()
         Gradle.kill()
         TnsTest.kill_emulators()
+        cls.kill_processes()
 
         # Ensure log folders are create
         Folder.create(Settings.TEST_OUT_HOME)
@@ -47,12 +48,9 @@ class TnsTest(unittest.TestCase):
         Gradle.kill()
 
     def tearDown(self):
+        # Kill processes
         Tns.kill()
-
-        for process in TestContext.STARTED_PROCESSES:
-            if Process.is_running(process.pid):
-                Log.info("Kill Process: " + os.linesep + process.commandline)
-                Process.kill_pid(process.pid)
+        self.kill_processes()
 
         # Analise test result
         result = self._resultForDoCleanups
@@ -75,6 +73,13 @@ class TnsTest(unittest.TestCase):
             Log.info("Kill Process: " + os.linesep + process.commandline)
             Process.kill_pid(process.pid)
         Log.test_class_end(class_name=cls.__name__)
+
+    @staticmethod
+    def kill_processes():
+        for process in TestContext.STARTED_PROCESSES:
+            if Process.is_running(process.pid):
+                Log.info("Kill Process: " + os.linesep + process.commandline)
+                Process.kill_pid(process.pid)
 
     @staticmethod
     def kill_emulators():
