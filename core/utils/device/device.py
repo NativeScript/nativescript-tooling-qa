@@ -61,7 +61,7 @@ class Device(object):
             if text in actual_text:
                 is_visible = True
             else:
-                Log.info('Current text on {0}: {1}{2}'.format(self.id, os.linesep, actual_text))
+                Log.debug('Current text on {0}: {1}{2}'.format(self.id, os.linesep, actual_text))
 
         return is_visible
 
