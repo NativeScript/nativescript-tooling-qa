@@ -21,6 +21,10 @@ When stop emulator it will save its state and next boot with this command will b
 $ANDROID_HOME/emulator/emulator -avd Emulator-Api23-Default -no-snapshot-save -no-boot-anim
 ```
 
+### Faster screenshots
+
+See [this article](https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb)
+
 ## Chrome
 
 Chrome browser need to be in consistent state for debugger tests.
