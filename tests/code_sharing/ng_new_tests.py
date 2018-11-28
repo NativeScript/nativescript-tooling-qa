@@ -159,7 +159,7 @@ class SmokeTests(TnsTest):
         if Settings.HOST_OS is OSType.OSX:
             Tns.run(app_name=SmokeTests.app_name, platform=Platform.IOS, bundle=webpack)
             for text in app_data.texts:
-                SmokeTests.sim.wait_for_text(text=text, timeout=30)
+                SmokeTests.sim.wait_for_text(text=text, timeout=60)
                 # Check if theme is really applied (only for non shared projects, shared is not good example to check)
                 if not shared:
                     blue_pixels = SmokeTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
