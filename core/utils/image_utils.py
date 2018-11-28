@@ -6,6 +6,7 @@ Notes: OpenCV color order is:
 1 - green
 2 - red
 """
+import string
 
 import cv2
 import numpy
@@ -99,5 +100,11 @@ class ImageUtils(object):
 
     @staticmethod
     def get_text(image_path):
+        char_whitelist = string.digits
+        char_whitelist += string.ascii_lowercase
+        char_whitelist += string.ascii_uppercase
+
         image = Image.open(image_path).convert('LA')
-        return pytesseract.image_to_string(image, lang='eng')
+        row_text = pytesseract.image_to_string(image, lang='eng',
+                                               config="-c tessedit_char_whitelist=%s_-." % char_whitelist).strip()
+        return "".join([s for s in row_text.splitlines(True) if s.strip()])
