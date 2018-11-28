@@ -27,7 +27,6 @@ class DeviceTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
 
-    @unittest.skip('')
     def test_01_emulator(self):
         # Verify emulator is started properly
         emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
