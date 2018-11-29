@@ -145,7 +145,12 @@ class Adb(object):
     @staticmethod
     def get_screen(id, file_path):
         File.clean(path=file_path)
-        Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.INFO)
+        if Settings.OSType == OSType.WINDOWS:
+            Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.INFO)
+        else:
+            Adb.__run_adb_command(command='shell rm /sdcard/screen.png', id=id)
+            Adb.__run_adb_command(command='shell screencap -p /sdcard/screen.png', id=id)
+            Adb.pull(id=id, source='/sdcard/screen.png', target=file_path)
         if File.exists(file_path):
             return
         else:
