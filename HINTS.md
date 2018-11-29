@@ -21,9 +21,19 @@ When stop emulator it will save its state and next boot with this command will b
 $ANDROID_HOME/emulator/emulator -avd Emulator-Api23-Default -no-snapshot-save -no-boot-anim
 ```
 
-### Faster screenshots
+### Faster Screenshots
 
 See [this article](https://stackoverflow.com/questions/13984017/how-to-capture-the-screen-as-fast-as-possible-through-adb)
+
+### Measure UI Performance
+
+See [this article](https://developer.android.com/training/testing/performance) 
+
+See [this blog](https://hackernoon.com/gfxinfo-ui-automator-kotlin-automated-jank-tests-fc43995c7a06)
+
+### Python wrappers around Android tools
+
+- [uiautomator](https://github.com/xiaocong/uiautomator)
 
 ## Chrome
 

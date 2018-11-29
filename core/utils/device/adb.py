@@ -68,18 +68,19 @@ class Adb(object):
             return False
 
     @staticmethod
-    def wait_until_boot(id, timeout=180):
+    def wait_until_boot(id, timeout=180, check_interval=3):
         """
         Wait android device/emulator is up and running.
         :param id: Device identifier.
         :param timeout: Timeout until device is ready (in seconds).
+        :param check_interval: Sleep specified time before check again.
         :return: True if device is ready before timeout, otherwise - False.
         """
         booted = False
         start_time = time.time()
         end_time = start_time + timeout
         while not booted:
-            time.sleep(2)
+            time.sleep(check_interval)
             booted = Adb.is_running(id=id)
             if (booted is True) or (time.time() > end_time):
                 break
@@ -144,14 +145,11 @@ class Adb(object):
     @staticmethod
     def get_screen(id, file_path):
         File.clean(path=file_path)
-        Adb.__run_adb_command(command='shell rm /sdcard/screen.png', id=id)
-        result = Adb.__run_adb_command(command='shell screencap -p /sdcard/screen.png', id=id)
-        if result.exit_code == 0:
-            time.sleep(1)
-            Adb.pull(id=id, source='/sdcard/screen.png', target=file_path)
-            if File.exists(file_path):
-                return
-        raise Exception('Failed to get screen of {0}.'.format(id))
+        Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id)
+        if File.exists(file_path):
+            return
+        else:
+            raise Exception('Failed to get screen of {0}.'.format(id))
 
     @staticmethod
     def get_device_version(id):
