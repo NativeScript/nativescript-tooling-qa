@@ -35,6 +35,10 @@ See [this blog](https://hackernoon.com/gfxinfo-ui-automator-kotlin-automated-jan
 
 - [uiautomator](https://github.com/xiaocong/uiautomator)
 
+- [AndroidViewClient](https://github.com/dtmilano/AndroidViewClient/wiki)
+    - [Example 1](https://github.com/dtmilano/AndroidViewClient/blob/master/examples/monkeyrunner-issue-36544-workaround.py)
+    - [Example 2](https://github.com/TQRG/physalia/blob/master/samples/utils.py)
+
 ## Chrome
 
 Chrome browser need to be in consistent state for debugger tests.
