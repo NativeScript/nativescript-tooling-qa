@@ -145,7 +145,7 @@ class Adb(object):
     @staticmethod
     def get_screen(id, file_path):
         File.clean(path=file_path)
-        Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id)
+        Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.INFO)
         if File.exists(file_path):
             return
         else:
