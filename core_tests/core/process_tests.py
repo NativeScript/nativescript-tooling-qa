@@ -21,8 +21,9 @@ class ProcessTests(unittest.TestCase):
 
     def tearDown(self):
         for process in TestContext.STARTED_PROCESSES:
-            Log.info("Kill Process: " + os.linesep + process.commandline)
-            Process.kill_pid(process.pid)
+            if Process.is_running(process.pid):
+                Log.info("Kill Process: " + os.linesep + process.commandline)
+                Process.kill_pid(process.pid)
 
     def test_01_run_simple_command(self):
         home = expanduser("~")
@@ -39,10 +40,10 @@ class ProcessTests(unittest.TestCase):
             result = Run.command(cmd='pause', wait=False)
             time.sleep(1)
             assert result.exit_code is None, 'exit code should be None when command is not complete.'
-            assert result.complete is False, 'tail command should not exit.'
+            assert result.complete is False, 'pause command should not exit.'
             assert result.duration is None, 'duration should be None in case process is not complete'
             assert result.output is '', 'output should be empty string.'
-            assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
+            assert result.log_file is not None, 'stdout and stderr of pause command should be redirected to file.'
             assert 'pause' in File.read(result.log_file), 'Log file should contains cmd of the command.'
             assert 'Press any key' in File.read(result.log_file), 'Log file should contains output of the command.'
         else:
