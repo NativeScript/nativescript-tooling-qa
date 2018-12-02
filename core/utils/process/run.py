@@ -1,17 +1,23 @@
 import logging
 import os
-import subprocess
+import sys
 import time
 from datetime import datetime
 
 import psutil
-from psutil import Popen, TimeoutExpired
 
 from core.base_test.test_context import TestContext
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process_info import ProcessInfo
+
+if os.name == 'posix' and sys.version_info[0] < 3:
+    # Import subprocess32 on Posix when Python2 is detected
+    # noinspection PyPackageRequirements
+    import subprocess32 as subprocess
+else:
+    import subprocess
 
 
 def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False, register=True,
@@ -40,15 +46,14 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
 
         # Wait until command complete
         try:
-            process.wait()
+            process.wait(timeout=timeout)
             complete = True
             out, err = process.communicate()
             if out is not None:
                 output = str(out.decode('utf-8')).strip()
             if err is not None:
                 output = os.linesep + str(err.decode('utf-8')).strip()
-
-        except TimeoutExpired:
+        except subprocess.TimeoutExpired:
             process.kill()
             if fail_safe:
                 Log.error('Command "{0}" timeout after {1} seconds.'.format(cmd, timeout))
@@ -57,7 +62,7 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
         end = time.time()
         duration = end - start
     else:
-        process = Popen(cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True, cwd=cwd)
+        process = psutil.Popen(cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True, cwd=cwd)
 
     # Get result
     pid = process.pid

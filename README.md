@@ -4,20 +4,41 @@
 
 Project with test for NativeScript tooling.
 
-## Install Requirements
+## Requirements
 
-Install Python 2.*:
-```
-brew install python
-```
+**Posix:**
+- Python 2.7 or Python 3.2+
+
+**Windows**
+- Python 3.2+
+
+
+## Before Running Tests
+
+**Install Required Packages**
 
 Update `pip` and install project requirements:
 ```
 python -m pip install --upgrade pip
-pip install -r requirements.txt --user
 ```
 
-## Before Running Tests
+Install packages on macOS:
+```bash
+pip install --upgrade -r requirements_darwin.txt --user 
+```
+Install packages on Windows on Linux:
+```bash
+pip install --upgrade -r requirements.txt --user
+```
+
+Set `PYTHONUNBUFFERED` and `PYTHONIOENCODING` environment variables:
+```bash
+export PYTHONUNBUFFERED=1
+export PYTHONIOENCODING=utf-8
+```
+Notes: 
+- `PYTHONUNBUFFERED` is required to get logging on Jenkins CI working properly.
+- `PYTHONIOENCODING` helps to get command execution more stable.
 
 **Setup Machine**
  

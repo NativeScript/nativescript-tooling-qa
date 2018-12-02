@@ -3,8 +3,6 @@ import platform
 import unittest
 from os.path import expanduser
 
-from psutil import TimeoutExpired
-
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process.run import run
@@ -43,10 +41,11 @@ class RunPosixTests(unittest.TestCase):
         assert result.output == '2', 'Output should be 2.'
 
     def test_10_run_command_with_wait_true_that_exceed_timeout(self):
+        # noinspection PyBroadException
         try:
             run(cmd='sleep 3', wait=True, timeout=1, fail_safe=False)
             assert False, 'This line should not be executed, because the line above should raise an exception.'
-        except TimeoutExpired:
+        except Exception:
             pass
 
     def test_11_run_command_with_wait_true_and_fail_safe_that_exceed_timeout(self):
@@ -55,4 +54,4 @@ class RunPosixTests(unittest.TestCase):
         assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is False, 'Complete should be true when process execution is complete.'
         assert result.duration < 2, 'Process duration should be same as timeout.'
-        assert result.output == '', 'No output for not compelted programs.'
+        assert result.output == '', 'No output for not completed programs.'
