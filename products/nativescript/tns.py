@@ -7,7 +7,8 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
-from core.utils.process import Run, Process
+from core.utils.process import Process
+from core.utils.run import run
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
 
@@ -73,7 +74,7 @@ class Tns(object):
             cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
-        return Run.command(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
+        return run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
 
     @staticmethod
     def create(app_name=Settings.AppName.DEFAULT, template=None, path=None, app_id=None,

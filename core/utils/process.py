@@ -212,3 +212,9 @@ class Process(object):
                         proc.kill()
             except Exception:
                 continue
+
+    @staticmethod
+    def kill_all_in_context():
+        for process in TestContext.STARTED_PROCESSES:
+            name = process.commandline.split(' ')[0]
+            Process.kill(proc_name=name, proc_cmdline=Settings.TEST_RUN_HOME)

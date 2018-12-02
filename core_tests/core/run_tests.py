@@ -1,16 +1,23 @@
 import os
 import platform
+import time
 import unittest
 from os.path import expanduser
 
+from nose.tools import timed
+
 from core.settings import Settings
 from core.utils.file_utils import File
-from core.utils.process.run import run
+from core.utils.process import Process
+from core.utils.run import run
 
 
 # noinspection PyMethodMayBeStatic
 @unittest.skipIf('Windows' in platform.platform(), 'This test class can not be exececuted on Windows OS.')
 class RunPosixTests(unittest.TestCase):
+
+    def tearDown(self):
+        Process.kill_all_in_context()
 
     def test_01_run_simple_command(self):
         home = expanduser("~")
@@ -55,3 +62,18 @@ class RunPosixTests(unittest.TestCase):
         assert result.complete is False, 'Complete should be true when process execution is complete.'
         assert result.duration < 2, 'Process duration should be same as timeout.'
         assert result.output == '', 'No output for not completed programs.'
+
+    @timed(5)
+    def test_20_run_long_living_process(self):
+        file_path = os.path.join(Settings.TEST_OUT_HOME, 'temp.txt')
+        File.write(path=file_path, text='test')
+        result = run(cmd='tail -f ' + file_path, wait=False)
+        time.sleep(1)
+        Process.kill_pid(pid=result.pid)
+        assert result.exit_code is None, 'exit code should be None when command is not complete.'
+        assert result.complete is False, 'tail command should not exit.'
+        assert result.duration is None, 'duration should be None in case process is not complete'
+        assert result.output is '', 'output should be empty string.'
+        assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
+        assert 'tail' in File.read(result.log_file), 'Log file should contains cmd of the command.'
+        assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'

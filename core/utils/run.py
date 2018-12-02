@@ -1,5 +1,6 @@
 import logging
 import os
+import signal
 import sys
 import time
 from datetime import datetime
@@ -42,7 +43,7 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
     # Execute command:
     if wait:
         start = time.time()
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         # Wait until command complete
         try:
@@ -62,7 +63,8 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
         end = time.time()
         duration = end - start
     else:
-        process = psutil.Popen(cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True, cwd=cwd)
+        process = psutil.Popen(cmd, cwd=cwd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True,
+                               preexec_fn=os.setsid)
 
     # Get result
     pid = process.pid
