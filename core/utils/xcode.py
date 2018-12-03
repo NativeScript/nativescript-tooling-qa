@@ -1,8 +1,8 @@
 """
 A wrapper around Xcode.
 """
+from core.utils.run import run
 from core.utils.version import Version
-from utils.run import run
 
 
 class Xcode(object):

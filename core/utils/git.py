@@ -3,7 +3,7 @@ A wrapper around GitHub commands.
 """
 from core.settings import Settings
 from core.utils.file_utils import Folder
-from utils.run import run
+from core.utils.run import run
 
 
 def get_repo_url(repo_url, ssh_clone=False):

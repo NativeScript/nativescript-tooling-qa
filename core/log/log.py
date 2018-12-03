@@ -51,12 +51,14 @@ class Log(object):
         Log.info('TEST COMPLETE:  {0}'.format(test_name))
         Log.info('OUTCOME:  {0}'.format(outcome))
         Log.info('=============================================================')
+        Log.info('')
 
     @staticmethod
     def test_class_end(class_name):
         Log.info('')
         Log.info('END CLASS:  {0}'.format(class_name))
         Log.info('=============================================================')
+        Log.info('')
 
     @staticmethod
     def test_step(message):

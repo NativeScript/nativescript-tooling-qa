@@ -8,7 +8,7 @@ from core.utils.device.device import Device
 from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
 from core.utils.process import Process
-from utils.run import run
+from core.utils.run import run
 
 
 class DeviceManager(object):

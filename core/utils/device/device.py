@@ -11,8 +11,8 @@ from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File, Folder
 from core.utils.image_utils import ImageUtils
+from core.utils.run import run
 from core.utils.wait import Wait
-from utils.run import run
 
 if Settings.HOST_OS is OSType.OSX:
     from core.utils.device.simauto import SimAuto

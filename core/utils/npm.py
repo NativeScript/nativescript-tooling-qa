@@ -6,8 +6,8 @@ import os
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
+from core.utils.run import run
 from core.utils.version import Version
-from utils.run import run
 
 
 class Npm(object):

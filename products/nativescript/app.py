@@ -4,7 +4,7 @@ import os
 from core.settings import Settings
 from core.utils.json_utils import JsonUtils
 from core.utils.npm import Npm
-from utils.run import run
+from core.utils.run import run
 
 
 class App(object):

@@ -6,7 +6,7 @@ from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
-from utils.run import run
+from core.utils.run import run
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')

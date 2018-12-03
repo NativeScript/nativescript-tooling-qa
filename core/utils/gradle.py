@@ -8,7 +8,7 @@ from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.process import Process
-from utils.run import run
+from core.utils.run import run
 
 
 class Gradle(object):
