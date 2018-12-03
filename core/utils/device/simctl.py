@@ -4,8 +4,9 @@ import time
 
 from core.log.log import Log
 from core.utils.file_utils import File
-from core.utils.process import Run, Process
+from core.utils.process import Process
 from core.utils.wait import Wait
+from utils.run import run
 
 
 # noinspection PyShadowingBuiltins
@@ -14,7 +15,7 @@ class Simctl(object):
     @staticmethod
     def __run_simctl_command(command, wait=True, timeout=30):
         command = '{0} {1}'.format('xcrun simctl', command)
-        return Run.command(cmd=command, wait=wait, timeout=timeout)
+        return run(cmd=command, wait=wait, timeout=timeout)
 
     # noinspection PyBroadException
     @staticmethod

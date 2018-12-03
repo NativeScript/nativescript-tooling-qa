@@ -8,10 +8,10 @@ from core.settings import Settings
 class Log(object):
 
     @staticmethod
-    def log(level, message):
+    def log(level, msg):
         if level != logging.DEBUG:
             date = datetime.datetime.now().strftime('%H:%M:%S')
-            print '{0} {1}'.format(date, message)
+            print('{0} {1}'.format(date, msg))
 
     @staticmethod
     def debug(message):

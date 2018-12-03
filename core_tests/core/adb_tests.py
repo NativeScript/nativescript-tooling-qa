@@ -1,14 +1,13 @@
 import os
 
 from core.base_test.tns_test import TnsTest
-from core.log.log import Log
 from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-# noinspection PyMethodMayBeStatic
 from core.utils.file_utils import File
 
 
+# noinspection PyMethodMayBeStatic
 class AdbTests(TnsTest):
     emu = None
 
@@ -16,7 +15,7 @@ class AdbTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         DeviceManager.Emulator.stop()
-        cls.emu = DeviceManager.Emulator.start(Settings.Emulators.DEFAULT, wipe_data=False)
+        cls.emu = DeviceManager.Emulator.start(Settings.Emulators.DEFAULT, wipe_data=True)
 
     def setUp(self):
         TnsTest.setUp(self)

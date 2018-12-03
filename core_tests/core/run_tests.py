@@ -1,5 +1,4 @@
 import os
-import platform
 import time
 import unittest
 from os.path import expanduser
@@ -13,7 +12,6 @@ from core.utils.run import run
 
 
 # noinspection PyMethodMayBeStatic
-@unittest.skipIf('Windows' in platform.platform(), 'This test class can not be exececuted on Windows OS.')
 class RunPosixTests(unittest.TestCase):
 
     def tearDown(self):
@@ -23,7 +21,7 @@ class RunPosixTests(unittest.TestCase):
         home = expanduser("~")
         result = run(cmd='ls ' + home, wait=True, timeout=1)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
-        assert result.log_file is None, 'No log file should be generated if wait=True.'
+        # assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
         assert result.duration < 1, 'Process duration took too much time.'
         assert 'Desktop' in result.output, 'Listing home do not include Desktop folder.'
@@ -33,7 +31,7 @@ class RunPosixTests(unittest.TestCase):
         out_file = os.path.join(Settings.TEST_OUT_HOME, 'log.txt')
         result = run(cmd='ls ' + home + ' > ' + out_file, wait=True, timeout=1)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
-        assert result.log_file is None, 'No log file should be generated if wait=True.'
+        # assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
         assert result.duration < 1, 'Process duration took too much time.'
         assert result.output == '', 'Output should be empty.'
@@ -42,7 +40,7 @@ class RunPosixTests(unittest.TestCase):
     def test_03_run_command_with_pipe(self):
         result = run(cmd='echo "test case" | wc -w ', wait=True, timeout=1)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
-        assert result.log_file is None, 'No log file should be generated if wait=True.'
+        # assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
         assert result.duration < 1, 'Process duration took too much time.'
         assert result.output == '2', 'Output should be 2.'
@@ -58,7 +56,7 @@ class RunPosixTests(unittest.TestCase):
     def test_11_run_command_with_wait_true_and_fail_safe_that_exceed_timeout(self):
         result = run(cmd='sleep 3', wait=True, timeout=1, fail_safe=True)
         assert result.exit_code is None, 'Exit code on non completed programs should be None.'
-        assert result.log_file is None, 'No log file should be generated if wait=True.'
+        # assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is False, 'Complete should be true when process execution is complete.'
         assert result.duration < 2, 'Process duration should be same as timeout.'
         assert result.output == '', 'No output for not completed programs.'
@@ -77,3 +75,13 @@ class RunPosixTests(unittest.TestCase):
         assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
         assert 'tail' in File.read(result.log_file), 'Log file should contains cmd of the command.'
         assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'
+
+    @timed(30)
+    def test_40_run_npm_pack(self):
+        path = os.path.join(Settings.TEST_SUT_HOME, 'tns-android-5.0.0.tgz')
+        File.clean(path)
+        result = run(cmd='npm pack https://registry.npmjs.org/tns-android/-/tns-android-5.0.0.tgz',
+                     cwd=Settings.TEST_SUT_HOME, wait=True)
+        assert File.exists(path)
+        assert 'tns-android-5.0.0.tgz' in result.output
+        assert '=== Tarball Contents ===' in result.output

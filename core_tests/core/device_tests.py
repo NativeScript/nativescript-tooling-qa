@@ -1,5 +1,4 @@
 import os
-import unittest
 
 from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType

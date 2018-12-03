@@ -1,7 +1,5 @@
 import logging
 import os
-import signal
-import sys
 import time
 from datetime import datetime
 
@@ -13,7 +11,7 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process_info import ProcessInfo
 
-if os.name == 'posix' and sys.version_info[0] < 3:
+if os.name == 'posix' and Settings.PYTHON_VERSION < 3:
     # Import subprocess32 on Posix when Python2 is detected
     # noinspection PyPackageRequirements
     import subprocess32 as subprocess
@@ -24,26 +22,26 @@ else:
 def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False, register=True,
         log_level=logging.DEBUG):
     # Init result values
-    log_file = None
+    time_string = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+    log_file = os.path.join(Settings.TEST_OUT_LOGS, 'command_{0}.txt'.format(time_string))
     complete = False
     duration = None
     output = ''
 
     # Command settings
     if not wait:
-        time_string = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-        log_file = os.path.join(Settings.TEST_OUT_LOGS, 'command_{0}.txt'.format(time_string))
         File.write(path=log_file, text=cmd + os.linesep + '====>' + os.linesep)
         cmd = cmd + ' >> ' + log_file + ' 2>&1 &'
 
     # Log command that will be executed:
-    Log.log(level=log_level, message='Execute command: ' + cmd)
-    Log.log(level=logging.DEBUG, message='CWD: ' + cwd)
+    Log.log(level=log_level, msg='Execute command: ' + cmd)
+    Log.log(level=logging.DEBUG, msg='CWD: ' + cwd)
 
     # Execute command:
     if wait:
         start = time.time()
-        process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        with open(log_file, "w") as log:
+            process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=log)
 
         # Wait until command complete
         try:
@@ -60,11 +58,11 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
                 Log.error('Command "{0}" timeout after {1} seconds.'.format(cmd, timeout))
             else:
                 raise
+        output = output + File.read(path=log_file)
         end = time.time()
         duration = end - start
     else:
-        process = psutil.Popen(cmd, cwd=cwd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True,
-                               preexec_fn=os.setsid)
+        process = psutil.Popen(cmd, cwd=cwd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
 
     # Get result
     pid = process.pid
@@ -72,9 +70,9 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
 
     # Log output of the process
     if wait:
-        Log.log(level=log_level, message='OUTPUT: ' + os.linesep + output)
+        Log.log(level=log_level, msg='OUTPUT: ' + os.linesep + output)
     else:
-        Log.log(level=log_level, message='OUTPUT REDIRECTED: ' + log_file)
+        Log.log(level=log_level, msg='OUTPUT REDIRECTED: ' + log_file)
 
     # Construct result
     result = ProcessInfo(cmd=cmd, pid=pid, exit_code=exit_code, output=output, log_file=log_file, complete=complete,

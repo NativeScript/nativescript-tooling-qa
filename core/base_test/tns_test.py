@@ -52,7 +52,13 @@ class TnsTest(unittest.TestCase):
         Process.kill_all_in_context()
 
         # Analise test result
-        result = self._resultForDoCleanups
+        if Settings.PYTHON_VERSION < 3:
+            # noinspection PyUnresolvedReferences
+            result = self._resultForDoCleanups
+        else:
+            # noinspection PyUnresolvedReferences
+            result = self._outcome.result
+
         outcome = 'FAILED'
         if result.errors == [] and result.failures == []:
             outcome = 'PASSED'

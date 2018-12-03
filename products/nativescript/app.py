@@ -4,7 +4,7 @@ import os
 from core.settings import Settings
 from core.utils.json_utils import JsonUtils
 from core.utils.npm import Npm
-from core.utils.process import Run
+from utils.run import run
 
 
 class App(object):
@@ -53,7 +53,7 @@ class App(object):
             Npm.uninstall(package='nativescript-angular', option='--save', folder=app_path)
             Npm.install(package=Settings.Packages.ANGULAR, option='--save', folder=app_path)
             update_script = os.path.join(app_path, 'node_modules', '.bin', 'update-app-ng-deps')
-            result = Run.command(cmd=update_script, log_level=logging.INFO)
+            result = run(cmd=update_script, log_level=logging.INFO)
             assert 'Angular dependencies updated' in result.output, 'Angular dependencies not updated.'
             Npm.install(folder=app_path)
         if typescript and App.is_dev_dependency(app_name=app_name, dependency='nativescript-dev-typescript'):
@@ -63,7 +63,7 @@ class App(object):
             Npm.uninstall(package='nativescript-dev-webpack', option='--save-dev', folder=app_path)
             Npm.install(package=Settings.Packages.WEBPACK, option='--save-dev', folder=app_path)
             update_script = os.path.join(app_path, 'node_modules', '.bin', 'update-ns-webpack') + ' --deps --configs'
-            result = Run.command(cmd=update_script, log_level=logging.INFO)
+            result = run(cmd=update_script, log_level=logging.INFO)
             assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
             assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
             Npm.install(folder=app_path)

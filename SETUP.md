@@ -2,7 +2,7 @@
 
 ## Install Tesseract
 
-In order to get OCR features workign you need to install `tesseract`.
+In order to get OCR features working you need to install `tesseract`.
 
 **macOS**
 ```bash
