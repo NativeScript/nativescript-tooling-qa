@@ -46,23 +46,27 @@ class App(object):
     @staticmethod
     def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, ns_plugins=False):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        modules_path = os.path.join(app_path, 'node_modules')
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):
             Npm.uninstall(package='tns-core-modules', option='--save', folder=app_path)
             Npm.install(package=Settings.Packages.MODULES, option='--save', folder=app_path)
         if angular and App.is_dependency(app_name=app_name, dependency='nativescript-angular'):
             Npm.uninstall(package='nativescript-angular', option='--save', folder=app_path)
             Npm.install(package=Settings.Packages.ANGULAR, option='--save', folder=app_path)
-            update_script = os.path.join(app_path, 'node_modules', '.bin', 'update-app-ng-deps')
+            update_script = os.path.join(modules_path, '.bin', 'update-app-ng-deps')
             result = run(cmd=update_script, log_level=logging.INFO)
             assert 'Angular dependencies updated' in result.output, 'Angular dependencies not updated.'
             Npm.install(folder=app_path)
         if typescript and App.is_dev_dependency(app_name=app_name, dependency='nativescript-dev-typescript'):
             Npm.uninstall(package='nativescript-dev-typescript', option='--save-dev', folder=app_path)
             Npm.install(package=Settings.Packages.TYPESCRIPT, option='--save-dev', folder=app_path)
+            update_script = os.path.join(modules_path, 'nativescript-dev-typescript', 'bin', 'ns-upgrade-tsconfig')
+            result = run(cmd=update_script, log_level=logging.INFO)
+            assert 'Adding tns-core-modules path mappings lib' in result.output
         if web_pack and App.is_dev_dependency(app_name=app_name, dependency='nativescript-dev-webpack'):
             Npm.uninstall(package='nativescript-dev-webpack', option='--save-dev', folder=app_path)
             Npm.install(package=Settings.Packages.WEBPACK, option='--save-dev', folder=app_path)
-            update_script = os.path.join(app_path, 'node_modules', '.bin', 'update-ns-webpack') + ' --deps --configs'
+            update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
             result = run(cmd=update_script, log_level=logging.INFO)
             assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
             assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
