@@ -17,6 +17,11 @@ def __cleanup():
     """
     Wipe TEST_OUT_HOME.
     """
+    Folder.clean(os.path.join(Settings.TEST_RUN_HOME, 'node_modules'))
+    Folder.clean(Settings.TEST_OUT_HOME)
+    Folder.create(Settings.TEST_OUT_LOGS)
+    Folder.create(Settings.TEST_OUT_IMAGES)
+
     DeviceManager.Emulator.stop()
     if Settings.HOST_OS == OSType.OSX:
         DeviceManager.Simulator.stop()
@@ -25,10 +30,6 @@ def __cleanup():
     Tns.kill()
     Gradle.kill()
     Gradle.cache_clean()
-    Folder.clean(os.path.join(Settings.TEST_RUN_HOME, 'node_modules'))
-    Folder.clean(Settings.TEST_OUT_HOME)
-    Folder.create(Settings.TEST_OUT_LOGS)
-    Folder.create(Settings.TEST_OUT_IMAGES)
 
 
 def __get_templates():
