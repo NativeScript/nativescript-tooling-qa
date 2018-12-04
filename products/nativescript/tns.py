@@ -9,6 +9,7 @@ from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from core.utils.process import Process
 from core.utils.run import run
+from log.log import Log
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
 
@@ -74,7 +75,15 @@ class Tns(object):
             cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
-        return run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
+
+        result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
+
+        # Retry in case of connectivity issues
+        if result.output is not None and 'Bad Gateway' in result.output:
+            Log.info('"Bad Gateway" issue detected! Will retry the command ...')
+            result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
+
+        return result
 
     @staticmethod
     def create(app_name=Settings.AppName.DEFAULT, template=None, path=None, app_id=None,
