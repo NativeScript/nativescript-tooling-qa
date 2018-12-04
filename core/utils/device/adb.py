@@ -149,9 +149,7 @@ class Adb(object):
         if Settings.OSType == OSType.WINDOWS:
             Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.DEBUG)
         else:
-            Adb.__run_adb_command(command='shell rm /sdcard/screen.png', id=id)
-            Adb.__run_adb_command(command='shell screencap -p /sdcard/screen.png', id=id)
-            Adb.pull(id=id, source='/sdcard/screen.png', target=file_path)
+            Adb.__run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path, id=id)
         if File.exists(file_path):
             return
         else:
