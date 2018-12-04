@@ -59,7 +59,12 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
             else:
                 raise
         output = output + File.read(path=log_file)
-        File.clean(path=log_file)
+        # noinspection PyBroadException
+        try:
+            File.clean(path=log_file)
+        except Exception:
+            Log.debug('Failed to clean log file: {0}'.format(log_file))
+        log_file = None
         end = time.time()
         duration = end - start
     else:

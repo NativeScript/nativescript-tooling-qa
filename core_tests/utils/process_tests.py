@@ -12,8 +12,9 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.perf_utils import PerfUtils
-from core.utils.process import Run, Process
+from core.utils.process import Process
 from core.utils.wait import Wait
+from utils.run import run
 
 
 # noinspection PyMethodMayBeStatic
@@ -27,7 +28,7 @@ class ProcessTests(unittest.TestCase):
 
     def test_01_run_simple_command(self):
         home = expanduser("~")
-        result = Run.command(cmd='ls ' + home)
+        result = run(cmd='ls ' + home)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
         assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
@@ -37,7 +38,7 @@ class ProcessTests(unittest.TestCase):
     @timed(5)
     def test_02_run_command_without_wait_for_completion(self):
         if Settings.HOST_OS == OSType.WINDOWS:
-            result = Run.command(cmd='pause', wait=False)
+            result = run(cmd='pause', wait=False)
             time.sleep(1)
             assert result.exit_code is None, 'exit code should be None when command is not complete.'
             assert result.complete is False, 'pause command should not exit.'
@@ -49,7 +50,7 @@ class ProcessTests(unittest.TestCase):
         else:
             file_path = os.path.join(Settings.TEST_OUT_HOME, 'temp.txt')
             File.write(path=file_path, text='test')
-            result = Run.command(cmd='tail -f ' + file_path, wait=False)
+            result = run(cmd='tail -f ' + file_path, wait=False)
             time.sleep(1)
             assert result.exit_code is None, 'exit code should be None when command is not complete.'
             assert result.complete is False, 'tail command should not exit.'
@@ -67,7 +68,7 @@ class ProcessTests(unittest.TestCase):
 
     @timed(5)
     def test_20_get_average_time(self):
-        ls_time = PerfUtils.get_average_time(lambda: Run.command(cmd='ifconfig'), retry_count=5)
+        ls_time = PerfUtils.get_average_time(lambda: run(cmd='ifconfig'), retry_count=5)
         assert 0.005 <= ls_time <= 0.025, "Command not executed in acceptable time. Actual value: " + str(ls_time)
 
     @staticmethod

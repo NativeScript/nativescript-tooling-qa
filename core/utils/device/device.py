@@ -57,7 +57,7 @@ class Device(object):
 
         # Retry find with ORC if macOS automation fails
         if not is_visible:
-            actual_text = self.get_text().encode('utf-8').strip()
+            actual_text = self.get_text()
             if text in actual_text:
                 is_visible = True
             else:
@@ -70,7 +70,11 @@ class Device(object):
         actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, img_name)
         File.clean(actual_image_path)
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
-        return ImageUtils.get_text(image_path=actual_image_path)
+        text = ImageUtils.get_text(image_path=actual_image_path)
+        if Settings.PYTHON_VERSION < 3:
+            return text.encode('utf-8').strip()
+        else:
+            return text.strip()
 
     def wait_for_text(self, text, timeout=30, retry_delay=1):
         t_end = time.time() + timeout

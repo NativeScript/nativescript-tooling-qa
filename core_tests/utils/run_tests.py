@@ -12,7 +12,7 @@ from core.utils.run import run
 
 
 # noinspection PyMethodMayBeStatic
-class RunPosixTests(unittest.TestCase):
+class RunTests(unittest.TestCase):
 
     def tearDown(self):
         Process.kill_all_in_context()
