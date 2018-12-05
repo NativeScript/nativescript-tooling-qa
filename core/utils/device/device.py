@@ -71,10 +71,7 @@ class Device(object):
         File.clean(actual_image_path)
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
         text = ImageUtils.get_text(image_path=actual_image_path)
-        if Settings.PYTHON_VERSION < 3:
-            return text.encode('utf-8').strip()
-        else:
-            return text.strip()
+        return text.encode('utf-8').strip()
 
     def wait_for_text(self, text, timeout=30, retry_delay=1):
         t_end = time.time() + timeout

@@ -146,7 +146,7 @@ class Adb(object):
     @staticmethod
     def get_screen(id, file_path):
         File.clean(path=file_path)
-        if Settings.OSType == OSType.WINDOWS:
+        if Settings.HOST_OS == OSType.WINDOWS:
             Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.DEBUG)
         else:
             Adb.__run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path, id=id)
