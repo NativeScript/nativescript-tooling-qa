@@ -5,11 +5,11 @@ import time
 from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from core.utils.process import Process
 from core.utils.run import run
-from log.log import Log
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
 
