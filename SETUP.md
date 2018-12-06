@@ -2,7 +2,7 @@
 
 ## Install Tesseract
 
-In order to get OCR features workign you need to install `tesseract`.
+In order to get OCR features working you need to install `tesseract`.
 
 **macOS**
 ```bash
@@ -20,6 +20,14 @@ Download [installer](https://github.com/UB-Mannheim/tesseract/wiki) and install 
 Notes:
 Installation of python wrapper around `tesseract` is handled in `requirements.txt`.
 
+## OpenCV
+
+OpenCV has some known installation issues on Windows when Python 3.7 is used.
+
+Please read those articles:
+- [import-cv2-doesnt-give-error-on-command-prompt-but-error-on-idle-on-windows-10ó](https://stackoverflow.com/questions/49516989/import-cv2-doesnt-give-error-on-command-prompt-but-error-on-idle-on-windows-10)
+- [opencv-for-python-3-x-under-windows](https://stackoverflow.com/questions/26489867/opencv-for-python-3-x-under-windows)
+- [pythonlibs](https://www.lfd.uci.edu/~gohlke/pythonlibs/#opencv)
 
 ## (macOS Only) Allow apps to control your computer
 

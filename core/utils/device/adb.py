@@ -5,7 +5,8 @@ import time
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File
-from core.utils.process import Run, Process
+from core.utils.process import Process
+from core.utils.run import run
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -19,7 +20,7 @@ class Adb(object):
             command = '{0} {1}'.format(ADB_PATH, command)
         else:
             command = '{0} -s {1} {2}'.format(ADB_PATH, id, command)
-        return Run.command(cmd=command, wait=wait, timeout=timeout, fail_safe=fail_safe, log_level=log_level)
+        return run(cmd=command, wait=wait, timeout=timeout, fail_safe=fail_safe, log_level=log_level)
 
     @staticmethod
     def __get_ids(include_emulator=False):
@@ -145,12 +146,10 @@ class Adb(object):
     @staticmethod
     def get_screen(id, file_path):
         File.clean(path=file_path)
-        if Settings.OSType == OSType.WINDOWS:
-            Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.INFO)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.DEBUG)
         else:
-            Adb.__run_adb_command(command='shell rm /sdcard/screen.png', id=id)
-            Adb.__run_adb_command(command='shell screencap -p /sdcard/screen.png', id=id)
-            Adb.pull(id=id, source='/sdcard/screen.png', target=file_path)
+            Adb.__run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path, id=id)
         if File.exists(file_path):
             return
         else:

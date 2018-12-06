@@ -4,35 +4,26 @@ import time
 
 from core.log.log import Log
 from core.utils.file_utils import File
-from core.utils.process import Run, Process
-from core.utils.wait import Wait
+from core.utils.run import run
 
 
 # noinspection PyShadowingBuiltins
 class Simctl(object):
 
     @staticmethod
-    def __run_simctl_command(command, wait=True, timeout=30):
+    def __run_simctl_command(command, wait=True, timeout=60):
         command = '{0} {1}'.format('xcrun simctl', command)
-        return Run.command(cmd=command, wait=wait, timeout=timeout)
+        return run(cmd=command, wait=wait, timeout=timeout)
 
     # noinspection PyBroadException
     @staticmethod
     def __get_simulators():
-        result = Simctl.__run_simctl_command(command='list --json devices', wait=False)
-        logs = result.log_file
-        found = Wait.until(lambda: 'iPhone' in File.read(logs), timeout=30)
-        Process.kill_pid(result.pid)
-        if found:
-            json_content = '{' + File.read(logs).split('{', 1)[-1]
-            try:
-                return json.loads(json_content)
-            except ValueError:
-                Log.error('Failed to parse json ' + os.linesep + json_content)
-                return json.loads('{}')
-        else:
-            Log.error(File.read(logs))
-            raise Exception('Failed to list iOS Devices!')
+        result = Simctl.__run_simctl_command(command='list --json devices')
+        try:
+            return json.loads(result.output)
+        except ValueError:
+            Log.error('Failed to parse json ' + os.linesep + result.output)
+            return json.loads('{}')
 
     @staticmethod
     def start(simulator_info):

@@ -6,7 +6,7 @@ import os
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
-from core.utils.process import Run
+from core.utils.run import run
 from core.utils.version import Version
 
 
@@ -15,7 +15,7 @@ class Npm(object):
     def __run_npm_command(cmd, folder=Settings.TEST_RUN_HOME, verify=True):
         command = 'npm {0}'.format(cmd)
         Log.info(command)
-        result = Run.command(cmd=command, cwd=folder)
+        result = run(cmd=command, cwd=folder, wait=True, timeout=300)
         if verify:
             assert result.exit_code is 0, "`npm " + command + "` exited with non zero exit code!: \n" + result.output
         Log.debug(result.output)

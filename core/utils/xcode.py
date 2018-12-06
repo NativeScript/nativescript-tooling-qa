@@ -1,7 +1,7 @@
 """
 A wrapper around Xcode.
 """
-from core.utils.process import Run
+from core.utils.run import run
 from core.utils.version import Version
 
 
@@ -11,7 +11,7 @@ class Xcode(object):
         """
         Cleanup Xcode cache and derived data
         """
-        Run.command(cmd="rm -rf ~/Library/Developer/Xcode/DerivedData/*")
+        run(cmd="rm -rf ~/Library/Developer/Xcode/DerivedData/*")
 
     @staticmethod
     def get_version():
@@ -19,5 +19,5 @@ class Xcode(object):
         Get Xcode version
         :return: Version as int.
         """
-        result = Run.command(cmd='xcodebuild -version').output.splitlines()[0].replace(' ', '').replace('Xcode', '')
+        result = run(cmd='xcodebuild -version').output.splitlines()[0].replace(' ', '').replace('Xcode', '')
         return Version.get(result)

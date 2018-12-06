@@ -3,7 +3,7 @@ A wrapper around GitHub commands.
 """
 from core.settings import Settings
 from core.utils.file_utils import Folder
-from core.utils.process import Run
+from core.utils.run import run
 
 
 def get_repo_url(repo_url, ssh_clone=False):
@@ -29,6 +29,6 @@ class Git(object):
         command = 'git clone {0} "{1}"'.format(repo_url, str(local_folder))
         if branch is not None:
             command = command + ' -b ' + branch
-        result = Run.command(cmd=command)
+        result = run(cmd=command)
         assert "fatal" not in result.output, "Failed to clone: " + repo_url
         assert result.exit_code is 0, "Failed to clone: " + repo_url

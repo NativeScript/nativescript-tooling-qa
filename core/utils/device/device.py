@@ -11,7 +11,7 @@ from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File, Folder
 from core.utils.image_utils import ImageUtils
-from core.utils.process import Run
+from core.utils.run import run
 from core.utils.wait import Wait
 
 if Settings.HOST_OS is OSType.OSX:
@@ -26,7 +26,7 @@ class Device(object):
         self.version = version
 
         if type is DeviceType.IOS:
-            type = Run.command(cmd="ideviceinfo | grep ProductType")
+            type = run(cmd="ideviceinfo | grep ProductType")
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
@@ -57,7 +57,7 @@ class Device(object):
 
         # Retry find with ORC if macOS automation fails
         if not is_visible:
-            actual_text = self.get_text().encode('utf-8').strip()
+            actual_text = self.get_text()
             if text in actual_text:
                 is_visible = True
             else:
@@ -70,7 +70,11 @@ class Device(object):
         actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, img_name)
         File.clean(actual_image_path)
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
-        return ImageUtils.get_text(image_path=actual_image_path)
+        text = ImageUtils.get_text(image_path=actual_image_path)
+        if Settings.PYTHON_VERSION < 3:
+            return text.encode('utf-8').strip()
+        else:
+            return text.encode('utf-8').strip().decode('utf-8')
 
     def wait_for_text(self, text, timeout=30, retry_delay=1):
         t_end = time.time() + timeout
@@ -114,7 +118,7 @@ class Device(object):
                 image_saved = True
         if image_saved:
             message = "Image of {0} saved at {1}".format(self.id, path)
-            Log.log(level=log_level, message=message)
+            Log.log(level=log_level, msg=message)
         else:
             message = "Failed to save image of {0} saved at {1}".format(self.id, path)
             Log.error(message)

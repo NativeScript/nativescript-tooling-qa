@@ -1,6 +1,7 @@
 import logging
 import os
 import platform
+import sys
 
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
@@ -15,6 +16,10 @@ def get_os():
         return OSType.OSX
     else:
         return OSType.LINUX
+
+
+def get_python_version():
+    return sys.version_info[0]
 
 
 def get_env():
@@ -34,13 +39,13 @@ def get_project_home():
     return home
 
 
+HOST_OS = get_os()
+PYTHON_VERSION = get_python_version()
+ENV = get_env()
+
 LOG_LEVEL = logging.DEBUG
 
 NS_GIT_ORG = 'NativeScript'
-
-HOST_OS = get_os()
-
-ENV = get_env()
 
 TEST_RUN_HOME = get_project_home()
 TEST_SUT_HOME = os.path.join(TEST_RUN_HOME, 'sut')

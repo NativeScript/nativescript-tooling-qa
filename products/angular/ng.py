@@ -4,7 +4,8 @@ import os
 from core.base_test.test_context import TestContext
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
-from core.utils.process import Run, Process
+from core.utils.process import Process
+from core.utils.run import run
 from core.utils.wait import Wait
 
 NS_SCHEMATICS = "@nativescript/schematics"
@@ -23,7 +24,7 @@ class NG(object):
         :rtype: core.utils.process_info.ProcessInfo
         """
         cmd = '{0} {1}'.format(Settings.Executables.NG, command)
-        return Run.command(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO)
+        return run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO)
 
     @staticmethod
     def new(collection=NS_SCHEMATICS, project=Settings.AppName.DEFAULT, shared=True, sample=False, prefix=None,

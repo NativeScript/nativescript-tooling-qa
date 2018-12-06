@@ -8,10 +8,10 @@ from core.settings import Settings
 class Log(object):
 
     @staticmethod
-    def log(level, message):
+    def log(level, msg):
         if level != logging.DEBUG:
             date = datetime.datetime.now().strftime('%H:%M:%S')
-            print '{0} {1}'.format(date, message)
+            print('{0} {1}'.format(date, msg))
 
     @staticmethod
     def debug(message):
@@ -51,12 +51,14 @@ class Log(object):
         Log.info('TEST COMPLETE:  {0}'.format(test_name))
         Log.info('OUTCOME:  {0}'.format(outcome))
         Log.info('=============================================================')
+        Log.info('')
 
     @staticmethod
     def test_class_end(class_name):
         Log.info('')
         Log.info('END CLASS:  {0}'.format(class_name))
         Log.info('=============================================================')
+        Log.info('')
 
     @staticmethod
     def test_step(message):

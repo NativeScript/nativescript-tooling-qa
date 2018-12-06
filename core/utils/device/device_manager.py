@@ -7,7 +7,8 @@ from core.utils.device.adb import Adb, ANDROID_HOME
 from core.utils.device.device import Device
 from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
-from core.utils.process import Run, Process
+from core.utils.process import Process
+from core.utils.run import run
 
 
 class DeviceManager(object):
@@ -59,7 +60,7 @@ class DeviceManager(object):
             command = '{0} @{1} {2}'.format(emulator_path, emulator.avd, options)
             Log.info('Booting {0} with cmd:'.format(emulator.avd))
             Log.info(command)
-            Run.command(cmd=command, wait=False, register_for_cleanup=False)
+            run(cmd=command, wait=False, register=False)
             booted = Adb.wait_until_boot(id=emulator.id)
             if booted:
                 Log.info('{0} is up and running!'.format(emulator.avd))
@@ -102,7 +103,7 @@ class DeviceManager(object):
         def create(simulator_info):
             cmd = 'xcrun simctl create {0} "{1}" com.apple.CoreSimulator.SimRuntime.iOS-{2}' \
                 .format(simulator_info.name, simulator_info.device_type, str(simulator_info.sdk).replace('.', '-'))
-            result = Run.command(cmd=cmd, timeout=60)
+            result = run(cmd=cmd, timeout=60)
             assert result.exit_code == 0, 'Failed to create iOS Simulator with name {0}'.format(simulator_info.name)
             assert '-' in result.output, 'Failed to create iOS Simulator with name {0}'.format(simulator_info.name)
             simulator_info.id = result.output.splitlines()[0]
@@ -121,8 +122,8 @@ class DeviceManager(object):
                 Process.kill('launchd_sim')
                 Process.kill_by_commandline('CoreSimulator')
             else:
-                print 'Stop simulator with id ' + id
-                Run.command(cmd='xcrun simctl shutdown {0}'.format(id), timeout=60)
+                Log.info('Stop simulator with id ' + id)
+                run(cmd='xcrun simctl shutdown {0}'.format(id), timeout=60)
 
         @staticmethod
         def start(simulator_info):
@@ -135,7 +136,7 @@ class DeviceManager(object):
                 Log.debug('Simulator GUI is already running.')
             else:
                 Log.info('Start simulator GUI.')
-                Run.command(cmd='open -a Simulator')
+                run(cmd='open -a Simulator')
 
             # Return result
             device = Device(id=simulator_info.id, name=simulator_info.name, type=DeviceType.SIM,
