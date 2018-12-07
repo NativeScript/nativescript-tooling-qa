@@ -9,3 +9,4 @@ numpy>=1.15.4
 opencv-python>=3.4.3.18
 pytesseract>=0.2.5
 flake8>=3.6.0
+selenium>=3.141.0

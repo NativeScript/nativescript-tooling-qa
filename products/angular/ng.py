@@ -14,20 +14,24 @@ NS_SCHEMATICS = "@nativescript/schematics"
 class NG(object):
 
     @staticmethod
-    def exec_command(command, cwd=Settings.TEST_RUN_HOME, wait=True):
+    def exec_command(command, cwd=Settings.TEST_RUN_HOME, wait=True, verify=True):
         """
         Execute tns command.
         :param command: NG cli command.
         :param cwd: Current working directory of the command.
         :param wait: Wait until command complete.
+        :param verify: If true and wait is also true it will check exit code of the command.
         :return: ProcessInfo object.
         :rtype: core.utils.process_info.ProcessInfo
         """
         cmd = '{0} {1}'.format(Settings.Executables.NG, command)
-        return run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO)
+        result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO)
+        if verify and wait:
+            assert result.exit_code == 0, 'ng command exit with non zero exit code.'
+        return result
 
     @staticmethod
-    def new(collection=NS_SCHEMATICS, project=Settings.AppName.DEFAULT, shared=True, sample=False, prefix=None,
+    def new(collection=NS_SCHEMATICS, project=Settings.AppName.DEFAULT, shared=False, sample=False, prefix=None,
             source_dir=None, theme=True, style=None, webpack=True):
         """
         Execute `ng new`
@@ -73,20 +77,36 @@ class NG(object):
         return NG.exec_command(command)
 
     @staticmethod
-    def serve(project=Settings.AppName.DEFAULT, verify=True):
+    def add(project, schematics_package):
         """
         Execute `ng serve` inside project dir.
         :param project: Project name.
-        :param verify: If true assert project compiled successfully.
+        :param schematics_package: Schematics package, for example: @nativescript/schemtics@next.
         :return: ProcessInfo object.
         :rtype: core.utils.process_info.ProcessInfo
         """
         project_path = os.path.join(Settings.TEST_RUN_HOME, project)
-        result = NG.exec_command(command='serve', cwd=project_path, wait=False)
-        if verify:
-            compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file))
-            Process.kill_pid(result.pid)
-            assert compiled, 'Failed to compile NG app at {0}'.format(project)
+        result = NG.exec_command(command='add {0}'.format(schematics_package), cwd=project_path, wait=True)
+        return result
+
+    @staticmethod
+    def serve(project=Settings.AppName.DEFAULT, prod=True):
+        """
+        Execute `ng serve` inside project dir.
+        :param project: Project name.
+        :param prod: If true passes `--prod` flag.
+        :return: ProcessInfo object.
+        :rtype: core.utils.process_info.ProcessInfo
+        """
+        project_path = os.path.join(Settings.TEST_RUN_HOME, project)
+        command = 'serve'
+        if prod:
+            command = command + ' --prod'
+        result = NG.exec_command(command=command, cwd=project_path, wait=False)
+        compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file))
+        if not compiled:
+            NG.kill()
+        assert compiled, 'Failed to compile NG app at {0}'.format(project)
         return result
 
     @staticmethod
