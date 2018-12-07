@@ -126,6 +126,21 @@ class Process(object):
         return result
 
     @staticmethod
+    def kill_by_port(port):
+        Log.info('Kill processes listening on port {0}.'.format(str(port)))
+        for proc in psutil.process_iter():
+            try:
+                connections = proc.connections(kind='inet')
+                if len(connections) > 0:
+                    for c in connections:
+                        if c.laddr.port == port:
+                            cmd = ''.join(proc.cmdline())
+                            Log.info('Kill process: ' + cmd)
+                            proc.kill()
+            except Exception:
+                pass
+
+    @staticmethod
     def kill_pid(pid):
         try:
             p = psutil.Process(pid)

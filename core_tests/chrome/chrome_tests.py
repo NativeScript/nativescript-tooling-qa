@@ -5,7 +5,7 @@ import unittest
 
 from selenium.webdriver.common.keys import Keys
 
-from utils.chrome import Chrome
+from core.utils.chrome import Chrome
 
 
 # noinspection PyMethodMayBeStatic

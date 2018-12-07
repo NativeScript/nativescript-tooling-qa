@@ -9,6 +9,7 @@ from core.utils.run import run
 from core.utils.wait import Wait
 
 NS_SCHEMATICS = "@nativescript/schematics"
+DEFAULT_PORT = 4200
 
 
 class NG(object):
@@ -90,7 +91,7 @@ class NG(object):
         return result
 
     @staticmethod
-    def serve(project=Settings.AppName.DEFAULT, prod=True):
+    def serve(project=Settings.AppName.DEFAULT, prod=False):
         """
         Execute `ng serve` inside project dir.
         :param project: Project name.
@@ -115,3 +116,4 @@ class NG(object):
         Kill ng cli processes.
         """
         Process.kill_by_commandline(cmdline=Settings.Executables.NG)
+        Process.kill_by_port(DEFAULT_PORT)

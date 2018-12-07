@@ -1,18 +1,18 @@
 import os
 
-from angular.ng import NG
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
+from core.utils.chrome import Chrome
 from core.utils.device.device_manager import DeviceManager
-# noinspection PyMethodMayBeStatic
-from nativescript.tns import Tns
-from utils.chrome import Chrome
-# noinspection PyMethodMayBeStatic
-from utils.file_utils import Folder
 
 
-class MigrateWebToMobile(TnsTest):
+# noinspection PyMethodMayBeStatic
+from products.angular.ng import NG
+from products.nativescript.tns import Tns
+
+
+class MigrateWebToMobileTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
     emu = None
@@ -22,7 +22,6 @@ class MigrateWebToMobile(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        Folder.clean(cls.app_folder)
         NG.new(collection=None, project=cls.app_name)
         cls.chrome = Chrome()
         cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)

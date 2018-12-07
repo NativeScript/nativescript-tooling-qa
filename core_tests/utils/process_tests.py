@@ -1,64 +1,17 @@
-import os
 import time
 import unittest
-from os.path import expanduser
 from random import randint
 
 from nose.tools import timed
 
-from core.base_test.test_context import TestContext
-from core.enums.os_type import OSType
-from core.log.log import Log
-from core.settings import Settings
-from core.utils.file_utils import File
 from core.utils.perf_utils import PerfUtils
 from core.utils.process import Process
+from core.utils.run import run
 from core.utils.wait import Wait
-from utils.run import run
 
 
 # noinspection PyMethodMayBeStatic
 class ProcessTests(unittest.TestCase):
-
-    def tearDown(self):
-        for process in TestContext.STARTED_PROCESSES:
-            if Process.is_running(process.pid):
-                Log.info("Kill Process: " + os.linesep + process.commandline)
-                Process.kill_pid(process.pid)
-
-    def test_01_run_simple_command(self):
-        home = expanduser("~")
-        result = run(cmd='ls ' + home)
-        assert result.exit_code == 0, 'Wrong exit code of successful command.'
-        assert result.log_file is None, 'No log file should be generated if wait=True.'
-        assert result.complete is True, 'Complete should be true when process execution is complete.'
-        assert result.duration < 1, 'Process duration took too much time.'
-        assert 'Desktop' in result.output, 'Listing home do not include Desktop folder.'
-
-    @timed(5)
-    def test_02_run_command_without_wait_for_completion(self):
-        if Settings.HOST_OS == OSType.WINDOWS:
-            result = run(cmd='pause', wait=False)
-            time.sleep(1)
-            assert result.exit_code is None, 'exit code should be None when command is not complete.'
-            assert result.complete is False, 'pause command should not exit.'
-            assert result.duration is None, 'duration should be None in case process is not complete'
-            assert result.output is '', 'output should be empty string.'
-            assert result.log_file is not None, 'stdout and stderr of pause command should be redirected to file.'
-            assert 'pause' in File.read(result.log_file), 'Log file should contains cmd of the command.'
-            assert 'Press any key' in File.read(result.log_file), 'Log file should contains output of the command.'
-        else:
-            file_path = os.path.join(Settings.TEST_OUT_HOME, 'temp.txt')
-            File.write(path=file_path, text='test')
-            result = run(cmd='tail -f ' + file_path, wait=False)
-            time.sleep(1)
-            assert result.exit_code is None, 'exit code should be None when command is not complete.'
-            assert result.complete is False, 'tail command should not exit.'
-            assert result.duration is None, 'duration should be None in case process is not complete'
-            assert result.output is '', 'output should be empty string.'
-            assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
-            assert 'tail' in File.read(result.log_file), 'Log file should contains cmd of the command.'
-            assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'
 
     @timed(5)
     def test_10_wait(self):
@@ -70,6 +23,9 @@ class ProcessTests(unittest.TestCase):
     def test_20_get_average_time(self):
         ls_time = PerfUtils.get_average_time(lambda: run(cmd='ifconfig'), retry_count=5)
         assert 0.005 <= ls_time <= 0.025, "Command not executed in acceptable time. Actual value: " + str(ls_time)
+
+    def test_30_kill_by_port(self):
+        Process.kill_by_port(port=4200)
 
     @staticmethod
     def seconds_are_odd():

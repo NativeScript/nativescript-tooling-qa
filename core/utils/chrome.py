@@ -1,12 +1,18 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-from log.log import Log
+from core.enums.os_type import OSType
+from core.log.log import Log
+from core.settings import Settings
+from core.utils.process import Process
 
 
 class Chrome(object):
+    driver = None
 
-    def __init__(self):
+    def __init__(self, kill_old=True):
+        if kill_old:
+            self.kill()
         path = ChromeDriverManager().install()
         Log.info('Starting Google Chrome ...')
         self.driver = webdriver.Chrome(executable_path=path)
@@ -16,6 +22,15 @@ class Chrome(object):
         self.driver.get(url)
         Log.info('Open url: ' + url)
 
-    def kill(self):
-        self.driver.quit()
+    def kill(self, force=True):
+        if self.driver is not None:
+            self.driver.quit()
+        if force:
+            if Settings.HOST_OS == OSType.OSX:
+                Process.kill(proc_name='Google Chrome')
+            elif Settings.HOST_OS == OSType.LINUX:
+                Process.kill("chrome")
+            else:
+                raise NotImplemented('Kill Chome not implemented for Windows.')
+            Process.kill(proc_name='chromedriver')
         Log.info('Kill Chrome browser!')
