@@ -2,19 +2,19 @@ import os
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.chrome import Chrome
 from core.utils.device.device_manager import DeviceManager
-
-
-# noinspection PyMethodMayBeStatic
-from products.angular.ng import NG
+from products.angular.ng import NG, DEFAULT_WEB_URL
 from products.nativescript.tns import Tns
 
 
+# noinspection PyMethodMayBeStatic
 class MigrateWebToMobileTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
+    ng_app_text = 'auto-generated works!'
     emu = None
     sim = None
     chrome = None
@@ -40,14 +40,18 @@ class MigrateWebToMobileTests(TnsTest):
         cls.chrome.kill()
         TnsTest.tearDownClass()
 
-    def ng_serve(self):
-        NG.serve(project=self.app_name)
-        self.chrome.open('http://localhost:4200/')
+    def ng_serve(self, prod=False):
+        NG.serve(project=self.app_name, prod=prod)
+        self.chrome.open(DEFAULT_WEB_URL)
         welcome_element = self.chrome.driver.find_element_by_xpath('//h1')
         assert 'Welcome to' in welcome_element.text, 'Failed to find welcome message.'
+        Log.info('Welcome page served successfully.')
+        NG.kill()
 
     def test_01_ng_serve_web(self):
-        self.ng_serve()
+        self.ng_serve(prod=False)
+        self.chrome.open(url='https://google.com/ncr')  # change url to be sure next serve do not assert previous serve
+        self.ng_serve(prod=True)
 
     def test_02_add_nativescript(self):
         # Add {N} to existing web project
@@ -67,18 +71,24 @@ class MigrateWebToMobileTests(TnsTest):
 
     def test_03_run_android(self):
         Tns.run_android(app_name=self.app_name, bundle=True, device=self.emu.id)
+        self.emu.wait_for_text(text=self.ng_app_text, timeout=60)
 
     def test_04_run_ios(self):
         Tns.run_ios(app_name=self.app_name, bundle=True, device=self.sim.id)
+        self.sim.wait_for_text(text=self.ng_app_text, timeout=60)
 
     def test_05_run_android_aot(self):
         Tns.run_android(app_name=self.app_name, bundle=True, aot=True, device=self.emu.id)
+        self.emu.wait_for_text(text=self.ng_app_text, timeout=60)
 
     def test_06_run_ios_aot(self):
         Tns.run_ios(app_name=self.app_name, bundle=True, aot=True, device=self.sim.id)
+        self.sim.wait_for_text(text=self.ng_app_text, timeout=60)
 
     def test_07_run_android_aot(self):
         Tns.run_android(app_name=self.app_name, bundle=True, aot=True, uglify=True, device=self.emu.id)
+        self.emu.wait_for_text(text=self.ng_app_text, timeout=60)
 
     def test_08_run_ios_aot(self):
         Tns.run_ios(app_name=self.app_name, bundle=True, aot=True, uglify=True, device=self.sim.id)
+        self.sim.wait_for_text(text=self.ng_app_text, timeout=60)

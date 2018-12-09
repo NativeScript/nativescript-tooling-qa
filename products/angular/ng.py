@@ -10,6 +10,7 @@ from core.utils.wait import Wait
 
 NS_SCHEMATICS = "@nativescript/schematics"
 DEFAULT_PORT = 4200
+DEFAULT_WEB_URL = 'http://localhost:' + str(DEFAULT_PORT)
 
 
 class NG(object):
