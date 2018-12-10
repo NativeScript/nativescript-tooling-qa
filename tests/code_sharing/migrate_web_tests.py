@@ -77,15 +77,15 @@ class MigrateWebToMobileTests(TnsTest):
         ('ios_aot_uglify', Platform.IOS, True, True, True),
     ])
     def test_10_run(self, name, platform, bundle, aot, uglify):
-        if platform == Platform.IOS and Settings.HOST_OS != OSType.OSX:
+        if (platform == Platform.IOS) and (Settings.HOST_OS == OSType.WINDOWS or Settings.HOST_OS == OSType.LINUX):
+            unittest.skip('Can not run iOS tests on Windows or Linux.')
+        else:
             ng_app_text = 'auto-generated works!'
             Tns.run(platform=platform, app_name=self.app_name, bundle=bundle, aot=aot, uglify=uglify, emulator=True)
             if platform == Platform.ANDROID:
                 self.emu.wait_for_text(text=ng_app_text, timeout=60)
             if platform == Platform.IOS:
                 self.sim.wait_for_text(text=ng_app_text, timeout=60)
-        else:
-            return unittest.skip('Can not run iOS test on Linux or Windows OS.')
 
     def ng_serve(self, prod=False):
         NG.serve(project=self.app_name, prod=prod)
