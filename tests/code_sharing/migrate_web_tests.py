@@ -5,11 +5,11 @@ from parameterized import parameterized
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.chrome import Chrome
 from core.utils.device.device_manager import DeviceManager
-from enums.platform_type import Platform
 from products.angular.ng import NG, DEFAULT_WEB_URL
 from products.nativescript.tns import Tns
 

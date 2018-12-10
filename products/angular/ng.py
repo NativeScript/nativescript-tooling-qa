@@ -116,5 +116,5 @@ class NG(object):
         """
         Kill ng cli processes.
         """
-        Process.kill_by_commandline(cmdline=Settings.Executables.NG)
+        Process.kill(proc_name='node', proc_cmdline=Settings.Executables.NG)
         Process.kill_by_port(DEFAULT_PORT)
