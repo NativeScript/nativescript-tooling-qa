@@ -22,7 +22,13 @@ class Chrome(object):
         self.driver.get(url)
         Log.info('Open url: ' + url)
 
-    def kill(self, force=True):
+    def kill(self, force=Settings.IS_ON_CI):
+        """
+        Kill Chrome browsers instance(s).
+        :param force: If false it will kill only browsers started by driver.
+        If true it will force kill all chrome processes.
+        By default `force` is set to false on local machines and true on CI (when JENKINS_HOME variable is set).
+        """
         if self.driver is not None:
             self.driver.quit()
         if force:
