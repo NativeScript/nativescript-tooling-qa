@@ -7,6 +7,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.enums.styling_type import StylingType
 from core.settings import Settings
+from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
@@ -145,6 +146,7 @@ class NGNewTests(TnsTest):
             App.update(app_name=NGNewTests.app_name)
 
         # Run android (if webpack is available -> use --bundle)
+        Adb.open_home(id=NGNewTests.emu.id)  # Open home page to be sure we do not find old text
         Tns.run(app_name=NGNewTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
         for text in app_data.texts:
             NGNewTests.emu.wait_for_text(text=text, timeout=60)

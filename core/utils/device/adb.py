@@ -162,3 +162,8 @@ class Adb(object):
             return result.output
         else:
             raise Exception('Failed to get version of {0}.'.format(id))
+
+    @staticmethod
+    def open_home(id):
+        cmd = 'shell am start -a android.intent.action.MAIN -c android.intent.category.HOME'
+        Adb.__run_adb_command(command=cmd, id=id)
