@@ -134,9 +134,9 @@ class Process(object):
                     for c in connections:
                         if c.laddr.port == port:
                             cmd = ''.join(proc.cmdline())
+                            proc.kill()
                             Log.info('Kill processes listening on port {0}.'.format(str(port)))
                             Log.debug('Kill process: ' + cmd)
-                            proc.kill()
             except Exception:
                 pass
 

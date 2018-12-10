@@ -27,10 +27,8 @@ class Chrome(object):
             self.driver.quit()
         if force:
             if Settings.HOST_OS == OSType.OSX:
-                Process.kill(proc_name='Google Chrome')
-            elif Settings.HOST_OS == OSType.LINUX:
-                Process.kill("chrome")
+                Process.kill(proc_name='Google Chrome', proc_cmdline=None)
             else:
-                raise NotImplemented('Kill Chome not implemented for Windows.')
+                Process.kill(proc_name="chrome", proc_cmdline=None)
             Process.kill(proc_name='chromedriver')
         Log.info('Kill Chrome browser!')
