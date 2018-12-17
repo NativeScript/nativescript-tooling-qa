@@ -81,6 +81,7 @@ class Log(object):
         Log.info('Host OS: ' + str(Settings.HOST_OS))
         Log.info('Python: ' + str(Settings.PYTHON_VERSION))
         Log.info('Env: ' + str(Settings.ENV))
+        Log.info('CI: ' + str(Settings.IS_ON_CI))
         Log.info('====================== Packages ======================')
         Log.info('NS CLI: ' + str(Settings.Packages.NS_CLI))
         Log.info('NG CLI: ' + str(Settings.Packages.NG_CLI))

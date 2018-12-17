@@ -3,6 +3,7 @@ import os
 import time
 
 from core.enums.os_type import OSType
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
@@ -162,3 +163,9 @@ class Adb(object):
             return result.output
         else:
             raise Exception('Failed to get version of {0}.'.format(id))
+
+    @staticmethod
+    def open_home(id):
+        cmd = 'shell am start -a android.intent.action.MAIN -c android.intent.category.HOME'
+        Adb.__run_adb_command(command=cmd, id=id)
+        Log.info('Open home screen of {0}.'.format(str(id)))

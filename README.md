@@ -72,7 +72,7 @@ If you wonder how you can contribute, just grab some of the open issues.
 
 Once you are ready with our changes, please run flake8:
 ```bash
-flake8 --max-line-length=120 core core_tests data products tests
+python -m flake8 --max-line-length=120 core core_tests data products tests
 ```
 
 ## Hints, Tips and Tricks

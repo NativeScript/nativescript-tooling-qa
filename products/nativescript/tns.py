@@ -325,5 +325,5 @@ class Tns(object):
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill(proc_name='node')
         else:
-            Process.kill_by_commandline(cmdline=Settings.Executables.TNS)
+            Process.kill(proc_name='node', proc_cmdline=Settings.Executables.TNS)
             Process.kill_by_commandline(cmdline='webpack.js')
