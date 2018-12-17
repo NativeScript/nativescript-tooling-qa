@@ -49,9 +49,9 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
             complete = True
             out, err = process.communicate()
             if out is not None:
-                output = str(out.decode('utf-8')).strip()
+                output = str(out.encode('utf-8')).strip()
             if err is not None:
-                output = os.linesep + str(err.decode('utf-8')).strip()
+                output = os.linesep + str(err.encode('utf-8')).strip()
         except subprocess.TimeoutExpired:
             process.kill()
             if fail_safe:
