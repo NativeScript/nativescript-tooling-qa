@@ -35,9 +35,11 @@ class NGNewTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
+        NG.kill()
         Folder.clean(self.app_folder)
 
     def tearDown(self):
+        NG.kill()
         TnsTest.tearDown(self)
 
     @classmethod
@@ -51,6 +53,7 @@ class NGNewTests(TnsTest):
     def test_010_shared(self):
         NGNewTests.create_and_run(shared=True)
         NG.serve(project=self.app_name)
+        NG.kill()
         NGNewTests.build_release()
         NG.serve(project=self.app_name, prod=True)
 
@@ -143,7 +146,7 @@ class NGNewTests(TnsTest):
 
         # Update the app
         if Settings.ENV != EnvironmentType.LIVE:
-            App.update(app_name=NGNewTests.app_name)
+            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=True)
 
         # Run android (if webpack is available -> use --bundle)
         Adb.open_home(id=NGNewTests.emu.id)  # Open home page to be sure we do not find old text

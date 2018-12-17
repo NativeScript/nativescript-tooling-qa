@@ -35,6 +35,7 @@ class MigrateWebToMobileTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
+        NG.kill()
 
     def tearDown(self):
         NG.kill()
