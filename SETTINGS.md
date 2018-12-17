@@ -1,7 +1,7 @@
 # Test Settings
 In order to run tests some environment variables should be set.
 
-### Building Android and iOS apps
+## Building Android and iOS apps
 
 Android release builds require:
       
@@ -21,7 +21,31 @@ iOS release builds for device require:
     
     DISTRIBUTION_PROVISIONING - Distribution provisioning profile
 
-### Other
+## Update Apps
+
+### Short-hand environment properties
+
+You can set `TEST_ENV` to
+```
+export TEST_ENV=next/rc/something-else-means-LIVE-env
+```
+It is translated to:
+```
+class EnvironmentType(Enum):
+    _init_ = 'value string'
+
+    NEXT = 1, 'next'
+    RC = 2, 'rc'
+    LIVE = 3, 'latest'
+
+    def __str__(self):
+        return self.string
+```
+Some tests use this logic and do not update apps when 
+`Settings.ENV == EnvironmentType.LIVE`
+
+
+## Other Settings
 
 Git settings (optional)
 
