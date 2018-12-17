@@ -36,6 +36,7 @@ class NGNewTests(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         NG.kill()
+        Adb.open_home(id=self.emu.id)  # Open home page to be sure we do not find old text
         Folder.clean(self.app_folder)
 
     def tearDown(self):
@@ -149,7 +150,6 @@ class NGNewTests(TnsTest):
             App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=True)
 
         # Run android (if webpack is available -> use --bundle)
-        Adb.open_home(id=NGNewTests.emu.id)  # Open home page to be sure we do not find old text
         Tns.run(app_name=NGNewTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
         for text in app_data.texts:
             NGNewTests.emu.wait_for_text(text=text, timeout=60)

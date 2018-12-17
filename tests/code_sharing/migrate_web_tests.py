@@ -36,6 +36,7 @@ class MigrateWebToMobileTests(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         NG.kill()
+        Adb.open_home(id=self.emu.id)  # Open home screen just to be sure we do not find text of previous run.
 
     def tearDown(self):
         NG.kill()
@@ -82,9 +83,6 @@ class MigrateWebToMobileTests(TnsTest):
         if (platform == Platform.IOS) and (Settings.HOST_OS == OSType.WINDOWS or Settings.HOST_OS == OSType.LINUX):
             unittest.skip('Can not run iOS tests on Windows or Linux.')
         else:
-            if platform == Platform.ANDROID:
-                Adb.open_home(id=self.emu.id)  # Open home screen just to be sure we do not find text of previous run.
-                # TODO: Implement it for iOS
             ng_app_text = 'auto-generated works!'
             Tns.run(platform=platform, app_name=self.app_name, bundle=bundle, aot=aot, uglify=uglify, emulator=True)
             if platform == Platform.ANDROID:
