@@ -5,8 +5,8 @@ from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
+from core.utils.ci.jenkins import Jenkins
 from core.utils.device.device_manager import DeviceManager
-from core.utils.jenkins import Jenkins
 from data.sync_helpers import SyncHelpers
 from data.templates import Template
 from products.nativescript.tns import Tns
