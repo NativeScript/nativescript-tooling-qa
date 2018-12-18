@@ -40,7 +40,7 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
     # Execute command:
     if wait:
         start = time.time()
-        with open(log_file, "w") as log:
+        with open(log_file, mode='w', encoding='utf-8') as log:
             process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=log)
 
         # Wait until command complete
@@ -49,9 +49,10 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
             complete = True
             out, err = process.communicate()
             if out is not None:
-                output = str(out.decode('utf8').encode('utf8')).strip()
-            if err is not None:
-                output = os.linesep + str(err.decode('utf8').encode('utf8')).strip()
+                if Settings.PYTHON_VERSION < 3:
+                    output = str(out.decode('utf8').encode('utf8')).strip()
+                else:
+                    output = out.decode("utf-8").strip()
         except subprocess.TimeoutExpired:
             process.kill()
             if fail_safe:

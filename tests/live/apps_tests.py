@@ -66,10 +66,10 @@ class SampleAppsTests(TnsTest):
     @parameterized.expand(test_data)
     def test_003_run_android(self, repo, org, text):
         Tns.run_android(app_name=repo, device=self.emu.id, bundle=True, justlaunch=True, wait=True)
-        self.emu.wait_for_text(texts=text, timeout=120)
+        self.emu.wait_for_text(text=text, timeout=120)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Skip iOS core_tests on non macOS machines.')
     @parameterized.expand(test_data)
     def test_004_run_ios(self, repo, org, text):
         Tns.run_ios(app_name=repo, device=self.sim.id, bundle=True, justlaunch=True, wait=True)
-        self.sim.wait_for_text(texts=text, timeout=120)
+        self.sim.wait_for_text(text=text, timeout=120)

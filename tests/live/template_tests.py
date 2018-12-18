@@ -84,11 +84,11 @@ class TemplateTests(TnsTest):
 
         # Run with bundle
         Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True, justlaunch=True, wait=True)
-        assert self.emu.wait_for_text(texts=template_info.texts, timeout=120), \
+        assert self.emu.wait_for_text(text=template_info.text, timeout=120), \
             '{0} does not look OK on {1}.'.format(app_name, self.emu.name)
         if Settings.HOST_OS is OSType.OSX:
             Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True, justlaunch=True, wait=True)
-            assert self.sim.wait_for_text(texts=template_info.texts, timeout=120), \
+            assert self.sim.wait_for_text(text=template_info.text, timeout=120), \
                 '{0} does not look OK on {1}.'.format(app_name, self.sim.name)
 
         # Cleanup
