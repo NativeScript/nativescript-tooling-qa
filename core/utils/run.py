@@ -40,7 +40,7 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
     # Execute command:
     if wait:
         start = time.time()
-        with open(log_file, mode='w', encoding='utf-8') as log:
+        with open(log_file, mode='w') as log:
             process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=log)
 
         # Wait until command complete
