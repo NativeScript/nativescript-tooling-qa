@@ -7,12 +7,10 @@ from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
-RETRY_COUNT = 3
-APP_NAME = Settings.AppName.DEFAULT
-
 
 # noinspection PyMethodMayBeStatic
 class DoctorFunctionalTests(TnsTest):
+    APP_NAME = Settings.AppName.DEFAULT
     ANDROID_HOME = os.environ.get('ANDROID_HOME')
     JAVA_HOME = os.environ.get('JAVA_HOME')
 
@@ -55,14 +53,14 @@ class DoctorFunctionalTests(TnsTest):
             assert "The Python 'six' package is found." in output
 
     def test_200_doctor_show_warning_when_new_components_are_available(self):
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
-        Tns.platform_add_android(app_name=APP_NAME, version='4')
-        App.install_dependency(app_name=APP_NAME, dependency='tns-core-modules', version='4')
+        Tns.create(app_name=self.APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.platform_add_android(app_name=self.APP_NAME, version='4')
+        App.install_dependency(app_name=self.APP_NAME, dependency='tns-core-modules', version='4')
 
-        doctor_result = Tns.doctor(app_name=APP_NAME)
+        doctor_result = Tns.doctor(app_name=self.APP_NAME)
         doctor_output = doctor_result.output
 
-        info_result = Tns.info(app_name=APP_NAME)
+        info_result = Tns.info(app_name=self.APP_NAME)
         info_output = info_result.output
 
         for output in (doctor_output, info_output):

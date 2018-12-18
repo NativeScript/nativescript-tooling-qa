@@ -73,8 +73,3 @@ class App(object):
             Npm.install(folder=app_path)
         if ns_plugins:
             pass
-
-    @staticmethod
-    def ensure_webpack_installed(app_name):
-        if not App.is_dev_dependency(app_name=app_name, dependency='nativescript-dev-webpack'):
-            Npm.install(package=Settings.Packages.WEBPACK, folder=os.path.join(Settings.TEST_RUN_HOME, app_name))

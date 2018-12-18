@@ -9,8 +9,8 @@ from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from data.sync_helpers import SyncHelpers
 from data.templates import Template
-from products.nativescript.app import App
 from products.nativescript.tns import Tns
+from utils.device.adb import Adb
 
 
 class TnsRunNGTests(TnsTest):
@@ -31,7 +31,6 @@ class TnsRunNGTests(TnsTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
-        App.ensure_webpack_installed(app_name=cls.app_name)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -41,6 +40,7 @@ class TnsRunNGTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
+        Adb.open_home(self.emu.id)
 
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.

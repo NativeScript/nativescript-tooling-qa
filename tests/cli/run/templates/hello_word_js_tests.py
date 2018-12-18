@@ -9,8 +9,8 @@ from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from data.sync_helpers import SyncHelpers
 from data.templates import Template
-from products.nativescript.app import App
 from products.nativescript.tns import Tns
+from utils.device.adb import Adb
 
 
 class TnsRunJSTests(TnsTest):
@@ -31,7 +31,6 @@ class TnsRunJSTests(TnsTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        App.ensure_webpack_installed(app_name=cls.app_name)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -41,6 +40,8 @@ class TnsRunJSTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
+        Adb.open_home(self.emu.id)
+
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.
         source_src = os.path.join(self.target_project_dir, 'app')
@@ -59,6 +60,10 @@ class RunAndroidJSTests(TnsRunJSTests):
 
     def test_200_run_android_bundle(self):
         SyncHelpers.sync_hello_world_js(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True)
+
+    def test_210_run_android_bundle_hmr(self):
+        SyncHelpers.sync_hello_world_js(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True,
+                                        hmr=True)
 
     def test_300_run_android_bundle_aot(self):
         SyncHelpers.sync_hello_world_js(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True,
@@ -85,6 +90,10 @@ class RunIOSJSTests(TnsRunJSTests):
 
     def test_200_run_ios_bundle(self):
         SyncHelpers.sync_hello_world_js(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True)
+
+    def test_210_run_ios_bundle_hmr(self):
+        SyncHelpers.sync_hello_world_js(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
+                                        hmr=True)
 
     def test_300_run_ios_bundle_aot(self):
         SyncHelpers.sync_hello_world_js(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
