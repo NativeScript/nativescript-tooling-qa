@@ -65,6 +65,7 @@ class RunAndroidNGTests(TnsRunNGTests):
         SyncHelpers.sync_hello_world_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True,
                                         aot=True)
 
+    @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-angular/issues/1572')
     def test_310_run_android_bundle_uglify(self):
         SyncHelpers.sync_hello_world_ng(app_name=self.app_name, platform=Platform.ANDROID, device=self.emu, bundle=True,
                                         uglify=True)
@@ -86,6 +87,7 @@ class RunIOSNGTests(TnsRunNGTests):
         SyncHelpers.sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
                                         aot=True)
 
+    @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-angular/issues/1572')
     def test_310_run_ios_bundle_uglify(self):
         SyncHelpers.sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS, device=self.sim, bundle=True,
                                         uglify=True)
