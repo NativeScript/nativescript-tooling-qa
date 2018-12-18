@@ -61,7 +61,9 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
                 raise
 
         # Append stderr to output
-        output = output + File.read(path=log_file)
+        stderr = File.read(path=log_file)
+        if len(stderr) > 0:
+            output = output + os.linesep + File.read(path=log_file)
 
         # noinspection PyBroadException
         try:
@@ -80,9 +82,9 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
 
     # Log output of the process
     if wait:
-        Log.log(level=log_level, msg='OUTPUT: ' + os.linesep + output)
+        Log.log(level=log_level, msg='OUTPUT: ' + os.linesep + output + os.linesep)
     else:
-        Log.log(level=log_level, msg='OUTPUT REDIRECTED: ' + log_file)
+        Log.log(level=log_level, msg='OUTPUT REDIRECTED: ' + log_file + os.linesep)
 
     # Construct result
     result = ProcessInfo(cmd=cmd, pid=pid, exit_code=exit_code, output=output, log_file=log_file, complete=complete,

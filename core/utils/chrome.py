@@ -4,6 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.jenkins import Jenkins
 from core.utils.process import Process
 
 
@@ -22,7 +23,7 @@ class Chrome(object):
         self.driver.get(url)
         Log.info('Open url: ' + url)
 
-    def kill(self, force=Settings.IS_ON_CI):
+    def kill(self, force=Jenkins.is_ci()):
         """
         Kill Chrome browsers instance(s).
         :param force: If false it will kill only browsers started by driver.

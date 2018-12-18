@@ -3,11 +3,11 @@ import os
 import time
 
 from core.enums.os_type import OSType
+from core.log.log import Log
 from core.settings import Settings
-from log.log import Log
-from utils.file_utils import File
-from utils.image_utils import ImageUtils
-from utils.run import run
+from core.utils.file_utils import File
+from core.utils.image_utils import ImageUtils
+from core.utils.run import run
 
 
 class Screen(object):

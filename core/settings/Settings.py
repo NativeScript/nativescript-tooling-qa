@@ -39,18 +39,9 @@ def get_project_home():
     return home
 
 
-def detect_ci():
-    jenkins_home = os.environ.get('JENKINS_HOME', '')
-    if jenkins_home == '':
-        return False
-    else:
-        return True
-
-
 HOST_OS = get_os()
 PYTHON_VERSION = get_python_version()
 ENV = get_env()
-IS_ON_CI = detect_ci()
 
 LOG_LEVEL = logging.DEBUG
 
