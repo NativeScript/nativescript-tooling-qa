@@ -59,7 +59,10 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
                 Log.error('Command "{0}" timeout after {1} seconds.'.format(cmd, timeout))
             else:
                 raise
+
+        # Append stderr to output
         output = output + File.read(path=log_file)
+
         # noinspection PyBroadException
         try:
             File.clean(path=log_file)
