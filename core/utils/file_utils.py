@@ -7,6 +7,7 @@ import shutil
 import stat
 
 from core.log.log import Log
+from core.settings import Settings
 
 
 class Folder(object):
@@ -91,7 +92,10 @@ class File(object):
             if log_content:
                 Log.info('Read ' + path + ':')
                 Log.info(output)
-            return output
+            if Settings.PYTHON_VERSION < 3:
+                return str(output.decode('utf8').encode('utf8')).strip()
+            else:
+                return output.decode("utf-8").strip()
         else:
             raise IOError("{0} not found!".format(path))
 

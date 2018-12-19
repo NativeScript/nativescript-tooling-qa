@@ -1,13 +1,12 @@
 import os
 import unittest
 
-from settings import Settings
-from utils.file_utils import File
+from core.settings import Settings
+from core.utils.file_utils import File
 
 
 # noinspection PyMethodMayBeStatic
 class FileUtilsTests(unittest.TestCase):
-
     def test_01_replace(self):
         # Path to files
         base_path = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'utils')
@@ -18,19 +17,19 @@ class FileUtilsTests(unittest.TestCase):
 
         # Create new file (so we don't break original one).
         File.copy(src=old_scss, target=new_scss)
-        assert len(File.read(path=new_scss).split('\n')) == 14, 'Unexpected lines count.'
+        assert len(File.read(path=new_scss).splitlines()) == 14, 'Unexpected lines count.'
 
         # Replace
         File.replace(path=new_scss, old_string=old_value, new_string=new_value)
         content = File.read(path=new_scss)
         assert 'red;' in content, 'Failed to replace string.'
-        assert len(content.split('\n')) == 15, 'Unexpected lines count.'
+        assert len(content.splitlines()) == 15, 'Unexpected lines count.'
 
         # Revert
         File.replace(path=new_scss, old_string=new_value, new_string=old_value)
         content = File.read(path=new_scss)
         assert 'red;' not in content, 'Failed to replace string.'
-        assert len(content.split('\n')) == 14, 'Unexpected lines count.'
+        assert len(content.splitlines()) == 14, 'Unexpected lines count.'
 
         File.clean(path=new_scss)
 

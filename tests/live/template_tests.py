@@ -1,18 +1,18 @@
 import os
 
-from nose_parameterized import parameterized
+from parameterized import parameterized
 
-from const import Colors
 from core.base_test.tns_test import TnsTest
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.settings import Settings
+from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
+from data.const import Colors
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
-from utils.device.adb import Adb
 
 
 # noinspection PyUnusedLocal
