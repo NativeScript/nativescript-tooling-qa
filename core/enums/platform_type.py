@@ -1,10 +1,10 @@
 """
 {N} Platform Type.
 """
-from aenum import Enum
+from aenum import IntEnum
 
 
-class Platform(Enum):
+class Platform(IntEnum):
     _init_ = 'value string'
 
     ANDROID = 1, 'android'

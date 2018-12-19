@@ -1,10 +1,10 @@
 """
 Host OS enum.
 """
-from aenum import Enum
+from aenum import IntEnum
 
 
-class OSType(Enum):
+class OSType(IntEnum):
     _init_ = 'value string'
 
     WINDOWS = 1, 'Windows'

@@ -69,10 +69,10 @@ class CLISmokeTests(TnsTest):
         SyncHelpers.sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim, bundle=True)
 
     @unittest.skipIf(is_pr, 'Skip on PR jobs.')
-    def test_300_build_android_release(self):
+    def test_200_build_android_release(self):
         Tns.build_android(app_name=self.js_app, release=True, bundle=True, aot=True, uglify=True, snapshot=True)
 
     @unittest.skipIf(is_pr, 'Skip on PR jobs.')
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_300_build_ios_release(self):
+    def test_200_build_ios_release(self):
         Tns.build_ios(app_name=self.js_app, for_device=True, release=True, bundle=True, aot=True, uglify=True)
