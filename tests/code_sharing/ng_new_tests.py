@@ -147,7 +147,7 @@ class NGNewTests(TnsTest):
 
         # Update the app
         if Settings.ENV != EnvironmentType.LIVE:
-            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=True)
+            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=False)
 
         # Run android (if webpack is available -> use --bundle)
         Tns.run(app_name=NGNewTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
