@@ -198,6 +198,8 @@ class Device(object):
     # noinspection PyUnresolvedReferences
     def wait_for_main_color(self, color, timeout=30):
         result = Wait.until(lambda: (self.get_main_color() == color).all(), timeout=timeout)
+        if result:
+            Log.info('Main color is: ' + str(color))
         assert result, "Expected main color: " + str(color) + os.linesep + \
                        "Actual main color: " + str(self.get_main_color())
 

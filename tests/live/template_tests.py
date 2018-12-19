@@ -2,6 +2,7 @@ import os
 
 from nose_parameterized import parameterized
 
+from const import Colors
 from core.base_test.tns_test import TnsTest
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
@@ -11,6 +12,7 @@ from core.utils.file_utils import Folder
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
+from utils.device.adb import Adb
 
 
 # noinspection PyUnusedLocal
@@ -75,19 +77,26 @@ class TemplateTests(TnsTest):
         if Settings.ENV != EnvironmentType.LIVE:
             App.update(app_name=app_name)
 
+        # Run Android with bundle
+        Adb.open_home(id=self.emu.id)
+        Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True)
+        self.emu.wait_for_main_color(color=Colors.WHITE)
+        if template_info.texts is not None:
+            for text in template_info.texts:
+                self.emu.wait_for_text(text=text, timeout=30)
+
+        # Run iOS with bundle
+        if Settings.HOST_OS is OSType.OSX:
+            Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True)
+            self.sim.wait_for_main_color(color=Colors.WHITE)
+            if template_info.texts is not None:
+                for text in template_info.texts:
+                    self.sim.wait_for_text(text=text, timeout=30)
+
         # Build in release
         Tns.build_android(app_name=app_name, release=True, bundle=True, aot=True, uglify=True, snapshot=True)
         if Settings.HOST_OS is OSType.OSX:
             Tns.build_ios(app_name=app_name, release=True, for_device=True, bundle=True, aot=True, uglify=True)
-
-        # Run with bundle
-        Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True, justlaunch=True, wait=True)
-        for text in template_info.texts:
-            self.emu.wait_for_text(text=text, timeout=30)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True, justlaunch=True, wait=True)
-            for text in template_info.texts:
-                self.sim.wait_for_text(text=text, timeout=30)
 
         # Cleanup
         Folder.clean(local_path)

@@ -19,6 +19,7 @@ class Template(object):
     dr_str = ['Page content goes here']
     tn_str = ['Item 1']
     login = ['Login']
+    auth = ['Your Company Name']
 
     # Blank templates
     BLANK_JS = gen_template_info(name='template-blank', app_type=AppType.JS)
@@ -54,9 +55,9 @@ class Template(object):
     TAB_NAVIGATION_NG = gen_template_info(name='template-tab-navigation-ng', app_type=AppType.NG, texts=tn_str)
 
     # Enterprise auth templates
-    ENTERPRISE_AUTH_JS = gen_template_info(name='template-enterprise-auth', app_type=AppType.JS, texts=login)
-    ENTERPRISE_AUTH_TS = gen_template_info(name='template-enterprise-auth-ts', app_type=AppType.TS, texts=login)
-    ENTERPRISE_AUTH_NG = gen_template_info(name='template-enterprise-auth-ng', app_type=AppType.NG, texts=login)
+    ENTERPRISE_AUTH_JS = gen_template_info(name='template-enterprise-auth', app_type=AppType.JS, texts=auth)
+    ENTERPRISE_AUTH_TS = gen_template_info(name='template-enterprise-auth-ts', app_type=AppType.TS, texts=auth)
+    ENTERPRISE_AUTH_NG = gen_template_info(name='template-enterprise-auth-ng', app_type=AppType.NG, texts=auth)
 
     # Health templates
     HEALTH_SURVEY_NG = gen_template_info(name='template-health-survey-ng', app_type=AppType.NG, texts=login)
