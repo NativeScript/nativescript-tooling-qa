@@ -9,6 +9,7 @@ from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from data.sync_helpers import SyncHelpers
+from data.templates import Template
 from products.nativescript.tns import Tns
 
 
