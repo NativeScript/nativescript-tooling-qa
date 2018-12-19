@@ -1,10 +1,10 @@
 """
 Application type enum.
 """
-from aenum import Enum
+from aenum import IntEnum
 
 
-class AppType(Enum):
+class AppType(IntEnum):
     _init_ = 'value string'
 
     JS = 1, 'js'

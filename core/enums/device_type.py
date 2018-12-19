@@ -1,10 +1,10 @@
 """
 Device type enum.
 """
-from aenum import Enum
+from aenum import IntEnum
 
 
-class DeviceType(Enum):
+class DeviceType(IntEnum):
     _init_ = 'value string'
 
     EMU = 1, 'emulator'

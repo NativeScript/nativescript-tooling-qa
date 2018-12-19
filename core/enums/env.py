@@ -1,10 +1,10 @@
 """
 Environment type.
 """
-from aenum import Enum
+from aenum import IntEnum
 
 
-class EnvironmentType(Enum):
+class EnvironmentType(IntEnum):
     _init_ = 'value string'
 
     NEXT = 1, 'next'

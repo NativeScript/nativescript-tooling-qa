@@ -1,10 +1,10 @@
 """
 Styling type enum.
 """
-from aenum import Enum
+from aenum import IntEnum
 
 
-class StylingType(Enum):
+class StylingType(IntEnum):
     _init_ = 'value string'
 
     CSS = 1, 'css'
