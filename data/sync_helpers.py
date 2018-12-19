@@ -1,13 +1,13 @@
 import os
 
+from core.enums.app_type import AppType
+from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
-from enums.app_type import AppType
-from enums.platform_type import Platform
-from log.log import Log
 from products.nativescript.tns import Tns
 
 

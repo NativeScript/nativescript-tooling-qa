@@ -9,6 +9,7 @@ from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from data.sync_helpers import SyncHelpers
+from products.nativescript.tns import Tns
 
 
 class TnsRunMasterDetailTests(TnsTest):
@@ -28,13 +29,13 @@ class TnsRunMasterDetailTests(TnsTest):
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
         # Create app
-        # Tns.create(app_name=cls.app_name, template=Template.MASTER_DETAIL_NG.repo, update=True)
-        # Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        # if Settings.HOST_OS is OSType.OSX:
-        #    Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
+        Tns.create(app_name=cls.app_name, template=Template.MASTER_DETAIL_NG.repo, update=True)
+        Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        if Settings.HOST_OS is OSType.OSX:
+            Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
         # Copy TestApp to data folder.
-        # Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
+        Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):
         TnsTest.setUp(self)
