@@ -93,9 +93,9 @@ class File(object):
                 Log.info('Read ' + path + ':')
                 Log.info(output)
             if Settings.PYTHON_VERSION < 3:
-                return str(output.decode('utf8').encode('utf8')).strip()
+                return str(output.decode('utf8').encode('utf8'))
             else:
-                return output.decode("utf-8").strip()
+                return output
         else:
             raise IOError("{0} not found!".format(path))
 
