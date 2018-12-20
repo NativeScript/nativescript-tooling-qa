@@ -16,7 +16,7 @@ class Template(object):
     hw_js = ['TAP']
     hw_ng = ['Ter Stegen']
     md_str = ['BMW 5 Series']
-    dr_str = ['Page content goes here']
+    dr_str = ['Home']
     tn_str = ['Item 1']
     login = ['Login']
     auth = ['Your Company Name']

@@ -9,11 +9,11 @@ from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
+from core.utils.gradle import Gradle
 from data.const import Colors
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
-from utils.gradle import Gradle
 
 
 # noinspection PyUnusedLocal
