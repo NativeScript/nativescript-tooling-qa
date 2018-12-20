@@ -49,6 +49,7 @@ class TnsTest(unittest.TestCase):
     def tearDown(self):
         # Kill processes
         Tns.kill()
+        Gradle.kill()
         Process.kill_all_in_context()
 
         # Analise test result
