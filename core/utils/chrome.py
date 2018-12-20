@@ -4,7 +4,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.jenkins import Jenkins
+from core.utils.ci.jenkins import Jenkins
 from core.utils.process import Process
 
 
