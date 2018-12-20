@@ -77,7 +77,7 @@ class TemplateTests(TnsTest):
         if Settings.ENV != EnvironmentType.LIVE:
             App.update(app_name=app_name)
 
-        # Run Android with bundle
+        # Run Android
         Adb.open_home(id=self.emu.id)
         Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True)
         if template_info.texts is not None:
@@ -86,7 +86,7 @@ class TemplateTests(TnsTest):
         else:
             self.emu.wait_for_main_color(color=Colors.WHITE)
 
-        # Run iOS with bundle
+        # Run iOS
         if Settings.HOST_OS is OSType.OSX:
             Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True)
             if template_info.texts is not None:
@@ -94,11 +94,6 @@ class TemplateTests(TnsTest):
                     self.sim.wait_for_text(text=text, timeout=30)
             else:
                 self.sim.wait_for_main_color(color=Colors.WHITE)
-
-        # Build in release
-        Tns.build_android(app_name=app_name, release=True, bundle=True, aot=True, uglify=True, snapshot=True)
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.build_ios(app_name=app_name, release=True, for_device=True, bundle=True, aot=True, uglify=True)
 
         # Cleanup
         Folder.clean(local_path)
