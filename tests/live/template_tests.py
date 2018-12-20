@@ -80,18 +80,20 @@ class TemplateTests(TnsTest):
         # Run Android with bundle
         Adb.open_home(id=self.emu.id)
         Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True)
-        self.emu.wait_for_main_color(color=Colors.WHITE)
         if template_info.texts is not None:
             for text in template_info.texts:
                 self.emu.wait_for_text(text=text, timeout=30)
+        else:
+            self.emu.wait_for_main_color(color=Colors.WHITE)
 
         # Run iOS with bundle
         if Settings.HOST_OS is OSType.OSX:
             Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True)
-            self.sim.wait_for_main_color(color=Colors.WHITE)
             if template_info.texts is not None:
                 for text in template_info.texts:
                     self.sim.wait_for_text(text=text, timeout=30)
+            else:
+                self.sim.wait_for_main_color(color=Colors.WHITE)
 
         # Build in release
         Tns.build_android(app_name=app_name, release=True, bundle=True, aot=True, uglify=True, snapshot=True)
