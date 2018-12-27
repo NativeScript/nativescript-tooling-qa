@@ -42,10 +42,10 @@ class Screen(object):
         """
         actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, "host_{0}.png".format(time.time()))
         if File.exists(actual_image_path):
-            File.clean(actual_image_path)
+            File.delete(actual_image_path)
         Screen.save_screen(path=actual_image_path)
         text = ImageUtils.get_text(image_path=actual_image_path)
-        File.clean(actual_image_path)
+        File.delete(actual_image_path)
         return text
 
     @staticmethod

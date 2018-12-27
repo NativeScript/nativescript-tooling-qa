@@ -33,5 +33,5 @@ class AdbTests(TnsTest):
 
     def test_02_adb_get_screen(self):
         path = os.path.join(Settings.TEST_OUT_HOME, 'temp.png')
-        File.clean(path)
+        File.delete(path)
         Adb.get_screen(id=self.emu.id, file_path=path)

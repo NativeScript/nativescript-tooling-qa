@@ -7,7 +7,8 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.ci.jenkins import Jenkins
 from core.utils.device.device_manager import DeviceManager
-from data.sync_helpers import SyncHelpers
+from data.sync.hello_world_js import sync_hello_world_js
+from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -55,18 +56,18 @@ class CLISmokeTests(TnsTest):
         TnsTest.tearDownClass()
 
     def test_001_run_android_js(self):
-        SyncHelpers.sync_hello_world_js(app_name=self.js_app, platform=Platform.ANDROID, device=self.emu)
+        sync_hello_world_js(app_name=self.js_app, platform=Platform.ANDROID, device=self.emu)
 
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_002_run_ios_js(self):
-        SyncHelpers.sync_hello_world_js(app_name=self.js_app, platform=Platform.IOS, device=self.sim)
+        sync_hello_world_js(app_name=self.js_app, platform=Platform.IOS, device=self.sim)
 
     def test_100_run_android_ng(self):
-        SyncHelpers.sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu, bundle=True)
+        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu, bundle=True)
 
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_101_run_ios_ng(self):
-        SyncHelpers.sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim, bundle=True)
+        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim, bundle=True)
 
     @unittest.skipIf(is_pr, 'Skip on PR jobs.')
     def test_200_build_android_release(self):

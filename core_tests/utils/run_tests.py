@@ -82,7 +82,7 @@ class RunTests(unittest.TestCase):
         version = '5.0.0'
         tarball = '{0}-{1}.tgz'.format(package, version)
         path = os.path.join(Settings.TEST_SUT_HOME, tarball)
-        File.clean(path)
+        File.delete(path)
         result = run(cmd='npm pack https://registry.npmjs.org/{0}/-/{1}'.format(package, tarball),
                      cwd=Settings.TEST_SUT_HOME, wait=True)
         assert File.exists(path)

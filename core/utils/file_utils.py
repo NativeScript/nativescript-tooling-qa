@@ -93,6 +93,7 @@ class File(object):
                 Log.info('Read ' + path + ':')
                 Log.info(output)
             if Settings.PYTHON_VERSION < 3:
+                # noinspection PyUnresolvedReferences
                 return str(output.decode('utf8').encode('utf8'))
             else:
                 return output
@@ -126,11 +127,18 @@ class File(object):
         Log.info('Copy {0} to {1}'.format(os.path.abspath(src), os.path.abspath(target)))
 
     @staticmethod
-    def clean(path):
+    def delete(path):
         if os.path.isfile(path):
             os.remove(path)
         else:
             Log.debug('Error: %s file not found' % path)
+
+    @staticmethod
+    def clean(path):
+        if os.path.isfile(path):
+            File.write(path, text='')
+        else:
+            raise FileNotFoundError('Error: %s file not found' % path)
 
     @staticmethod
     def find_by_extension(folder, extension):
