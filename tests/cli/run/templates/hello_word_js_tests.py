@@ -8,7 +8,7 @@ from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
-from data.sync_helpers import SyncHelpers
+from data.sync.hello_world_js import sync_hello_world_js
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -56,44 +56,44 @@ class TnsRunJSTests(TnsTest):
 
 class RunAndroidJSTests(TnsRunJSTests):
     def test_100_run_android(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu)
 
     def test_200_run_android_bundle(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True)
 
     def test_210_run_android_bundle_hmr(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, hmr=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, hmr=True)
 
     def test_300_run_android_bundle_aot(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
 
     def test_310_run_android_bundle_uglify(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
 
     def test_320_run_android_bundle_aot_and_uglify(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
 
     def test_390_run_android_bundle_aot_uglify_snapshot(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu,
-                                        bundle=True, aot=True, uglify=True, snapshot=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu,
+                            bundle=True, aot=True, uglify=True, snapshot=True)
 
 
 @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
 class RunIOSJSTests(TnsRunJSTests):
     def test_100_run_ios(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.IOS, self.sim)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim)
 
     def test_200_run_ios_bundle(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True)
 
     def test_210_run_ios_bundle_hmr(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, hmr=True)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, hmr=True)
 
     def test_300_run_ios_bundle_aot(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
 
     def test_310_run_ios_bundle_uglify(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
 
     def test_320_run_ios_bundle_aot_and_uglify(self):
-        SyncHelpers.sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)

@@ -31,7 +31,7 @@ class FileUtilsTests(unittest.TestCase):
         assert 'red;' not in content, 'Failed to replace string.'
         assert len(content.splitlines()) == 14, 'Unexpected lines count.'
 
-        File.clean(path=new_scss)
+        File.delete(path=new_scss)
 
 
 if __name__ == '__main__':

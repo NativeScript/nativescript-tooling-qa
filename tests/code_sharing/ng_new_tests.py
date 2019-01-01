@@ -92,12 +92,12 @@ class NGNewTests(TnsTest):
     @staticmethod
     def create_and_run(shared=True, sample=False, theme=True, style=None, prefix=None, source_dir=None, webpack=True):
         # Get test data based on app type
-        app_data = Apps.SHEMATICS_NS
+        app_data = Apps.SCHEMATICS_NS
         if shared:
             if sample:
-                app_data = Apps.SHEMATICS_SHARED_SAMPLE
+                app_data = Apps.SCHEMATICS_SHARED_SAMPLE
             else:
-                app_data = Apps.SHEMATICS_SHARED
+                app_data = Apps.SCHEMATICS_SHARED
 
         # Create shared project with sample data
         result = NG.new(collection=NS_SCHEMATICS, project=NGNewTests.app_name, theme=theme, shared=shared,

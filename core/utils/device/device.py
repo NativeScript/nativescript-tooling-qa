@@ -55,8 +55,8 @@ class Device(object):
         if self.type is DeviceType.IOS:
             is_visible = IDevice.is_text_visible(id=self.id, text=text)
 
-        # Retry find with ORC if macOS automation fails
-        if not is_visible:
+        # Retry find with ORC (only for IOS, for example if macOS automation fails)
+        if not is_visible and (self.type is DeviceType.SIM or self.type is DeviceType.IOS):
             actual_text = self.get_text()
             if text in actual_text:
                 is_visible = True
@@ -68,7 +68,7 @@ class Device(object):
     def get_text(self):
         img_name = "actual_{0}_{1}.png".format(self.id, time.time())
         actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, img_name)
-        File.clean(actual_image_path)
+        File.delete(actual_image_path)
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
         text = ImageUtils.get_text(image_path=actual_image_path)
         if Settings.PYTHON_VERSION < 3:
@@ -100,7 +100,7 @@ class Device(object):
         :param path: Path to image that will be saved.
         :param log_level: Log level.
         """
-        File.clean(path)
+        File.delete(path)
         base_path, file_name = os.path.split(path)
         Folder.create(base_path)
 

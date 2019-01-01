@@ -96,7 +96,7 @@ class Simctl(object):
 
     @staticmethod
     def get_screen(id, file_path):
-        File.clean(file_path)
+        File.delete(file_path)
         result = Simctl.__run_simctl_command('io {0} screenshot {1}'.format(id, file_path))
         assert result.exit_code == 0, 'Failed to get screenshot of {0}'.format(id)
         assert File.exists(file_path), 'Failed to get screenshot of {0}'.format(id)

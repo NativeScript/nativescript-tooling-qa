@@ -8,7 +8,7 @@ from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
-from data.sync_helpers import SyncHelpers
+from data.sync.master_details_ng import sync_master_detail_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -56,36 +56,36 @@ class TnsRunMasterDetailTests(TnsTest):
 
 class RunAndroidMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_100_run_android(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu)
+        sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu)
 
     def test_200_run_android_bundle(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True)
+        sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True)
 
     def test_300_run_android_bundle_aot(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
+        sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
 
     @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-angular/issues/1572')
     def test_310_run_android_bundle_uglify(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
+        sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
 
     def test_320_run_android_bundle_aot_and_uglify(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
+        sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
 
 
 @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
 class RunIOSMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_100_run_ios(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.IOS, self.sim)
+        sync_master_detail_ng(self.app_name, Platform.IOS, self.sim)
 
     def test_200_run_ios_bundle(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True)
+        sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True)
 
     def test_300_run_ios_bundle_aot(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
+        sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
 
     @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-angular/issues/1572')
     def test_310_run_ios_bundle_uglify(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
+        sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
 
     def test_320_run_ios_bundle_aot_and_uglify(self):
-        SyncHelpers.sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)
+        sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)

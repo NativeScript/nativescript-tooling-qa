@@ -108,7 +108,7 @@ class Adb(object):
     @staticmethod
     def get_page_source(id):
         temp_file = os.path.join(Settings.TEST_OUT_HOME, 'window_dump.xml')
-        File.clean(temp_file)
+        File.delete(temp_file)
         Adb.__run_adb_command(command='shell rm /sdcard/window_dump.xml', id=id)
         result = Adb.__run_adb_command(command='shell uiautomator dump', id=id)
         if 'UI hierchary dumped to' in result.output:
@@ -146,7 +146,7 @@ class Adb(object):
 
     @staticmethod
     def get_screen(id, file_path):
-        File.clean(path=file_path)
+        File.delete(path=file_path)
         if Settings.HOST_OS == OSType.WINDOWS:
             Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path, id=id, log_level=logging.DEBUG)
         else:

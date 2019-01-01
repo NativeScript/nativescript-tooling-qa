@@ -186,7 +186,7 @@ class Helpers(object):
         result.build_incremental = build_incremental / retry_count
 
         # Save to results file
-        File.clean(path=result_file)
+        File.delete(path=result_file)
         result_json = json.dumps(result, default=lambda o: o.__dict__, sort_keys=True, indent=4)
         File.write(path=result_file, text=str(result_json))
 
