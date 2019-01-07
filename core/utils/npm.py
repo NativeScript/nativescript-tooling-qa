@@ -17,7 +17,7 @@ class Npm(object):
         Log.info(command)
         result = run(cmd=command, cwd=folder, wait=True, timeout=300)
         if verify:
-            assert result.exit_code is 0, "`npm " + command + "` exited with non zero exit code!: \n" + result.output
+            assert result.exit_code is 0, '" + command + " exited with non zero exit code!: \n' + result.output
         Log.debug(result.output)
         return result.output.strip()
 
