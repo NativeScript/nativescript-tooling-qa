@@ -59,7 +59,8 @@ SSH_CLONE = os.environ.get('SSH_CLONE', False)
 
 def resolve_package(name, variable, default=str(ENV)):
     tag = os.environ.get(variable, default)
-    if '.tgz' not in tag:
+    # For local packages (tgz files) or NG nightly builds (angular/cli-builds) just return value of the env. variable
+    if '.tgz' not in tag and '-builds' not in tag:
         return name + '@' + tag
     else:
         return tag
@@ -74,16 +75,21 @@ class Executables(object):
 
 # noinspection SpellCheckingInspection
 class Packages(object):
-    NS_CLI = resolve_package(name='nativescript', variable='CLI_PATH')
-    NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable='NATIVESCRIPT_SCHEMATICS')
-    NG_CLI = resolve_package(name='@angular/cli', variable='NG_CLI_PATH', default='latest')
-    ANDROID = resolve_package(name='tns-android', variable='ANDROID_PATH')
-    IOS = resolve_package(name='tns-ios', variable='IOS_PATH')
-    MODULES = resolve_package(name='tns-core-modules', variable='MODULES_PATH')
-    ANGULAR = resolve_package(name='nativescript-angular', variable='ANGULAR')
-    WEBPACK = resolve_package(name='nativescript-dev-webpack', variable='WEBPACK')
-    TYPESCRIPT = resolve_package(name='nativescript-dev-typescript', variable='TYPESCRIPT')
-    SASS = resolve_package(name='nativescript-dev-sass', variable='SASS')
+    # CLIs
+    NS_CLI = resolve_package(name='nativescript', variable='nativescript_cli')
+    NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable='nativescript_schematics')
+    NG_CLI = resolve_package(name='@angular/cli', variable='ng_cli', default='latest')
+
+    # Runtimes
+    ANDROID = resolve_package(name='tns-android', variable='tns_android')
+    IOS = resolve_package(name='tns-ios', variable='tns_ios')
+
+    # Modules and Plugins
+    MODULES = resolve_package(name='tns-core-modules', variable='tns_core_modules')
+    ANGULAR = resolve_package(name='nativescript-angular', variable='nativescript_angular')
+    WEBPACK = resolve_package(name='nativescript-dev-webpack', variable='nativescript_dev_webpack')
+    TYPESCRIPT = resolve_package(name='nativescript-dev-typescript', variable='nativescript_dev_typescript')
+    SASS = resolve_package(name='nativescript-dev-sass', variable='nativescript_dev_sass')
 
 
 # noinspection SpellCheckingInspection
