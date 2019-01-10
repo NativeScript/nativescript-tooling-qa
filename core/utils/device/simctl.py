@@ -100,3 +100,15 @@ class Simctl(object):
         result = Simctl.__run_simctl_command('io {0} screenshot {1}'.format(id, file_path))
         assert result.exit_code == 0, 'Failed to get screenshot of {0}'.format(id)
         assert File.exists(file_path), 'Failed to get screenshot of {0}'.format(id)
+
+    @staticmethod
+    def erase(simulator_info):
+        result = Simctl.__run_simctl_command('erase {0}'.format(simulator_info.id))
+        assert result.exit_code == 0, 'Failed to erase {0}'.format(simulator_info.name)
+        Log.info('Erase {0}.'.format(simulator_info.name))
+
+    @staticmethod
+    def erase_all():
+        result = Simctl.__run_simctl_command('erase all')
+        assert result.exit_code == 0, 'Failed to erase all iOS Simulators.'
+        Log.info('Erase all iOS Simulators.')
