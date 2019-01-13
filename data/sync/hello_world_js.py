@@ -52,7 +52,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
         css_change = Changes.TSHelloWord.CSS
     else:
         raise ValueError('Invalid app_type value.')
-    result = Tns.run(app_name=app_name, platform=platform, device=device.id, wait=False,
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False,
                      bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot)
     __verify_snapshot_skipped(snapshot, result)
 

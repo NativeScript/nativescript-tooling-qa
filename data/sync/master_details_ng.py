@@ -14,8 +14,7 @@ from products.nativescript.tns import Tns
 
 
 def sync_master_detail_ng(app_name, platform, device, bundle=False, uglify=False, aot=False):
-    Tns.run(app_name=app_name, platform=platform, device=device.id, wait=False, bundle=bundle, aot=aot,
-            uglify=uglify)
+    Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, aot=aot, uglify=uglify)
     # Verify it looks properly
     device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text, timeout=60, retry_delay=5)
     device.wait_for_text(text=Changes.MasterDetailNG.HTML.old_text, timeout=30)
