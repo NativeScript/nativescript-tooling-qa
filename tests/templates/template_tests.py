@@ -8,8 +8,9 @@ from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.gradle import Gradle
+from core.utils.npm import Npm
 from data.const import Colors
 from data.templates import Template
 from products.nativescript.app import App
@@ -25,31 +26,28 @@ class TemplateTests(TnsTest):
     sim = None
 
     test_data = [
-        [Template.HELLO_WORLD_JS.name, Template.HELLO_WORLD_JS],
-        [Template.HELLO_WORLD_TS.name, Template.HELLO_WORLD_TS],
-        [Template.HELLO_WORLD_NG.name, Template.HELLO_WORLD_NG],
         [Template.BLANK_JS.name, Template.BLANK_JS],
         [Template.BLANK_TS.name, Template.BLANK_TS],
         [Template.BLANK_NG.name, Template.BLANK_NG],
+        [Template.VUE_BLANK.name, Template.VUE_BLANK],
         [Template.DRAWER_NAVIGATION_JS.name, Template.DRAWER_NAVIGATION_JS],
         [Template.DRAWER_NAVIGATION_TS.name, Template.DRAWER_NAVIGATION_TS],
         [Template.DRAWER_NAVIGATION_NG.name, Template.DRAWER_NAVIGATION_NG],
-        [Template.TAB_NAVIGATION_JS.name, Template.TAB_NAVIGATION_JS],
-        [Template.TAB_NAVIGATION_TS.name, Template.TAB_NAVIGATION_TS],
-        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG],
-        [Template.MASTER_DETAIL_JS.name, Template.MASTER_DETAIL_JS],
-        [Template.MASTER_DETAIL_TS.name, Template.MASTER_DETAIL_TS],
-        [Template.MASTER_DETAIL_NG.name, Template.MASTER_DETAIL_NG],
+        [Template.HEALTH_SURVEY_NG.name, Template.HEALTH_SURVEY_NG],
+        [Template.HELLO_WORLD_JS.name, Template.HELLO_WORLD_JS],
+        [Template.HELLO_WORLD_TS.name, Template.HELLO_WORLD_TS],
+        [Template.HELLO_WORLD_NG.name, Template.HELLO_WORLD_NG],
         [Template.MASTER_DETAIL_KINVEY_JS.name, Template.MASTER_DETAIL_KINVEY_JS],
         [Template.MASTER_DETAIL_KINVEY_TS.name, Template.MASTER_DETAIL_KINVEY_TS],
         [Template.MASTER_DETAIL_KINVEY_NG.name, Template.MASTER_DETAIL_KINVEY_NG],
-        [Template.ENTERPRISE_AUTH_JS.name, Template.ENTERPRISE_AUTH_JS],
-        [Template.ENTERPRISE_AUTH_TS.name, Template.ENTERPRISE_AUTH_TS],
-        [Template.ENTERPRISE_AUTH_NG.name, Template.ENTERPRISE_AUTH_NG],
-        [Template.HEALTH_SURVEY_NG.name, Template.HEALTH_SURVEY_NG],
+        [Template.MASTER_DETAIL_JS.name, Template.MASTER_DETAIL_JS],
+        [Template.MASTER_DETAIL_TS.name, Template.MASTER_DETAIL_TS],
+        [Template.MASTER_DETAIL_NG.name, Template.MASTER_DETAIL_NG],
+        [Template.VUE_MASTER_DETAIL.name, Template.VUE_MASTER_DETAIL],
         [Template.PATIENT_CARE_NG.name, Template.PATIENT_CARE_NG],
-        [Template.VUE_BLANK.name, Template.VUE_BLANK],
-        [Template.VUE_MASTER_DETAIL.name, Template.VUE_MASTER_DETAIL]
+        [Template.TAB_NAVIGATION_JS.name, Template.TAB_NAVIGATION_JS],
+        [Template.TAB_NAVIGATION_TS.name, Template.TAB_NAVIGATION_TS],
+        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG]
     ]
 
     @classmethod
@@ -71,11 +69,17 @@ class TemplateTests(TnsTest):
 
     @parameterized.expand(test_data)
     def test(self, template_name, template_info):
+        # Ensure template local package
+        template_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates', 'packages', template_name)
+        out_file = os.path.join(Settings.TEST_SUT_HOME, template_name + '.tgz')
+        Npm.pack(folder=template_folder, output_file=out_file)
+        assert File.exists(out_file), "Failed to pack template: " + template_name
+
         # Create app
         app_name = template_info.name.replace('template-', '')
-        local_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
-        Tns.create(app_name=app_name, template=template_info.repo, update=False)
-        if Settings.ENV != EnvironmentType.LIVE:
+        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        Tns.create(app_name=app_name, template=template_info.local_package, update=False)
+        if Settings.ENV != EnvironmentType.LIVE and Settings.ENV != EnvironmentType.PR:
             App.update(app_name=app_name)
 
         # Run Android
@@ -99,4 +103,4 @@ class TemplateTests(TnsTest):
         # Cleanup
         Tns.kill()
         Gradle.kill()
-        Folder.clean(local_path)
+        Folder.clean(app_path)

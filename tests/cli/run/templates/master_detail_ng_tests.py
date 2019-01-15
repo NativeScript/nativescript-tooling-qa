@@ -30,7 +30,7 @@ class TnsRunMasterDetailTests(TnsTest):
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
         # Create app
-        Tns.create(app_name=cls.app_name, template=Template.MASTER_DETAIL_NG.repo, update=True)
+        Tns.create(app_name=cls.app_name, template=Template.MASTER_DETAIL_NG.local_package, update=True)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
