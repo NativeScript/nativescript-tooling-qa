@@ -7,7 +7,12 @@ from core.utils.file_utils import File
 
 # noinspection PyMethodMayBeStatic
 class FileUtilsTests(unittest.TestCase):
-    def test_01_replace(self):
+
+    def test_01_read(self):
+        logs = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'utils', 'file.txt')
+        assert 'Compiled successfully' in File.read(logs)
+
+    def test_02_replace(self):
         # Path to files
         base_path = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'utils')
         old_scss = os.path.join(base_path, 'app.android.scss')
