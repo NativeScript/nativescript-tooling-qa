@@ -28,6 +28,8 @@ def get_env():
         return EnvironmentType.NEXT
     elif 'rc' in env:
         return EnvironmentType.RC
+    elif 'pr' in env:
+        return EnvironmentType.LIVE
     else:
         return EnvironmentType.LIVE
 

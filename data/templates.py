@@ -1,14 +1,13 @@
 import os
 
 from core.enums.app_type import AppType
-from core.settings.Settings import NS_GIT_ORG, TEST_SUT_HOME
+from core.settings.Settings import TEST_SUT_HOME
 from products.nativescript.template_info import TemplateInfo
 
 
 def gen_template_info(name, app_type, texts=None):
-    return TemplateInfo(name=name, repo='https://github.com/{0}/{1}'.format(NS_GIT_ORG, name),
-                        local_package=os.path.join(TEST_SUT_HOME, '{0}.tgz'.format(name)),
-                        app_type=app_type, texts=texts)
+    return TemplateInfo(name=name, local_package=os.path.join(TEST_SUT_HOME, '{0}.tgz'.format(name)), app_type=app_type,
+                        texts=texts)
 
 
 class Template(object):
@@ -19,7 +18,9 @@ class Template(object):
     dr_str = ['Home']
     tn_str = ['Item 1']
     login = ['Login']
-    auth = ['Your Company Name']
+
+    # Templates repo
+    REPO = 'https://github.com/NativeScript/nativescript-app-templates'
 
     # Blank templates
     BLANK_JS = gen_template_info(name='template-blank', app_type=AppType.JS)
@@ -53,11 +54,6 @@ class Template(object):
     TAB_NAVIGATION_JS = gen_template_info(name='template-tab-navigation', app_type=AppType.JS, texts=tn_str)
     TAB_NAVIGATION_TS = gen_template_info(name='template-tab-navigation-ts', app_type=AppType.TS, texts=tn_str)
     TAB_NAVIGATION_NG = gen_template_info(name='template-tab-navigation-ng', app_type=AppType.NG, texts=tn_str)
-
-    # Enterprise auth templates
-    ENTERPRISE_AUTH_JS = gen_template_info(name='template-enterprise-auth', app_type=AppType.JS, texts=auth)
-    ENTERPRISE_AUTH_TS = gen_template_info(name='template-enterprise-auth-ts', app_type=AppType.TS, texts=auth)
-    ENTERPRISE_AUTH_NG = gen_template_info(name='template-enterprise-auth-ng', app_type=AppType.NG, texts=auth)
 
     # Health templates
     HEALTH_SURVEY_NG = gen_template_info(name='template-health-survey-ng', app_type=AppType.NG, texts=login)

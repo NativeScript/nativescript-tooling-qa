@@ -3,6 +3,7 @@ import os
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.ci.jenkins import Jenkins
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
@@ -37,17 +38,22 @@ def __get_templates():
     Clone hello-world templates and pack them as local npm packages.
     Hints: Creating project from local npm package is much faster than from GitHub repo.
     """
-    apps = [Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS, Template.HELLO_WORLD_NG]
+    branch = 'master'
+    if Jenkins.is_pr():
+        branch = Jenkins.get_pr_info().source_branch
+    local_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates')
+    Git.clone(repo_url=Template.REPO, branch=branch, local_folder=local_folder)
+
+    apps = [Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS, Template.HELLO_WORLD_NG, Template.MASTER_DETAIL_NG]
     for app in apps:
-        template_name = app.repo.split('/')[-1]
-        local_folder = os.path.join(Settings.TEST_SUT_HOME, template_name)
+        template_name = app.name
+        template_folder = os.path.join(local_folder, 'packages', template_name)
         out_file = os.path.join(Settings.TEST_SUT_HOME, template_name + '.tgz')
-        Git.clone(repo_url=app.repo, local_folder=local_folder)
-        Npm.pack(folder=local_folder, output_file=out_file)
+        Npm.pack(folder=template_folder, output_file=out_file)
         if File.exists(out_file):
             app.path = out_file
         else:
-            raise IOError("Failed to clone and pack template: " + app.repo)
+            raise IOError("Failed to clone and pack template: " + template_name)
 
 
 def __get_packages():
@@ -127,15 +133,15 @@ def __install_schematics():
     Npm.install(package=Settings.Packages.NS_SCHEMATICS, folder=Settings.TEST_RUN_HOME)
 
 
-def prepare(shared=False):
+def prepare(clone_templates=True, install_ng_cli=False):
     Log.info('================== Prepare Test Run ==================')
     __cleanup()
     __get_packages()
     __install_ns_cli()
-    if shared:
+    if install_ng_cli:
         __install_ng_cli()
         __install_schematics()
-    else:
+    if clone_templates:
         __get_templates()
 
     Log.settings()

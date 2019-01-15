@@ -14,11 +14,10 @@ class Npm(object):
     @staticmethod
     def __run_npm_command(cmd, folder=Settings.TEST_RUN_HOME, verify=True):
         command = 'npm {0}'.format(cmd)
-        Log.info(command)
+        Log.info(command + " (at " + folder + ").")
         result = run(cmd=command, cwd=folder, wait=True, timeout=300)
         if verify:
             assert result.exit_code is 0, '" + command + " exited with non zero exit code!: \n' + result.output
-        Log.debug(result.output)
         return result.output.strip()
 
     @staticmethod
