@@ -1,12 +1,18 @@
 # Setup 
 
+## Install Xcode Build Tool
+
+```bash
+xcode-select --install
+```
+
 ## Install Tesseract
 
 In order to get OCR features working you need to install `tesseract`.
 
 **macOS**
 ```bash
-brew install tesseract --all-languages
+brew install tesseract --with-all-languages
 ```
 
 **Linux**
@@ -39,4 +45,3 @@ System Preferences -> Security & Privacy ->  Privacy -> Accessibility ->
 - Add PyCharm to list of apps allowed to control your computer (to be able to run tests via IDE)
 ```
 Note that if your Jenkins instance is started via some other executable it should be also added in the list.
-
