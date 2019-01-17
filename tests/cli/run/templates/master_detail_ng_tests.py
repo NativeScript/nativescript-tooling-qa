@@ -64,7 +64,6 @@ class RunAndroidMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_300_run_android_bundle_aot(self):
         sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
 
-    @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-angular/issues/1572')
     def test_310_run_android_bundle_uglify(self):
         sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
 
@@ -83,7 +82,6 @@ class RunIOSMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_300_run_ios_bundle_aot(self):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
 
-    @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-angular/issues/1572')
     def test_310_run_ios_bundle_uglify(self):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
 
