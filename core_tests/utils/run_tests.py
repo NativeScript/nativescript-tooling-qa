@@ -1,8 +1,7 @@
 import os
-import time
 import unittest
-from os.path import expanduser
 
+import time
 from nose.tools import timed
 
 from core.settings import Settings
@@ -13,29 +12,28 @@ from core.utils.run import run
 
 # noinspection PyMethodMayBeStatic
 class RunTests(unittest.TestCase):
+    current_folder = os.path.dirname(os.path.realpath(__file__))
 
     def tearDown(self):
         Process.kill_all_in_context()
 
     def test_01_run_simple_command(self):
-        home = expanduser("~")
-        result = run(cmd='ls ' + home, wait=True, timeout=1)
+        result = run(cmd='ls ' + self.current_folder, wait=True, timeout=1)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
         assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
         assert result.duration < 1, 'Process duration took too much time.'
-        assert 'Desktop' in result.output, 'Listing home do not include Desktop folder.'
+        assert 'run_tests.py' in result.output, 'Listing do not return correct output.'
 
     def test_02_run_command_with_redirect(self):
-        home = expanduser("~")
         out_file = os.path.join(Settings.TEST_OUT_HOME, 'log.txt')
-        result = run(cmd='ls ' + home + ' > ' + out_file, wait=True, timeout=1)
+        result = run(cmd='ls ' + self.current_folder + ' > ' + out_file, wait=True, timeout=1)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
         assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
         assert result.duration < 1, 'Process duration took too much time.'
         assert result.output == '', 'Output should be empty.'
-        assert 'Desktop' in File.read(path=out_file)
+        assert 'run_tests.py' in File.read(path=out_file)
 
     def test_03_run_command_with_pipe(self):
         result = run(cmd='echo "test case" | wc -w ', wait=True, timeout=1)
