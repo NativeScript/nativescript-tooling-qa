@@ -2,15 +2,12 @@
 
 ### Smoke tests
 
-`smoke` folder contains set smoke tests (to be executed on variety of node and java versions) plus set of tests for pr.
+`smoke` folder contains set smoke tests that are executed on PRs.
 
-**pr_tests.py**
-- Tests executed on PRs in {N} CLI repo.
-
-**smoke_tests.py**
-- Tests executed on commit in master branch.
-- Note that those tests are also executed nightly on variety of node and java versions.
-
+On commit in master we run:
+```bash
+python run_ns.py tests\cli --exclude="^test_[2-9]"
+```
 
 ### Tests for CLI Commands
 

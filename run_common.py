@@ -56,18 +56,10 @@ def __get_templates():
             raise IOError("Failed to clone and pack template: " + template_name)
 
 
-def __get_packages():
+def __get_runtimes():
     """
-    Get NativeScript CLI and runtimes in TEST_SUT_HOME.
+    Get {N} Runtimes in TEST_SUT_HOME.
     """
-
-    # Copy or install NativeScript CLI
-    if '.tgz' in Settings.Packages.NS_CLI:
-        cli_package = os.path.join(Settings.TEST_SUT_HOME, 'nativescript.tgz')
-        File.copy(src=Settings.Packages.NS_CLI, target=cli_package)
-        Settings.Packages.NS_CLI = cli_package
-    else:
-        Npm.install(package=Settings.Packages.NS_CLI, folder=Settings.TEST_RUN_HOME)
 
     # Copy or download tns-android
     android_package = os.path.join(Settings.TEST_SUT_HOME, 'tns-android.tgz')
@@ -92,6 +84,13 @@ def __install_ns_cli():
     Install NativeScript CLI locally.
     """
 
+    # Copy NativeScript CLI (if used from local package)
+    if '.tgz' in Settings.Packages.NS_CLI:
+        cli_package = os.path.join(Settings.TEST_SUT_HOME, 'nativescript.tgz')
+        File.copy(src=Settings.Packages.NS_CLI, target=cli_package)
+        Settings.Packages.NS_CLI = cli_package
+
+    # Install NativeScript CLI
     output = Npm.install(package=Settings.Packages.NS_CLI, folder=Settings.TEST_RUN_HOME)
 
     # Verify executable exists after install
@@ -136,8 +135,8 @@ def __install_schematics():
 def prepare(clone_templates=True, install_ng_cli=False):
     Log.info('================== Prepare Test Run ==================')
     __cleanup()
-    __get_packages()
     __install_ns_cli()
+    __get_runtimes()
     if install_ng_cli:
         __install_ng_cli()
         __install_schematics()
