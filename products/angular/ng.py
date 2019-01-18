@@ -106,7 +106,7 @@ class NG(object):
         if prod:
             command = command + ' --prod'
         result = NG.exec_command(command=command, cwd=project_path, wait=False)
-        compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file), timeout=90)
+        compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file), timeout=180)
         if not compiled:
             Log.error('NG Serve failed to compile in 90 sec.')
             Log.error('Logs:{0}{1}'.format(os.linesep, File.read(result.log_file)))

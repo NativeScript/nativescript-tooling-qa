@@ -10,6 +10,7 @@ numpy>=1.15.4
 opencv-python>=3.4.3.18
 pytesseract>=0.2.5
 flake8>=3.6.0
+pylint>=2.2.2
 selenium>=3.141.0
 webdriver_manager>=1.7
 atomac>=1.1.0
