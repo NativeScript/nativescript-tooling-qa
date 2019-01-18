@@ -144,7 +144,10 @@ disable=print-statement,
         missing-docstring,
         fixme,
         no-else-return,
-        no-self-use
+        no-self-use,
+        unnecessary-lambda,
+        too-many-arguments,
+        too-many-locals
 
 
 # Enable the message, report, category or checker with the given id(s). You can

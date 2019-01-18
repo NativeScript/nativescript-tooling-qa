@@ -63,6 +63,7 @@ class ImageUtils(object):
         :param image_path: Image path.
         :return: Image as opencv object.
         """
+        # pylint: disable=no-member
         return cv2.imread(image_path)
 
     @staticmethod

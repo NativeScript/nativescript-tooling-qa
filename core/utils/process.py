@@ -1,3 +1,4 @@
+# pylint: disable=broad-except
 import logging
 import os
 import time

@@ -21,13 +21,12 @@ class Screen(object):
         """
         Log.log(level=log_level, msg='Save current host screen at {0}'.format(path))
         if Settings.HOST_OS is OSType.LINUX:
-            import os
             os.system("import -window root {0}".format(path))
         else:
             try:
                 from PIL import ImageGrab
-                im = ImageGrab.grab()
-                im.save(path)
+                image = ImageGrab.grab()
+                image.save(path)
             except IOError:
                 Log.error('Failed to take screen of host OS')
                 if Settings.HOST_OS is OSType.OSX:

@@ -17,7 +17,7 @@ class Npm(object):
         Log.info(command + " (at " + folder + ").")
         result = run(cmd=command, cwd=folder, wait=True, timeout=300)
         if verify:
-            assert result.exit_code is 0, '" + command + " exited with non zero exit code!: \n' + result.output
+            assert result.exit_code == 0, '" + command + " exited with non zero exit code!: \n' + result.output
         return result.output.strip()
 
     @staticmethod
@@ -58,7 +58,7 @@ class Npm(object):
 
     @staticmethod
     def uninstall(package, option='', folder=None):
-        if package is None or package is '':
+        if package is None or package == '':
             raise NameError('Package can not be None.')
         return Npm.__run_npm_command('un {0} {1}'.format(package, option), folder=folder)
 

@@ -1,4 +1,3 @@
-# pylint: disable=too-many-arguments
 class PRInfo(object):
 
     def __init__(self, pull_id=None, author=None, title=None, description=None, target_branch=None,
