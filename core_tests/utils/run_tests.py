@@ -76,6 +76,7 @@ class RunTests(unittest.TestCase):
         assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'
 
     @timed(30)
+    @unittest.skipIf(os.environ.get('TRAVIS', None) is not None, 'Skip on Travis.')
     def test_40_run_npm_pack(self):
         package = 'tns-core-modules'
         version = '5.0.0'
