@@ -13,3 +13,4 @@ flake8>=3.6.0
 pylint>=1.9.4
 selenium>=3.141.0
 webdriver_manager>=1.7
+subprocess32>=3.5.3
