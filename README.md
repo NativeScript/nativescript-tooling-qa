@@ -75,6 +75,12 @@ Once you are ready with our changes, please run flake8:
 python -m flake8 --max-line-length=120 core core_tests data products tests
 ```
 
+Notes:
+We plan to adopt `pylint`, but we are still in process of defining rules and fixing lint errors.
+```bash
+python -m pylint core data product --rcfile=c:\Git\nativescript-tooling-qa\.pylintrc
+```
+
 ## Hints, Tips and Tricks
 
 Please see [Hints, Tips and Tricks](HINTS.md) document.

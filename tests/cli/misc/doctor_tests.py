@@ -9,7 +9,7 @@ from products.nativescript.tns import Tns
 
 
 # noinspection PyMethodMayBeStatic
-class DoctorFunctionalTests(TnsTest):
+class DoctorTests(TnsTest):
     APP_NAME = Settings.AppName.DEFAULT
     ANDROID_HOME = os.environ.get('ANDROID_HOME')
     JAVA_HOME = os.environ.get('JAVA_HOME')
