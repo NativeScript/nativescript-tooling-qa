@@ -9,7 +9,6 @@ from core.utils.device.emulator_info import EmulatorInfo
 
 # noinspection PyMethodMayBeStatic
 class DeviceTests(TnsTest):
-
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()

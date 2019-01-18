@@ -24,6 +24,7 @@ class ImageUtils(object):
         :param tolerance: Tolerance in percents.
         :return: match (boolean value), diff_percent (diff %), diff_image (diff image)
         """
+        # pylint: disable=too-many-instance-attributes
         actual_image = Image.open(actual_image)
         actual_pixels = actual_image.load()
         expected_image = Image.open(expected_image)

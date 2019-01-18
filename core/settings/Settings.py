@@ -1,3 +1,5 @@
+# pylint: disable=invalid-name
+
 import logging
 import os
 import platform
@@ -12,10 +14,9 @@ from core.utils.device.simulator_info import SimulatorInfo
 def get_os():
     if 'Windows' in platform.platform():
         return OSType.WINDOWS
-    elif 'Darwin' in platform.platform():
+    if 'Darwin' in platform.platform():
         return OSType.OSX
-    else:
-        return OSType.LINUX
+    return OSType.LINUX
 
 
 def get_python_version():

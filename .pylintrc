@@ -140,7 +140,11 @@ disable=print-statement,
         exception-escape,
         comprehension-escape,
         too-few-public-methods,
-        useless-object-inheritance
+        useless-object-inheritance,
+        missing-docstring,
+        fixme,
+        no-else-return,
+        no-self-use
 
 
 # Enable the message, report, category or checker with the given id(s). You can
@@ -361,7 +365,7 @@ ignore-comments=yes
 ignore-docstrings=yes
 
 # Ignore imports when computing similarities.
-ignore-imports=no
+ignore-imports=yes
 
 # Minimum lines number of a similarity.
 min-similarity-lines=4

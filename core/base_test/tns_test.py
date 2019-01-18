@@ -47,6 +47,8 @@ class TnsTest(unittest.TestCase):
         Gradle.kill()
 
     def tearDown(self):
+        # pylint: disable=no-member
+
         # Kill processes
         Tns.kill()
         Gradle.kill()

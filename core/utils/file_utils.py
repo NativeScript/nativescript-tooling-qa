@@ -18,7 +18,7 @@ class Folder(object):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
-            except OSError as e:
+            except OSError as error:
                 for root, dirs, files in os.walk(folder, topdown=False):
                     for name in files:
                         filename = os.path.join(root, name)
@@ -27,7 +27,7 @@ class Folder(object):
                     for name in dirs:
                         os.rmdir(os.path.join(root, name))
                 os.rmdir(folder)
-                Log.error('Error: %s - %s.' % (e.filename, e.strerror))
+                Log.error('Error: %s - %s.' % (error.filename, error.strerror))
 
     @staticmethod
     def exists(folder):
@@ -57,8 +57,8 @@ class Folder(object):
         if only_files is True:
             files = os.listdir(source)
 
-            for f in files:
-                f_path = os.path.join(source, f)
+            for file in files:
+                f_path = os.path.join(source, file)
                 File.copy(f_path, target)
         else:
             try:
@@ -78,9 +78,9 @@ class Folder(object):
         """
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(folder):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
+            for file_name in filenames:
+                file_path = os.path.join(dirpath, file_name)
+                total_size += os.path.getsize(file_path)
         return total_size
 
 
