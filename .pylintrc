@@ -147,7 +147,8 @@ disable=print-statement,
         no-self-use,
         unnecessary-lambda,
         too-many-arguments,
-        too-many-locals
+        too-many-locals,
+        too-many-instance-attributes
 
 
 # Enable the message, report, category or checker with the given id(s). You can

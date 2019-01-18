@@ -36,7 +36,7 @@ class MigrateWebToMobileTests(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         NG.kill()
-        Adb.open_home(id=self.emu.id)  # Open home screen just to be sure we do not find text of previous run.
+        Adb.open_home(device_id=self.emu.id)  # Open home screen just to be sure we do not find text of previous run.
 
     def tearDown(self):
         NG.kill()

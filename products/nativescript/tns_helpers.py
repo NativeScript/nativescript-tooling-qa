@@ -1,4 +1,8 @@
+# pylint: disable=unused-argument
+# TODO: Implement it!
 
+
+# noinspection PyUnusedLocal
 class TnsHelpers(object):
 
     @staticmethod

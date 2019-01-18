@@ -49,7 +49,7 @@ class Device(object):
     def is_text_visible(self, text):
         is_visible = False
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            is_visible = Adb.is_text_visible(id=self.id, text=text)
+            is_visible = Adb.is_text_visible(device_id=self.id, text=text)
         if self.type is DeviceType.SIM:
             is_visible = SimAuto.is_text_visible(self, text)
         if self.type is DeviceType.IOS:
@@ -105,7 +105,7 @@ class Device(object):
         Folder.create(base_path)
 
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            Adb.get_screen(id=self.id, file_path=path)
+            Adb.get_screen(device_id=self.id, file_path=path)
         if self.type is DeviceType.SIM:
             Simctl.get_screen(id=self.id, file_path=path)
         if self.type is DeviceType.IOS:

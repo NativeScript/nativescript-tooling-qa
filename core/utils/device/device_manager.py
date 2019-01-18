@@ -61,7 +61,7 @@ class DeviceManager(object):
             Log.info('Booting {0} with cmd:'.format(emulator.avd))
             Log.info(command)
             run(cmd=command, wait=False, register=False)
-            booted = Adb.wait_until_boot(id=emulator.id)
+            booted = Adb.wait_until_boot(device_id=emulator.id)
             if booted:
                 Log.info('{0} is up and running!'.format(emulator.avd))
                 device = Device(id=emulator.id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
@@ -82,8 +82,8 @@ class DeviceManager(object):
             :param emulator: EmulatorInfo object.
             :return: True if running, False if not running.
             """
-            if Adb.is_running(id=emulator.id):
-                if str(emulator.os_version) in Adb.get_device_version(id=emulator.id):
+            if Adb.is_running(device_id=emulator.id):
+                if str(emulator.os_version) in Adb.get_device_version(device_id=emulator.id):
                     return True
             return False
 
