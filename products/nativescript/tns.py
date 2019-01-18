@@ -325,6 +325,7 @@ class Tns(object):
         """
         Kill all tns related processes.
         """
+        Log.info("Kill tns processes.")
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill(proc_name='node')
         else:

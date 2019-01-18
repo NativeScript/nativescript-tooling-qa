@@ -44,6 +44,7 @@ class Adb(object):
 
     @staticmethod
     def restart():
+        Log.info("Restart adb.")
         Adb.__run_adb_command('kill-server')
         Process.kill(proc_name='adb')
         Adb.__run_adb_command('start-server')
