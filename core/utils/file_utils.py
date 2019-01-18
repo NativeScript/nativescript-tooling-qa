@@ -3,8 +3,9 @@ File and Folder utils.
 """
 import errno
 import os
-import shutil
 import stat
+
+import shutil
 
 from core.log.log import Log
 from core.settings import Settings
@@ -138,7 +139,7 @@ class File(object):
         if os.path.isfile(path):
             File.write(path, text='')
         else:
-            raise FileNotFoundError('Error: %s file not found' % path)
+            raise IOError('Error: %s file not found' % path)
 
     @staticmethod
     def find_by_extension(folder, extension):

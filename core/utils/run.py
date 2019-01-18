@@ -1,14 +1,14 @@
 import logging
 import os
-import time
-from datetime import datetime
 
 import psutil
+import time
+from datetime import datetime
 
 from core.base_test.test_context import TestContext
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.file_utils import File
+from core.utils.file_utils import File, Folder
 from core.utils.process_info import ProcessInfo
 
 if os.name == 'posix' and Settings.PYTHON_VERSION < 3:
@@ -30,6 +30,10 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
 
     # Command settings
     if not wait:
+        # Ensure folder exists
+        dir_path = os.path.dirname(os.path.realpath(log_file))
+        Folder.create(dir_path)
+        # Redirect output to file
         File.write(path=log_file, text=cmd + os.linesep + '====>' + os.linesep)
         cmd = cmd + ' >> ' + log_file + ' 2>&1 &'
 

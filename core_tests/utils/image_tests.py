@@ -35,6 +35,7 @@ class ImageUtilsTests(unittest.TestCase):
         actual_color = ImageUtils.get_main_color(image_path=self.app_image)
         assert (actual_color == self.white).all(), 'Main color is wrong. It should be white.'
 
+    @unittest.skipIf(os.environ.get('TRAVIS', None) is not None, 'Skip on Travis.')
     def test_04_get_text(self):
         # OCR on Hello-World app
         text = ImageUtils.get_text(self.app_image)
