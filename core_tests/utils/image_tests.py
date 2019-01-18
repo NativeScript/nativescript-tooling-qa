@@ -35,7 +35,6 @@ class ImageUtilsTests(unittest.TestCase):
         actual_color = ImageUtils.get_main_color(image_path=self.app_image)
         assert (actual_color == self.white).all(), 'Main color is wrong. It should be white.'
 
-    @unittest.skip('Skip due to tesseract not installed on Travis CI.')
     def test_04_get_text(self):
         # OCR on Hello-World app
         text = ImageUtils.get_text(self.app_image)
