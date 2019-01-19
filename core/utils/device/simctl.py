@@ -95,11 +95,11 @@ class Simctl(object):
             'Failed to uninstall {0} on {1}'.format(app_id, simulator_info.name)
 
     @staticmethod
-    def get_screen(id, file_path):
+    def get_screen(sim_id, file_path):
         File.delete(file_path)
-        result = Simctl.__run_simctl_command('io {0} screenshot {1}'.format(id, file_path))
-        assert result.exit_code == 0, 'Failed to get screenshot of {0}'.format(id)
-        assert File.exists(file_path), 'Failed to get screenshot of {0}'.format(id)
+        result = Simctl.__run_simctl_command('io {0} screenshot {1}'.format(sim_id, file_path))
+        assert result.exit_code == 0, 'Failed to get screenshot of {0}'.format(sim_id)
+        assert File.exists(file_path), 'Failed to get screenshot of {0}'.format(sim_id)
 
     @staticmethod
     def erase(simulator_info):

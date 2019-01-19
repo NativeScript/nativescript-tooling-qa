@@ -37,16 +37,16 @@ class DeviceTests(TnsTest):
         # Verify Emulator.is_running returns true if emu is running
         valid_emu = EmulatorInfo(avd=Settings.Emulators.DEFAULT.avd,
                                  os_version=Settings.Emulators.DEFAULT.os_version,
-                                 id=Settings.Emulators.DEFAULT.id)
+                                 emu_id=Settings.Emulators.DEFAULT.id)
 
         # Verify Emulator.is_running() return false when port or version or name are different.
         wrong_port_emu = EmulatorInfo(avd=Settings.Emulators.DEFAULT.avd,
                                       os_version=Settings.Emulators.DEFAULT.os_version,
-                                      id='emulator-5555')
+                                      emu_id='emulator-5555')
 
         wrong_version_emu = EmulatorInfo(avd=Settings.Emulators.DEFAULT.avd,
                                          os_version=Settings.Emulators.EMU_API_19.os_version,
-                                         id=emu.id)
+                                         emu_id=emu.id)
 
         is_running = DeviceManager.Emulator.is_running(valid_emu)
         assert is_running is True, 'Emulator.is_running() should return true if emulator is running'

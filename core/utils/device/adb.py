@@ -132,16 +132,16 @@ class Adb(object):
     def is_text_visible(device_id, text, case_sensitive=False):
         import xml.etree.ElementTree as ET
         page_source = Adb.get_page_source(device_id)
-        if page_source is not '':
+        if page_source != '':
             xml = ET.ElementTree(ET.fromstring(page_source))
             elements = xml.findall("//node[@text]")
             if len(elements) > 0:
-                for e in elements:
+                for element in elements:
                     if case_sensitive:
-                        if text in e.attrib['text']:
+                        if text in element.attrib['text']:
                             return True
                     else:
-                        if text.lower() in e.attrib['text'].lower():
+                        if text.lower() in element.attrib['text'].lower():
                             return True
         return False
 

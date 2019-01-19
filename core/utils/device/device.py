@@ -107,7 +107,7 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.get_screen(device_id=self.id, file_path=path)
         if self.type is DeviceType.SIM:
-            Simctl.get_screen(id=self.id, file_path=path)
+            Simctl.get_screen(sim_id=self.id, file_path=path)
         if self.type is DeviceType.IOS:
             IDevice.get_screen(id=self.id, file_path=path)
 

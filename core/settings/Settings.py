@@ -119,20 +119,20 @@ class IOS(object):
 
 class Emulators(object):
     EMU_API_19 = EmulatorInfo(avd=os.environ.get('EMU_API_19', 'Emulator-Api19-Default'), os_version=4.4, port='5560',
-                              id='emulator-5560')
+                              emu_id='emulator-5560')
     EMU_API_23 = EmulatorInfo(avd=os.environ.get('EMU_API_23', 'Emulator-Api23-Default'), os_version=6.0, port='5562',
-                              id='emulator-5562')
+                              emu_id='emulator-5562')
     EMU_API_26 = EmulatorInfo(avd=os.environ.get('EMU_API_26', 'Emulator-Api26-Google'), os_version=8.0, port='5564',
-                              id='emulator-5564')
+                              emu_id='emulator-5564')
     EMU_API_28 = EmulatorInfo(avd=os.environ.get('EMU_API_28', 'Emulator-Api28-Google'), os_version=9.0, port='5566',
-                              id='emulator-5566')
+                              emu_id='emulator-5566')
     DEFAULT = EMU_API_23
 
 
 class Simulators(object):
-    SIM_IOS10 = SimulatorInfo(name=os.environ.get('SIM_IOS10', 'iPhone7_10'), device_type='iPhone 7', sdk=10.0, id='')
-    SIM_IOS11 = SimulatorInfo(name=os.environ.get('SIM_IOS11', 'iPhone7_11'), device_type='iPhone 7', sdk=11.2, id='')
-    SIM_IOS12 = SimulatorInfo(name=os.environ.get('SIM_IOS12', 'iPhoneXR_12'), device_type='iPhone XR', sdk=12.0, id='')
+    SIM_IOS10 = SimulatorInfo(name=os.environ.get('SIM_IOS10', 'iPhone7_10'), device_type='iPhone 7', sdk=10.0)
+    SIM_IOS11 = SimulatorInfo(name=os.environ.get('SIM_IOS11', 'iPhone7_11'), device_type='iPhone 7', sdk=11.2)
+    SIM_IOS12 = SimulatorInfo(name=os.environ.get('SIM_IOS12', 'iPhoneXR_12'), device_type='iPhone XR', sdk=12.0)
     DEFAULT = SIM_IOS11
 
 
