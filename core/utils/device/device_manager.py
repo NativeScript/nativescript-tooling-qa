@@ -26,7 +26,7 @@ class DeviceManager(object):
     @staticmethod
     def get_device(device_type):
         devices = DeviceManager.get_devices(device_type=device_type)
-        if len(devices) > 0:
+        if devices:
             return devices[0]
         else:
             raise Exception('Failed to find {0} device.'.format(device_type))

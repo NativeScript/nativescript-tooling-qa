@@ -30,16 +30,14 @@ class Adb(object):
         """
         devices = []
         output = Adb.__run_adb_command('devices -l').output
-        '''
-        Example output:
-        emulator-5554          device product:sdk_x86 model:Android_SDK_built_for_x86 device:generic_x86
-        HT46BWM02644           device usb:336592896X product:m8_google model:HTC_One_M8 device:htc_m8
-        '''
+        # Example output:
+        # emulator-5554          device product:sdk_x86 model:Android_SDK_built_for_x86 device:generic_x86
+        # HT46BWM02644           device usb:336592896X product:m8_google model:HTC_One_M8 device:htc_m8
         for line in output.splitlines():
             if 'model' in line and ' device ' in line:
-                id = line.split(' ')[0]
+                device_id = line.split(' ')[0]
                 if include_emulator:
-                    devices.append(id)
+                    devices.append(device_id)
         return devices
 
     @staticmethod
@@ -65,10 +63,7 @@ class Adb(object):
         else:
             command = "shell dumpsys window windows | grep -E 'mFocusedApp'"
         result = Adb.__run_adb_command(command=command, device_id=device_id, timeout=10, fail_safe=True)
-        if 'ActivityRecord' in result.output:
-            return True
-        else:
-            return False
+        return bool('ActivityRecord' in result.output)
 
     @staticmethod
     def wait_until_boot(device_id, timeout=180, check_interval=3):
@@ -120,11 +115,9 @@ class Adb(object):
             else:
                 return ''
         else:
-            """
-            Sometimes adb shell uiatomator dump fails, for example with:
-            adb: error: remote object '/sdcard/window_dump.xml' does not exist
-            In such cases return empty string.
-            """
+            # Sometimes adb shell uiatomator dump fails, for example with:
+            # adb: error: remote object '/sdcard/window_dump.xml' does not exist
+            # In such cases return empty string.
             return ''
 
     # noinspection PyPep8Naming
@@ -135,7 +128,7 @@ class Adb(object):
         if page_source != '':
             xml = ET.ElementTree(ET.fromstring(page_source))
             elements = xml.findall("//node[@text]")
-            if len(elements) > 0:
+            if elements:
                 for element in elements:
                     if case_sensitive:
                         if text in element.attrib['text']:

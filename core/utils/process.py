@@ -131,9 +131,9 @@ class Process(object):
         for proc in psutil.process_iter():
             try:
                 connections = proc.connections(kind='inet')
-                if len(connections) > 0:
-                    for c in connections:
-                        if c.laddr.port == port:
+                if connections:
+                    for connection in connections:
+                        if connection.laddr.port == port:
                             cmd = ''.join(proc.cmdline())
                             proc.kill()
                             Log.info('Kill processes listening on port {0}.'.format(str(port)))
