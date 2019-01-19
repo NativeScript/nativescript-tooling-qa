@@ -25,7 +25,6 @@ class ImageUtils(object):
         :return: match (boolean value), diff_percent (diff %), diff_image (diff image)
         """
         # pylint: disable=too-many-instance-attributes
-        # pylint: disable=invalid-name
         actual_image = Image.open(actual_image)
         actual_pixels = actual_image.load()
         expected_image = Image.open(expected_image)

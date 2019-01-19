@@ -1,3 +1,4 @@
+# pylint: disable=redefined-builtin
 import logging
 import os
 import time
@@ -100,9 +101,10 @@ class Device(object):
         :param path: Path to image that will be saved.
         :param log_level: Log level.
         """
+
+        # Ensure folder to save the screen exists
         File.delete(path)
-        base_path, file_name = os.path.split(path)
-        Folder.create(base_path)
+        Folder.create(folder=os.path.dirname(path))
 
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.get_screen(device_id=self.id, file_path=path)
@@ -179,9 +181,9 @@ class Device(object):
             count = self.get_pixels_by_color(color=color)
             msg = '{0} pixels of type {1} found on {2}'.format(count, str(color), self.name)
             err_msg = msg + ' Expected count: {0}'.format(pixel_count)
-            min = pixel_count - int(pixel_count * delta / 100)
-            max = pixel_count + int(pixel_count * delta / 100)
-            if min <= count <= max:
+            min_count = pixel_count - int(pixel_count * delta / 100)
+            max_count = pixel_count + int(pixel_count * delta / 100)
+            if min_count <= count <= max_count:
                 Log.info(msg)
                 found = True
                 break

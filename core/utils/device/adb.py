@@ -49,7 +49,9 @@ class Adb(object):
 
     @staticmethod
     def get_devices(include_emulators=False):
-        pass
+        # pylint: disable=unused-argument
+        # TODO: Implement it!
+        return []
 
     @staticmethod
     def is_running(device_id):
