@@ -25,6 +25,6 @@ class PerfUtils(object):
         :return: Average execution time in seconds.
         """
         total_time = 0
-        for i in range(0, retry_count):
+        for _ in range(0, retry_count):
             total_time = total_time + operation(*args, **kwargs).duration
         return total_time / retry_count

@@ -1,5 +1,6 @@
 # pylint: disable=too-many-statements
 # pylint: disable=too-many-branches
+# pylint: disable=broad-except
 import logging
 import os
 import time
@@ -23,8 +24,6 @@ else:
 
 def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False, register=True,
         log_level=logging.DEBUG):
-    # pylint: disable=broad-except
-
     # Init result values
     time_string = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
     log_file = os.path.join(Settings.TEST_OUT_LOGS, 'command_{0}.txt'.format(time_string))
