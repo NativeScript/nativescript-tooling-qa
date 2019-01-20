@@ -31,11 +31,11 @@ class TnsAssert(object):
         # Assert app data
         if app_data is not None:
             # Assert app type
-            assert File.exists(os.path.join(app_path, 'node_modules', 'tns-core-modules', 'package.json'))
-            assert File.exists(os.path.join(app_path, 'node_modules', 'tns-core-modules', 'LICENSE'))
-            assert File.exists(os.path.join(app_path, 'node_modules', 'tns-core-modules', 'xml', 'xml.js'))
-            assert Folder.exists(os.path.join(app_path, 'node_modules', 'nativescript-theme-core'))
-            assert Folder.exists(os.path.join(app_path, 'node_modules', 'nativescript-dev-webpack'))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.TNS_MODULES))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.TNS_MODULES))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.TNS_MODULES))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.NODE_MODULES, 'nativescript-theme-core'))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.NODE_MODULES, 'nativescript-dev-webpack'))
 
             if app_data.type is AppType.JS:
                 pass
@@ -44,18 +44,22 @@ class TnsAssert(object):
                 assert File.exists(os.path.join(app_path, 'webpack.config.js'))
                 assert File.exists(os.path.join(app_path, 'tsconfig.tns.json'))
                 assert not File.exists(os.path.join(app_path, 'references.d.ts'))
-                assert File.exists(os.path.join(app_path, 'node_modules', 'tns-core-modules', 'tns-core-modules.d.ts'))
-                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-prepare', 'nativescript-dev-typescript.js'))
-                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-watch', 'nativescript-dev-typescript.js'))
+                assert File.exists(os.path.join(app_path, TnsAssert.TNS_MODULES, 'tns-core-modules.d.ts'))
+                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-prepare',
+                                                'nativescript-dev-typescript.js'))
+                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-watch',
+                                                'nativescript-dev-typescript.js'))
                 pass
             elif app_data.type is AppType.NG:
                 assert File.exists(os.path.join(app_path, 'tsconfig.json'))
                 assert File.exists(os.path.join(app_path, 'webpack.config.js'))
                 assert File.exists(os.path.join(app_path, 'tsconfig.tns.json'))
                 assert not File.exists(os.path.join(app_path, 'references.d.ts'))
-                assert File.exists(os.path.join(app_path, 'node_modules', 'tns-core-modules', 'tns-core-modules.d.ts'))
-                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-prepare', 'nativescript-dev-typescript.js'))
-                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-watch', 'nativescript-dev-typescript.js'))
+                assert File.exists(os.path.join(app_path, TnsAssert.TNS_MODULES, 'tns-core-modules.d.ts'))
+                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-prepare',
+                                                'nativescript-dev-typescript.js'))
+                assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-watch',
+                                                'nativescript-dev-typescript.js'))
                 pass
             elif app_data.type is AppType.VUE:
                 pass

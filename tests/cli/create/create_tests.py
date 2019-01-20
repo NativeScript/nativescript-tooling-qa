@@ -27,6 +27,8 @@ class CreateTests(TnsTest):
     ng_source_project_dir = os.path.join(Settings.TEST_RUN_HOME, ng_app)
     ng_target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', ng_app)
 
+    js_app_space = Settings.AppName.WITH_SPACE
+
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
@@ -40,8 +42,19 @@ class CreateTests(TnsTest):
 
     def test_001_create_app_like_real_user(self):
         Tns.create(app_name=self.js_app, app_data=None)
-
-    def test_002_create_apps(self):
+    s
+    def test_002_create_app_template_js(self):
         Tns.create(app_name=self.js_app, template=Template.HELLO_WORLD_JS.local_package, app_data=self.app_data_JS)
+
+    def test_003_create_app_template_ts(self):
         Tns.create(app_name=self.ts_app, template=Template.HELLO_WORLD_TS.local_package, app_data=self.app_data_TS)
+
+    def test_004_create_app_template_ng(self):
         Tns.create(app_name=self.ng_app, template=Template.HELLO_WORLD_NG.local_package, app_data=self.app_data_NG)
+
+    def test_005_create_project_with_path(self):
+        """Create project with --path option"""
+
+    def test_006_create_project_with_space(self):
+        """ Create project with space is possible, but packageId will skip the space symbol"""
+        Tns.create(app_name=self.js_app_space, template=Template.HELLO_WORLD_JS.local_package, app_data=self.app_data_JS)
