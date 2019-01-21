@@ -2,9 +2,9 @@
 # pylint: disable=broad-except
 import logging
 import os
+import time
 
 import psutil
-import time
 
 from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
@@ -79,10 +79,7 @@ class Process(object):
                 break
             if (running is False) and (time.time() > end_time):
                 error = "{0} not running in {1} seconds.", proc_name, timeout
-                if Settings.PYTHON_VERSION < 2:
-                    raise Exception(error)
-                else:
-                    raise TimeoutError(error)
+                raise Exception(error)
         return running
 
     @staticmethod

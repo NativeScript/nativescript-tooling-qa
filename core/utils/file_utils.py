@@ -57,8 +57,8 @@ class Folder(object):
         if only_files is True:
             files = os.listdir(source)
 
-            for file in files:
-                f_path = os.path.join(source, file)
+            for f in files:
+                f_path = os.path.join(source, f)
                 File.copy(f_path, target)
         else:
             try:

@@ -85,7 +85,7 @@ python -m pylint --disable=locally-disabled --rcfile=.pylintrc core data product
 Due to the fact tests are not modules pylint can not be executed directly.
 Workaround:
 ```bash
-find tests | grep .py | grep -v .pyc | xargs python -m pylint --disable=locally-disabled --rcfile=.pylintrc
+find tests/cli | grep .py | grep -v .pyc | xargs python -m pylint --disable=locally-disabled --min-similarity-lines=15 --rcfile=.pylintrc
 ```
 
 ## Hints, Tips and Tricks
