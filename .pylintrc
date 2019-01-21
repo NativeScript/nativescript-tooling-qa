@@ -151,7 +151,8 @@ disable=print-statement,
         too-many-instance-attributes,
         keyword-arg-before-vararg,
         try-except-raise,
-        cell-var-from-loop
+        cell-var-from-loop,
+        wrong-import-order
 
 
 # Enable the message, report, category or checker with the given id(s). You can
