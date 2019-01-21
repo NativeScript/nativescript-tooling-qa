@@ -76,9 +76,16 @@ python -m flake8 --max-line-length=120 core core_tests data products tests
 ```
 
 Notes:
+
 We plan to adopt `pylint`, but we are still in process of defining rules and fixing lint errors.
 ```bash
 python -m pylint --disable=locally-disabled --rcfile=.pylintrc core data products
+```
+
+Due to the fact tests are not modules pylint can not be executed directly.
+Workaround:
+```bash
+find tests | grep .py | grep -v .pyc | xargs python -m pylint --disable=locally-disabled --rcfile=.pylintrc
 ```
 
 ## Hints, Tips and Tricks
