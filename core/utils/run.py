@@ -1,12 +1,13 @@
 # pylint: disable=too-many-statements
 # pylint: disable=too-many-branches
 # pylint: disable=broad-except
+# pylint: disable=unused-variable
 import logging
 import os
-import time
-from datetime import datetime
 
 import psutil
+import time
+from datetime import datetime
 
 from core.base_test.test_context import TestContext
 from core.log.log import Log

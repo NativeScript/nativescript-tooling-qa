@@ -76,6 +76,7 @@ class Folder(object):
         :param folder: Folder path.
         :return: Size in bytes.
         """
+        # pylint: disable=unused-variable
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(folder):
             for file_name in filenames:
@@ -149,6 +150,7 @@ class File(object):
         :param extension: File extension.
         :return: List of found files.
         """
+        # pylint: disable=unused-variable
         matches = []
         if '.' not in extension:
             extension = '.' + extension

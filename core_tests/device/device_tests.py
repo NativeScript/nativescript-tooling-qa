@@ -29,7 +29,7 @@ class DeviceTests(TnsTest):
         # Verify emulator is started properly
         emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
         assert emu.type == DeviceType.EMU, 'Device should be of type DeviceType.EMU'
-        assert emu.id == Settings.Emulators.DEFAULT.id, 'Emulator should be booted on specified port.'
+        assert emu.id == Settings.Emulators.DEFAULT.emu_id, 'Emulator should be booted on specified port.'
         assert emu.name == Settings.Emulators.DEFAULT.avd, 'Device name should match avd name from settings.'
         assert emu.version == Settings.Emulators.DEFAULT.os_version, 'Device version should match os_version.'
         assert emu.type == DeviceType.EMU
@@ -37,7 +37,7 @@ class DeviceTests(TnsTest):
         # Verify Emulator.is_running returns true if emu is running
         valid_emu = EmulatorInfo(avd=Settings.Emulators.DEFAULT.avd,
                                  os_version=Settings.Emulators.DEFAULT.os_version,
-                                 emu_id=Settings.Emulators.DEFAULT.id)
+                                 emu_id=Settings.Emulators.DEFAULT.emu_id)
 
         # Verify Emulator.is_running() return false when port or version or name are different.
         wrong_port_emu = EmulatorInfo(avd=Settings.Emulators.DEFAULT.avd,
@@ -62,8 +62,8 @@ class DeviceTests(TnsTest):
         # Verify multiple emulators can be started properly
         emu1 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_23)
         emu2 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_26)
-        assert emu1.id == Settings.Emulators.EMU_API_23.id
-        assert emu2.id == Settings.Emulators.EMU_API_26.id
+        assert emu1.emu_id == Settings.Emulators.EMU_API_23.emu_id
+        assert emu2.emu_id == Settings.Emulators.EMU_API_26.emu_id
 
         # Verify screen_match() method
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, 'temp.png')

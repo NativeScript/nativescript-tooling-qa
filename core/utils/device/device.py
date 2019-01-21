@@ -27,7 +27,7 @@ class Device(object):
         self.version = version
 
         if type is DeviceType.IOS:
-            type = run(cmd="ideviceinfo | grep ProductType")
+            type = run(cmd="ideviceinfo | grep ProductType").output
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
@@ -54,7 +54,7 @@ class Device(object):
         if self.type is DeviceType.SIM:
             is_visible = SimAuto.is_text_visible(self, text)
         if self.type is DeviceType.IOS:
-            is_visible = IDevice.is_text_visible(id=self.id, text=text)
+            is_visible = IDevice.is_text_visible(device_id=self.id, text=text)
 
         # Retry find with ORC (only for IOS, for example if macOS automation fails)
         if not is_visible and (self.type is DeviceType.SIM or self.type is DeviceType.IOS):
@@ -111,7 +111,7 @@ class Device(object):
         if self.type is DeviceType.SIM:
             Simctl.get_screen(sim_id=self.id, file_path=path)
         if self.type is DeviceType.IOS:
-            IDevice.get_screen(id=self.id, file_path=path)
+            IDevice.get_screen(device_id=self.id, file_path=path)
 
         image_saved = False
         if File.exists(path):
