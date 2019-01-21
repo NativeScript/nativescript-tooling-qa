@@ -74,10 +74,10 @@ class CreateTests(TnsTest):
     def test_008_create_project_named_123(self):
         """Create app starting with digits should not be possible without --force option"""
         Tns.create(app_name=self.js_app_number, template=Template.HELLO_WORLD_JS.local_package,
-                    app_data=self.app_data_JS, update=False, verify=False)
-        #TODO: package_json contains
+                   app_data=self.app_data_JS, update=False, verify=False)
+        # TODO: package_json contains
 
     def test_009_create_project_with_appid(self):
         """Create project with --appid option"""
-        Tns.create(app_name=self.js_app, template=Template.HELLO_WORLD_JS.local_package,app_data=self.app_data_JS,
+        Tns.create(app_name=self.js_app, template=Template.HELLO_WORLD_JS.local_package, app_data=self.app_data_JS,
                    update=False, verify=False, app_id='org.nativescript.MyApp')
