@@ -1,5 +1,14 @@
+import os
+
+from core.settings import Settings
+
 
 class TnsHelpers(object):
+
+    @staticmethod
+    def get_app_path(app_name):
+        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        return app_path
 
     @staticmethod
     def get_apk(app_name):
