@@ -20,12 +20,12 @@ class ChangeSet(object):
 class Sync(object):
     @staticmethod
     def replace(app_name, change_set):
-        path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file)
+        path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file_path)
         File.replace(path=path, old_string=change_set.old_value, new_string=change_set.new_value)
 
     @staticmethod
     def revert(app_name, change_set):
-        path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file)
+        path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file_path)
         File.replace(path=path, old_string=change_set.new_value, new_string=change_set.old_value)
 
 
