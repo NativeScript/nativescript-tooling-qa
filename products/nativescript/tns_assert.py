@@ -40,10 +40,8 @@ class TnsAssert(object):
                 pass
             elif app_data.type is AppType.TS:
                 TnsAssert.__verify_created_ts()
-                pass
             elif app_data.type is AppType.NG:
                 TnsAssert.__verify_created_ng()
-                pass
             elif app_data.type is AppType.VUE:
                 pass
             elif app_data.type is AppType.SHARED_NG:
