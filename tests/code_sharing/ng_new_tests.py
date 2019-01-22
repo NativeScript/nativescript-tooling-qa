@@ -1,3 +1,5 @@
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
 import os
 import unittest
 
