@@ -31,4 +31,4 @@ class Git(object):
         Log.info(command)
         result = run(cmd=command)
         assert "fatal" not in result.output, "Failed to clone: " + repo_url
-        assert result.exit_code is 0, "Failed to clone: " + repo_url
+        assert result.exit_code == 0, "Failed to clone: " + repo_url

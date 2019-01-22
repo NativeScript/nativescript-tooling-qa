@@ -46,6 +46,7 @@ class RunTests(unittest.TestCase):
 
     def test_10_run_command_with_wait_true_that_exceed_timeout(self):
         # noinspection PyBroadException
+        # pylint: disable=broad-except
         try:
             run(cmd='sleep 3', wait=True, timeout=1, fail_safe=False)
             assert False, 'This line should not be executed, because the line above should raise an exception.'
@@ -70,7 +71,7 @@ class RunTests(unittest.TestCase):
         assert result.exit_code is None, 'exit code should be None when command is not complete.'
         assert result.complete is False, 'tail command should not exit.'
         assert result.duration is None, 'duration should be None in case process is not complete'
-        assert result.output is '', 'output should be empty string.'
+        assert result.output == '', 'output should be empty string.'
         assert result.log_file is not None, 'stdout and stderr of tail command should be redirected to file.'
         assert 'tail' in File.read(result.log_file), 'Log file should contains cmd of the command.'
         assert 'test' in File.read(result.log_file), 'Log file should contains output of the command.'

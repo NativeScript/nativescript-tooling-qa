@@ -40,10 +40,8 @@ class TnsAssert(object):
                 pass
             elif app_data.type is AppType.TS:
                 TnsAssert.__verify_created_ts()
-                pass
             elif app_data.type is AppType.NG:
                 TnsAssert.__verify_created_ng()
-                pass
             elif app_data.type is AppType.VUE:
                 pass
             elif app_data.type is AppType.SHARED_NG:
@@ -75,6 +73,9 @@ class TnsAssert(object):
     @staticmethod
     def build(app_name, platform=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
               bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False, output=None, app_data=None):
+        # pylint: disable=unused-argument
+        # TODO: Implement it!
+
         # Verify output and exit code
         assert 'Project successfully built.' in output
 

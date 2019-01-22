@@ -83,7 +83,7 @@ class TemplateTests(TnsTest):
             App.update(app_name=app_name)
 
         # Run Android
-        Adb.open_home(id=self.emu.id)
+        Adb.open_home(device_id=self.emu.id)
         Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True, justlaunch=True)
         if template_info.texts is not None:
             for text in template_info.texts:

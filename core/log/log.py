@@ -1,6 +1,7 @@
-import datetime
 import logging
 import os
+
+import datetime
 
 from core.settings import Settings
 
@@ -9,6 +10,7 @@ class Log(object):
 
     @staticmethod
     def log(level, msg):
+        # pylint: disable=superfluous-parens
         if level != logging.DEBUG:
             date = datetime.datetime.now().strftime('%H:%M:%S')
             print('{0} {1}'.format(date, msg))
@@ -72,8 +74,7 @@ class Log(object):
     @staticmethod
     def device_screen(image_name, device_id):
         path = os.path.join(Settings.TEST_OUT_IMAGES, image_name + '.png')
-        Log.debug('Save screen of {0} at: '.format(device_id, path))
-        Log.debug('Save screen of {0} at: '.format(device_id, path))
+        Log.debug('Save screen of {0} at {1}: '.format(device_id, path))
 
     @staticmethod
     def settings():

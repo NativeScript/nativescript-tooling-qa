@@ -1,7 +1,7 @@
 """
 A wrapper around java.
 """
-from core.utils.process import Run
+from core.utils.run import run
 from core.utils.version import Version
 
 
@@ -12,5 +12,5 @@ class Java(object):
         Java version.
         :rtype: float
         """
-        result = Run.command('java -version')
+        result = run('java -version')
         return Version.get(result.output.split('"')[1])

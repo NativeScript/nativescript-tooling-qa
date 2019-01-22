@@ -1,3 +1,4 @@
+# pylint: disable=unidiomatic-typecheck
 """
 Json utils.
 """
@@ -45,9 +46,9 @@ class JsonUtils(object):
         :param key: Key.
         :param value: Desired value.
         """
-        with open(file_path, "r+") as jsonFile:
-            data = json.load(jsonFile)
+        with open(file_path, "r+") as json_file:
+            data = json.load(json_file)
             JsonUtils.__replace_value(data, key, value)
-            jsonFile.seek(0)
-            json.dump(data, jsonFile, indent=4)
-            jsonFile.truncate()
+            json_file.seek(0)
+            json.dump(data, json_file, indent=4)
+            json_file.truncate()

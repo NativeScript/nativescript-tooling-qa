@@ -1,9 +1,9 @@
 import os
 
 from core.base_test.tns_test import TnsTest
+from core.settings import Settings
 from core.utils.file_utils import Folder
 from data.apps import Apps
-from core.settings import Settings
 from data.templates import Template
 from products.nativescript.tns import Tns
 

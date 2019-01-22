@@ -17,15 +17,12 @@ class Jenkins(object):
 
     @staticmethod
     def is_pr():
-        pr = Jenkins.get_pr_info()
-        if pr.id is not None:
-            return True
-        else:
-            return False
+        pr_info = Jenkins.get_pr_info()
+        return bool(pr_info.pull_id is not None)
 
     @staticmethod
     def get_pr_info():
-        return PRInfo(id=os.environ.get('ghprbPullId', None),
+        return PRInfo(pull_id=os.environ.get('ghprbPullId', None),
                       author=os.environ.get('ghprbPullAuthorLogin', None),
                       title=os.environ.get('ghprbPullTitle', None),
                       description=os.environ.get('ghprbPullLongDescription', None),

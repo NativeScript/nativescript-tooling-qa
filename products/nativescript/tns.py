@@ -1,5 +1,7 @@
+# pylint: disable=too-many-branches
 import logging
 import os
+
 import time
 
 from core.base_test.test_context import TestContext
@@ -188,7 +190,7 @@ class Tns(object):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
                                   for_device=for_device, bundle=bundle, wait=True, log_trace=log_trace)
         if verify:
-            assert result.exit_code is 0, 'Prepare failed with non zero exit code.'
+            assert result.exit_code == 0, 'Prepare failed with non zero exit code.'
         return result
 
     @staticmethod
@@ -208,7 +210,7 @@ class Tns(object):
                                   provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
                                   snapshot=snapshot, wait=True, log_trace=log_trace)
         if verify:
-            assert result.exit_code is 0, 'Build failed with non zero exit code.'
+            assert result.exit_code == 0, 'Build failed with non zero exit code.'
             TnsAssert.build(app_name=app_name, platform=platform, release=False, provision=Settings.IOS.DEV_PROVISION,
                             for_device=False, bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False,
                             output=result.output, app_data=app_data)
@@ -237,7 +239,7 @@ class Tns(object):
                                   wait=wait, log_trace=log_trace, justlaunch=justlaunch)
         if verify:
             if wait:
-                assert result.exit_code is 0, 'tns run failed with non zero exit code.'
+                assert result.exit_code == 0, 'tns run failed with non zero exit code.'
                 assert 'successfully synced' in result.output.lower()
             else:
                 end_time = time.time() + 500

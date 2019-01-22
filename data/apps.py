@@ -34,16 +34,16 @@ class SizeInfo(object):
 
 # noinspection PyShadowingBuiltins
 class AppInfo(object):
-    def __init__(self, type, id, size, texts):
+    def __init__(self, app_type, app_id, size, texts):
         """
         AppInfo object.
-        :param type: Type of Project.
-        :param id: Bundle id for the app.
+        :param app_type: Type of Project.
+        :param app_id: Bundle id for the app.
         :param size: SizeInfo object.
         :param texts: Array of texts that should be on the home page.
         """
-        self.type = type
-        self.id = id
+        self.app_type = app_type
+        self.bundle_id = app_id
         self.size = size
         self.texts = texts
 
@@ -51,9 +51,9 @@ class AppInfo(object):
 class Apps(object):
     __ns_only_size = SizeInfo(init=248157241, apk_bundle_uglify_aot_snapshot=15743753, ipa_bundle_uglify_aot=15743753)
     __shared_size = SizeInfo(init=273331339, apk_bundle_uglify_aot_snapshot=15743753, ipa_bundle_uglify_aot=15743753)
-    SCHEMATICS_SHARED = AppInfo(type=AppType.SHARED_NG, id=None, size=__shared_size, texts=['Welcome'])
-    SCHEMATICS_SHARED_SAMPLE = AppInfo(type=AppType.SHARED_NG, id=None, size=__shared_size, texts=['Barcelona'])
-    SCHEMATICS_NS = AppInfo(type=AppType.NG, id=None, size=__ns_only_size, texts=['Tap the button'])
-    HELLO_WORLD_JS = AppInfo(type=AppType.JS, id=None, size=None, texts=None)
-    HELLO_WORLD_TS = AppInfo(type=AppType.TS, id=None, size=None, texts=None)
-    HELLO_WORLD_NG = AppInfo(type=AppType.NG, id=None, size=None, texts=None)
+    SCHEMATICS_SHARED = AppInfo(app_type=AppType.SHARED_NG, app_id=None, size=__shared_size, texts=['Welcome'])
+    SCHEMATICS_SHARED_SAMPLE = AppInfo(app_type=AppType.SHARED_NG, app_id=None, size=__shared_size, texts=['Barcelona'])
+    SCHEMATICS_NS = AppInfo(app_type=AppType.NG, app_id=None, size=__ns_only_size, texts=['Tap the button'])
+    HELLO_WORLD_JS = AppInfo(app_type=AppType.JS, app_id=None, size=None, texts=None)
+    HELLO_WORLD_TS = AppInfo(app_type=AppType.TS, app_id=None, size=None, texts=None)
+    HELLO_WORLD_NG = AppInfo(app_type=AppType.NG, app_id=None, size=None, texts=None)

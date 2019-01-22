@@ -12,7 +12,7 @@ class Version(object):
         :return: Version as float.
         """
         split = version.split('.')
-        if len(split) == 0:
-            return float(split[0])
-        else:
+        if split:
             return float(split[0] + '.' + split[1])
+        else:
+            return float(split[0])

@@ -36,7 +36,7 @@ class NGNewTests(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         NG.kill()
-        Adb.open_home(id=self.emu.id)  # Open home page to be sure we do not find old text
+        Adb.open_home(device_id=self.emu.id)  # Open home page to be sure we do not find old text
         Folder.clean(self.app_folder)
 
     def tearDown(self):

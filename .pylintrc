@@ -140,7 +140,19 @@ disable=print-statement,
         exception-escape,
         comprehension-escape,
         too-few-public-methods,
-        useless-object-inheritance
+        useless-object-inheritance,
+        missing-docstring,
+        fixme,
+        no-else-return,
+        no-self-use,
+        unnecessary-lambda,
+        too-many-arguments,
+        too-many-locals,
+        too-many-instance-attributes,
+        keyword-arg-before-vararg,
+        try-except-raise,
+        cell-var-from-loop,
+        wrong-import-order
 
 
 # Enable the message, report, category or checker with the given id(s). You can
@@ -239,14 +251,18 @@ docstring-min-length=-1
 # Naming style matching correct function names.
 function-naming-style=snake_case
 
-# Regular expression matching correct function names. Overrides function-
-# naming-style.
+# Regular expression matching correct function names. Overrides function-naming-style.
 #function-rgx=
 
 # Good variable names which should always be accepted, separated by a comma.
 good-names=i,
+           id,
+           f,
            j,
            k,
+           v,
+           x,
+           y,
            ex,
            Run,
            _
@@ -265,8 +281,8 @@ inlinevar-naming-style=any
 method-naming-style=snake_case
 
 # Regular expression matching correct method names. Overrides method-naming-
-# style.
-#method-rgx=
+# style
+method-rgx=(([a-z_][a-z0-9_]{2,})|(_[a-z0-9_]*)|(__[a-z][a-z0-9_]+__))$
 
 # Naming style matching correct module names.
 module-naming-style=snake_case
@@ -361,7 +377,7 @@ ignore-comments=yes
 ignore-docstrings=yes
 
 # Ignore imports when computing similarities.
-ignore-imports=no
+ignore-imports=yes
 
 # Minimum lines number of a similarity.
 min-similarity-lines=4

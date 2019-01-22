@@ -1,3 +1,7 @@
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-branches
+# pylint: disable=broad-except
+# pylint: disable=unused-variable
 import logging
 import os
 
@@ -28,11 +32,12 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
     duration = None
     output = ''
 
+    # Ensure logs folder exists
+    dir_path = os.path.dirname(os.path.realpath(log_file))
+    Folder.create(dir_path)
+
     # Command settings
     if not wait:
-        # Ensure folder exists
-        dir_path = os.path.dirname(os.path.realpath(log_file))
-        Folder.create(dir_path)
         # Redirect output to file
         File.write(path=log_file, text=cmd + os.linesep + '====>' + os.linesep)
         cmd = cmd + ' >> ' + log_file + ' 2>&1 &'
@@ -66,7 +71,7 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
 
         # Append stderr to output
         stderr = File.read(path=log_file)
-        if len(stderr) > 0:
+        if stderr:
             output = output + os.linesep + File.read(path=log_file)
 
         # noinspection PyBroadException

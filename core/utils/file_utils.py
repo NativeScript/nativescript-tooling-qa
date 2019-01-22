@@ -18,7 +18,7 @@ class Folder(object):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
-            except OSError as e:
+            except OSError as error:
                 for root, dirs, files in os.walk(folder, topdown=False):
                     for name in files:
                         filename = os.path.join(root, name)
@@ -27,7 +27,7 @@ class Folder(object):
                     for name in dirs:
                         os.rmdir(os.path.join(root, name))
                 os.rmdir(folder)
-                Log.error('Error: %s - %s.' % (e.filename, e.strerror))
+                Log.error('Error: %s - %s.' % (error.filename, error.strerror))
 
     @staticmethod
     def exists(folder):
@@ -76,11 +76,12 @@ class Folder(object):
         :param folder: Folder path.
         :return: Size in bytes.
         """
+        # pylint: disable=unused-variable
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(folder):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
+            for file_name in filenames:
+                file_path = os.path.join(dirpath, file_name)
+                total_size += os.path.getsize(file_path)
         return total_size
 
 
@@ -149,6 +150,7 @@ class File(object):
         :param extension: File extension.
         :return: List of found files.
         """
+        # pylint: disable=unused-variable
         matches = []
         if '.' not in extension:
             extension = '.' + extension

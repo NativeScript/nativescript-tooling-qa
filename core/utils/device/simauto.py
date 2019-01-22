@@ -1,3 +1,6 @@
+# pylint: disable=import-error
+# pylint: disable=broad-except
+# pylint: disable=too-many-nested-blocks
 import atomac
 
 
@@ -37,8 +40,7 @@ class SimAuto(object):
         element = SimAuto.find(device_info=device_info, text=text)
         if element is not None:
             return True
-        else:
-            return False
+        return False
 
     @staticmethod
     def click(device_info, text):

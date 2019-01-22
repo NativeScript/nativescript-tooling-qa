@@ -1,3 +1,5 @@
+# pylint: disable=wrong-import-order
+# pylint: disable=broad-except
 import logging
 import os
 import time
@@ -38,10 +40,7 @@ class Process(object):
         Check if process with specified commandline is running.
         """
         proc = Process.get_proc_by_commandline(commandline=commandline)
-        if proc is not None:
-            return True
-        else:
-            return False
+        return bool(proc is not None)
 
     @staticmethod
     def get_proc_by_commandline(commandline):
@@ -79,7 +78,8 @@ class Process(object):
                 running = True
                 break
             if (running is False) and (time.time() > end_time):
-                raise NameError("{0} not running in {1} seconds.", proc_name, timeout)
+                error = "{0} not running in {1} seconds.", proc_name, timeout
+                raise Exception(error)
         return running
 
     @staticmethod
@@ -130,9 +130,9 @@ class Process(object):
         for proc in psutil.process_iter():
             try:
                 connections = proc.connections(kind='inet')
-                if len(connections) > 0:
-                    for c in connections:
-                        if c.laddr.port == port:
+                if connections:
+                    for connection in connections:
+                        if connection.laddr.port == port:
                             cmd = ''.join(proc.cmdline())
                             proc.kill()
                             Log.info('Kill processes listening on port {0}.'.format(str(port)))
@@ -143,9 +143,9 @@ class Process(object):
     @staticmethod
     def kill_pid(pid):
         try:
-            p = psutil.Process(pid)
-            p.terminate()
-            Log.log(level=logging.DEBUG, msg="Process has been killed: {0}{1}".format(os.linesep, p.cmdline()))
+            proc = psutil.Process(pid)
+            proc.terminate()
+            Log.log(level=logging.DEBUG, msg="Process has been killed: {0}{1}".format(os.linesep, proc.cmdline()))
         except Exception:
             pass
 

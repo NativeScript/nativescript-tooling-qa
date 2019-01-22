@@ -28,10 +28,10 @@ class AdbTests(TnsTest):
         TnsTest.tearDownClass()
 
     def test_01_adb_get_source(self):
-        page_source = Adb.get_page_source(id=self.emu.id)
+        page_source = Adb.get_page_source(device_id=self.emu.id)
         assert '</hierarchy>' in page_source
 
     def test_02_adb_get_screen(self):
         path = os.path.join(Settings.TEST_OUT_HOME, 'temp.png')
         File.delete(path)
-        Adb.get_screen(id=self.emu.id, file_path=path)
+        Adb.get_screen(device_id=self.emu.id, file_path=path)

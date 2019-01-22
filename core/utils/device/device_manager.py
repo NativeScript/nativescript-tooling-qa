@@ -26,7 +26,7 @@ class DeviceManager(object):
     @staticmethod
     def get_device(device_type):
         devices = DeviceManager.get_devices(device_type=device_type)
-        if len(devices) > 0:
+        if devices:
             return devices[0]
         else:
             raise Exception('Failed to find {0} device.'.format(device_type))
@@ -61,19 +61,24 @@ class DeviceManager(object):
             Log.info('Booting {0} with cmd:'.format(emulator.avd))
             Log.info(command)
             run(cmd=command, wait=False, register=False)
-            booted = Adb.wait_until_boot(id=emulator.id)
+            booted = Adb.wait_until_boot(device_id=emulator.emu_id)
             if booted:
                 Log.info('{0} is up and running!'.format(emulator.avd))
-                device = Device(id=emulator.id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
+                device = Device(id=emulator.emu_id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
                 TestContext.STARTED_DEVICES.append(device)
                 return device
             else:
                 raise Exception('Failed to boot {0}!'.format(emulator.avd))
 
         @staticmethod
-        def is_available(emulator):
-            # TODO: Implement it.
-            return True
+        def is_available(avd_name):
+            avd_manager = os.path.join(ANDROID_HOME, 'tools', 'bin', 'avdmanager')
+            result = run(cmd='{0} list avd -c'.format(avd_manager))
+            avds = result.output.splitlines()
+            for avd in avds:
+                if avd == avd_name:
+                    return True
+            return False
 
         @staticmethod
         def is_running(emulator):
@@ -82,17 +87,16 @@ class DeviceManager(object):
             :param emulator: EmulatorInfo object.
             :return: True if running, False if not running.
             """
-            if Adb.is_running(id=emulator.id):
-                if str(emulator.os_version) in Adb.get_device_version(id=emulator.id):
+            if Adb.is_running(device_id=emulator.emu_id):
+                if str(emulator.os_version) in Adb.get_device_version(device_id=emulator.emu_id):
                     return True
             return False
 
         @staticmethod
         def ensure_available(emulator, force_start=False):
             if DeviceManager.Emulator.is_running(emulator=emulator) and not force_start:
-                pass
-                # TODO: Implement it.
-            elif DeviceManager.Emulator.is_available(emulator=emulator):
+                return emulator
+            elif DeviceManager.Emulator.is_available(avd_name=emulator.avd):
                 return DeviceManager.Emulator.start(emulator)
             else:
                 raise Exception('{0} emulator not available! Plase create it.'.format(emulator.avd))
@@ -110,20 +114,20 @@ class DeviceManager(object):
             return simulator_info
 
         @staticmethod
-        def stop(id='booted'):
+        def stop(sim_id='booted'):
             """
             Stop running simulators (by default stop all simulators)
-            :param id: Device identifier (Simulator GUID)
+            :param sim_id: Device identifier (Simulator ID)
             """
-            if id == 'booted':
+            if sim_id == 'booted':
                 Log.info('Stop all running simulators.')
                 Process.kill('Simulator')
                 Process.kill('tail')
                 Process.kill('launchd_sim')
                 Process.kill_by_commandline('CoreSimulator')
             else:
-                Log.info('Stop simulator with id ' + id)
-                run(cmd='xcrun simctl shutdown {0}'.format(id), timeout=60)
+                Log.info('Stop simulator with id ' + sim_id)
+                run(cmd='xcrun simctl shutdown {0}'.format(sim_id), timeout=60)
 
         @staticmethod
         def start(simulator_info):
