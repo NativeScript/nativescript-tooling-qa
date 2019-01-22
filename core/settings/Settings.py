@@ -140,3 +140,4 @@ class AppName(object):
     DEFAULT_NG = 'TestApp'
     WITH_DASH = 'tns-app'
     WITH_SPACE = 'Test App'
+    WITH_NUMBER = '123'

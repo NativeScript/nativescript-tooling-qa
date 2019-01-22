@@ -54,3 +54,6 @@ class Apps(object):
     SCHEMATICS_SHARED = AppInfo(type=AppType.SHARED_NG, id=None, size=__shared_size, texts=['Welcome'])
     SCHEMATICS_SHARED_SAMPLE = AppInfo(type=AppType.SHARED_NG, id=None, size=__shared_size, texts=['Barcelona'])
     SCHEMATICS_NS = AppInfo(type=AppType.NG, id=None, size=__ns_only_size, texts=['Tap the button'])
+    HELLO_WORLD_JS = AppInfo(type=AppType.JS, id=None, size=None, texts=None)
+    HELLO_WORLD_TS = AppInfo(type=AppType.TS, id=None, size=None, texts=None)
+    HELLO_WORLD_NG = AppInfo(type=AppType.NG, id=None, size=None, texts=None)

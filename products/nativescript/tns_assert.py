@@ -3,11 +3,17 @@ import os
 from core.enums.app_type import AppType
 from core.settings import Settings
 from core.utils.file_utils import Folder
+from core.utils.file_utils import File
 from core.utils.json_utils import JsonUtils
 from core.utils.perf_utils import PerfUtils
+from products.nativescript.tns_helpers import TnsHelpers
 
 
 class TnsAssert(object):
+    NODE_MODULES = 'node_modules'
+    TNS_MODULES = os.path.join(NODE_MODULES, 'tns-core-modules')
+    HOOKS = 'hooks'
+
     @staticmethod
     def created(app_name, output=None, app_data=None):
 
@@ -17,18 +23,28 @@ class TnsAssert(object):
 
         # Assert output
         if output is not None:
+            app = app_name.rsplit('/')[-1]
             assert 'Now you can navigate to your project with $ cd' in output
             assert 'After that you can preview it on device by executing $ tns preview' in output
             assert 'After that you can run it on device/emulator by executing $ tns run <platform>' not in output
+            assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
 
         # Assert app data
         if app_data is not None:
             # Assert app type
+            assert Folder.exists(os.path.join(app_path, TnsAssert.TNS_MODULES))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.NODE_MODULES, 'nativescript-theme-core'))
+            assert Folder.exists(os.path.join(app_path, TnsAssert.NODE_MODULES, 'nativescript-dev-webpack'))
+
             if app_data.type is AppType.JS:
                 pass
             elif app_data.type is AppType.TS:
+                TnsAssert.__verify_created_ts()
                 pass
             elif app_data.type is AppType.NG:
+                TnsAssert.__verify_created_ng()
+                pass
+            elif app_data.type is AppType.VUE:
                 pass
             elif app_data.type is AppType.SHARED_NG:
                 pass
@@ -77,3 +93,29 @@ class TnsAssert(object):
             # Assert size
             if app_data.size is not None:
                 pass
+
+    @staticmethod
+    def __verify_created_ts():
+        app_path = TnsHelpers.get_app_path(app_name='TestAppTS')
+        assert File.exists(os.path.join(app_path, 'tsconfig.json'))
+        assert File.exists(os.path.join(app_path, 'webpack.config.js'))
+        assert File.exists(os.path.join(app_path, 'tsconfig.tns.json'))
+        assert not File.exists(os.path.join(app_path, 'references.d.ts'))
+        assert File.exists(os.path.join(app_path, TnsAssert.TNS_MODULES, 'tns-core-modules.d.ts'))
+        assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-prepare',
+                                        'nativescript-dev-typescript.js'))
+        assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-watch',
+                                        'nativescript-dev-typescript.js'))
+
+    @staticmethod
+    def __verify_created_ng():
+        app_path = TnsHelpers.get_app_path(app_name='TestAppNG')
+        assert File.exists(os.path.join(app_path, 'tsconfig.json'))
+        assert File.exists(os.path.join(app_path, 'webpack.config.js'))
+        assert File.exists(os.path.join(app_path, 'tsconfig.tns.json'))
+        assert not File.exists(os.path.join(app_path, 'references.d.ts'))
+        assert File.exists(os.path.join(app_path, TnsAssert.TNS_MODULES, 'tns-core-modules.d.ts'))
+        assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-prepare',
+                                        'nativescript-dev-typescript.js'))
+        assert File.exists(os.path.join(app_path, TnsAssert.HOOKS, 'before-watch',
+                                        'nativescript-dev-typescript.js'))
