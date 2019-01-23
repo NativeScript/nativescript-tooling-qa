@@ -6,8 +6,6 @@ from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import File
-from core.utils.wait import Wait
 from products.nativescript.tns import Tns
 from products.nativescript.tns_helpers import TnsHelpers
 
