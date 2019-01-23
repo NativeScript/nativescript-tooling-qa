@@ -12,9 +12,12 @@ from core.utils.file_utils import File
 class TnsHelpers(object):
 
     @staticmethod
-    def get_app_path(app_name):
-        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
-        return app_path
+    def get_app_path(app_name, path=Settings.TEST_RUN_HOME):
+        return os.path.join(path, app_name)
+
+    @staticmethod
+    def get_app_node_modules_path(app_name, path=Settings.TEST_RUN_HOME):
+        return os.path.join(TnsHelpers.get_app_path(app_name=app_name, path=path), 'node_modules')
 
     @staticmethod
     def get_apk(app_name):
