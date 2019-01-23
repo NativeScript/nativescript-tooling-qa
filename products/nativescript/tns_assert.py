@@ -36,19 +36,19 @@ class TnsAssert(object):
             assert Folder.exists(os.path.join(app_path, TnsAssert.NODE_MODULES, 'nativescript-theme-core'))
             assert Folder.exists(os.path.join(app_path, TnsAssert.NODE_MODULES, 'nativescript-dev-webpack'))
 
-            if app_data.type is AppType.JS:
+            if app_data.app_type is AppType.JS:
                 pass
-            elif app_data.type is AppType.TS:
+            elif app_data.app_type is AppType.TS:
                 TnsAssert.__verify_created_ts()
-            elif app_data.type is AppType.NG:
+            elif app_data.app_type is AppType.NG:
                 TnsAssert.__verify_created_ng()
-            elif app_data.type is AppType.VUE:
+            elif app_data.app_type is AppType.VUE:
                 pass
-            elif app_data.type is AppType.SHARED_NG:
+            elif app_data.app_type is AppType.SHARED_NG:
                 pass
 
             # Assert app id
-            if app_data.id is not None:
+            if app_data.app_id is not None:
                 pass
 
             # Assert size
@@ -70,6 +70,7 @@ class TnsAssert(object):
         assert json['nativescript']['tns-' + platform_string]['version'] is not None, \
             'tns-' + platform_string + ' not available in package.json of the app.'
 
+    # noinspection PyUnusedLocal
     @staticmethod
     def build(app_name, platform=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
               bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False, output=None, app_data=None):
@@ -82,13 +83,13 @@ class TnsAssert(object):
         # Assert app data
         if app_data is not None:
             # Assert app type
-            if app_data.type is AppType.JS:
+            if app_data.app_type is AppType.JS:
                 pass
-            elif app_data.type is AppType.TS:
+            elif app_data.app_type is AppType.TS:
                 pass
-            elif app_data.type is AppType.NG:
+            elif app_data.app_type is AppType.NG:
                 pass
-            elif app_data.type is AppType.SHARED_NG:
+            elif app_data.app_type is AppType.SHARED_NG:
                 pass
 
             # Assert size
