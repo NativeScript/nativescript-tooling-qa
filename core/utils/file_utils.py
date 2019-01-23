@@ -108,6 +108,11 @@ class File(object):
             text_file.write(text)
 
     @staticmethod
+    def append(path, text):
+        with open(path, 'a') as text_file:
+            text_file.write(text)
+
+    @staticmethod
     def replace(path, old_string, new_string):
         content = File.read(path=path)
         new_content = content.replace(old_string, new_string)
@@ -160,3 +165,13 @@ class File(object):
                     Log.debug('File with {0} extension found: {1}'.format(extension, os.path.abspath(f)))
                     matches.append(os.path.join(root, f))
         return matches
+
+    @staticmethod
+    def extract_part_of_text(text, key_word):
+        """
+        That method will extract text from last occurance of key word
+        to the end of the file
+        """
+        index = text.rfind(key_word)
+        text = text[index:]
+        return text
