@@ -26,7 +26,7 @@ class CreateTests(TnsTest):
 
     def test_001_create_app_like_real_user(self):
         """Create app with no any params"""
-        Tns.create(app_name=Settings.AppName.DEFAULT, app_data=Apps.HELLO_WORLD_JS)
+        Tns.create(app_name=Settings.AppName.DEFAULT, app_data=Apps.HELLO_WORLD_JS, update=False)
 
     def test_002_create_app_template_js(self):
         """Create app with --template js project"""
