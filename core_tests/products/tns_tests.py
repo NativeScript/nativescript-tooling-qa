@@ -9,6 +9,7 @@ from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File
 from core.utils.wait import Wait
 from products.nativescript.tns import Tns
+from products.nativescript.tns_helpers import TnsHelpers
 
 
 class TnsTests(TnsTest):
@@ -47,9 +48,7 @@ class TnsTests(TnsTest):
 
         # Wait until app is build and installed.
         texts = ['Project successfully built', 'Successfully installed']
-        for text in texts:
-            found = Wait.until(lambda: text in File.read(result.log_file), timeout=180, period=10)
-            assert found, '"{0}" not found in logs.'.format(text)
+        TnsHelpers.wait_for_log(result.log_file, texts)
 
     @timed(300)
     def test_002_tns_run_android_with_justlaunch(self):

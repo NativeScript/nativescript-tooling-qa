@@ -12,6 +12,7 @@ sample-Groceries
 master-detail*
 hello-world*
 tab-navigation*
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
