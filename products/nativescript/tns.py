@@ -145,7 +145,11 @@ class Tns(object):
 
         # Verify app is created properly
         if verify is not False:
-            TnsAssert.created(app_name=app_name, output=result.output, app_data=app_data)
+            # Usually we do not pass path on tns create, which actually equals to cwd.
+            # In such cases pass correct path to TnsAssert.created()
+            if path is None:
+                path = Settings.TEST_RUN_HOME
+            TnsAssert.created(app_name=app_name, output=result.output, app_data=app_data, path=path)
 
         return result
 
