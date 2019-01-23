@@ -3,6 +3,7 @@
 import os
 import time
 
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 
@@ -50,24 +51,24 @@ class TnsHelpers(object):
                 log = File.extract_part_of_text(log, verified_flag)
             for item in string_list:
                 if item in log:
-                    print "'{0}' found.".format(item)
+                    Log.info("'{0}' found.".format(item))
                 else:
                     not_found_list.append(item)
             if not_found_list == []:
                 all_items_found = True
-                print "Log contains: {0}".format(string_list)
+                Log.info("Log contains: {0}".format(string_list))
                 break
             else:
-                print "'{0}' NOT found. Wait...".format(not_found_list)
+                Log.info("'{0}' NOT found. Wait...".format(not_found_list))
                 time.sleep(check_interval)
             if 'BUILD FAILED' in log:
-                print 'BUILD FAILED. No need to wait more time!'
+                Log.error('BUILD FAILED. No need to wait more time!')
                 break
             if 'Unable to sync files' in log:
-                print 'Sync process failed. No need to wait more time!'
+                Log.error('Sync process failed. No need to wait more time!')
                 break
             if 'errors were thrown' in log:
-                print 'Multiple errors were thrown. No need to wait more time!'
+                Log.error('Multiple errors were thrown. No need to wait more time!')
                 break
 
         # Mark that part of the log as verified by appending a flag at the end.
@@ -81,8 +82,7 @@ class TnsHelpers(object):
                 for item in not_existing_string_list:
                     assert item not in log, "{0} found! It should not be in logs.\nLog:\n{1}".format(item, log)
         else:
-            print "##### OUTPUT BEGIN #####\n"
-            print log
-            print "##### OUTPUT END #####\n"
-            print ""
+            Log.debug('##### OUTPUT BEGIN #####\n')
+            Log.debug(log)
+            Log.debug('##### OUTPUT END #####\n')
             assert False, "Output does not contain {0}".format(not_found_list)
