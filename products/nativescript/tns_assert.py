@@ -12,13 +12,14 @@ from products.nativescript.tns_helpers import TnsHelpers
 class TnsAssert(object):
 
     @staticmethod
-    def created(app_name, output=None, app_data=None, path=Settings.TEST_RUN_HOME):
+    def created(app_name, output=None, app_data=None, path=Settings.TEST_RUN_HOME, theme=True):
         """
         Verify app is created properly.
         :param app_name: Name of the app.
         :param output: Console output of `tns create` command.
         :param app_data: AppInfo object.
         :param path: Base path where app is created.
+        :param theme: If true it will verify default {N} theme is installed.
         """
         # Assert app exists
         app_path = os.path.join(path, app_name)
@@ -40,7 +41,8 @@ class TnsAssert(object):
             assert File.exists(os.path.join(node_path, 'tns-core-modules', 'tns-core-modules.d.ts'))
 
             # Verify {N} core theme is installed
-            assert Folder.exists(os.path.join(node_path, 'nativescript-theme-core')), '{N} theme do not exists in app.'
+            if theme:
+                assert Folder.exists(os.path.join(node_path, 'nativescript-theme-core')), '{N} theme do not exists.'
 
             # Verify webpack is installed
             before_watch_hooks = os.path.join(app_path, 'hooks', 'before-watch')

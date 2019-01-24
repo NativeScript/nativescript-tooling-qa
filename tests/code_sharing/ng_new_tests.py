@@ -104,7 +104,12 @@ class NGNewTests(TnsTest):
         # Create shared project with sample data
         result = NG.new(collection=NS_SCHEMATICS, project=NGNewTests.app_name, theme=theme, shared=shared,
                         sample=sample, style=style, prefix=prefix, source_dir=source_dir, webpack=webpack)
-        TnsAssert.created(app_name=NGNewTests.app_name, app_data=app_data)
+
+        # Verify valid {N} app is created
+        theme = True
+        if style is None:
+            theme = False
+        TnsAssert.created(app_name=NGNewTests.app_name, app_data=app_data, theme=theme)
         assert 'Directory is already under version control. Skipping initialization of git.' in result.output, \
             'Git init should be skipped because app is created already existing repo (the one with tests).'
 
