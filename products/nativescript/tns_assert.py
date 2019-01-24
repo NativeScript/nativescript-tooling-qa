@@ -12,7 +12,7 @@ from products.nativescript.tns_helpers import TnsHelpers
 class TnsAssert(object):
 
     @staticmethod
-    def created(app_name, output=None, app_data=None, path=Settings.TEST_RUN_HOME, theme=True):
+    def created(app_name, output=None, app_data=None, path=Settings.TEST_RUN_HOME, webpack=True, theme=True):
         """
         Verify app is created properly.
         :param app_name: Name of the app.
@@ -33,31 +33,33 @@ class TnsAssert(object):
             assert 'After that you can run it on device/emulator by executing $ tns run <platform>' not in output
             assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
 
-        # Assert app data
-        if app_data is not None:
-            # Verify modules installed
-            node_path = TnsHelpers.get_app_node_modules_path(app_name=app_name, path=path)
-            assert Folder.exists(os.path.join(node_path, 'tns-core-modules')), '{N} theme do not exists in app.'
-            assert File.exists(os.path.join(node_path, 'tns-core-modules', 'tns-core-modules.d.ts'))
+        # Verify modules installed
+        node_path = TnsHelpers.get_app_node_modules_path(app_name=app_name, path=path)
+        assert Folder.exists(os.path.join(node_path, 'tns-core-modules')), '{N} theme do not exists in app.'
+        assert File.exists(os.path.join(node_path, 'tns-core-modules', 'tns-core-modules.d.ts'))
 
-            # Verify {N} core theme is installed
-            if theme:
-                assert Folder.exists(os.path.join(node_path, 'nativescript-theme-core')), '{N} theme do not exists.'
+        # Verify {N} core theme is installed
+        if theme:
+            assert Folder.exists(os.path.join(node_path, 'nativescript-theme-core')), '{N} theme do not exists.'
 
-            # Verify webpack is installed
+        # Verify webpack is installed
+        if webpack:
             before_watch_hooks = os.path.join(app_path, 'hooks', 'before-watch')
             assert Folder.exists(os.path.join(node_path, 'nativescript-dev-webpack')), 'Webpack not installed in app.'
             assert File.exists(os.path.join(app_path, 'webpack.config.js')), 'Missing webpack config.'
             assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
 
-            # Verify typescript in TS and NG apps:
-            if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
-                assert Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
-                assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
+        # Verify typescript in TS and NG apps:
+        if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
+            assert Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
+            assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
+            if webpack:
                 assert File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'
-                assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
-                    'Hooks not installed.'
+            assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
+                'Hooks not installed.'
 
+        # Assert app data
+        if app_data is not None:
             # Assert app id
             if app_data.bundle_id is not None:
                 pass
