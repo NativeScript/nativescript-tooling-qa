@@ -101,15 +101,25 @@ class NGNewTests(TnsTest):
             else:
                 app_data = Apps.SCHEMATICS_SHARED
 
+        # Create app
+        NGNewTests.create_app(app_data=app_data, shared=shared, sample=sample, theme=theme, style=style,
+                              prefix=prefix, source_dir=source_dir, webpack=webpack)
+
+        # Update the app
+        if Settings.ENV != EnvironmentType.LIVE:
+            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=False)
+
+        # Run the app
+        NGNewTests.run_bundle(app_data=app_data, webpack=webpack, shared=shared, theme=theme)
+
+    @staticmethod
+    def create_app(app_data, shared, sample, theme, style, prefix, source_dir, webpack):
         # Create shared project with sample data
         result = NG.new(collection=NS_SCHEMATICS, project=NGNewTests.app_name, theme=theme, shared=shared,
                         sample=sample, style=style, prefix=prefix, source_dir=source_dir, webpack=webpack)
 
         # Verify valid {N} app is created
-        theme = True
-        if style is None:
-            theme = False
-        TnsAssert.created(app_name=NGNewTests.app_name, app_data=app_data, theme=theme)
+        TnsAssert.created(app_name=NGNewTests.app_name, app_data=app_data, theme=theme, webpack=webpack)
         assert 'Directory is already under version control. Skipping initialization of git.' in result.output, \
             'Git init should be skipped because app is created already existing repo (the one with tests).'
 
@@ -152,10 +162,8 @@ class NGNewTests(TnsTest):
                 source_dir = 'src'
             assert Folder.exists(os.path.join(Settings.TEST_RUN_HOME, NGNewTests.app_name, source_dir))
 
-        # Update the app
-        if Settings.ENV != EnvironmentType.LIVE:
-            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=False)
-
+    @staticmethod
+    def run_bundle(app_data, webpack, shared, theme):
         # Run android (if webpack is available -> use --bundle)
         Tns.run(app_name=NGNewTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
         for text in app_data.texts:
