@@ -50,17 +50,17 @@ class TnsAssert(object):
             assert File.exists(os.path.join(app_path, 'webpack.config.js')), 'Missing webpack config.'
             assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
 
-        # Verify typescript in TS and NG apps:
-        if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
-            assert Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
-            assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
-            if webpack:
-                assert File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'
-            assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
-                'Hooks not installed.'
-
         # Assert app data
         if app_data is not None:
+            # Verify typescript in TS and NG apps:
+            if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
+                assert Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
+                assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
+                if webpack:
+                    assert File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'
+                assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
+                    'Hooks not installed.'
+
             # Assert app id
             if app_data.bundle_id is not None:
                 pass
