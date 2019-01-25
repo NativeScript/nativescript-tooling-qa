@@ -19,6 +19,7 @@ class TnsAssert(object):
         :param output: Console output of `tns create` command.
         :param app_data: AppInfo object.
         :param path: Base path where app is created.
+        :param webpack: If true it will verify webpack plugin is installed.
         :param theme: If true it will verify default {N} theme is installed.
         """
         # Assert app exists
@@ -43,8 +44,8 @@ class TnsAssert(object):
             assert Folder.exists(os.path.join(node_path, 'nativescript-theme-core')), '{N} theme do not exists.'
 
         # Verify webpack is installed
+        before_watch_hooks = os.path.join(app_path, 'hooks', 'before-watch')
         if webpack:
-            before_watch_hooks = os.path.join(app_path, 'hooks', 'before-watch')
             assert Folder.exists(os.path.join(node_path, 'nativescript-dev-webpack')), 'Webpack not installed in app.'
             assert File.exists(os.path.join(app_path, 'webpack.config.js')), 'Missing webpack config.'
             assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
