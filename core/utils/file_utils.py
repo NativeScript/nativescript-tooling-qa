@@ -85,19 +85,18 @@ class Folder(object):
         return total_size
 
 
+# noinspection PyUnresolvedReferences
 class File(object):
     @staticmethod
-    def read(path, log_content=False):
+    def read(path):
         if File.exists(path):
-            with open(path, 'r') as file_to_read:
-                output = file_to_read.read()
-            if log_content:
-                Log.info('Read ' + path + ':')
-                Log.info(output)
             if Settings.PYTHON_VERSION < 3:
-                # noinspection PyUnresolvedReferences
+                with open(path, 'r') as file_to_read:
+                    output = file_to_read.read()
                 return str(output.decode('utf8').encode('utf8'))
             else:
+                with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                    output = f.read()
                 return output
         else:
             raise IOError("{0} not found!".format(path))
