@@ -10,7 +10,7 @@ class TnsLogs(object):
     SKIP_NODE_MODULES = ['Skipping node_modules folder!', 'Use the syncAllFiles option to sync files from this folder.']
 
     @staticmethod
-    def get_prepare_log_strings(platform, plugins):
+    def prepare_messages(platform, plugins):
         """
         Get log messages that should be present when project is prepared (except the case when prepare is skipped!).
         :param platform: Platform.ANDROID or Platform.IOS
@@ -27,7 +27,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def get_build_log_strings(platform, prepare_type):
+    def build_messages(platform, prepare_type):
         """
         Get log messages that should be present when project is build.
         :param platform: Platform.ANDROID or Platform.IOS
@@ -49,11 +49,11 @@ class TnsLogs(object):
         # Xcode build...
         # Project successfully built.
 
-        logs = ['Project successfully built.']
+        logs = ['Project successfully built']
         return logs
 
     @staticmethod
-    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=45, check_interval=3):
+    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=45, check_interval=1):
         """
         Wait until log file contains list of string.
         :param log_file: Path to log file.

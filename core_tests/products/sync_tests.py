@@ -11,7 +11,7 @@ class SyncMessagesTests(unittest.TestCase):
         assert len(TnsLogs.SKIP_NODE_MODULES) == 2
 
     def test_02_get_prepare_log_strings(self):
-        logs = TnsLogs.get_prepare_log_strings(platform=Platform.ANDROID, plugins=['tns-core-modules', 'fake-plugin'])
+        logs = TnsLogs.prepare_messages(platform=Platform.ANDROID, plugins=['tns-core-modules', 'fake-plugin'])
         assert 'Preparing project...' in logs
         assert 'Successfully prepared plugin tns-core-modules for android' in logs
         assert 'Successfully prepared plugin fake-plugin for android' in logs
