@@ -1,35 +1,56 @@
-# pylint: disable=unused-argument
-# TODO: Implement it!
-import os
 import time
 
+from core.enums.platform_type import Platform
 from core.log.log import Log
-from core.settings import Settings
 from core.utils.file_utils import File
 
 
 # noinspection PyUnusedLocal
-class TnsHelpers(object):
+class TnsLogs(object):
+    SKIP_NODE_MODULES = ['Skipping node_modules folder!', 'Use the syncAllFiles option to sync files from this folder.']
 
     @staticmethod
-    def get_app_path(app_name, path=Settings.TEST_RUN_HOME):
-        return os.path.join(path, app_name)
+    def get_prepare_log_strings(platform, plugins):
+        """
+        Get log messages that should be present when project is prepared (except the case when prepare is skipped!).
+        :param platform: Platform.ANDROID or Platform.IOS
+        :param plugins: Array of strings: ['nativescript-theme-core', 'tns-core-modules', 'tns-core-modules-widgets']
+        :return: Array of strings.
+        """
+        logs = ['Preparing project...']
+        if platform == Platform.ANDROID:
+            logs.append('Project successfully prepared (Android)')
+        if platform == Platform.IOS:
+            logs.append('Project successfully prepared (iOS)')
+        for plugin in plugins:
+            logs.append('Successfully prepared plugin {0} for {1}'.format(plugin, str(platform)))
+        return logs
 
     @staticmethod
-    def get_app_node_modules_path(app_name, path=Settings.TEST_RUN_HOME):
-        return os.path.join(TnsHelpers.get_app_path(app_name=app_name, path=path), 'node_modules')
+    def get_build_log_strings(platform, prepare_type):
+        """
+        Get log messages that should be present when project is build.
+        :param platform: Platform.ANDROID or Platform.IOS
+        :param prepare_type: PrepareType enum value.
+        :return: Array of strings.
+        """
+        # ANDROID LOGS:
+        # Building project...
+        # Gradle build...
+        # 	 + setting applicationId
+        # 	 + applying user-defined configuration from /Users/topuzov/Git/nativescript-tooling-qa/TestApp/app/App_Resources/Android/app.gradle
+        # 	 + using support library version 28.0.0
+        # 	 + adding nativescript runtime package dependency: nativescript-optimized-with-inspector
+        # 	 + adding aar plugin dependency: /Users/topuzov/Git/nativescript-tooling-qa/TestApp/node_modules/tns-core-modules-widgets/platforms/android/widgets-release.aar
+        # Project successfully built.
 
-    @staticmethod
-    def get_apk(app_name):
-        return ''
+        # IOS LOGS:
+        # Building project...
+        # Xcode build...
+        # Project successfully built.
 
-    @staticmethod
-    def get_ipa(app_name):
-        return ''
-
-    @staticmethod
-    def get_app(app_name):
-        return ''
+        logs = ['Project successfully built.']
+        return logs
 
     @staticmethod
     def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=45, check_interval=3):
@@ -57,7 +78,7 @@ class TnsHelpers(object):
                     Log.info("'{0}' found.".format(item))
                 else:
                     not_found_list.append(item)
-            if not_found_list == []:
+            if not not_found_list:
                 all_items_found = True
                 Log.info("Log contains: {0}".format(string_list))
                 break

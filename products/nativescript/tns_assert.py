@@ -6,7 +6,7 @@ from core.utils.file_utils import File
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from core.utils.perf_utils import PerfUtils
-from products.nativescript.tns_helpers import TnsHelpers
+from products.nativescript.tns_paths import TnsPaths
 
 
 class TnsAssert(object):
@@ -35,7 +35,7 @@ class TnsAssert(object):
             assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
 
         # Verify modules installed
-        node_path = TnsHelpers.get_app_node_modules_path(app_name=app_name, path=path)
+        node_path = TnsPaths.get_app_node_modules_path(app_name=app_name, path=path)
         assert Folder.exists(os.path.join(node_path, 'tns-core-modules')), '{N} theme do not exists in app.'
         assert File.exists(os.path.join(node_path, 'tns-core-modules', 'tns-core-modules.d.ts'))
 

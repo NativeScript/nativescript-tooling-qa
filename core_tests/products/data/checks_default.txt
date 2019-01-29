@@ -1,0 +1,77 @@
+# Run and changes files flow
+
+## JS and TS with options
+
+### Android
+
+/Users/topuzov/Git/nativescript-tooling-qa/node_modules/.bin/tns run android --path TestApp --emulator
+====>
+[Verify node_modules not watched] Skipping node_modules folder! Use the syncAllFiles option to sync files from this folder.
+[Initial prepare] Preparing project...
+[Initial prepare] Successfully prepared plugin nativescript-theme-core for android.
+[Initial prepare] Successfully prepared plugin tns-core-modules for android.
+[Initial prepare] Successfully prepared plugin tns-core-modules-widgets for android.
+[Initial prepare] Project successfully prepared (Android)
+[Initial build] Building project...
+[Initial build] Gradle build...
+[Initial build] 	 + setting applicationId
+[Initial build] 	 + applying user-defined configuration from /Users/topuzov/Git/nativescript-tooling-qa/TestApp/app/App_Resources/Android/app.gradle
+[Initial build] 	 + using support library version 28.0.0
+[Initial build] 	 + adding nativescript runtime package dependency: nativescript-optimized-with-inspector
+[Initial build] 	 + adding aar plugin dependency: /Users/topuzov/Git/nativescript-tooling-qa/TestApp/node_modules/tns-core-modules-widgets/platforms/android/widgets-release.aar
+[Initial build] Project successfully built.
+[Initial run] Installing on device emulator-5562...
+[Initial run] Successfully installed on device with identifier 'emulator-5562'.
+[Initial run] Restarting application on device emulator-5562...
+[Initial run] Successfully synced application org.nativescript.TestApp on device emulator-5562.
+[Initial run] ActivityManager: Start proc 2746:org.nativescript.TestApp/u0a55 for activity org.nativescript.TestApp/com.tns.NativeScriptActivity
+========== Sync JS Change ========================================================================================================
+[Prepare with change] Preparing project...
+[Prepare with change] Project successfully prepared (Android)
+[Sync JS file] Successfully transferred main-view-model.js on device emulator-5562.
+[Sync JS file should cause restart] Restarting application on device emulator-5562...
+[Sync JS file] Successfully synced application org.nativescript.TestApp on device emulator-5562.
+[Sync JS file should cause restart] ActivityManager: Start proc 2888:org.nativescript.TestApp/u0a55 for activity org.nativescript.TestApp/com.tns.NativeScriptActivity
+========== Sync XML Change ========================================================================================================
+[Prepare with change] Preparing project...
+[Prepare with change] Project successfully prepared (Android)
+[Sync XML file] Successfully transferred main-page.xml on device emulator-5562.
+[Sync XML file] Refreshing application on device emulator-5562...
+[Sync XML file] Successfully synced application org.nativescript.TestApp on device emulator-5562.
+[Sync XML should NOT cause restart] ActivityManager: Start proc 2888:org.nativescript.TestApp/u0a55 is MISSING!
+
+### iOS
+
+/Users/topuzov/Git/nativescript-tooling-qa/node_modules/.bin/tns run ios --path TestApp --emulator
+====>
+[Verify node_modules not watched] Skipping node_modules folder! Use the syncAllFiles option to sync files from this folder.
+[Initial prepare] Preparing project...
+[Initial prepare] Successfully prepared plugin nativescript-theme-core for ios.
+[Initial prepare] Successfully prepared plugin tns-core-modules for ios.
+[Initial prepare] Successfully prepared plugin tns-core-modules-widgets for ios.
+[Initial prepare] Project successfully prepared (iOS)
+[Initial build] Building project...
+[Initial build] Xcode build...
+[Initial build] Project successfully built.
+[Initial run] Installing on device 91440777-B175-4E3D-86B5-70830628ECE4...
+[Initial run] Successfully installed on device with identifier '91440777-B175-4E3D-86B5-70830628ECE4'.
+[Initial run] Successfully transferred all files on device 91440777-B175-4E3D-86B5-70830628ECE4.
+[Initial run] Restarting application on device 91440777-B175-4E3D-86B5-70830628ECE4...
+[Initial run] Successfully synced application org.nativescript.TestApp on device 91440777-B175-4E3D-86B5-70830628ECE4.
+========== Sync JS Change ========================================================================================================
+[Prepare with change] Preparing project...
+[Prepare with change] Project successfully prepared (iOS)
+[Sync JS file] Successfully transferred main-view-model.js on device 91440777-B175-4E3D-86B5-70830628ECE4.
+[Sync JS file should cause restart] Restarting application on device 91440777-B175-4E3D-86B5-70830628ECE4...
+[Sync JS file] Successfully synced application org.nativescript.TestApp on device 91440777-B175-4E3D-86B5-70830628ECE4.
+========== Sync XML Change ========================================================================================================
+[Prepare with change] Preparing project...
+[Prepare with change] Project successfully prepared (iOS)
+[Sync XML file] Successfully transferred main-page.xml on device 91440777-B175-4E3D-86B5-70830628ECE4.
+[Sync XML should NOT cause restart] NativeScript debugger has opened inspector socket on port 18183 for org.nativescript.TestApp.
+[Sync XML file] Refreshing application on device 91440777-B175-4E3D-86B5-70830628ECE4...
+[Sync XML file] Successfully synced application org.nativescript.TestApp on device 91440777-B175-4E3D-86B5-70830628ECE4.
+CONSOLE LOG file:///app/tns_modules/tns-core-modules/inspector_modules.js:1:82: Loading inspector modules...
+CONSOLE LOG file:///app/tns_modules/tns-core-modules/inspector_modules.js:6:12: Finished loading inspector modules.
+NativeScript debugger attached.
+[Sync XML should NOT cause restart] Restarting application is MISSING!

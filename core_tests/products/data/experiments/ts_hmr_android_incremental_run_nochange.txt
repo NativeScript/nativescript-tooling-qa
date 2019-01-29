@@ -1,0 +1,72 @@
+/Users/topuzov/Git/nativescript-tooling-qa/node_modules/.bin/tns run android --path TestApp --emulator --hmr
+====>
+Skipping node_modules folder! Use the syncAllFiles option to sync files from this folder.
+Searching for devices...
+Hot Module Replacement (HMR) is currently in Beta. For more information about the current development state and any known issues, please check the relevant GitHub issue: https://github.com/NativeScript/NativeScript/issues/6398
+Hook skipped because bundling is in progress.
+Running webpack for Android...
+clean-webpack-plugin: /Users/topuzov/Git/nativescript-tooling-qa/TestApp/platforms/android/app/src/main/assets/app/**/* has been removed.
+File change detected. Starting incremental webpack compilation...
+
+webpack is watching the files…
+
+Hash: eb840fbc207d8b90a97d
+Version: webpack 4.27.1
+Time: 3484ms
+Built at: 01/29/2019 5:39:52 AM
+                                                              Asset       Size  Chunks             Chunk Names
+                                   App_Resources/Android/app.gradle  549 bytes          [emitted]  
+                 App_Resources/Android/src/main/AndroidManifest.xml   1.41 KiB          [emitted]  
+    App_Resources/Android/src/main/res/drawable-hdpi/background.png   3.42 KiB          [emitted]  
+          App_Resources/Android/src/main/res/drawable-hdpi/icon.png    6.8 KiB          [emitted]  
+          App_Resources/Android/src/main/res/drawable-hdpi/logo.png   32.4 KiB          [emitted]  
+    App_Resources/Android/src/main/res/drawable-ldpi/background.png   1.31 KiB          [emitted]  
+          App_Resources/Android/src/main/res/drawable-ldpi/icon.png   3.23 KiB          [emitted]  
+          App_Resources/Android/src/main/res/drawable-ldpi/logo.png   9.95 KiB          [emitted]  
+    App_Resources/Android/src/main/res/drawable-mdpi/background.png   1.89 KiB          [emitted]  
+          App_Resources/Android/src/main/res/drawable-mdpi/icon.png   3.42 KiB          [emitted]  
+          App_Resources/Android/src/main/res/drawable-mdpi/logo.png   15.8 KiB          [emitted]  
+App_Resources/Android/src/main/res/drawable-nodpi/splash_screen.xml  304 bytes          [emitted]  
+   App_Resources/Android/src/main/res/drawable-xhdpi/background.png   5.26 KiB          [emitted]  
+         App_Resources/Android/src/main/res/drawable-xhdpi/icon.png   10.4 KiB          [emitted]  
+         App_Resources/Android/src/main/res/drawable-xhdpi/logo.png     54 KiB          [emitted]  
+  App_Resources/Android/src/main/res/drawable-xxhdpi/background.png   10.3 KiB          [emitted]  
+        App_Resources/Android/src/main/res/drawable-xxhdpi/icon.png   20.3 KiB          [emitted]  
+        App_Resources/Android/src/main/res/drawable-xxhdpi/logo.png    116 KiB          [emitted]  
+ App_Resources/Android/src/main/res/drawable-xxxhdpi/background.png   3.87 KiB          [emitted]  
+       App_Resources/Android/src/main/res/drawable-xxxhdpi/icon.png   73.8 KiB          [emitted]  
+       App_Resources/Android/src/main/res/drawable-xxxhdpi/logo.png    193 KiB          [emitted]  
+           App_Resources/Android/src/main/res/values-v21/colors.xml  104 bytes          [emitted]  
+           App_Resources/Android/src/main/res/values-v21/styles.xml  902 bytes          [emitted]  
+               App_Resources/Android/src/main/res/values/colors.xml  237 bytes          [emitted]  
+               App_Resources/Android/src/main/res/values/styles.xml   1.68 KiB          [emitted]  
+                                                          bundle.js   41.7 KiB  bundle  [emitted]  bundle
+                                                       package.json   82 bytes          [emitted]  
+                                                         starter.js   39 bytes          [emitted]  
+                                                tns-java-classes.js    0 bytes          [emitted]  
+                                                          vendor.js   1.29 MiB  vendor  [emitted]  vendor
+Entrypoint bundle = vendor.js bundle.js
+[./ sync ^\.\/app\.(css|scss|less|sass)$] . sync nonrecursive ^\.\/app\.(css|scss|less|sass)$ 174 bytes {bundle} [built]
+[./ sync recursive (root|page)\.(xml|css|js|ts|scss)$] . sync (root|page)\.(xml|css|js|ts|scss)$ 218 bytes {bundle} [built]
+[./app-root.xml] 247 bytes {bundle} [optional] [built]
+[./app.css] 1.1 KiB {bundle} [optional] [built]
+[./app.ts] 1.74 KiB {bundle} [built]
+[./main-page.ts] 1.29 KiB {bundle} [optional] [built]
+[./main-page.xml] 1.87 KiB {bundle} [optional] [built]
+[./main-view-model.ts] 1.21 KiB {bundle} [built]
+[./package.json] 81 bytes {bundle} [optional] [built]
+    + 159 hidden modules
+Webpack compilation complete. Watching for file changes.
+Webpack build done!
+Hook skipped because either bundling or livesync is in progress.
+Preparing project...
+Project successfully prepared (Android)
+Successfully transferred bundle.js on device emulator-5562.
+Successfully transferred package.json on device emulator-5562.
+Successfully transferred starter.js on device emulator-5562.
+Successfully transferred tns-java-classes.js on device emulator-5562.
+Successfully transferred vendor.js on device emulator-5562.
+Restarting application on device emulator-5562...
+Successfully synced application org.nativescript.TestApp on device emulator-5562.
+ActivityManager: Start proc 4952:org.nativescript.TestApp/u0a57 for activity org.nativescript.TestApp/com.tns.NativeScriptActivity
+JS: HMR: Hot Module Replacement Enabled. Waiting for signal.

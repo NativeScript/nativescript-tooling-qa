@@ -1,0 +1,113 @@
+import os
+
+from core.base_test.tns_test import TnsTest
+from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
+from core.settings import Settings
+from core.utils.device.adb import Adb
+from core.utils.device.device_manager import DeviceManager
+from core.utils.file_utils import File, Folder
+from data.changes import Changes, Sync
+from data.templates import Template
+from products.nativescript.tns import Tns
+
+
+class ExperimentTests(TnsTest):
+    emu = None
+    sim = None
+    base_log_path = os.path.join(Settings.TEST_OUT_LOGS, 'experiments')
+
+    @classmethod
+    def setUpClass(cls):
+        Folder.create(cls.base_log_path)
+        TnsTest.setUpClass()
+
+        # Boot emulator and simulator
+        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
+        if Settings.HOST_OS == OSType.OSX:
+            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+
+    def setUp(self):
+        TnsTest.setUp(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()
+
+    def test_001_run_js(self):
+
+        for config in {'default', 'bundle', 'hmr'}:
+            bundle = False
+            hmr = False
+            if config == 'bundle':
+                bundle = True
+            if config == 'hmr':
+                hmr = True
+
+            for platform in {Platform.ANDROID, Platform.IOS}:
+                device = self.emu
+                framework_path = Settings.Android.FRAMEWORK_PATH
+                if platform == Platform.IOS:
+                    device = self.sim
+                    framework_path = Settings.IOS.FRAMEWORK_PATH
+
+                Tns.create(app_name=Settings.AppName.DEFAULT, template=Template.HELLO_WORLD_JS.local_package,
+                           update=True)
+                Tns.platform_add(app_name=Settings.AppName.DEFAULT, platform=platform, framework_path=framework_path)
+
+                # Initial run
+                result = Tns.run(app_name=Settings.AppName.DEFAULT, platform=platform, emulator=True, wait=False,
+                                 bundle=bundle, hmr=hmr, uglify=False, aot=False, snapshot=False)
+                device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=180, retry_delay=5)
+                File.copy(src=result.log_file,
+                          target=os.path.join(self.base_log_path,
+                                              'js_{0}_{1}_initial_run.txt'.format(config, str(platform))))
+
+                # Replace JS
+                Sync.replace(app_name=Settings.AppName.DEFAULT, change_set=Changes.JSHelloWord.JS)
+                device.wait_for_text(text=Changes.JSHelloWord.JS.new_text, timeout=180, retry_delay=5)
+                File.copy(src=result.log_file,
+                          target=os.path.join(self.base_log_path,
+                                              'js_{0}_{1}_sync_js.txt'.format(config, str(platform))))
+
+                # Replace XML
+                Sync.replace(app_name=Settings.AppName.DEFAULT, change_set=Changes.JSHelloWord.XML)
+                device.wait_for_text(text=Changes.JSHelloWord.XML.new_text, timeout=180, retry_delay=5)
+                File.copy(src=result.log_file,
+                          target=os.path.join(self.base_log_path,
+                                              'js_{0}_{1}_sync_xml.txt'.format(config, str(platform))))
+
+                # Incremental run no changes
+                Tns.kill()
+                Adb.open_home(device_id=self.emu.id)
+                result = Tns.run(app_name=Settings.AppName.DEFAULT, platform=platform, emulator=True,
+                                 wait=False,
+                                 bundle=bundle, hmr=hmr, uglify=False, aot=False, snapshot=False)
+                device.wait_for_text(text=Changes.JSHelloWord.JS.new_text, timeout=180, retry_delay=5)
+                File.copy(src=result.log_file,
+                          target=os.path.join(self.base_log_path,
+                                              'js_{0}_{1}_incremental_run_nochange.txt'.format(config, str(platform))))
+
+                # Incremental run js change
+                Tns.kill()
+                Adb.open_home(device_id=self.emu.id)
+                Sync.revert(app_name=Settings.AppName.DEFAULT, change_set=Changes.JSHelloWord.JS)
+                result = Tns.run(app_name=Settings.AppName.DEFAULT, platform=platform, emulator=True,
+                                 wait=False,
+                                 bundle=bundle, hmr=hmr, uglify=False, aot=False, snapshot=False)
+                device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=180, retry_delay=5)
+                File.copy(src=result.log_file,
+                          target=os.path.join(self.base_log_path,
+                                              'js_{0}_{1}_incremental_run_jschange.txt'.format(config, str(platform))))
+
+                # Incremental run xml change
+                Tns.kill()
+                Adb.open_home(device_id=self.emu.id)
+                Sync.revert(app_name=Settings.AppName.DEFAULT, change_set=Changes.JSHelloWord.XML)
+                result = Tns.run(app_name=Settings.AppName.DEFAULT, platform=platform, emulator=True,
+                                 wait=False,
+                                 bundle=bundle, hmr=hmr, uglify=False, aot=False, snapshot=False)
+                device.wait_for_text(text=Changes.JSHelloWord.XML.old_text, timeout=180, retry_delay=5)
+                File.copy(src=result.log_file,
+                          target=os.path.join(self.base_log_path,
+                                              'js_{0}_{1}_incremental_run_xmlchange.txt'.format(config, str(platform))))

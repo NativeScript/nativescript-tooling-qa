@@ -7,7 +7,7 @@ from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from products.nativescript.tns import Tns
-from products.nativescript.tns_helpers import TnsHelpers
+from products.nativescript.tns_logs import TnsLogs
 
 
 class TnsTests(TnsTest):
@@ -46,7 +46,7 @@ class TnsTests(TnsTest):
 
         # Wait until app is build and installed.
         texts = ['Project successfully built', 'Successfully installed']
-        TnsHelpers.wait_for_log(result.log_file, texts)
+        TnsLogs.wait_for_log(result.log_file, texts)
 
     @timed(300)
     def test_002_tns_run_android_with_justlaunch(self):
