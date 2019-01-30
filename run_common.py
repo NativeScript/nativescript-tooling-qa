@@ -102,15 +102,6 @@ def __install_ns_cli():
     # noinspection SpellCheckingInspection
     assert 'postinstall.js' in output, 'Post install scripts not executed.'
     assert 'dev-post-install' not in output, 'Dev post install executed on installation.'
-    assert 'Installation successful.' in output, 'No success message.'
-    assert 'Connect with us on http://twitter.com/NativeScript' in output, 'No connect on twitter message.'
-    assert 'tns create <app name>' in output, 'No help for create new project.'
-    assert 'tns build <platform>' in output, 'No help for building app.'
-    assert 'https://docs.nativescript.org/start/quick-setup' in output, 'No link to quick setup.'
-    assert 'tns cloud build' in output, 'No help for cloud builds.'
-    assert 'https://play.nativescript.org' in output, 'No link to {N} Playground.'
-    assert 'https://stackoverflow.com/questions/tagged/nativescript' in output, 'No Stackoverflow link.'
-    assert 'https://nativescriptcommunity.slack.com' in output, 'No link to community Slack.'
 
 
 def __install_ng_cli():
