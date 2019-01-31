@@ -41,7 +41,7 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
-                                    file='main-view-model.js')
+                                    file_name='main-view-model.js')
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
         assert 'Successfully transferred main-view-model.js on device' in logs
@@ -54,7 +54,7 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
-                                    file='main-view-model.js',
+                                    file_name='main-view-model.js',
                                     bundle=True)
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
@@ -73,7 +73,7 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
-                                    file='main-view-model.js',
+                                    file_name='main-view-model.js',
                                     hmr=True)
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs

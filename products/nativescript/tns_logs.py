@@ -1,3 +1,4 @@
+# pylint: disable=unused-argument
 import time
 
 from core.enums.platform_type import Platform
@@ -41,7 +42,7 @@ class TnsLogs(object):
         return []
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, file=None, plugins=None):
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, file_name=None, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -49,7 +50,7 @@ class TnsLogs(object):
         :param run_type: RunType enum value.
         :param bundle: True if `--bundle is specified.`
         :param hmr: True if `--hmr is specified.`
-        :param file: Name of changed file.
+        :param file_name: Name of changed file.
         :param plugins: List of plugins.
         :return: Array of strings.
         """
@@ -58,9 +59,9 @@ class TnsLogs(object):
         logs = []
 
         # Add messages when file is changes (prepare and sync files).
-        if file is not None:
+        if file_name is not None:
             # Generate webpack messages
-            logs.append(file)
+            logs.append(file_name)
             if bundle or hmr:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
@@ -79,7 +80,7 @@ class TnsLogs(object):
 
             # Generate file transfer message
             if not bundle and not hmr:
-                logs.append('Successfully transferred {0} on device'.format(file))
+                logs.append('Successfully transferred {0} on device'.format(file_name))
             if bundle and not hmr:
                 logs.append('Successfully transferred bundle.js on device')
             if hmr:

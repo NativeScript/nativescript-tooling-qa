@@ -47,7 +47,7 @@ class TnsTests(TnsTest):
                                         platform=Platform.ANDROID,
                                         run_type=RunType.FIRST_TIME,
                                         plugins=plugins)
-        TnsLogs.wait_for_log(result.log_file, messages), 'Console logs verification failed!'
+        TnsLogs.wait_for_log(result.log_file, messages)
 
         # Verify app looks ok
         for text in Apps.HELLO_WORLD_JS.texts:
@@ -55,7 +55,7 @@ class TnsTests(TnsTest):
 
     @timed(300)
     def test_002_tns_run_android_with_justlaunch(self):
-        result = Tns.run_android(app_name=self.app_name, device=self.emu.id, justlaunch=True, wait=True)
+        result = Tns.run_android(app_name=Settings.AppName.DEFAULT, device=self.emu.id, justlaunch=True, wait=True)
         assert result.complete is True, 'tns run with --justlauch and wait=true should wait until command is executed.'
         assert result.exit_code == 0, 'tns run should be successful.'
         assert 'Successfully synced application' in result.output
