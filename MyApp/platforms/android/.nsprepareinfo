@@ -1,0 +1,19 @@
+{
+	"nativePlatformStatus": "3",
+	"appFilesHashes": {
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\app-root.xml": "900a386cb2d8abc9573413eb3aff45448dcd3608",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\app.css": "6b35cf7fc669764bd611ef9fe3164457246cfaed",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\app.js": "ffc8eadfddf8a30f4da4a21a2cc532d16230753e",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\main-page.js": "e3dfd3fc75a4d41d3c3ea69bbfc2e52159919e19",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\main-page.xml": "dadb79414737be842940881ad61a8bed20080077",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\main-view-model.js": "c992a312cf62a165ab32176febc47b6a4b6f2367",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\package.json": "554a1e7b09cfa1663c75683765118999cb11411a",
+		"c:\\Git\\nativescript-tooling-qa\\MyApp\\app\\references.d.ts": "c83a3304d98c2586359871f5d8ac10c8aa8af848"
+	},
+	"release": false,
+	"bundle": false,
+	"changesRequireBuild": false,
+	"time": "Thu Jan 31 2019 16:27:23 GMT+0200 (Eastern European Standard Time)",
+	"changesRequireBuildTime": "Thu Jan 31 2019 16:12:30 GMT+0200 (Eastern European Standard Time)",
+	"projectFileHash": "6cab3127d4f767b13e1b2c02d7ebb04dc2804995cd03da6ec3646d036d0c9feb"
+}

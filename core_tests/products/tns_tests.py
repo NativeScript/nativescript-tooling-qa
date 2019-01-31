@@ -7,7 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from data.apps import Apps
-from products.nativescript.prepare_type import PrepareType
+from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
@@ -43,9 +43,11 @@ class TnsTests(TnsTest):
 
         # Verify console logs of `tns run` command
         plugins = ['nativescript-theme-core', 'tns-core-modules', 'tns-core-modules-widgets']
-        prepare_logs = TnsLogs.prepare_messages(platform=Platform.ANDROID, plugins=plugins)
-        build_logs = TnsLogs.build_messages(platform=Platform.ANDROID, prepare_type=PrepareType.FIRST_TIME)
-        TnsLogs.wait_for_log(result.log_file, prepare_logs.append(build_logs)), 'Console logs verification failed!'
+        messages = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
+                                        platform=Platform.ANDROID,
+                                        run_type=RunType.FIRST_TIME,
+                                        plugins=plugins)
+        TnsLogs.wait_for_log(result.log_file, messages), 'Console logs verification failed!'
 
         # Verify app looks ok
         for text in Apps.HELLO_WORLD_JS.texts:

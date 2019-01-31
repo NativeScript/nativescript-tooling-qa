@@ -1,9 +1,0 @@
-/Users/topuzov/Git/nativescript-tooling-qa/node_modules/.bin/tns run ios --path TestApp --emulator
-====>
-Skipping node_modules folder! Use the syncAllFiles option to sync files from this folder.
-Searching for devices...
-Preparing project...
-Project successfully prepared (iOS)
-Successfully transferred all files on device 91440777-B175-4E3D-86B5-70830628ECE4.
-Restarting application on device 91440777-B175-4E3D-86B5-70830628ECE4...
-Successfully synced application org.nativescript.TestApp on device 91440777-B175-4E3D-86B5-70830628ECE4.

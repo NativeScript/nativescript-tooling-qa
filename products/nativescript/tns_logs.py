@@ -3,6 +3,7 @@ import time
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.utils.file_utils import File
+from products.nativescript.run_type import RunType
 
 
 # noinspection PyUnusedLocal
@@ -10,13 +11,15 @@ class TnsLogs(object):
     SKIP_NODE_MODULES = ['Skipping node_modules folder!', 'Use the syncAllFiles option to sync files from this folder.']
 
     @staticmethod
-    def prepare_messages(platform, plugins):
+    def prepare_messages(platform, plugins=None):
         """
         Get log messages that should be present when project is prepared (except the case when prepare is skipped!).
         :param platform: Platform.ANDROID or Platform.IOS
         :param plugins: Array of strings: ['nativescript-theme-core', 'tns-core-modules', 'tns-core-modules-widgets']
         :return: Array of strings.
         """
+        if plugins is None:
+            plugins = []
         logs = ['Preparing project...']
         if platform == Platform.ANDROID:
             logs.append('Project successfully prepared (Android)')
@@ -27,29 +30,79 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def build_messages(platform, prepare_type):
+    def build_messages(platform, run_type, plugins=None):
         """
         Get log messages that should be present when project is build.
         :param platform: Platform.ANDROID or Platform.IOS
-        :param prepare_type: PrepareType enum value.
+        :param run_type: RunType enum value.
+        :param plugins: Array of plugins available in the project.
         :return: Array of strings.
         """
-        # ANDROID LOGS:
-        # Building project...
-        # Gradle build...
-        # 	 + setting applicationId
-        # 	 + applying user-defined configuration from /Users/topuzov/Git/nativescript-tooling-qa/TestApp/app/App_Resources/Android/app.gradle
-        # 	 + using support library version 28.0.0
-        # 	 + adding nativescript runtime package dependency: nativescript-optimized-with-inspector
-        # 	 + adding aar plugin dependency: /Users/topuzov/Git/nativescript-tooling-qa/TestApp/node_modules/tns-core-modules-widgets/platforms/android/widgets-release.aar
-        # Project successfully built.
+        return []
 
-        # IOS LOGS:
-        # Building project...
-        # Xcode build...
-        # Project successfully built.
+    @staticmethod
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, file=None, plugins=None):
+        """
+        Get log messages that should be present when running a project.
+        :param app_name: Name of the app (for example TestApp).
+        :param platform: Platform.ANDROID or Platform.IOS.
+        :param run_type: RunType enum value.
+        :param bundle: True if `--bundle is specified.`
+        :param hmr: True if `--hmr is specified.`
+        :param file: Name of changed file.
+        :param plugins: List of plugins.
+        :return: Array of strings.
+        """
+        if plugins is None:
+            plugins = []
+        logs = []
 
-        logs = ['Project successfully built']
+        # Add messages when file is changes (prepare and sync files).
+        if file is not None:
+            # Generate webpack messages
+            logs.append(file)
+            if bundle or hmr:
+                logs.append('File change detected.')
+                logs.append('Starting incremental webpack compilation...')
+                logs.append('Webpack compilation complete.')
+
+            # Generate prepare messages
+            prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
+            logs.extend(prepare_logs)
+
+            # Generate build messages
+            # TODO: Check if file is in app resources and require native build
+            should_build_native = False
+            if should_build_native:
+                build_logs = TnsLogs.build_messages(platform=platform, run_type=run_type)
+                logs.extend(build_logs)
+
+            # Generate file transfer message
+            if not bundle and not hmr:
+                logs.append('Successfully transferred {0} on device'.format(file))
+            if bundle and not hmr:
+                logs.append('Successfully transferred bundle.js on device')
+            if hmr:
+                logs.append('hot-update.json on device')
+                logs.append('The following modules were updated:')
+                logs.append('Successfully applied update with hmr hash')
+
+        # Add messages for restart or refresh
+        # TODO: Implement it!
+        # Based on bundle, hmr and file type detect that should be the value of restart variable.
+        restart = True
+        if restart:
+            logs.append('Restarting application on device')
+            if platform == Platform.ANDROID:
+                logs.append('ActivityManager: Start proc')
+                logs.append('activity org.nativescript.TestApp/com.tns.NativeScriptActivity')
+        else:
+            logs.append('Refreshing application on device')
+
+        # Add message for successful sync
+        logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
+
+        # Return logs
         return logs
 
     @staticmethod

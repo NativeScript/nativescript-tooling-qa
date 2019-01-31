@@ -1,0 +1,216 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+MERGED from [com.android.support:multidex:1.0.2] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\a396cf53eae6d95a045bbbfd81835453\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\ed438cd6a29b89dd47b7f34965cf2628\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:design:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\96c2c30a26c2dcfd769a7424949b2c09\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\c2f0dc729b12131a1ebb0763b36845db\AndroidManifest.xml:17:1-22:12
+MERGED from [:nativescript-optimized-with-inspector:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\5361845d3c83bf9158ead165a07baaff\AndroidManifest.xml:2:1-11:12
+MERGED from [:widgets-release:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\9bcd86c3fd66bed31dafc8b10e26ae62\AndroidManifest.xml:2:1-14:12
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\148be171f211c619ddf84312d040325d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\1c4dd4303f6963e755cd7272bbc20cfe\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\d89711ea2c727d4c40d1607273fc0181\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\5de6acae864225fa1f70d4f5df8b8c01\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\384f628cfffe7946fad4c4240a3422fd\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\4a28a65bd303dfa8dc2706000bd0378c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\9dda46f812483e5da51c993aba68eb29\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\2c65d4c4e47b9134397ecd7c55c05dc3\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\fd0d35a8f43c4ecedcd2920272d5adb3\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\453474c3d853aea87e047d627f8386ba\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\bff65f950ece53807c625079b6d6c4ea\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\5d00f14d7c26259100df0ba0a8d3c7f1\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\e59cacce56640fc6918bcd17d6450c20\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\6416ddd54b6b8a8e45913249ec177275\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\ac9bf4cd17f7656371154f326f5ad0f1\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\8611ec9fab13767691893123bd78e9d5\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\858f513d417fc89635bca75e94436fb4\AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\320679510d1c22d83f0a44cadb2b02cd\AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\2e7410c721f8b06923027c76687be22d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\3acdfe4f3aec0fadf045964ae8d3f6ee\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\f9f9823eb87c018a572039c262a002a9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\906079cbbaeaf9990356becc17ee2419\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\387dad0d1d1cbc9b1b3579e43afb8430\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\4a6aafcc4e42a8bc291599f36559646b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\8d4cf2c6b2ff4e87b50b39cbba3fe9eb\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\2010d202a958cd7e847ad3edafacec3e\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\4735992de3293ed3e94d5732ce7964f5\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\930af983d1323a090895d0dee41ae302\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\a7f813531ba2820abfbef86995cb879c\AndroidManifest.xml:17:1-22:12
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:1-43:12
+	package
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:3:2-34
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:5:2-27
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:4:2-25
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+supports-screens
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:7:2-11:33
+	android:largeScreens
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:10:3-30
+	android:smallScreens
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:8:3-30
+	android:normalScreens
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:9:3-31
+	android:xlargeScreens
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:11:3-31
+uses-sdk
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:13:2-15:34
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:13:2-15:34
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:13:2-15:34
+MERGED from [com.android.support:multidex:1.0.2] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\a396cf53eae6d95a045bbbfd81835453\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:multidex:1.0.2] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\a396cf53eae6d95a045bbbfd81835453\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\ed438cd6a29b89dd47b7f34965cf2628\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-v4-28.0.0.aar\ed438cd6a29b89dd47b7f34965cf2628\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\96c2c30a26c2dcfd769a7424949b2c09\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\96c2c30a26c2dcfd769a7424949b2c09\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\c2f0dc729b12131a1ebb0763b36845db\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\c2f0dc729b12131a1ebb0763b36845db\AndroidManifest.xml:20:5-44
+MERGED from [:nativescript-optimized-with-inspector:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\5361845d3c83bf9158ead165a07baaff\AndroidManifest.xml:7:5-9:41
+MERGED from [:nativescript-optimized-with-inspector:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\5361845d3c83bf9158ead165a07baaff\AndroidManifest.xml:7:5-9:41
+MERGED from [:widgets-release:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\9bcd86c3fd66bed31dafc8b10e26ae62\AndroidManifest.xml:7:5-9:41
+MERGED from [:widgets-release:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\9bcd86c3fd66bed31dafc8b10e26ae62\AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\148be171f211c619ddf84312d040325d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-media-compat-28.0.0.aar\148be171f211c619ddf84312d040325d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\1c4dd4303f6963e755cd7272bbc20cfe\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\1c4dd4303f6963e755cd7272bbc20cfe\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\d89711ea2c727d4c40d1607273fc0181\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-28.0.0.aar\d89711ea2c727d4c40d1607273fc0181\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\5de6acae864225fa1f70d4f5df8b8c01\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-28.0.0.aar\5de6acae864225fa1f70d4f5df8b8c01\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\384f628cfffe7946fad4c4240a3422fd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-core-ui-28.0.0.aar\384f628cfffe7946fad4c4240a3422fd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\4a28a65bd303dfa8dc2706000bd0378c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-core-utils-28.0.0.aar\4a28a65bd303dfa8dc2706000bd0378c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\9dda46f812483e5da51c993aba68eb29\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-28.0.0.aar\9dda46f812483e5da51c993aba68eb29\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\2c65d4c4e47b9134397ecd7c55c05dc3\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\transition-28.0.0.aar\2c65d4c4e47b9134397ecd7c55c05dc3\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\fd0d35a8f43c4ecedcd2920272d5adb3\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\loader-28.0.0.aar\fd0d35a8f43c4ecedcd2920272d5adb3\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\453474c3d853aea87e047d627f8386ba\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\viewpager-28.0.0.aar\453474c3d853aea87e047d627f8386ba\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\bff65f950ece53807c625079b6d6c4ea\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\coordinatorlayout-28.0.0.aar\bff65f950ece53807c625079b6d6c4ea\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\5d00f14d7c26259100df0ba0a8d3c7f1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\drawerlayout-28.0.0.aar\5d00f14d7c26259100df0ba0a8d3c7f1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\e59cacce56640fc6918bcd17d6450c20\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\slidingpanelayout-28.0.0.aar\e59cacce56640fc6918bcd17d6450c20\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\6416ddd54b6b8a8e45913249ec177275\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\customview-28.0.0.aar\6416ddd54b6b8a8e45913249ec177275\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\ac9bf4cd17f7656371154f326f5ad0f1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\swiperefreshlayout-28.0.0.aar\ac9bf4cd17f7656371154f326f5ad0f1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\8611ec9fab13767691893123bd78e9d5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\asynclayoutinflater-28.0.0.aar\8611ec9fab13767691893123bd78e9d5\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\858f513d417fc89635bca75e94436fb4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\858f513d417fc89635bca75e94436fb4\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\320679510d1c22d83f0a44cadb2b02cd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\320679510d1c22d83f0a44cadb2b02cd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\2e7410c721f8b06923027c76687be22d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\cursoradapter-28.0.0.aar\2e7410c721f8b06923027c76687be22d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\3acdfe4f3aec0fadf045964ae8d3f6ee\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\cardview-v7-28.0.0.aar\3acdfe4f3aec0fadf045964ae8d3f6ee\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\f9f9823eb87c018a572039c262a002a9\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\f9f9823eb87c018a572039c262a002a9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\906079cbbaeaf9990356becc17ee2419\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\documentfile-28.0.0.aar\906079cbbaeaf9990356becc17ee2419\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\387dad0d1d1cbc9b1b3579e43afb8430\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\localbroadcastmanager-28.0.0.aar\387dad0d1d1cbc9b1b3579e43afb8430\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\4a6aafcc4e42a8bc291599f36559646b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\print-28.0.0.aar\4a6aafcc4e42a8bc291599f36559646b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\8d4cf2c6b2ff4e87b50b39cbba3fe9eb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\interpolator-28.0.0.aar\8d4cf2c6b2ff4e87b50b39cbba3fe9eb\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\2010d202a958cd7e847ad3edafacec3e\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.1.aar\2010d202a958cd7e847ad3edafacec3e\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\4735992de3293ed3e94d5732ce7964f5\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\livedata-1.1.1.aar\4735992de3293ed3e94d5732ce7964f5\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\930af983d1323a090895d0dee41ae302\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.1.aar\930af983d1323a090895d0dee41ae302\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\a7f813531ba2820abfbef86995cb879c\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\runtime-1.1.1.aar\a7f813531ba2820abfbef86995cb879c\AndroidManifest.xml:20:5-44
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:13:2-15:34
+INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:13:2-15:34
+	android:targetSdkVersion
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:15:3-32
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:14:3-29
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:17:2-76
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:17:19-74
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:18:2-77
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:18:19-75
+uses-permission#android.permission.INTERNET
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:19:2-63
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:19:19-61
+application
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:21:2-42:16
+MERGED from [com.android.support:design:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\96c2c30a26c2dcfd769a7424949b2c09\AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\design-28.0.0.aar\96c2c30a26c2dcfd769a7424949b2c09\AndroidManifest.xml:22:5-20
+MERGED from [:widgets-release:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\9bcd86c3fd66bed31dafc8b10e26ae62\AndroidManifest.xml:11:5-12:19
+MERGED from [:widgets-release:] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\9bcd86c3fd66bed31dafc8b10e26ae62\AndroidManifest.xml:11:5-12:19
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\858f513d417fc89635bca75e94436fb4\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\858f513d417fc89635bca75e94436fb4\AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\320679510d1c22d83f0a44cadb2b02cd\AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\versionedparcelable-28.0.0.aar\320679510d1c22d83f0a44cadb2b02cd\AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [com.android.support:support-compat:28.0.0] C:\Users\topuzov\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\858f513d417fc89635bca75e94436fb4\AndroidManifest.xml:22:18-91
+	android:label
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:25:3-35
+	android:icon
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:24:3-32
+	android:allowBackup
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:23:3-29
+	android:theme
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:26:3-34
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:22:3-49
+activity#com.tns.NativeScriptActivity
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:28:3-40:14
+	android:label
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:30:4-49
+	android:configChanges
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:31:4-65
+	android:theme
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:32:4-44
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:29:4-47
+meta-data#SET_THEME_ON_LAUNCH
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:34:4-87
+	android:resource
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:34:50-84
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:34:15-49
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:36:4-39:20
+action#android.intent.action.MAIN
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:37:5-57
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:37:13-54
+category#android.intent.category.LAUNCHER
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:38:5-65
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:38:15-62
+activity#com.tns.ErrorReportActivity
+ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:41:3-57
+	android:name
+		ADDED from C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app\src\main\AndroidManifest.xml:41:13-55
