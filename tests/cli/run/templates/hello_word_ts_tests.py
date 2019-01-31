@@ -74,7 +74,7 @@ class RunAndroidTSTests(TnsRunTSTests):
         sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
 
 
-@unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+@unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
 class RunIOSTSTests(TnsRunTSTests):
     def test_100_run_ios(self):
         sync_hello_world_ts(self.app_name, Platform.IOS, self.sim)

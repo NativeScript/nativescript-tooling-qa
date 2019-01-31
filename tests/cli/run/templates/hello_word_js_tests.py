@@ -78,7 +78,7 @@ class RunAndroidJSTests(TnsRunJSTests):
                             bundle=True, aot=True, uglify=True, snapshot=True)
 
 
-@unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+@unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
 class RunIOSJSTests(TnsRunJSTests):
     def test_100_run_ios(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim)
