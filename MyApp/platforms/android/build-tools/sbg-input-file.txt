@@ -1,1 +1,0 @@
-C:\Git\nativescript-tooling-qa\MyApp\platforms\android\app/src/main/assets/app
