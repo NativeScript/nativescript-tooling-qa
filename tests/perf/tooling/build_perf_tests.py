@@ -65,7 +65,7 @@ class PrepareAndBuildPerfTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial android prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_201_prepare_ios_initial(self, template, template_package, change_set, bundle):
         actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'prepare_initial')
         expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'prepare_initial')
@@ -78,7 +78,7 @@ class PrepareAndBuildPerfTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Skip android prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_211_prepare_ios_skip(self, template, template_package, change_set, bundle):
         actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'prepare_skip')
         expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'prepare_skip')
@@ -91,7 +91,7 @@ class PrepareAndBuildPerfTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental android prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_221_prepare_ios_incremental(self, template, template_package, change_set, bundle):
         actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'prepare_incremental')
         expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'prepare_incremental')
@@ -104,7 +104,7 @@ class PrepareAndBuildPerfTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial android build time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_301_build_ios_initial(self, template, template_package, change_set, bundle):
         actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'build_initial')
         expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'build_initial')
@@ -117,7 +117,7 @@ class PrepareAndBuildPerfTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental android build time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_311_build_ios_incremental(self, template, template_package, change_set, bundle):
         actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'build_incremental')
         expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'build_incremental')

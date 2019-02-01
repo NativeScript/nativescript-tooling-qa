@@ -39,8 +39,7 @@ class PlatformAddPerfTests(TnsTest):
             total_time = total_time + time
         actual = total_time / RETRY_COUNT
         expected = EXPECTED_RESULTS['hello-world-js']['platform_add_android']
-        assert PerfUtils.is_value_in_range(actual, expected,
-                                           EXPECTED_RESULTS), 'Time for platform add android is not OK.'
+        assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Time for platform add android is not OK.'
 
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_101_platform_add_ios(self):
