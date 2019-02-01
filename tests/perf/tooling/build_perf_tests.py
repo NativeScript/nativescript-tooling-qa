@@ -185,7 +185,7 @@ class Helpers(object):
 
     @staticmethod
     def get_result_file_name(template, platform, bundle):
-        result_file = os.path.join(Settings.TEST_OUT_HOME, '{0}_{1}.json'.format(template, platform))
+        result_file = os.path.join(Settings.TEST_OUT_HOME, '{0}_{1}.json'.format(template, str(platform)))
         if bundle:
             result_file = result_file.replace('.json', '_bundle.json')
         return result_file
