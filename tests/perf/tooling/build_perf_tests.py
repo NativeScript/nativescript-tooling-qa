@@ -67,8 +67,8 @@ class PrepareAndBuildPerfTests(TnsTest):
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_201_prepare_ios_initial(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'prepare_initial')
-        expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'prepare_initial')
+        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'prepare_initial')
+        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'prepare_initial')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
@@ -80,8 +80,8 @@ class PrepareAndBuildPerfTests(TnsTest):
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_211_prepare_ios_skip(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'prepare_skip')
-        expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'prepare_skip')
+        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'prepare_skip')
+        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'prepare_skip')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Skip ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
@@ -93,8 +93,8 @@ class PrepareAndBuildPerfTests(TnsTest):
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_221_prepare_ios_incremental(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'prepare_incremental')
-        expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'prepare_incremental')
+        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'prepare_incremental')
+        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'prepare_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
@@ -106,8 +106,8 @@ class PrepareAndBuildPerfTests(TnsTest):
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_301_build_ios_initial(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'build_initial')
-        expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'build_initial')
+        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'build_initial')
+        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'build_initial')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial ios build time is not OK.'
 
     @parameterized.expand(TEST_DATA)
@@ -119,8 +119,8 @@ class PrepareAndBuildPerfTests(TnsTest):
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_311_build_ios_incremental(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.iOS, bundle, 'build_incremental')
-        expected = Helpers.get_expected_result(template, Platform.iOS, bundle, 'build_incremental')
+        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'build_incremental')
+        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'build_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental ios build time is not OK.'
 
 
@@ -197,6 +197,7 @@ class Helpers(object):
 
     @staticmethod
     def get_expected_result(template, platform, bundle, entry):
+        platform = str(platform)
         if bundle:
-            platform = str(platform) + '_bundle'
+            platform = platform + '_bundle'
         return EXPECTED_RESULTS[template][platform][entry]
