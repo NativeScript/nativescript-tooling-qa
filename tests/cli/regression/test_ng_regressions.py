@@ -8,7 +8,7 @@ from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from data.sync.hello_world_ng import sync_hello_world_ng
 from products.nativescript.tns import Tns
-from tests.cli.regression.create_legacy_app import CreateLegacyApp
+from tests.cli.regression.create_legacy_app import create
 
 
 class NGRegressionTests(TnsTest):
@@ -26,7 +26,7 @@ class NGRegressionTests(TnsTest):
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
         # Create legacy NG app
-        CreateLegacyApp.create(app_name=cls.ng_app, app_type=AppType.NG)
+        create(app_name=cls.ng_app, app_type=AppType.NG)
 
     def setUp(self):
         TnsTest.setUp(self)
