@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from core.base_test.tns_test import TnsTest
@@ -14,12 +13,7 @@ from products.nativescript.tns import Tns
 
 class SmokeTests(TnsTest):
     js_app = Settings.AppName.DEFAULT + 'JS'
-    js_source_project_dir = os.path.join(Settings.TEST_RUN_HOME, js_app)
-    js_target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', js_app)
-
     ng_app = Settings.AppName.DEFAULT + 'NG'
-    ng_source_project_dir = os.path.join(Settings.TEST_RUN_HOME, ng_app)
-    ng_target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', ng_app)
 
     emu = None
     sim = None

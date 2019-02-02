@@ -1,7 +1,6 @@
 # pylint: disable=too-many-branches
 import logging
 import os
-
 import time
 
 from core.base_test.test_context import TestContext
@@ -91,7 +90,7 @@ class Tns(object):
         return result
 
     @staticmethod
-    def create(app_name=Settings.AppName.DEFAULT, template=None, path=None, app_id=None,
+    def create(app_name=Settings.AppName.DEFAULT, template=None, flags=None, path=None, app_id=None,
                force=False,
                default=False,
                update=True,
@@ -102,7 +101,8 @@ class Tns(object):
         """
         Create {N} application.
         :param app_name: Application name (TestApp by default).
-        :param template: Template string (it can be everything that can be npm installed - npm package, git url ...)
+        :param template: Template string (it can be everything that can be npm installed - npm package, git url ...).
+        :param flags: Custom flags passed to create command as plain string (for example `--js` or `-tsc`).
         :param path: Path where app to be created (Passes `--path <value>` to tns command. None by default).
         :param app_id: Application identifier.
         :param force: If true passes '--force' to tns command.
@@ -125,6 +125,8 @@ class Tns(object):
         command = 'create ' + normalized_app_name
         if template is not None:
             command = command + ' --template ' + template
+        if flags is not None:
+            command = command + ' ' + flags
         if path is not None:
             command = command + ' --path ' + path
         if app_id is not None:

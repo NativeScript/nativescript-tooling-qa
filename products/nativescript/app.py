@@ -14,6 +14,17 @@ class App(object):
         return JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, app_name, 'package.json'))
 
     @staticmethod
+    def get_platform_version(app_name, platform):
+        """
+        Get platform version from package.json.
+        :param app_name: Name of the app.
+        :param platform: PlatfromType enum value.
+        :return: Version as string.
+        """
+        json = App.get_package_json(app_name=app_name)
+        return json.get('nativescript').get('tns-{0}'.format(str(platform))).get('version')
+
+    @staticmethod
     def is_dev_dependency(app_name, dependency):
         json = App.get_package_json(app_name=app_name)
         dev_deps = json.get('devDependencies')
@@ -32,16 +43,11 @@ class App(object):
         return False
 
     @staticmethod
-    def install_dependency(app_name, dependency, version='latest'):
+    def install_dependency(app_name, dependency, version='latest', force_uninstall=True):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
-        Npm.uninstall(package=dependency, option='--save', folder=app_path)
+        if force_uninstall:
+            Npm.uninstall(package=dependency, option='--save', folder=app_path)
         Npm.install(package='{0}@{1}'.format(dependency, version), option='--save', folder=app_path)
-
-    @staticmethod
-    def install_dev_dependency(app_name, dependency, version='latest'):
-        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
-        Npm.uninstall(package=dependency, option='--save-dev', folder=app_path)
-        Npm.install(package='{0}@{1}'.format(dependency, version), option='--save-dev', folder=app_path)
 
     @staticmethod
     def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, ns_plugins=False):
