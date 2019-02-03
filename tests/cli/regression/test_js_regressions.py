@@ -6,9 +6,9 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
+from data.legacy_app import LegacyApp
 from data.sync.hello_world_js import sync_hello_world_js
 from products.nativescript.tns import Tns
-from tests.cli.regression.create_legacy_app import create
 
 
 class JSRegressionTests(TnsTest):
@@ -26,7 +26,7 @@ class JSRegressionTests(TnsTest):
             cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
         # Create legacy JS app
-        create(app_name=cls.js_app, app_type=AppType.JS)
+        LegacyApp.create(app_name=cls.js_app, app_type=AppType.JS)
 
     def setUp(self):
         TnsTest.setUp(self)
