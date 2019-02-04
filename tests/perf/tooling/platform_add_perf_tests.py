@@ -11,7 +11,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 RETRY_COUNT = 3
-TOLERANCE = 0.20
+TOLERANCE = 0.30
 APP_NAME = Settings.AppName.DEFAULT
 EXPECTED_RESULTS = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 'perf', 'data.json'))
 
