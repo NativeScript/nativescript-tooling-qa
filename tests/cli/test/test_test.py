@@ -10,14 +10,11 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
-from core.utils.json_utils import JsonUtils
+from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
 
-RETRY_COUNT = 3
-TOLERANCE = 0.20
 APP_NAME = Settings.AppName.DEFAULT
-EXPECTED_RESULTS = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 'perf', 'data.json'))
 
 TEST_DATA = [
     ('jasmine-js-android', 'jasmine', Template.HELLO_WORLD_JS, Platform.ANDROID),
@@ -41,7 +38,7 @@ TEST_DATA_OSX = [
 ]
 
 
-def get_test_data():
+def get_data():
     if Settings.HOST_OS == OSType.OSX:
         return TEST_DATA_OSX
     else:
@@ -65,10 +62,10 @@ class PrepareAndBuildPerfTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
 
-    @parameterized.expand(get_test_data())
+    @parameterized.expand(get_data())
     def test_100(self, title, framework, template, platform):
         # Create app
-        Tns.create(app_name=Settings.AppName.DEFAULT, template=template.local_package)
+        Tns.create(app_name=APP_NAME, template=template.local_package)
 
         # Add platforms
         if platform == Platform.ANDROID:
@@ -79,12 +76,17 @@ class PrepareAndBuildPerfTests(TnsTest):
             raise Exception('Unknown platform: ' + str(platform))
 
         # Init tests and run tests
-        Tns.test_init(app_name=Settings.AppName.DEFAULT, framework=framework)
+        if Settings.HOST_OS == OSType.WINDOWS and framework == 'qunit':
+            # Hack for qunit on windows
+            Npm.install(package='qunit@2', option='--save-dev', folder=os.path.join(Settings.TEST_RUN_HOME, APP_NAME))
+            Tns.test_init(app_name=APP_NAME, framework=framework, verify=False)
+        else:
+            Tns.test_init(app_name=APP_NAME, framework=framework)
 
         # Run Tests
-        Tns.test(app_name=Settings.AppName.DEFAULT, platform=Platform.ANDROID, emulator=True, justlaunch=True)
+        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
 
-    def test_400_invalid_framework(self):
-        Tns.create(app_name=Settings.AppName.DEFAULT, template=Template.HELLO_WORLD_JS.local_package)
-        result = Tns.test_init(app_name=Settings.AppName.DEFAULT, framework='jasmin', verify=False)
-        assert 'unknown or unsupported unit testing framework: jasmin' in result.output
+    def test_400_invalid_framework_name(self):
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        result = Tns.test_init(app_name=APP_NAME, framework='jasmin', verify=False)
+        assert 'Unknown or unsupported unit testing framework: jasmin' in result.output

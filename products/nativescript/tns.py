@@ -330,7 +330,7 @@ class Tns(object):
             assert 'Starting browser' in result.output
             assert 'Connected on socket' in result.output
             assert 'Executed 1 of 1' in result.output
-            assert 'TOTAL: 1 SUCCESS' in result.output
+            assert 'TOTAL: 1 SUCCESS' in result.output or 'Executed 1 of 1 SUCCESS' in result.output
         return result
 
     @staticmethod
