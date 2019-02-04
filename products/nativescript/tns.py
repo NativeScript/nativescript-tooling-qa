@@ -1,7 +1,6 @@
 # pylint: disable=too-many-branches
 import logging
 import os
-
 import time
 
 from core.base_test.test_context import TestContext
@@ -292,6 +291,46 @@ class Tns(object):
                                   wait=wait, log_trace=log_trace)
         if verify:
             pass
+        return result
+
+    @staticmethod
+    def test_init(app_name, framework, verify=True):
+        """
+        Execute `tns test init` command.
+        :param app_name: App name (passed as --path <App name>)
+        :param framework: Unit testing framework as string (jasmin, mocha, quinit).
+        :param verify: Verify command was executed successfully.
+        :return: Result of `tns test init` command.
+        """
+        command = 'test init --framework {0}'.format(framework)
+        result = Tns.exec_command(command=command, path=app_name, timeout=60)
+        if verify:
+            assert 'Successfully installed plugin nativescript-unit-test-runner' in result.output
+            assert 'Example test file created in' in result.output
+            assert 'Run your tests using the' in result.output
+        return result
+
+    @staticmethod
+    def test(app_name, platform, emulator=True, device=None, justlaunch=True, verify=True):
+        """
+        Execute `tns test <platform>` command.
+        :param app_name: App name (passed as --path <App name>)
+        :param platform: PlatformType enum value.
+        :param emulator: If true pass `--emulator` to the command.
+        :param device: Pass `--device <value>` to command.
+        :param justlaunch: If true pass `--justlaunch` to the command.
+        :param verify: Verify command was executed successfully.
+        :return: Result of `tns test` command.
+        """
+        cmd = 'test {0}'.format(str(platform))
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch)
+        if verify:
+            assert 'server started at' in result.output
+            assert 'Launching browsers android with concurrency unlimited' in result.output
+            assert 'Starting browser NativeScript Unit Test Runner' in result.output
+            assert 'Connected on socket' in result.output
+            assert 'Executed 1 of 1' in result.output
+            assert 'TOTAL: 1 SUCCESS' in result.output
         return result
 
     @staticmethod
