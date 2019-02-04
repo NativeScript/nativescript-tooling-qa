@@ -303,7 +303,7 @@ class Tns(object):
         :return: Result of `tns test init` command.
         """
         command = 'test init --framework {0}'.format(framework)
-        result = Tns.exec_command(command=command, path=app_name, timeout=120)
+        result = Tns.exec_command(command=command, path=app_name, timeout=300)
         if verify:
             assert 'Successfully installed plugin nativescript-unit-test-runner' in result.output
             assert 'Example test file created in' in result.output
