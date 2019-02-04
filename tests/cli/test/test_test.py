@@ -79,7 +79,10 @@ class PrepareAndBuildPerfTests(TnsTest):
         if Settings.HOST_OS == OSType.WINDOWS and framework == 'qunit':
             # Hack for qunit on windows
             Npm.install(package='qunit@2', option='--save-dev', folder=os.path.join(Settings.TEST_RUN_HOME, APP_NAME))
-            Tns.test_init(app_name=APP_NAME, framework=framework, verify=False)
+            result = Tns.test_init(app_name=APP_NAME, framework=framework, verify=False)
+            assert 'Successfully installed plugin nativescript-unit-test-runner' in result.output
+            assert 'Example test file created in' in result.output
+            assert 'Run your tests using the' in result.output
         else:
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
