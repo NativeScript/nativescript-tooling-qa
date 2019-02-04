@@ -58,6 +58,10 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
                      bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot)
     __verify_snapshot_skipped(snapshot, result)
 
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+
     # Verify it looks properly
     device.wait_for_text(text=js_change.old_text, timeout=120, retry_delay=5)
     device.wait_for_text(text=xml_change.old_text)
@@ -68,35 +72,50 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
-                                   hmr=hmr)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=js_change.new_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr, file_name='main-view-model.js')
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit XML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=xml_change)
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr, file_name='main-page.xml')
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=css_change)
     device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr, file_name='app.css')
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Revert all the changes
     Sync.revert(app_name=app_name, change_set=js_change)
     device.wait_for_text(text=js_change.old_text)
     device.wait_for_text(text=xml_change.new_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr, file_name='main-view-model.js')
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=xml_change)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr, file_name='main-page.xml')
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=css_change)
     device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+                                   hmr=hmr, file_name='app.css')
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Assert final and initial states are same
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
