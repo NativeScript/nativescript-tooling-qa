@@ -303,7 +303,7 @@ class Tns(object):
         :return: Result of `tns test init` command.
         """
         command = 'test init --framework {0}'.format(framework)
-        result = Tns.exec_command(command=command, path=app_name, timeout=60)
+        result = Tns.exec_command(command=command, path=app_name, timeout=120)
         if verify:
             assert 'Successfully installed plugin nativescript-unit-test-runner' in result.output
             assert 'Example test file created in' in result.output
@@ -326,8 +326,8 @@ class Tns(object):
         result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch)
         if verify:
             assert 'server started at' in result.output
-            assert 'Launching browsers android with concurrency unlimited' in result.output
-            assert 'Starting browser NativeScript Unit Test Runner' in result.output
+            assert 'Launching browser' in result.output
+            assert 'Starting browser' in result.output
             assert 'Connected on socket' in result.output
             assert 'Executed 1 of 1' in result.output
             assert 'TOTAL: 1 SUCCESS' in result.output

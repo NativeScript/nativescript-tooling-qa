@@ -19,21 +19,37 @@ TOLERANCE = 0.20
 APP_NAME = Settings.AppName.DEFAULT
 EXPECTED_RESULTS = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 'perf', 'data.json'))
 
+TEST_DATA = [
+    ('jasmine-js-android', 'jasmine', Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('jasmine-ng-android', 'jasmine', Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('mocha-js-android', 'mocha', Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('mocha-ng-android', 'mocha', Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('qunit-js-android', 'qunit', Template.HELLO_WORLD_JS, Platform.ANDROID),
+]
+
+TEST_DATA_OSX = [
+    ('jasmine-js-android', 'jasmine', Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('jasmine-js-ios', 'jasmine', Template.HELLO_WORLD_JS, Platform.IOS),
+    ('jasmine-ng-android', 'jasmine', Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('jasmine-ng-ios', 'jasmine', Template.HELLO_WORLD_NG, Platform.IOS),
+    ('mocha-js-android', 'mocha', Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('mocha-js-ios', 'mocha', Template.HELLO_WORLD_JS, Platform.IOS),
+    ('mocha-ng-android', 'mocha', Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('mocha-ng-ios', 'mocha', Template.HELLO_WORLD_NG, Platform.IOS),
+    ('qunit-js-android', 'qunit', Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('qunit-js-ios', 'qunit', Template.HELLO_WORLD_JS, Platform.IOS),
+]
+
+
+def get_test_data():
+    if Settings.HOST_OS == OSType.OSX:
+        return TEST_DATA_OSX
+    else:
+        return TEST_DATA
+
 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
 class PrepareAndBuildPerfTests(TnsTest):
-    TEST_DATA = [
-        ('jasmine-js-android', 'jasmine', Template.HELLO_WORLD_JS, Platform.ANDROID),
-        ('jasmine-js-ios', 'jasmine', Template.HELLO_WORLD_JS, Platform.IOS),
-        ('jasmine-ng-android', 'jasmine', Template.HELLO_WORLD_NG, Platform.ANDROID),
-        ('jasmine-ng-ios', 'jasmine', Template.HELLO_WORLD_NG, Platform.IOS),
-        ('mocha-js-android', 'mocha', Template.HELLO_WORLD_JS, Platform.ANDROID),
-        ('mocha-js-ios', 'mocha', Template.HELLO_WORLD_JS, Platform.IOS),
-        ('mocha-ng-android', 'mocha', Template.HELLO_WORLD_NG, Platform.ANDROID),
-        ('mocha-ng-ios', 'mocha', Template.HELLO_WORLD_NG, Platform.IOS),
-        ('qunit-js-android', 'qunit', Template.HELLO_WORLD_JS, Platform.ANDROID),
-        ('qunit-js-ios', 'qunit', Template.HELLO_WORLD_JS, Platform.IOS),
-    ]
 
     @classmethod
     def setUpClass(cls):
@@ -49,7 +65,7 @@ class PrepareAndBuildPerfTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
 
-    @parameterized.expand(TEST_DATA)
+    @parameterized.expand(get_test_data())
     def test_100(self, title, framework, template, platform):
         # Create app
         Tns.create(app_name=Settings.AppName.DEFAULT, template=template.local_package)
@@ -64,6 +80,8 @@ class PrepareAndBuildPerfTests(TnsTest):
 
         # Init tests and run tests
         Tns.test_init(app_name=Settings.AppName.DEFAULT, framework=framework)
+
+        # Run Tests
         Tns.test(app_name=Settings.AppName.DEFAULT, platform=Platform.ANDROID, emulator=True, justlaunch=True)
 
     def test_400_invalid_framework(self):
