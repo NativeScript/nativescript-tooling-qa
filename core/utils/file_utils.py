@@ -3,9 +3,8 @@ File and Folder utils.
 """
 import errno
 import os
-import stat
-
 import shutil
+import stat
 
 from core.log.log import Log
 from core.settings import Settings
@@ -122,6 +121,7 @@ class File(object):
     @staticmethod
     def replace(path, old_string, new_string):
         content = File.read(path=path)
+        assert old_string in content, 'Can not find "{0}" in {1}'.format(old_string, path)
         new_content = content.replace(old_string, new_string)
         File.write(path=path, text=new_content)
         Log.info("")

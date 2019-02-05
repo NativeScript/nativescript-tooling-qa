@@ -7,6 +7,7 @@ from core.utils.device.adb import Adb, ANDROID_HOME
 from core.utils.device.device import Device
 from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
+from core.utils.file_utils import Folder
 from core.utils.process import Process
 from core.utils.run import run
 
@@ -51,12 +52,20 @@ class DeviceManager(object):
             Process.kill('qemu-system-i38')
 
         @staticmethod
-        def start(emulator, wipe_data=True):
+        def start(emulator):
+            # Define emulator start options and command
             emulator_path = os.path.join(ANDROID_HOME, 'emulator', 'emulator')
-            base_options = '-no-snapshot-save -no-boot-anim -no-audio'
-            options = '-port {0} {1}'.format(emulator.port, base_options)
-            if wipe_data:
-                options = '-port {0} -wipe-data {1}'.format(emulator.port, base_options)
+            options = '-port {0} -wipe-data -no-snapshot-save -no-boot-anim -no-audio'.format(emulator.port)
+
+            # Check if clean snapshot is available and use it
+            snapshot_name = 'clean_boot'
+            home = os.path.expanduser("~")
+            snapshot = os.path.join(home, '.android', 'avd', '{0}.avd'.format(emulator.avd), 'snapshots', snapshot_name)
+            if Folder.exists(snapshot):
+                Log.info('{0} has clean boot snapshot! Will user it.'.format(emulator.avd))
+                options = '-port {0} -no-snapshot-save -no-boot-anim -no-audio -snapshot {1}'.format(emulator.port,
+                                                                                                     snapshot_name)
+
             command = '{0} @{1} {2}'.format(emulator_path, emulator.avd, options)
             Log.info('Booting {0} with cmd:'.format(emulator.avd))
             Log.info(command)
