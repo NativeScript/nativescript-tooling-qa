@@ -72,7 +72,7 @@ class PrepareAndBuildPerfTests(TnsTest):
             Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
             Tns.prepare_android(app_name=APP_NAME)
             if Settings.HOST_OS == OSType.WINDOWS:
-                Tns.run_android(app_name=APP_NAME, emulator=True, justlaunch=True)
+                Tns.run_android(app_name=APP_NAME, emulator=True, justlaunch=True, wait=True)
         elif platform == Platform.IOS:
             Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH)
             Tns.prepare_ios(app_name=APP_NAME)
