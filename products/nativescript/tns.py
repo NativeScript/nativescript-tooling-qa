@@ -19,8 +19,8 @@ class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False,
-                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, justlaunch=False, wait=True,
-                     timeout=600):
+                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, justlaunch=False,
+                     options=None, wait=True, timeout=600):
         """
         Execute tns command.
         :param command: Tns command.
@@ -39,6 +39,7 @@ class Tns(object):
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
         :param justlaunch: If true pass `--justlaunch` to command.
+        :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
         :return: ProcessInfo object.
@@ -79,6 +80,8 @@ class Tns(object):
             cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
+        if options:
+            cmd += ' ' + options
 
         result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
 
@@ -323,14 +326,20 @@ class Tns(object):
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
-        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch)
+        # Hack: Only on Jenkins CI, only on Windows hosts --justlauch do not exit. Try to hack it with -- --exit
+        options = None
+        if Settings.HOST_OS == OSType.WINDOWS:
+            options = '-- --exit'
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch,
+                                  options=options)
         if verify:
             assert 'server started at' in result.output
             assert 'Launching browser' in result.output
             assert 'Starting browser' in result.output
             assert 'Connected on socket' in result.output
             assert 'Executed 1 of 1' in result.output
-            assert 'TOTAL: 1 SUCCESS' in result.output or 'Executed 1 of 1 SUCCESS' in result.output
+            assert 'TOTAL: 1 SUCCESS' in result.output \
+                   or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
         return result
 
     @staticmethod
