@@ -324,12 +324,7 @@ class Tns(object):
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
-        # Hack: Only on Jenkins CI, only on Windows hosts --justlauch do not exit. Try to hack it with -- --exit
-        options = None
-        if Settings.HOST_OS == OSType.WINDOWS:
-            options = '-- --exit'
-        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch,
-                                  options=options)
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch)
         if verify:
             assert 'server started at' in result.output
             assert 'Launching browser' in result.output
