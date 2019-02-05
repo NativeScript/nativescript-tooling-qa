@@ -305,7 +305,7 @@ class Tns(object):
         :param verify: Verify command was executed successfully.
         :return: Result of `tns test init` command.
         """
-        command = 'test init --framework {0}'.format(framework)
+        command = 'test init --framework {0}'.format(str(framework))
         result = Tns.exec_command(command=command, path=app_name, timeout=300)
         if verify:
             TnsAssert.test_initialized(app_name=app_name, framework=framework, output=result.output)
