@@ -1,7 +1,6 @@
 # pylint: disable=too-many-branches
 import logging
 import os
-
 import time
 
 from core.base_test.test_context import TestContext
@@ -20,8 +19,8 @@ class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False,
-                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, justlaunch=False, wait=True,
-                     timeout=600):
+                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, justlaunch=False,
+                     options=None, wait=True, timeout=600):
         """
         Execute tns command.
         :param command: Tns command.
@@ -40,6 +39,7 @@ class Tns(object):
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
         :param justlaunch: If true pass `--justlaunch` to command.
+        :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
         :return: ProcessInfo object.
@@ -80,6 +80,8 @@ class Tns(object):
             cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
+        if options:
+            cmd += ' ' + options
 
         result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
 
@@ -292,6 +294,45 @@ class Tns(object):
                                   wait=wait, log_trace=log_trace)
         if verify:
             pass
+        return result
+
+    @staticmethod
+    def test_init(app_name, framework, verify=True):
+        """
+        Execute `tns test init` command.
+        :param app_name: App name (passed as --path <App name>)
+        :param framework: Unit testing framework as string (jasmin, mocha, quinit).
+        :param verify: Verify command was executed successfully.
+        :return: Result of `tns test init` command.
+        """
+        command = 'test init --framework {0}'.format(framework)
+        result = Tns.exec_command(command=command, path=app_name, timeout=300)
+        if verify:
+            TnsAssert.test_initialized(app_name=app_name, framework=framework, output=result.output)
+        return result
+
+    @staticmethod
+    def test(app_name, platform, emulator=True, device=None, justlaunch=True, verify=True):
+        """
+        Execute `tns test <platform>` command.
+        :param app_name: App name (passed as --path <App name>)
+        :param platform: PlatformType enum value.
+        :param emulator: If true pass `--emulator` to the command.
+        :param device: Pass `--device <value>` to command.
+        :param justlaunch: If true pass `--justlaunch` to the command.
+        :param verify: Verify command was executed successfully.
+        :return: Result of `tns test` command.
+        """
+        cmd = 'test {0}'.format(str(platform))
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch)
+        if verify:
+            assert 'server started at' in result.output
+            assert 'Launching browser' in result.output
+            assert 'Starting browser' in result.output
+            assert 'Connected on socket' in result.output
+            assert 'Executed 1 of 1' in result.output
+            assert 'TOTAL: 1 SUCCESS' in result.output \
+                   or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
         return result
 
     @staticmethod
