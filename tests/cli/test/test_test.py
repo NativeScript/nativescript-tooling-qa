@@ -70,11 +70,16 @@ class PrepareAndBuildPerfTests(TnsTest):
         # Add platforms
         if platform == Platform.ANDROID:
             Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
+            Tns.prepare_android(app_name=APP_NAME)
+            if Settings.HOST_OS == OSType.WINDOWS:
+                Tns.run_android(app_name=APP_NAME, emulator=True, justlaunch=True)
         elif platform == Platform.IOS:
             Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH)
+            Tns.prepare_ios(app_name=APP_NAME)
         else:
             raise Exception('Unknown platform: ' + str(platform))
 
+        # First Run
         # Init tests and run tests
         if Settings.HOST_OS == OSType.WINDOWS and framework == 'qunit':
             # Hack for qunit on windows (see https://github.com/NativeScript/nativescript-cli/issues/4333)
