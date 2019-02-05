@@ -1,3 +1,5 @@
+# pylint: disable=broad-except
+import inspect
 import os
 import unittest
 
@@ -14,11 +16,15 @@ from core.utils.xcode import Xcode
 from products.nativescript.tns import Tns
 
 
+# noinspection PyBroadException
 class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
-        TestContext.CLASS_NAME = cls.__name__
+        try:
+            TestContext.CLASS_NAME = inspect.stack()[1][0].f_locals['cls'].__name__
+        except:
+            TestContext.CLASS_NAME = cls.__name__
         Log.test_class_start(class_name=TestContext.CLASS_NAME)
 
         # Kill processes
