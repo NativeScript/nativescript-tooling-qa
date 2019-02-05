@@ -23,7 +23,7 @@ class TnsTest(unittest.TestCase):
         # Get class name and log
         try:
             TestContext.CLASS_NAME = inspect.stack()[1][0].f_locals['cls'].__name__
-        except:
+        except Exception:
             TestContext.CLASS_NAME = cls.__name__
         Log.test_class_start(class_name=TestContext.CLASS_NAME)
 
