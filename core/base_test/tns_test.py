@@ -1,4 +1,3 @@
-import inspect
 import os
 import unittest
 
@@ -19,7 +18,7 @@ class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
-        TestContext.CLASS_NAME = inspect.stack()[1][0].f_locals['cls'].__name__
+        TestContext.CLASS_NAME = cls.__name__
         Log.test_class_start(class_name=TestContext.CLASS_NAME)
 
         # Kill processes
@@ -78,7 +77,7 @@ class TnsTest(unittest.TestCase):
         Tns.kill()
         TnsTest.kill_emulators()
         Process.kill_all_in_context()
-        Log.test_class_end(class_name=cls.__name__)
+        Log.test_class_end(TestContext.CLASS_NAME)
 
     @staticmethod
     def kill_emulators():

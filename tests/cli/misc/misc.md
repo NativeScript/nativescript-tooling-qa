@@ -1,8 +1,5 @@
 #Tests to be writen
 
-**autocomplete**
-https://github.com/NativeScript/nativescript-cli/blob/master/docs/man_pages/general/autocomplete.md
-
 **setup**
 https://github.com/NativeScript/nativescript-cli/blob/master/docs/man_pages/env-configuration/setup.md
 

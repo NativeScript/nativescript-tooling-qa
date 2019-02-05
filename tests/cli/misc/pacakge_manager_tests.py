@@ -1,23 +1,12 @@
+"""
+Test for package-manager command
+"""
 from core.base_test.tns_test import TnsTest
 from products.nativescript.tns import Tns
 
 
 # noinspection PyMethodMayBeStatic
 class PackageManagerTests(TnsTest):
-
-    @classmethod
-    def setUpClass(cls):
-        TnsTest.setUpClass()
-
-    def setUp(self):
-        TnsTest.setUp(self)
-
-    def tearDown(self):
-        TnsTest.tearDown(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
 
     def test_001_package_manager_get(self):
         result = Tns.exec_command(command='package-manager get')
