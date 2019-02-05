@@ -6,6 +6,7 @@ import os
 from parameterized import parameterized
 
 from core.base_test.tns_test import TnsTest
+from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
@@ -19,24 +20,24 @@ from products.nativescript.tns_assert import TnsAssert
 APP_NAME = Settings.AppName.DEFAULT
 
 TEST_DATA = [
-    ('jasmine-js-android', 'jasmine', Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('jasmine-ng-android', 'jasmine', Template.HELLO_WORLD_NG, Platform.ANDROID),
-    ('mocha-js-android', 'mocha', Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('mocha-ng-android', 'mocha', Template.HELLO_WORLD_NG, Platform.ANDROID),
-    ('qunit-js-android', 'qunit', Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('qunit-js-android', FrameworkType.QUNIT, Template.HELLO_WORLD_JS, Platform.ANDROID),
 ]
 
 TEST_DATA_OSX = [
-    ('jasmine-js-android', 'jasmine', Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('jasmine-js-ios', 'jasmine', Template.HELLO_WORLD_JS, Platform.IOS),
-    ('jasmine-ng-android', 'jasmine', Template.HELLO_WORLD_NG, Platform.ANDROID),
-    ('jasmine-ng-ios', 'jasmine', Template.HELLO_WORLD_NG, Platform.IOS),
-    ('mocha-js-android', 'mocha', Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('mocha-js-ios', 'mocha', Template.HELLO_WORLD_JS, Platform.IOS),
-    ('mocha-ng-android', 'mocha', Template.HELLO_WORLD_NG, Platform.ANDROID),
-    ('mocha-ng-ios', 'mocha', Template.HELLO_WORLD_NG, Platform.IOS),
-    ('qunit-js-android', 'qunit', Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('qunit-js-ios', 'qunit', Template.HELLO_WORLD_JS, Platform.IOS),
+    ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('jasmine-js-ios', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.IOS),
+    ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('jasmine-ng-ios', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.IOS),
+    ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('mocha-js-ios', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.IOS),
+    ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('mocha-ng-ios', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.IOS),
+    ('qunit-js-android', FrameworkType.QUNIT, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('qunit-js-ios', FrameworkType.QUNIT, Template.HELLO_WORLD_JS, Platform.IOS),
 ]
 
 
@@ -48,7 +49,7 @@ def get_data():
 
 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
-class PrepareAndBuildPerfTests(TnsTest):
+class TestsForTnsTest(TnsTest):
 
     @classmethod
     def setUpClass(cls):
@@ -78,7 +79,7 @@ class PrepareAndBuildPerfTests(TnsTest):
             raise Exception('Unknown platform: ' + str(platform))
 
         # Init tests and run tests
-        if Settings.HOST_OS == OSType.WINDOWS and framework == 'qunit':
+        if Settings.HOST_OS == OSType.WINDOWS and framework == FrameworkType.QUNIT:
             # Hack for qunit on windows (see https://github.com/NativeScript/nativescript-cli/issues/4333)
             Npm.install(package='qunit@2', option='--save-dev', folder=os.path.join(Settings.TEST_RUN_HOME, APP_NAME))
             # Tns test init will still fail with exit code 1, so we use `verify=False` and then assert logs.
@@ -96,6 +97,7 @@ class PrepareAndBuildPerfTests(TnsTest):
             # TODO: Fix it!
 
     def test_400_invalid_framework_name(self):
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        result = Tns.create(app_name=APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)
+        TnsAssert.created(app_name=APP_NAME, output=result.output, theme=False, webpack=False)
         result = Tns.test_init(app_name=APP_NAME, framework='jasmin', verify=False)
         assert 'Unknown or unsupported unit testing framework: jasmin' in result.output

@@ -52,12 +52,12 @@ class CreateTests(TnsTest):
                    update=False)
 
     def test_006_create_project_with_dash(self):
-        """ Create project with space is possible, but packageId will skip the space symbol"""
+        """ Create project with dash is possible, but packageId will skip the space symbol"""
         Tns.create(app_name=Settings.AppName.WITH_DASH, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, update=False)
 
     def test_007_create_project_with_space(self):
-        """ Create project with dash is possible, but packageId will skip the dash symbol"""
+        """ Create project with space is possible, but packageId will skip the dash symbol"""
         Tns.create(app_name=Settings.AppName.WITH_SPACE, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, update=False)
 

@@ -9,6 +9,7 @@ from core.utils.npm import Npm
 from core.utils.perf_utils import PerfUtils
 from data.templates import Template
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 
 RETRY_COUNT = 3
 TOLERANCE = 0.30
@@ -33,8 +34,7 @@ class PlatformAddPerfTests(TnsTest):
     def test_100_platform_add_android(self):
         total_time = 0
         for _ in range(RETRY_COUNT):
-            Npm.cache_clean()
-            Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
+            self.create_app()
             time = Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH).duration
             total_time = total_time + time
         actual = total_time / RETRY_COUNT
@@ -45,10 +45,14 @@ class PlatformAddPerfTests(TnsTest):
     def test_101_platform_add_ios(self):
         total_time = 0
         for _ in range(RETRY_COUNT):
-            Npm.cache_clean()
-            Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
+            self.create_app()
             time = Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH).duration
             total_time = total_time + time
         actual = total_time / RETRY_COUNT
         expected = EXPECTED_RESULTS['hello-world-js']['platform_add_ios']
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Time for platform add ios is not OK.'
+
+    def create_app(self):
+        Npm.cache_clean()
+        result = Tns.create(app_name=APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)
+        TnsAssert.created(app_name=APP_NAME, output=result.output, theme=False, webpack=False)

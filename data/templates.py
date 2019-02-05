@@ -62,3 +62,6 @@ class Template(object):
     # Vue templates
     VUE_BLANK = gen_template_info(name='template-blank-vue', app_type=AppType.VUE)
     VUE_MASTER_DETAIL = gen_template_info(name='template-master-detail-vue', app_type=AppType.VUE, texts=md_str)
+
+    # Minimal templates (not shipped for users, we bring them in assets folder)
+    MIN_JS = gen_template_info(name='template-min', app_type=AppType.JS)

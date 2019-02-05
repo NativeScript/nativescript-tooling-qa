@@ -1,11 +1,13 @@
 import os
 
 from core.enums.app_type import AppType
+from core.enums.framework_type import FrameworkType
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from core.utils.perf_utils import PerfUtils
+from products.nativescript.app import App
 from products.nativescript.tns_helpers import TnsHelpers
 
 
@@ -28,11 +30,11 @@ class TnsAssert(object):
 
         # Assert output
         if output is not None:
-            app = app_name.rsplit('/')[-1]
             assert 'Now you can navigate to your project with $ cd' in output
             assert 'After that you can preview it on device by executing $ tns preview' in output
             assert 'After that you can run it on device/emulator by executing $ tns run <platform>' not in output
-            assert 'Project {0} was successfully created'.format(app) in output, 'Failed to create {0}'.format(app)
+            assert 'Project {0} was successfully created'.format(app_name) in output, \
+                'Failed to create {0}'.format(app_name)
 
         # Verify modules installed
         node_path = TnsHelpers.get_app_node_modules_path(app_name=app_name, path=path)
@@ -110,18 +112,28 @@ class TnsAssert(object):
             if app_data.size is not None:
                 pass
 
-    # noinspection PyUnusedLocal
     @staticmethod
     def test_initialized(app_name, framework, output):
-        # pylint: disable=unused-argument
-        # TODO: Implement it!
         """
         Execute `tns test init` command.
         :param app_name: App name (passed as --path <App name>)
-        :param framework: Unit testing framework as string (jasmin, mocha, quinit).
+        :param framework: FrameworkType enum value.
         :param output: Output of `tns test init` command.
         :return: Result of `tns test init` command.
         """
+        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        config = os.path.join(app_path, 'karma.conf.js')
+        assert App.is_dependency(app_name=app_name, dependency='nativescript-unit-test-runner')
+        if framework == FrameworkType.JASMINE:
+            assert "frameworks: ['jasmine']" in File.read(config), 'Framework not set in config file.'
+            assert App.is_dev_dependency(app_name=app_name, dependency='karma-jasmine')
+        if framework == FrameworkType.MOCHA:
+            assert "frameworks: ['mocha', 'chai']" in File.read(config), 'Frameworks not set in config file.'
+            assert App.is_dev_dependency(app_name=app_name, dependency='karma-mocha')
+            assert App.is_dev_dependency(app_name=app_name, dependency='karma-chai')
+        if framework == FrameworkType.QUNIT:
+            assert "frameworks: ['qunit']" in File.read(config), 'Framework not set in config file.'
+            assert App.is_dev_dependency(app_name=app_name, dependency='karma-qunit')
         if output is not None:
             assert 'Successfully installed plugin nativescript-unit-test-runner' in output
             assert 'Example test file created in' in output

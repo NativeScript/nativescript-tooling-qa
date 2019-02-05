@@ -6,6 +6,7 @@ from core.settings import Settings
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 
 
 # noinspection PyMethodMayBeStatic
@@ -53,7 +54,8 @@ class DoctorTests(TnsTest):
             assert "The Python 'six' package is found." in output
 
     def test_200_doctor_show_warning_when_new_components_are_available(self):
-        Tns.create(app_name=self.APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        result = Tns.create(app_name=self.APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)
+        TnsAssert.created(app_name=self.APP_NAME, output=result.output, theme=False, webpack=False)
         Tns.platform_add_android(app_name=self.APP_NAME, version='4')
         App.install_dependency(app_name=self.APP_NAME, dependency='tns-core-modules', version='4')
 
