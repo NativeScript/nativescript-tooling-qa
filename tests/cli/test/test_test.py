@@ -8,11 +8,13 @@ from parameterized import parameterized
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 
 APP_NAME = Settings.AppName.DEFAULT
 
@@ -70,29 +72,27 @@ class PrepareAndBuildPerfTests(TnsTest):
         # Add platforms
         if platform == Platform.ANDROID:
             Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
-            Tns.prepare_android(app_name=APP_NAME)
-            if Settings.HOST_OS == OSType.WINDOWS:
-                Tns.run_android(app_name=APP_NAME, emulator=True, justlaunch=True, wait=True)
         elif platform == Platform.IOS:
             Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH)
-            Tns.prepare_ios(app_name=APP_NAME)
         else:
             raise Exception('Unknown platform: ' + str(platform))
 
-        # First Run
         # Init tests and run tests
         if Settings.HOST_OS == OSType.WINDOWS and framework == 'qunit':
             # Hack for qunit on windows (see https://github.com/NativeScript/nativescript-cli/issues/4333)
             Npm.install(package='qunit@2', option='--save-dev', folder=os.path.join(Settings.TEST_RUN_HOME, APP_NAME))
+            # Tns test init will still fail with exit code 1, so we use `verify=False` and then assert logs.
             result = Tns.test_init(app_name=APP_NAME, framework=framework, verify=False)
-            assert 'Successfully installed plugin nativescript-unit-test-runner' in result.output
-            assert 'Example test file created in' in result.output
-            assert 'Run your tests using the' in result.output
+            TnsAssert.test_initialized(app_name=APP_NAME, framework=framework, output=result.output)
         else:
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
         # Run Tests
-        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
+        if Settings.HOST_OS != OSType.WINDOWS:
+            Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
+        else:
+            Log.info('Due to unknown issues --justlauch do not exit on Windows when tests are executed on Jenkins!')
+            # TODO: Fix it!
 
     def test_400_invalid_framework_name(self):
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package)

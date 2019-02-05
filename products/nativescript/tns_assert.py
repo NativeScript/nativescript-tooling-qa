@@ -109,3 +109,20 @@ class TnsAssert(object):
             # Assert size
             if app_data.size is not None:
                 pass
+
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def test_initialized(app_name, framework, output):
+        # pylint: disable=unused-argument
+        # TODO: Implement it!
+        """
+        Execute `tns test init` command.
+        :param app_name: App name (passed as --path <App name>)
+        :param framework: Unit testing framework as string (jasmin, mocha, quinit).
+        :param output: Output of `tns test init` command.
+        :return: Result of `tns test init` command.
+        """
+        if output is not None:
+            assert 'Successfully installed plugin nativescript-unit-test-runner' in output
+            assert 'Example test file created in' in output
+            assert 'Run your tests using the' in output
