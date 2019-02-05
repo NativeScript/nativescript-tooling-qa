@@ -62,20 +62,20 @@ class RunAndroidJSTests(TnsRunJSTests):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True)
 
     def test_210_run_android_bundle_hmr(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, hmr=True)
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, hmr=True)
 
-    def test_300_run_android_bundle_aot(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
-
-    def test_310_run_android_bundle_uglify(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
-
-    def test_320_run_android_bundle_aot_and_uglify(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
-
-    def test_390_run_android_bundle_aot_uglify_snapshot(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu,
-                            bundle=True, aot=True, uglify=True, snapshot=True)
+    # def test_300_run_android_bundle_aot(self):
+    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
+    #
+    # def test_310_run_android_bundle_uglify(self):
+    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
+    #
+    # def test_320_run_android_bundle_aot_and_uglify(self):
+    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
+    #
+    # def test_390_run_android_bundle_aot_uglify_snapshot(self):
+    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu,
+    #                         bundle=True, aot=True, uglify=True, snapshot=True)
 
 
 @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
@@ -85,15 +85,15 @@ class RunIOSJSTests(TnsRunJSTests):
 
     def test_200_run_ios_bundle(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True)
-
+    #
     def test_210_run_ios_bundle_hmr(self):
-        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, hmr=True)
-
-    def test_300_run_ios_bundle_aot(self):
-        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
-
-    def test_310_run_ios_bundle_uglify(self):
-        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
-
-    def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, hmr=True)
+    #
+    # def test_300_run_ios_bundle_aot(self):
+    #     sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
+    #
+    # def test_310_run_ios_bundle_uglify(self):
+    #     sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
+    #
+    # def test_320_run_ios_bundle_aot_and_uglify(self):
+    #     sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)

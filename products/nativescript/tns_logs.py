@@ -45,7 +45,19 @@ class TnsLogs(object):
         logs = ['Building project...', 'Project successfully built.']
         return logs
 
-        # return []
+    @staticmethod
+    def webpack_messages(platform, plugins=None):
+        """
+        Get log messages that should be present when project is build.
+        :param platform: Platform.ANDROID or Platform.IOS
+        :param plugins: Array of plugins available in the project.
+        :return: Array of strings.
+        """
+        if plugins is None:
+            plugins = []
+
+        logs = ['Webpack compilation complete.', 'Watching for file changes.', 'Webpack build done!']
+        return logs
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, file_name=None, plugins=None):
@@ -65,38 +77,69 @@ class TnsLogs(object):
         logs = []
 
         if file_name is None:
-            logs.append('Installing on device')
-            logs.append('Successfully installed on device with identifier')
-            logs.append('Restarting application on device')
-            if platform ==Platform.IOS:
-                logs.append('Successfully transferred all files on device')
+            if bundle is True or hmr is True:
+                logs.append('File change detected.')
+                logs.append('Starting incremental webpack compilation...')
+                webpack_logs = TnsLogs.webpack_messages(platform=platform, plugins=[])
+                logs.extend(webpack_logs)
 
-            # TODO
-            prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=['nativescript-theme-core',
+                prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
+                logs.extend(prepare_logs)
+
+                build_logs = TnsLogs.build_messages(platform=platform, plugins=[])
+                logs.extend(build_logs)
+
+                logs.append('Installing on device')
+                logs.append('Successfully installed on device with identifier')
+                logs.append('Restarting application on device')
+
+            else:
+                logs.append('Installing on device')
+                logs.append('Successfully installed on device with identifier')
+                logs.append('Restarting application on device')
+                if platform ==Platform.IOS:
+                    logs.append('Successfully transferred all files on device')
+
+                # TODO
+                prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=['nativescript-theme-core',
                                                                                 'tns-core-modules',
                                                                                 'tns-core-modules-widgets'])
-            logs.extend(prepare_logs)
+                logs.extend(prepare_logs)
 
-            build_logs = TnsLogs.build_messages(platform=platform, plugins=[])
-            logs.extend(build_logs)
+                build_logs = TnsLogs.build_messages(platform=platform, plugins=[])
+                logs.extend(build_logs)
+
+            if hmr is True:
+                logs.append('HMR: Hot Module Replacement Enabled.')
+                logs.append('Waiting for signal.')
+
+
 
         # Add messages when file is changes (prepare and sync files).
         if file_name is not None:
-            # Generate webpack messages
-            logs.append(file_name)
-            if not bundle and not hmr:
-                prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
-                logs.extend(prepare_logs)
-                logs.append('Successfully transferred {0} on device'.format(file_name))
-                if file_name=='main-view-model.js':
-                    logs.append('Restarting application on device')
-                else:
-                    logs.append('Refreshing application on device')
 
-            if bundle or hmr:
+            files = ['main-view-model.js', 'main-view-model.ts', 'item.service.ts']
+            if file_name in files or bundle is True:
+                if hmr is False:
+                    restart = True
+                    logs.append('Restarting application on device')
+                    if platform == Platform.ANDROID:
+                        logs.append('ActivityManager: Start proc')
+                        logs.append('activity org.nativescript.TestApp/com.tns.NativeScriptActivity')
+                if hmr is True:
+                    logs.append('Refreshing application on device')
+            elif file_name not in files or bundle is False:
+                logs.append('Refreshing application on device')
+
+            if hmr is True:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
-                logs.append('Webpack compilation complete.')
+                webpack_logs = TnsLogs.webpack_messages(platform=platform, plugins=[])
+                logs.extend(webpack_logs)
+                logs.append('hot-update.json on device')
+                logs.append('The following modules were updated:')
+                logs.append('Successfully applied update with hmr hash')
+                logs.append('Refreshing application on device')
 
             # Generate build messages
             # TODO: Check if file is in app resources and require native build
@@ -104,45 +147,6 @@ class TnsLogs(object):
             if should_build_native:
                 build_logs = TnsLogs.build_messages(platform=platform, run_type=run_type)
                 logs.extend(build_logs)
-
-
-
-
-            # # Generate file transfer message
-            # if not bundle and not hmr:
-            #     # logs.append('Webpack compilation complete.')
-            #     # logs.append('Watching for file changes.')
-            #     # logs.append('Webpack build done!')
-            #     # logs.append('Successfully transferred {0} on device'.format(file_name))
-            #     # logs.append('Restarting application on device')
-            #     # prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
-            #     # logs.extend(prepare_logs)
-            #     logs.append('Successfully transferred bundle.js on device')
-            #
-            # if bundle and not hmr:
-            #     prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
-            #     logs.extend(prepare_logs)
-            #     logs.append('Successfully transferred {0} on device'.format(file_name))
-            #     if file_name is not 'main-view-model.js':
-            #         logs.append('Refreshing application on device')
-            #     else:
-            #         logs.append('Restarting application on device')
-            # if hmr:
-            #     logs.append('hot-update.json on device')
-            #     logs.append('The following modules were updated:')
-            #     logs.append('Successfully applied update with hmr hash')
-
-        # Add messages for restart or refresh
-        # TODO: Implement it!
-        # Based on bundle, hmr and file type detect that should be the value of restart variable.
-        restart = True
-        if restart:
-            logs.append('Restarting application on device')
-            if platform == Platform.ANDROID:
-                logs.append('ActivityManager: Start proc')
-                logs.append('activity org.nativescript.TestApp/com.tns.NativeScriptActivity')
-        else:
-            logs.append('Refreshing application on device')
 
         # Add message for successful sync
         logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
