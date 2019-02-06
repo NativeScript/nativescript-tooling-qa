@@ -13,7 +13,7 @@ from core.utils.version import Version
 class Npm(object):
     @staticmethod
     def __run_npm_command(cmd, folder=Settings.TEST_RUN_HOME, verify=True):
-        command = 'npm {0}'.format(cmd)
+        command = 'npm {0}'.format(cmd).strip()
         Log.info(command + " (at " + folder + ").")
         result = run(cmd=command, cwd=folder, wait=True, timeout=300)
         if verify:

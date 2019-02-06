@@ -11,6 +11,7 @@ import unittest
 
 import numpy
 
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.image_utils import ImageUtils
 
@@ -36,6 +37,7 @@ class ImageUtilsTests(unittest.TestCase):
         assert (actual_color == self.white).all(), 'Main color is wrong. It should be white.'
 
     @unittest.skipIf(os.environ.get('TRAVIS', None) is not None, 'Skip on Travis.')
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'Skip on Windows.')
     def test_04_get_text(self):
         # OCR on Hello-World app
         text = ImageUtils.get_text(self.app_image)

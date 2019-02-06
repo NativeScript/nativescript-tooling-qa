@@ -103,13 +103,21 @@ class File(object):
 
     @staticmethod
     def write(path, text):
-        with open(path, 'w+') as text_file:
-            text_file.write(text)
+        if Settings.PYTHON_VERSION < 3:
+            with open(path, 'w+') as text_file:
+                text_file.write(text)
+        else:
+            with open(path, 'w+', encoding='utf-8', errors='ignore') as text_file:
+                text_file.write(text)
 
     @staticmethod
     def append(path, text):
-        with open(path, 'a') as text_file:
-            text_file.write(text)
+        if Settings.PYTHON_VERSION < 3:
+            with open(path, 'a') as text_file:
+                text_file.write(text)
+        else:
+            with open(path, 'a', encoding='utf-8', errors='ignore') as text_file:
+                text_file.write(text)
 
     @staticmethod
     def replace(path, old_string, new_string):
