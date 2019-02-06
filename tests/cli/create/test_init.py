@@ -81,15 +81,19 @@ class InitAndInstallTests(TnsTest):
         assert Folder.exists(os.path.join(APP_PATH, 'node_modules', 'gulp'))
 
         # Copy app folder and app resources
-        Folder.copy(source=os.path.join(Settings.TEST_RUN_HOME, 'assets', 'template-min', 'app'), target=APP_PATH)
+        Folder.copy(source=os.path.join(Settings.TEST_RUN_HOME, 'assets', 'template-min', 'app'),
+                    target=os.path.join(APP_PATH, 'app'))
 
         # Prepare project
         Tns.prepare_android(app_name=APP_NAME)
         if Settings.HOST_OS == OSType.OSX:
             Tns.prepare_ios(app_name=APP_NAME)
 
-        # Verify lodash and gulp and are in platforms
-        # TODO: Will finish is later
+        # Verify prepare
+        base_path = os.path.join(APP_PATH, 'platforms', 'android', 'app', 'src', 'main', 'assets', 'app', 'tns_modules')
+        assert Folder.exists(os.path.join(base_path, 'lodash')), 'Dependency not available in platforms.'
+        assert not Folder.exists(os.path.join(base_path, 'gulp')), 'DevDependency available in platforms.'
+        # TODO: Verify prepare for iOS
 
     def test_400_install_in_not_existing_folder(self):
         result = Tns.exec_command(command='install', path=APP_NAME)
