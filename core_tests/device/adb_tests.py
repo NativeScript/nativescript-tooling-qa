@@ -15,7 +15,7 @@ class AdbTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         DeviceManager.Emulator.stop()
-        cls.emu = DeviceManager.Emulator.start(Settings.Emulators.DEFAULT, wipe_data=True)
+        cls.emu = DeviceManager.Emulator.start(Settings.Emulators.DEFAULT)
 
     def setUp(self):
         TnsTest.setUp(self)
