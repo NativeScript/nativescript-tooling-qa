@@ -60,7 +60,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, file_name=None, plugins=None):
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, file_name=None, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -93,6 +93,11 @@ class TnsLogs(object):
                 logs.append('Successfully installed on device with identifier')
                 logs.append('Restarting application on device')
 
+                if platform == Platform.IOS:
+                    logs.append('Successfully transferred bundle.js on device')
+                    logs.append('Successfully transferred package.json on device')
+                    logs.append('Successfully transferred starter.js on device')
+                    logs.append('Successfully transferred vendor.js on device')
             else:
                 logs.append('Installing on device')
                 logs.append('Successfully installed on device with identifier')
@@ -117,20 +122,24 @@ class TnsLogs(object):
 
         # Add messages when file is changes (prepare and sync files).
         if file_name is not None:
-
-            files = ['main-view-model.js', 'main-view-model.ts', 'item.service.ts']
-            if file_name in files or bundle is True:
-                if hmr is False:
+            if hmr is False:
+                if '.js' in file_name or '.ts' in file_name or bundle is True:
                     restart = True
+                    prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
+                    logs.extend(prepare_logs)
+                    if bundle is False:
+                        logs.append('Successfully transferred ' + file_name + ' on device'.replace('.ts', '.js'))
+                    if bundle is True:
+                        logs.append('Successfully transferred bundle.js on device')
+                        if uglify is True:
+                            logs.append('Successfully transferred vendor.js on device')
                     logs.append('Restarting application on device')
                     if platform == Platform.ANDROID:
                         logs.append('ActivityManager: Start proc')
                         logs.append('activity org.nativescript.TestApp/com.tns.NativeScriptActivity')
-                if hmr is True:
+                elif '.js' or '.ts' not in file_name or bundle is False:
                     logs.append('Refreshing application on device')
-            elif file_name not in files or bundle is False:
-                logs.append('Refreshing application on device')
-
+                    logs.append('Successfully transferred ' + file_name + ' on device')
             if hmr is True:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')

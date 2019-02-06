@@ -31,6 +31,7 @@ class TnsRunJSTests(TnsTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
+
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -64,18 +65,18 @@ class RunAndroidJSTests(TnsRunJSTests):
     def test_210_run_android_bundle_hmr(self):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, hmr=True)
 
-    # def test_300_run_android_bundle_aot(self):
-    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
-    #
-    # def test_310_run_android_bundle_uglify(self):
-    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
-    #
-    # def test_320_run_android_bundle_aot_and_uglify(self):
-    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
-    #
-    # def test_390_run_android_bundle_aot_uglify_snapshot(self):
-    #     sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu,
-    #                         bundle=True, aot=True, uglify=True, snapshot=True)
+    def test_300_run_android_bundle_aot(self):
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
+
+    def test_310_run_android_bundle_uglify(self):
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
+
+    def test_320_run_android_bundle_aot_and_uglify(self):
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
+
+    def test_390_run_android_bundle_aot_uglify_snapshot(self):
+        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu,
+                            bundle=True, aot=True, uglify=True, snapshot=True)
 
 
 @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
@@ -89,11 +90,11 @@ class RunIOSJSTests(TnsRunJSTests):
     def test_210_run_ios_bundle_hmr(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, hmr=True)
     #
-    # def test_300_run_ios_bundle_aot(self):
-    #     sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
-    #
-    # def test_310_run_ios_bundle_uglify(self):
-    #     sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
-    #
-    # def test_320_run_ios_bundle_aot_and_uglify(self):
-    #     sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)
+    def test_300_run_ios_bundle_aot(self):
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
+
+    def test_310_run_ios_bundle_uglify(self):
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
+
+    def test_320_run_ios_bundle_aot_and_uglify(self):
+        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)

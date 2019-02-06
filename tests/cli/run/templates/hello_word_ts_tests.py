@@ -62,7 +62,7 @@ class RunAndroidTSTests(TnsRunTSTests):
         sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True)
 
     def test_210_run_android_bundle_hmr(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True, hmr=True)
+        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, hmr=True)
 
     def test_300_run_android_bundle_aot(self):
         sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
