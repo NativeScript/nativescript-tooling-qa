@@ -109,4 +109,5 @@ class ImageUtils(object):
         image = Image.open(image_path).convert('LA')
         row_text = pytesseract.image_to_string(image, lang='eng',
                                                config="-c tessedit_char_whitelist=%s_-." % char_whitelist).strip()
-        return "".join([s for s in row_text.splitlines(True) if s.strip()])
+        text = "".join([s for s in row_text.splitlines(True) if s.strip()])
+        return text.encode(encoding='utf-8', errors='ignore')
