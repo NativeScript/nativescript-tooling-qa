@@ -18,8 +18,10 @@ from core.utils.image_utils import ImageUtils
 
 # noinspection PyMethodMayBeStatic,PyUnresolvedReferences
 class ImageUtilsTests(unittest.TestCase):
-    app_image = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'app.png')
-    iphone_image = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'screenshot.png')
+    current_folder = os.path.dirname(os.path.realpath(__file__))
+
+    app_image = os.path.join(current_folder, 'resources', 'app.png')
+    iphone_image = os.path.join(current_folder, 'resources', 'screenshot.png')
     blue = numpy.array([255, 188, 48])
     white = numpy.array([255, 255, 255])
 
