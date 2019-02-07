@@ -60,7 +60,8 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, file_name=None, plugins=None):
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False,
+                     file_name=None, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -90,6 +91,8 @@ class TnsLogs(object):
                 logs.extend(build_logs)
 
                 logs.append('Installing on device')
+                # message from app.js
+                logs.append('application started')
                 logs.append('Successfully installed on device with identifier')
                 logs.append('Restarting application on device')
 
@@ -99,16 +102,18 @@ class TnsLogs(object):
                     logs.append('Successfully transferred starter.js on device')
                     logs.append('Successfully transferred vendor.js on device')
             else:
+                # message from app.js
+                logs.append('application started')
                 logs.append('Installing on device')
                 logs.append('Successfully installed on device with identifier')
                 logs.append('Restarting application on device')
-                if platform ==Platform.IOS:
+                if platform == Platform.IOS:
                     logs.append('Successfully transferred all files on device')
 
                 # TODO
                 prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=['nativescript-theme-core',
-                                                                                'tns-core-modules',
-                                                                                'tns-core-modules-widgets'])
+                                                                                    'tns-core-modules',
+                                                                                    'tns-core-modules-widgets'])
                 logs.extend(prepare_logs)
 
                 build_logs = TnsLogs.build_messages(platform=platform, plugins=[])
@@ -118,15 +123,14 @@ class TnsLogs(object):
                 logs.append('HMR: Hot Module Replacement Enabled.')
                 logs.append('Waiting for signal.')
 
-
-
         # Add messages when file is changes (prepare and sync files).
         if file_name is not None:
             if hmr is False:
                 if '.js' in file_name or '.ts' in file_name or bundle is True:
-                    restart = True
                     prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
                     logs.extend(prepare_logs)
+                    # message from app.js
+                    logs.append('application started')
                     if bundle is False:
                         logs.append('Successfully transferred ' + file_name + ' on device'.replace('.ts', '.js'))
                     if bundle is True:
@@ -149,6 +153,7 @@ class TnsLogs(object):
                 logs.append('The following modules were updated:')
                 logs.append('Successfully applied update with hmr hash')
                 logs.append('Refreshing application on device')
+                assert "application started" not in logs
 
             # Generate build messages
             # TODO: Check if file is in app resources and require native build

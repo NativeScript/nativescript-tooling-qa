@@ -7,7 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from data.sync.hello_world_js import sync_hello_world_js
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -31,7 +31,9 @@ class TnsRunJSTests(TnsTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-
+        src = os.path.join(Settings.TEST_RUN_HOME, 'data', 'issues', 'liveSyncJS', 'app.js')
+        target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
+        File.copy(src=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -86,10 +88,10 @@ class RunIOSJSTests(TnsRunJSTests):
 
     def test_200_run_ios_bundle(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True)
-    #
+
     def test_210_run_ios_bundle_hmr(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, hmr=True)
-    #
+
     def test_300_run_ios_bundle_aot(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
 
