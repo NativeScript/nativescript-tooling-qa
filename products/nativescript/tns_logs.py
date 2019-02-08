@@ -78,7 +78,6 @@ class TnsLogs(object):
         # Generate prepare messages
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
-            logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform, instrumented=instrumented))
 
         # Generate build messages
         # TODO: Check if file is in app resources and require native build
@@ -94,10 +93,10 @@ class TnsLogs(object):
                                                     bundle=bundle, hmr=hmr, uglify=uglify))
 
         # App restart messages:
-        if (file_name is not None) and (hmr or '.css' in file_name or '.xml' in file_name or '.html' in file_name):
-            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented))
-        else:
+        if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
             logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform, instrumented=instrumented))
+        else:
+            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented))
 
         # Add message for successful sync
         logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
@@ -132,6 +131,25 @@ class TnsLogs(object):
             else:
                 logs.append('Successfully transferred {0}'.format(file_name))
         return logs
+
+    @staticmethod
+    def __should_restart(run_type, bundle, hmr, file_name):
+        should_restart = True
+        if hmr:
+            should_restart = False
+        else:
+            if bundle:
+                should_restart = True
+            else:
+                if file_name is not None:
+                    if '.css' in file_name or '.xml' in file_name or '.html' in file_name:
+                        should_restart = False
+
+        # ...and at the end: App restarts always on first run
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            should_restart = True
+
+        return should_restart
 
     @staticmethod
     def __app_restart_messages(app_name, platform, instrumented):

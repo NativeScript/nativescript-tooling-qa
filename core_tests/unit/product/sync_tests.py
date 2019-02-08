@@ -111,6 +111,21 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Successfully transferred bundle.js on device' not in logs
         assert 'Restarting application on device' not in logs
 
+    def test_14_get_run_messages_sync_xml_bundle_no_hmr(self):
+        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT, platform=Platform.ANDROID,
+                                    run_type=RunType.INCREMENTAL, bundle=True, hmr=False, file_name='main-page.xml',
+                                    instrumented=True)
+        assert 'Refreshing application on device' not in logs
+        assert 'Restarting application on device' in logs
+
+    def test_15_get_run_messages_sync_xml_bundle_and_uglify(self):
+        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT, platform=Platform.ANDROID,
+                                    run_type=RunType.INCREMENTAL, bundle=True, hmr=False, uglify=True,
+                                    file_name='main-page.xml',
+                                    instrumented=True)
+        assert 'Refreshing application on device' not in logs
+        assert 'Restarting application on device' in logs
+
 
 if __name__ == '__main__':
     unittest.main()
