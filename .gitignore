@@ -3,9 +3,7 @@
 package-lock.json
 nosetests.*
 node_modules
-TestApp
-TestAppJS
-TestAppNG
+TestApp*
 out/*
 nativescript-sdk-*
 sample-Groceries

@@ -31,7 +31,7 @@ class TnsRunJSTests(TnsTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        src = os.path.join(Settings.TEST_RUN_HOME, 'data', 'issues', 'liveSyncJS', 'app.js')
+        src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
         File.copy(src=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
@@ -51,10 +51,6 @@ class TnsRunJSTests(TnsTest):
         target_src = os.path.join(self.source_project_dir, 'app')
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
 
 
 class RunAndroidJSTests(TnsRunJSTests):

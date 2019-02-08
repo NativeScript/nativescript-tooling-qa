@@ -39,19 +39,12 @@ class SmokeTests(TnsTest):
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.ng_app, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
-    def setUp(self):
-        TnsTest.setUp(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
-
     def test_001_run_android_js(self):
-        sync_hello_world_js(app_name=self.js_app, platform=Platform.ANDROID, device=self.emu)
+        sync_hello_world_js(app_name=self.js_app, platform=Platform.ANDROID, device=self.emu, instrumented=False)
 
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_002_run_ios_js(self):
-        sync_hello_world_js(app_name=self.js_app, platform=Platform.IOS, device=self.sim)
+        sync_hello_world_js(app_name=self.js_app, platform=Platform.IOS, device=self.sim, instrumented=False)
 
     def test_100_run_android_ng(self):
         sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu, bundle=True)

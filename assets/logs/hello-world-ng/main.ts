@@ -5,7 +5,7 @@ import { AppModule } from "./app/app.module";
 
 import * as application from "tns-core-modules/application";
 application.on(application.launchEvent, () => { 
-    console.log("applications started");
+    console.log("QA: Application started");
 });
 // A traditional NativeScript application starts by initializing global objects, setting up global CSS rules, creating, and navigating to the main page.
 // Angular applications need to take care of their own initialization: modules, components, directives, routes, DI providers.

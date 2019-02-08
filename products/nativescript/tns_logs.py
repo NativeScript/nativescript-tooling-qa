@@ -1,8 +1,10 @@
 # pylint: disable=unused-argument
 import time
 
+from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
+from core.settings import Settings
 from core.utils.file_utils import File
 from products.nativescript.run_type import RunType
 
@@ -41,27 +43,18 @@ class TnsLogs(object):
         """
         if plugins is None:
             plugins = []
-
-        logs = ['Building project...', 'Project successfully built.']
-        return logs
-
-    @staticmethod
-    def webpack_messages(platform, plugins=None):
-        """
-        Get log messages that should be present when project is build.
-        :param platform: Platform.ANDROID or Platform.IOS
-        :param plugins: Array of plugins available in the project.
-        :return: Array of strings.
-        """
-        if plugins is None:
-            plugins = []
-
-        logs = ['Webpack compilation complete.', 'Watching for file changes.', 'Webpack build done!']
+        logs = []
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            logs = ['Building project...', 'Project successfully built.']
+            if platform == Platform.ANDROID:
+                logs.append('Gradle build...')
+            if platform == Platform.IOS:
+                logs.append('Xcode build...')
         return logs
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False,
-                     file_name=None, plugins=None):
+                     file_name=None, instrumented=False, sync_all_file=False, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -69,98 +62,41 @@ class TnsLogs(object):
         :param run_type: RunType enum value.
         :param bundle: True if `--bundle is specified.`
         :param hmr: True if `--hmr is specified.`
+        :param uglify: True if `--env.uglify is specified.`
         :param file_name: Name of changed file.
+        :param instrumented: If true it will return logs we place inside app (see files in assets/logs).
+        :param sync_all_file: If false will check for logs that syncAllFiles is skipped.
         :param plugins: List of plugins.
         :return: Array of strings.
         """
         if plugins is None:
             plugins = []
         logs = []
+        if hmr:
+            bundle = True
 
-        if file_name is None:
-            if bundle is True or hmr is True:
-                logs.append('File change detected.')
-                logs.append('Starting incremental webpack compilation...')
-                webpack_logs = TnsLogs.webpack_messages(platform=platform, plugins=[])
-                logs.extend(webpack_logs)
+        # Generate prepare messages
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
 
-                prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
-                logs.extend(prepare_logs)
+        # Generate build messages
+        # TODO: Check if file is in app resources and require native build
+        logs.extend(TnsLogs.build_messages(platform=platform, run_type=run_type))
 
-                build_logs = TnsLogs.build_messages(platform=platform, plugins=[])
-                logs.extend(build_logs)
+        # App install messages
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            logs.append('Installing on device')
+            logs.append('Successfully installed')
 
-                logs.append('Installing on device')
-                # message from app.js
-                logs.append('application started')
-                logs.append('Successfully installed on device with identifier')
-                logs.append('Restarting application on device')
+        # File transfer messages
+        logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
+                                                    bundle=bundle, hmr=hmr, uglify=uglify))
 
-                if platform == Platform.IOS:
-                    logs.append('Successfully transferred bundle.js on device')
-                    logs.append('Successfully transferred package.json on device')
-                    logs.append('Successfully transferred starter.js on device')
-                    logs.append('Successfully transferred vendor.js on device')
-            else:
-                # message from app.js
-                logs.append('application started')
-                logs.append('Installing on device')
-                logs.append('Successfully installed on device with identifier')
-                logs.append('Restarting application on device')
-                if platform == Platform.IOS:
-                    logs.append('Successfully transferred all files on device')
-
-                # TODO
-                prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=['nativescript-theme-core',
-                                                                                    'tns-core-modules',
-                                                                                    'tns-core-modules-widgets'])
-                logs.extend(prepare_logs)
-
-                build_logs = TnsLogs.build_messages(platform=platform, plugins=[])
-                logs.extend(build_logs)
-
-            if hmr is True:
-                logs.append('HMR: Hot Module Replacement Enabled.')
-                logs.append('Waiting for signal.')
-
-        # Add messages when file is changes (prepare and sync files).
-        if file_name is not None:
-            if hmr is False:
-                if '.js' in file_name or '.ts' in file_name or bundle is True:
-                    prepare_logs = TnsLogs.prepare_messages(platform=platform, plugins=[])
-                    logs.extend(prepare_logs)
-                    # message from app.js
-                    logs.append('application started')
-                    if bundle is False:
-                        logs.append('Successfully transferred ' + file_name + ' on device'.replace('.ts', '.js'))
-                    if bundle is True:
-                        logs.append('Successfully transferred bundle.js on device')
-                        if uglify is True:
-                            logs.append('Successfully transferred vendor.js on device')
-                    logs.append('Restarting application on device')
-                    if platform == Platform.ANDROID:
-                        logs.append('ActivityManager: Start proc')
-                        logs.append('activity org.nativescript.TestApp/com.tns.NativeScriptActivity')
-                elif '.js' or '.ts' not in file_name or bundle is False:
-                    logs.append('Refreshing application on device')
-                    logs.append('Successfully transferred ' + file_name + ' on device')
-            if hmr is True:
-                logs.append('File change detected.')
-                logs.append('Starting incremental webpack compilation...')
-                webpack_logs = TnsLogs.webpack_messages(platform=platform, plugins=[])
-                logs.extend(webpack_logs)
-                logs.append('hot-update.json on device')
-                logs.append('The following modules were updated:')
-                logs.append('Successfully applied update with hmr hash')
-                logs.append('Refreshing application on device')
-                assert "application started" not in logs
-
-            # Generate build messages
-            # TODO: Check if file is in app resources and require native build
-            should_build_native = False
-            if should_build_native:
-                build_logs = TnsLogs.build_messages(platform=platform, run_type=run_type)
-                logs.extend(build_logs)
+        # App restart messages:
+        if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
+            logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform, instrumented=instrumented))
+        else:
+            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented))
 
         # Add message for successful sync
         logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
@@ -169,7 +105,69 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=45, check_interval=1):
+    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify):
+        logs = []
+        if file_name is None:
+            if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
+                logs.append('Skipping prepare.')
+        else:
+            logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
+            if bundle:
+                logs.append('File change detected.')
+                logs.append('Starting incremental webpack compilation...')
+                logs.append(file_name)
+                logs.append('Webpack compilation complete.')
+                logs.append('Webpack build done!')
+                if hmr:
+                    logs.append('Successfully transferred bundle.')
+                    logs.append('hot-update.json')
+                    logs.append('HMR: Checking for updates to the bundle with hmr hash')
+                    logs.append('HMR: The following modules were updated:')
+                    logs.append('HMR: Successfully applied update with hmr hash')
+                else:
+                    logs.append('Successfully transferred bundle.js')
+                    if uglify:
+                        logs.append('Successfully transferred vendor.js')
+            else:
+                # If bundle is not used then TS files are transpiled and synced as JS
+                logs.append('Successfully transferred {0}'.format(file_name.replace('.ts', '.js')))
+        return logs
+
+    @staticmethod
+    def __should_restart(run_type, bundle, hmr, file_name):
+        should_restart = True
+        if hmr:
+            should_restart = False
+        else:
+            if bundle:
+                should_restart = True
+            else:
+                if file_name is not None:
+                    if '.css' in file_name or '.xml' in file_name or '.html' in file_name:
+                        should_restart = False
+
+        # ...and at the end: App restarts always on first run
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            should_restart = True
+
+        return should_restart
+
+    @staticmethod
+    def __app_restart_messages(app_name, platform, instrumented):
+        logs = ['Restarting application on device']
+        if platform == Platform.ANDROID:
+            logs.append('ActivityManager: Start proc')
+            logs.append('activity org.nativescript.{0}/com.tns.NativeScriptActivity'.format(app_name))
+        if instrumented:
+            logs.append('QA: Application started')
+        return logs
+
+    @staticmethod
+    def __app_refresh_messages(instrumented):
+        return ['Refreshing application on device']
+
+    @staticmethod
+    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=3):
         """
         Wait until log file contains list of string.
         :param log_file: Path to log file.
@@ -192,6 +190,7 @@ class TnsLogs(object):
             for item in string_list:
                 if item in log:
                     Log.info("'{0}' found.".format(item))
+                    string_list.remove(item)
                 else:
                     not_found_list.append(item)
             if not not_found_list:
@@ -199,7 +198,7 @@ class TnsLogs(object):
                 Log.info("Log contains: {0}".format(string_list))
                 break
             else:
-                Log.info("'{0}' NOT found. Wait...".format(not_found_list))
+                Log.debug("'{0}' NOT found. Wait...".format(not_found_list))
                 time.sleep(check_interval)
             if 'BUILD FAILED' in log:
                 Log.error('BUILD FAILED. No need to wait more time!')
@@ -213,7 +212,8 @@ class TnsLogs(object):
 
         # Mark that part of the log as verified by appending a flag at the end.
         # The second time we read the file we will verify only the text after that flag
-        File.append(log_file, verified_flag)
+        if Settings.HOST_OS != OSType.WINDOWS:
+            File.append(log_file, verified_flag)
 
         if all_items_found:
             if not_existing_string_list is None:
@@ -222,7 +222,8 @@ class TnsLogs(object):
                 for item in not_existing_string_list:
                     assert item not in log, "{0} found! It should not be in logs.\nLog:\n{1}".format(item, log)
         else:
-            Log.debug('##### OUTPUT BEGIN #####\n')
-            Log.debug(log)
-            Log.debug('##### OUTPUT END #####\n')
+            Log.info("NOT FOUND: {0}".format(not_found_list))
+            Log.info('##### ACTUAL LOG #####\n')
+            Log.info(log)
+            Log.info('######################\n')
             assert False, "Output does not contain {0}".format(not_found_list)

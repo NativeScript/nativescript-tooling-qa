@@ -49,10 +49,6 @@ class TnsRunMasterDetailTests(TnsTest):
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
 
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
-
 
 class RunAndroidMasterDetailNGTests(TnsRunMasterDetailTests):
     def test_100_run_android(self):
