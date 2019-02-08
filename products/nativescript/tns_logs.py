@@ -44,7 +44,7 @@ class TnsLogs(object):
         if plugins is None:
             plugins = []
         logs = []
-        if RunType.FIRST_TIME or run_type == RunType.FULL:
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             logs = ['Building project...', 'Project successfully built.']
             if platform == Platform.ANDROID:
                 logs.append('Gradle build...')
@@ -222,6 +222,7 @@ class TnsLogs(object):
                 for item in not_existing_string_list:
                     assert item not in log, "{0} found! It should not be in logs.\nLog:\n{1}".format(item, log)
         else:
+            Log.info("NOT FOUND: {0}".format(not_found_list))
             Log.info('##### ACTUAL LOG #####\n')
             Log.info(log)
             Log.info('######################\n')

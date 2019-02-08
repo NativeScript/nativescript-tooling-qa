@@ -1,7 +1,9 @@
+import os
 import unittest
 
 from core.enums.platform_type import Platform
 from core.settings import Settings
+from data.changes import Changes
 from products.nativescript.run_type import RunType
 from products.nativescript.tns_logs import TnsLogs
 
@@ -141,6 +143,17 @@ class SyncMessagesTests(unittest.TestCase):
                                     run_type=RunType.INCREMENTAL,
                                     file_name='main-view-model.ts',
                                     bundle=False)
+        assert 'Skipping prepare.' not in logs
+        assert 'Successfully transferred main-view-model.js' in logs
+
+    def test_18_get_run_messages_incremental_prepare(self):
+        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
+                                    platform=Platform.ANDROID,
+                                    run_type=RunType.INCREMENTAL,
+                                    file_name=os.path.basename(Changes.JSHelloWord.JS.file_path))
+
+        assert 'Building project...' not in logs
+        assert 'Project successfully built.' not in logs
         assert 'Skipping prepare.' not in logs
         assert 'Successfully transferred main-view-model.js' in logs
 
