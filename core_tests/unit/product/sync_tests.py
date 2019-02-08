@@ -126,6 +126,24 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Refreshing application on device' not in logs
         assert 'Restarting application on device' in logs
 
+    def test_16_get_run_messages_sync_js(self):
+        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
+                                    platform=Platform.ANDROID,
+                                    run_type=RunType.INCREMENTAL,
+                                    file_name='main-view-model.js',
+                                    bundle=False)
+        assert 'Skipping prepare.' not in logs
+        assert 'Successfully transferred main-view-model.js' in logs
+
+    def test_17_get_run_messages_sync_ts(self):
+        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
+                                    platform=Platform.ANDROID,
+                                    run_type=RunType.INCREMENTAL,
+                                    file_name='main-view-model.ts',
+                                    bundle=False)
+        assert 'Skipping prepare.' not in logs
+        assert 'Successfully transferred main-view-model.js' in logs
+
 
 if __name__ == '__main__':
     unittest.main()

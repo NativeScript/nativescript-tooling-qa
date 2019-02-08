@@ -46,11 +46,14 @@ def __verify_snapshot_skipped(snapshot, result):
 
 def __sync_hello_world_js_ts(app_type, app_name, platform, device,
                              bundle=False, hmr=False, uglify=False, aot=False, snapshot=False, instrumented=False):
+    # Set changes
+    js_file = os.path.basename(Changes.JSHelloWord.JS.file_path)
     if app_type == AppType.JS:
         js_change = Changes.JSHelloWord.JS
         xml_change = Changes.JSHelloWord.XML
         css_change = Changes.JSHelloWord.CSS
     elif app_type == AppType.TS:
+        js_file = os.path.basename(Changes.TSHelloWord.TS.file_path)
         js_change = Changes.TSHelloWord.TS
         xml_change = Changes.TSHelloWord.XML
         css_change = Changes.TSHelloWord.CSS
@@ -78,7 +81,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     Sync.replace(app_name=app_name, change_set=js_change)
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='main-view-model.js', instrumented=instrumented)
+                                   hmr=hmr, file_name=js_file, instrumented=instrumented)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit XML file and verify changes are applied
@@ -103,7 +106,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.wait_for_text(text=js_change.old_text)
     device.wait_for_text(text=xml_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='main-view-model.js', instrumented=instrumented)
+                                   hmr=hmr, file_name=js_file, instrumented=instrumented)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=xml_change)
