@@ -64,8 +64,7 @@ class App(object):
             result = run(cmd=update_script, log_level=logging.INFO)
             assert "Adding 'es6' lib to tsconfig.json..." in result.output
             assert "Adding 'dom' lib to tsconfig.json..." in result.output
-            # Path mappings removed by https://github.com/NativeScript/nativescript-dev-typescript/pull/76
-            assert 'Adding tns-core-modules path mappings lib' not in result.output
+            assert 'Adding tns-core-modules path mappings lib' in result.output
         if web_pack and App.is_dev_dependency(app_name=app_name, dependency='nativescript-dev-webpack'):
             Npm.uninstall(package='nativescript-dev-webpack', option='--save-dev', folder=app_path)
             Npm.install(package=Settings.Packages.WEBPACK, option='--save-dev', folder=app_path)
