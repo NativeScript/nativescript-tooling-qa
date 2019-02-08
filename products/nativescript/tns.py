@@ -1,18 +1,18 @@
 # pylint: disable=too-many-branches
 import logging
 import os
-import time
 
 from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.file_utils import Folder, File
+from core.utils.file_utils import Folder
 from core.utils.process import Process
 from core.utils.run import run
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_paths import TnsPaths
 
 
 class Tns(object):
@@ -118,7 +118,7 @@ class Tns(object):
 
         # Cleanup app folder
         if force_clean:
-            Folder.clean(os.path.join(Settings.TEST_RUN_HOME, app_name))
+            Folder.clean(TnsPaths.get_app_path(app_name=app_name))
 
         # Create app
         normalized_app_name = app_name
@@ -243,29 +243,9 @@ class Tns(object):
                                   release=release, provision=provision, for_device=for_device,
                                   bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
                                   wait=wait, log_trace=log_trace, justlaunch=justlaunch)
-        if verify:
-            if wait:
-                assert result.exit_code == 0, 'tns run failed with non zero exit code.'
-                assert 'successfully synced' in result.output.lower()
-            else:
-                end_time = time.time() + 500
-                complete = False
-                log = ''
-                while time.time() < end_time:
-                    log = File.read(result.log_file)
-                    install_complete = 'Successfully installed' in log
-                    sync_complete = 'Successfully synced application' in log
-                    android_native_build_failed = 'BUILD FAILED' in log
-                    sync_failed = 'Unable to apply changes' in log
-                    if install_complete or sync_complete:
-                        complete = True
-                        break
-                    elif android_native_build_failed or sync_failed:
-                        complete = False
-                        break
-                    else:
-                        time.sleep(1)
-                assert complete, 'Tns run failed!' + os.linesep + 'LOG:' + os.linesep + log
+        if verify and wait:
+            assert result.exit_code == 0, 'tns run failed with non zero exit code.'
+            assert 'successfully synced' in result.output.lower()
         return result
 
     @staticmethod

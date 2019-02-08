@@ -20,23 +20,25 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Project successfully prepared (Android)' in logs
         assert len(logs) == 4
 
-    @unittest.skip('Failing.')
     def test_10_get_run_messages_first_run(self):
-        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
+        logs = TnsLogs.run_messages(app_name='QAApp',
                                     platform=Platform.ANDROID,
-                                    run_type=RunType.FIRST_TIME)
-        assert 'Skipping node_modules folder!' in logs
+                                    run_type=RunType.FIRST_TIME,
+                                    file_name=None)
+        assert 'Skipping prepare.' not in logs
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
         assert 'Building project...' in logs
         assert 'Gradle build...' in logs
+        assert 'Xcode build...' not in logs
         assert 'Project successfully built.' in logs
         assert 'Installing on device' in logs
-        assert 'Successfully installed on device' in logs
+        assert 'Successfully installed' in logs
         assert 'Restarting application on device' in logs
-        assert 'Successfully synced application org.nativescript.TestApp on device' in logs
+        assert 'Refreshing application on device' not in logs
+        assert 'Successfully synced application org.nativescript.QAApp on device' in logs
         assert 'ActivityManager: Start proc' in logs
-        assert 'activity org.nativescript.TestApp/com.tns.NativeScriptActivity' in logs
+        assert 'activity org.nativescript.QAApp/com.tns.NativeScriptActivity' in logs
 
     def test_11_get_run_messages_sync_js(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
@@ -45,13 +47,12 @@ class SyncMessagesTests(unittest.TestCase):
                                     file_name='main-view-model.js')
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
-        assert 'Successfully transferred main-view-model.js on device' in logs
+        assert 'Successfully transferred main-view-model.js' in logs
         assert 'Restarting application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
         assert 'ActivityManager: Start proc' in logs
         assert 'activity org.nativescript.TestApp/com.tns.NativeScriptActivity' in logs
 
-    @unittest.skip('Failing.')
     def test_12_get_run_messages_sync_js_bundle(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
@@ -63,7 +64,8 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Webpack compilation complete.' in logs
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
-        assert 'Successfully transferred bundle.js on device' in logs
+        assert 'Successfully transferred bundle.js' in logs
+        assert 'Successfully transferred vendor.js' not in logs
         assert 'Restarting application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
         assert 'ActivityManager: Start proc' in logs
@@ -71,7 +73,27 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Refreshing application on device' not in logs
         assert 'hot-update.json on device' not in logs
 
-    @unittest.skip('Failing.')
+    def test_12_get_run_messages_sync_js_bundle_uglify(self):
+        logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
+                                    platform=Platform.ANDROID,
+                                    run_type=RunType.INCREMENTAL,
+                                    file_name='main-view-model.js',
+                                    bundle=True, uglify=True)
+        assert 'Skipping prepare.' not in logs
+        assert 'File change detected.' in logs
+        assert 'main-view-model.js' in logs
+        assert 'Webpack compilation complete.' in logs
+        assert 'Preparing project...' in logs
+        assert 'Project successfully prepared (Android)' in logs
+        assert 'Successfully transferred bundle.js' in logs
+        assert 'Successfully transferred vendor.js' in logs
+        assert 'Restarting application on device' in logs
+        assert 'Successfully synced application org.nativescript.TestApp on device' in logs
+        assert 'ActivityManager: Start proc' in logs
+        assert 'activity org.nativescript.TestApp/com.tns.NativeScriptActivity' in logs
+        assert 'Refreshing application on device' not in logs
+        assert 'hot-update.json on device' not in logs
+
     def test_13_get_run_messages_sync_js_hmr(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
@@ -81,9 +103,9 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
         assert 'Webpack compilation complete.' in logs
-        assert 'hot-update.json on device' in logs
-        assert 'The following modules were updated:' in logs
-        assert 'Successfully applied update with hmr hash' in logs
+        assert 'hot-update.json' in logs
+        assert 'HMR: The following modules were updated:' in logs
+        assert 'HMR: Successfully applied update with hmr hash' in logs
         assert 'Refreshing application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
         assert 'Successfully transferred bundle.js on device' not in logs
