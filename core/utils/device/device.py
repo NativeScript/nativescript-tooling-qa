@@ -73,7 +73,7 @@ class Device(object):
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
         text = ImageUtils.get_text(image_path=actual_image_path)
         if Settings.PYTHON_VERSION < 3:
-            return text.encode('utf-8').strip()
+            return text.decode('utf-8').strip()
         else:
             return text.encode('utf-8').strip().decode('utf-8')
 
