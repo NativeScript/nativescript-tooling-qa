@@ -1,22 +1,21 @@
 import os
 import unittest
 
-from core.settings import Settings
 from core.utils.file_utils import File
 
 
 # noinspection PyMethodMayBeStatic
 class FileUtilsTests(unittest.TestCase):
+    current_folder = os.path.dirname(os.path.realpath(__file__))
 
     def test_01_read(self):
-        logs = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'utils', 'file.txt')
+        logs = os.path.join(self.current_folder, 'resources', 'file.txt')
         assert 'Compiled successfully' in File.read(logs)
 
     def test_02_replace(self):
         # Path to files
-        base_path = os.path.join(Settings.TEST_RUN_HOME, 'core_tests', 'utils')
-        old_scss = os.path.join(base_path, 'app.android.scss')
-        new_scss = os.path.join(base_path, 'app.android.add_style.scss')
+        old_scss = os.path.join(self.current_folder, 'resources', 'app.android.scss')
+        new_scss = os.path.join(self.current_folder, 'resources', 'app.android.add_style.scss')
         old_value = 'Android here'
         new_value = 'Android here\n.page { background-color: red;}'
 
