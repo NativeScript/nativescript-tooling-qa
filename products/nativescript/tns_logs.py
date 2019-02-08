@@ -167,7 +167,7 @@ class TnsLogs(object):
         return ['Refreshing application on device']
 
     @staticmethod
-    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=1):
+    def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=3):
         """
         Wait until log file contains list of string.
         :param log_file: Path to log file.
@@ -190,6 +190,7 @@ class TnsLogs(object):
             for item in string_list:
                 if item in log:
                     Log.info("'{0}' found.".format(item))
+                    string_list.remove(item)
                 else:
                     not_found_list.append(item)
             if not not_found_list:
@@ -197,7 +198,7 @@ class TnsLogs(object):
                 Log.info("Log contains: {0}".format(string_list))
                 break
             else:
-                Log.info("'{0}' NOT found. Wait...".format(not_found_list))
+                Log.debug("'{0}' NOT found. Wait...".format(not_found_list))
                 time.sleep(check_interval)
             if 'BUILD FAILED' in log:
                 Log.error('BUILD FAILED. No need to wait more time!')
@@ -221,7 +222,7 @@ class TnsLogs(object):
                 for item in not_existing_string_list:
                     assert item not in log, "{0} found! It should not be in logs.\nLog:\n{1}".format(item, log)
         else:
-            Log.debug('##### OUTPUT BEGIN #####\n')
-            Log.debug(log)
-            Log.debug('##### OUTPUT END #####\n')
+            Log.info('##### ACTUAL LOG #####\n')
+            Log.info(log)
+            Log.info('######################\n')
             assert False, "Output does not contain {0}".format(not_found_list)
