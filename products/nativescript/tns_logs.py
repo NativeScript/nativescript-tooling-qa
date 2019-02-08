@@ -130,7 +130,7 @@ class TnsLogs(object):
                         logs.append('Successfully transferred vendor.js')
             else:
                 # If bundle is not used then TS files are transpiled and synced as JS
-                logs.append('Successfully transferred {0}'.format(file_name.replace('.ts','.js')))
+                logs.append('Successfully transferred {0}'.format(file_name.replace('.ts', '.js')))
         return logs
 
     @staticmethod
