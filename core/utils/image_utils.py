@@ -13,6 +13,8 @@ import numpy
 import pytesseract
 from PIL import Image
 
+from core.settings import Settings
+
 
 class ImageUtils(object):
     @staticmethod
@@ -110,4 +112,7 @@ class ImageUtils(object):
         row_text = pytesseract.image_to_string(image, lang='eng',
                                                config="-c tessedit_char_whitelist=%s_-." % char_whitelist).strip()
         text = "".join([s for s in row_text.splitlines(True) if s.strip()])
-        return text.encode(encoding='utf-8', errors='ignore')
+        if Settings.PYTHON_VERSION < 3:
+            return str(text.decode('utf8').encode('utf8')).strip()
+        else:
+            return text.decode("utf-8").strip()
