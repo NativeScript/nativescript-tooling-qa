@@ -87,18 +87,18 @@ class TemplateTests(TnsTest):
         Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True, justlaunch=True)
         if template_info.texts is not None:
             for text in template_info.texts:
-                self.emu.wait_for_text(text=text, timeout=30)
+                self.emu.wait_for_text(text=text, timeout=60)
         else:
-            self.emu.wait_for_main_color(color=Colors.WHITE)
+            self.emu.wait_for_main_color(color=Colors.WHITE, timeout=60)
 
         # Run iOS
         if Settings.HOST_OS is OSType.OSX:
             Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True, justlaunch=True)
             if template_info.texts is not None:
                 for text in template_info.texts:
-                    self.sim.wait_for_text(text=text, timeout=30)
+                    self.sim.wait_for_text(text=text, timeout=60)
             else:
-                self.sim.wait_for_main_color(color=Colors.WHITE)
+                self.sim.wait_for_main_color(color=Colors.WHITE, timeout=60)
 
         # Cleanup
         Tns.kill()

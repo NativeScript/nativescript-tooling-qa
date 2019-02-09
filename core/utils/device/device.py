@@ -194,7 +194,7 @@ class Device(object):
         return ImageUtils.get_main_color(image_path)
 
     # noinspection PyUnresolvedReferences
-    def wait_for_main_color(self, color, timeout=30):
+    def wait_for_main_color(self, color, timeout=60):
         result = Wait.until(lambda: (self.get_main_color() == color).all(), timeout=timeout)
         if result:
             Log.info('Main color is: ' + str(color))
