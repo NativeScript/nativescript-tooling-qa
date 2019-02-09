@@ -130,6 +130,6 @@ class InitAndInstallTests(TnsTest):
         assert File.exists(os.path.join(APP_PATH, 'platforms', 'android', 'build.gradle'))
         if Settings.HOST_OS == OSType.OSX:
             assert Folder.exists(os.path.join(APP_PATH, 'platforms', 'ios'))
-            assert File.exists(os.path.join(APP_PATH, 'platforms', 'ios', 'TestApp.xcodeproj'))
+            assert Folder.exists(os.path.join(APP_PATH, 'platforms', 'ios', 'TestApp.xcodeproj'))
 
         # App resources not created, see https://github.com/NativeScript/nativescript-cli/issues/4341
