@@ -47,7 +47,7 @@ class TnsTests(TnsTest):
                                         platform=Platform.ANDROID,
                                         run_type=RunType.FIRST_TIME,
                                         plugins=plugins)
-        TnsLogs.wait_for_log(result.log_file, messages)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=messages, timeout=300)
 
         # Verify app looks ok
         for text in Apps.HELLO_WORLD_JS.texts:
