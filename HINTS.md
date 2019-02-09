@@ -8,6 +8,15 @@
 Preference -> Tools -> Python integrated Tools - Choose Nosetests as Default test runner
 ```
 
+## Xcode Commandline Tools
+
+### xcrun simctl
+`xcrun simctl` tutorial:
+- https://www.iosdev.recipes/simctl/
+
+### Disable accept trafic messages in iOS Simulator
+- https://tomsoderling.github.io/Disable-iOS-simulator-connections-popup/
+
 ## Android Commandline Tools
 
 ### Emulator Quick Boot
