@@ -1,6 +1,7 @@
 # pylint: disable=too-many-branches
 import logging
 import os
+from time import sleep
 
 from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
@@ -243,9 +244,12 @@ class Tns(object):
                                   release=release, provision=provision, for_device=for_device,
                                   bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
                                   wait=wait, log_trace=log_trace, justlaunch=justlaunch)
-        if verify and wait:
-            assert result.exit_code == 0, 'tns run failed with non zero exit code.'
-            assert 'successfully synced' in result.output.lower()
+        if verify:
+            if wait:
+                assert result.exit_code == 0, 'tns run failed with non zero exit code.'
+                assert 'successfully synced' in result.output.lower()
+            else:
+                sleep(10)
         return result
 
     @staticmethod
