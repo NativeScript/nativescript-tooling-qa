@@ -102,6 +102,7 @@ class SyncMessagesTests(unittest.TestCase):
                                     run_type=RunType.INCREMENTAL,
                                     file_name='main-view-model.js',
                                     hmr=True)
+        assert 'Preparing project...' not in logs
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
         assert 'Webpack compilation complete.' in logs

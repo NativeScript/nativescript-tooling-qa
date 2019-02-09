@@ -111,7 +111,8 @@ class TnsLogs(object):
             if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
                 logs.append('Skipping prepare.')
         else:
-            logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
+            if not hmr:
+                logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
             if bundle:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
