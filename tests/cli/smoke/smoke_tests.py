@@ -1,31 +1,22 @@
 import unittest
 
-from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.device.device_manager import DeviceManager
 from data.sync.hello_world_js import sync_hello_world_js
 from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-class SmokeTests(TnsTest):
+class SmokeTests(TnsRunTest):
     js_app = Settings.AppName.DEFAULT + 'JS'
     ng_app = Settings.AppName.DEFAULT + 'NG'
 
-    emu = None
-    sim = None
-
     @classmethod
     def setUpClass(cls):
-        TnsTest.setUpClass()
-
-        # Boot emulator and simulator
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS == OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+        TnsRunTest.setUpClass()
 
         # Create JS app and copy to temp data folder
         Tns.create(app_name=cls.js_app, template=Template.HELLO_WORLD_JS.local_package, update=False)
