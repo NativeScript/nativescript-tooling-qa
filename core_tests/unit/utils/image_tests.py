@@ -22,6 +22,7 @@ class ImageUtilsTests(unittest.TestCase):
 
     app_image = os.path.join(current_folder, 'resources', 'app.png')
     iphone_image = os.path.join(current_folder, 'resources', 'screenshot.png')
+    unicode_image = os.path.join(current_folder, 'resources', 'unicode.png')
     blue = numpy.array([255, 188, 48])
     white = numpy.array([255, 255, 255])
 
@@ -53,6 +54,11 @@ class ImageUtilsTests(unittest.TestCase):
         assert 'Monday' in text
         assert 'Reminders' in text
         assert 'Settings' in text
+
+        # Unicode text
+        text = ImageUtils.get_text(self.unicode_image)
+        assert 'Ter Stegen' in text
+        assert 'Neymar' in text
 
 
 if __name__ == '__main__':
