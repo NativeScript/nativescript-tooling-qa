@@ -73,7 +73,7 @@ class Device(object):
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
         return ImageUtils.get_text(image_path=actual_image_path)
 
-    def wait_for_text(self, text, timeout=30, retry_delay=1):
+    def wait_for_text(self, text, timeout=60, retry_delay=1):
         t_end = time.time() + timeout
         found = False
         error_msg = '{0} NOT found on {1}.'.format(text, self.name)
