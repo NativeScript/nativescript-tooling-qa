@@ -87,9 +87,9 @@ class MigrateWebToMobileTests(TnsTest):
             ng_app_text = 'auto-generated works!'
             Tns.run(platform=platform, app_name=self.app_name, bundle=bundle, aot=aot, uglify=uglify, emulator=True)
             if platform == Platform.ANDROID:
-                self.emu.wait_for_text(text=ng_app_text, timeout=60)
+                self.emu.wait_for_text(text=ng_app_text, timeout=300)
             if platform == Platform.IOS:
-                self.sim.wait_for_text(text=ng_app_text, timeout=60)
+                self.sim.wait_for_text(text=ng_app_text, timeout=300)
 
     def ng_serve(self, prod=False):
         NG.serve(project=self.app_name, prod=prod)

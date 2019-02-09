@@ -167,7 +167,7 @@ class NGNewTests(TnsTest):
         # Run android (if webpack is available -> use --bundle)
         Tns.run(app_name=NGNewTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
         for text in app_data.texts:
-            NGNewTests.emu.wait_for_text(text=text, timeout=60)
+            NGNewTests.emu.wait_for_text(text=text, timeout=300)
             # Check if theme is really applied (only for non shared projects, shared is not good example to check)
             if not shared:
                 blue_pixels = NGNewTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
@@ -180,7 +180,7 @@ class NGNewTests(TnsTest):
         if Settings.HOST_OS is OSType.OSX:
             Tns.run(app_name=NGNewTests.app_name, platform=Platform.IOS, emulator=True, bundle=webpack)
             for text in app_data.texts:
-                NGNewTests.sim.wait_for_text(text=text, timeout=60)
+                NGNewTests.sim.wait_for_text(text=text, timeout=300)
                 # Check if theme is really applied (only for non shared projects, shared is not good example to check)
                 if not shared:
                     blue_pixels = NGNewTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
