@@ -62,8 +62,8 @@ class DeviceTests(TnsTest):
         # Verify multiple emulators can be started properly
         emu1 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_23)
         emu2 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_26)
-        assert emu1.emu_id == Settings.Emulators.EMU_API_23.emu_id
-        assert emu2.emu_id == Settings.Emulators.EMU_API_26.emu_id
+        assert emu1.id == Settings.Emulators.EMU_API_23.emu_id
+        assert emu2.id == Settings.Emulators.EMU_API_26.emu_id
 
         # Verify screen_match() method
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, 'temp.png')
