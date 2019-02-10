@@ -81,6 +81,11 @@ class Simctl(object):
         return Simctl.__run_simctl_command('terminate {0} {1}'.format(simulator_info.id, app_id))
 
     @staticmethod
+    def stop_all(simulator_info):
+        for app_id in Simctl.get_all_apps(simulator_info):
+            Simctl.stop_application(simulator_info, app_id)
+
+    @staticmethod
     def install(simulator_info, path):
         result = Simctl.__run_simctl_command('install {0} {1}'.format(simulator_info.id, path))
         assert result.exit_code == 0, 'Failed to install {0} on {1}'.format(path, simulator_info.name)
@@ -93,6 +98,13 @@ class Simctl(object):
         assert result.exit_code == 0, 'Failed to uninstall {0} on {1}'.format(app_id, simulator_info.name)
         assert 'Failed to uninstall the requested application' not in result.output, \
             'Failed to uninstall {0} on {1}'.format(app_id, simulator_info.name)
+        Log.info('Successfully uninstalled {0} from {1}'.format(app_id, simulator_info.id))
+
+    @staticmethod
+    def uninstall_all(simulator_info):
+        Simctl.stop_all(simulator_info)
+        for app_id in Simctl.get_all_apps(simulator_info):
+            Simctl.uninstall(simulator_info, app_id)
 
     @staticmethod
     def get_screen(sim_id, file_path):
@@ -112,3 +124,15 @@ class Simctl(object):
         result = Simctl.__run_simctl_command('erase all')
         assert result.exit_code == 0, 'Failed to erase all iOS Simulators.'
         Log.info('Erase all iOS Simulators.')
+
+    @staticmethod
+    def get_all_apps(simulator_info):
+        bundle_ids = []
+        root = '~/Library/Developer/CoreSimulator/Devices/{0}'.format(simulator_info.id)
+        shell = 'find {0}/data/Containers/Bundle/Application -maxdepth 3 | grep .app | grep Info.plist'.format(root)
+        result = run(cmd=shell, timeout=30)
+        for plist in result.output.splitlines():
+            bundle_id = run(cmd='/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" {0}'.format(plist)).output
+            if '.' in bundle_id:
+                bundle_ids.append(bundle_id)
+        return bundle_ids
