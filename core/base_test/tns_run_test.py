@@ -19,4 +19,5 @@ class TnsRunTest(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         Adb.open_home(self.emu.id)
-        Simctl.stop_all(self.sim)
+        if Settings.HOST_OS is OSType.OSX:
+            Simctl.stop_all(self.sim)
