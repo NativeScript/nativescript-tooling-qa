@@ -76,6 +76,6 @@ class Preview(object):
     def dismiss_simulator_alert():
         """When preview url is loaded in simulator there is alert for confirmation.
            This method will dismiss it. It is implemented only for one instance of simulator for the moment"""
-        dismiss_sim_alert = os.path.join(TEST_RUN_HOME, 'data', 'scripts', 'send_enter_to_simulator.scpt')
+        dismiss_sim_alert = os.path.join(TEST_RUN_HOME, 'assets', 'scripts', 'send_enter_to_simulator.scpt')
         command = "osascript " + dismiss_sim_alert
         run(command)
