@@ -68,25 +68,11 @@ python run_schematics.py tests/code_sharing
 
 Contributions are welcome.
 
-If you wonder how you can contribute, just grab some of the open issues.
+If you wonder how you can contribute, just grab some of the [open issues](https://github.com/NativeScript/nativescript-tooling-qa/issues).
 
-Once you are ready with our changes, please run flake8:
+Once you are ready with our changes, please run:
 ```bash
-python -m flake8 --max-line-length=120 core core_tests data products tests
-```
-
-Notes:
-
-We plan to adopt `pylint`, but we are still in process of defining rules and fixing lint errors.
-```bash
-python -m pylint --disable=locally-disabled --rcfile=.pylintrc core data products
-```
-
-Due to the fact tests are not modules pylint can not be executed directly.
-Workaround:
-```bash
-find core_tests | grep .py | grep -v .pyc | xargs python -m pylint --disable=locally-disabled --rcfile=.pylintrc
-find tests | grep .py | grep -v .pyc | xargs python -m pylint --disable=locally-disabled --min-similarity-lines=15 --rcfile=.pylintrc
+./scripts/test.sh
 ```
 
 ## Hints, Tips and Tricks

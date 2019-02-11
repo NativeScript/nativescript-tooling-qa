@@ -21,10 +21,12 @@ class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
+        TestContext.CLASS_NAME = cls.__name__
         try:
-            TestContext.CLASS_NAME = inspect.stack()[1][0].f_locals['cls'].__name__
+            for item in inspect.stack():
+                TestContext.CLASS_NAME = item[0].f_locals['cls'].__name__
         except Exception:
-            TestContext.CLASS_NAME = cls.__name__
+            pass
         Log.test_class_start(class_name=TestContext.CLASS_NAME)
 
         # Kill processes
