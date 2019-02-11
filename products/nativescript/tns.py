@@ -14,6 +14,7 @@ from core.utils.run import run
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_paths import TnsPaths
+from products.nativescript.tns_logs import TnsLogs
 
 
 class Tns(object):
@@ -362,3 +363,14 @@ class Tns(object):
         else:
             Process.kill(proc_name='node', proc_cmdline=Settings.Executables.TNS)
             Process.kill_by_commandline(cmdline='webpack.js')
+
+    @staticmethod
+    def preview(app_name, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
+            log_trace=True, verify=True, timeout=60):
+        result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify,
+                                snapshot=snapshot, wait=wait, log_trace=log_trace, timeout=timeout)
+        if verify:
+            strings = ['Use NativeScript Playground app and scan the QR code above to preview the application on your device']
+            TnsLogs.wait_for_log(result.log_file, strings)
+               
+        return result
