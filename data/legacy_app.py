@@ -30,7 +30,7 @@ class LegacyApp(object):
         Tns.platform_add_android(app_name=app_name, version='4.2')
         if Settings.HOST_OS == OSType.OSX:
             Tns.platform_add_ios(app_name=app_name, version='4.2')
-        # Install webpack
+        # Install webpack (it was not included in {N} 4.2 templates)
         Npm.install(package='nativescript-dev-webpack@0.16', option='--save-dev',
                     folder=os.path.join(Settings.TEST_RUN_HOME, app_name))
         Npm.install(folder=os.path.join(Settings.TEST_RUN_HOME, app_name))
