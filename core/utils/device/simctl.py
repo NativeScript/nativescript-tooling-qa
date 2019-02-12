@@ -40,7 +40,7 @@ class Simctl(object):
         for sim in sims:
             if sim['name'] == simulator_info.name and sim['state'] == 'Booted':
                 # simctl returns Booted too early, so we will wait some untill service is started
-                simulator_info.id = sim['udid']
+                simulator_info.id = str(sim['udid'])
                 command = 'spawn {0} launchctl print system | grep com.apple.springboard.services'.format(
                     simulator_info.id)
                 service_state = Simctl.__run_simctl_command(command=command)
@@ -72,7 +72,7 @@ class Simctl(object):
         sims = Simctl.__get_simulators()['devices']['iOS {0}'.format(simulator_info.sdk)]
         for sim in sims:
             if sim['name'] == simulator_info.name:
-                simulator_info.id = sim['udid']
+                simulator_info.id = str(sim['udid'])
                 return simulator_info
         return False
 
