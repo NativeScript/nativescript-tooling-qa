@@ -53,8 +53,8 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False,
-                     file_name=None, instrumented=False, sync_all_file=False, plugins=None):
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, angular=False,
+                     aot=False, file_name=None, instrumented=False, sync_all_file=False, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -78,6 +78,15 @@ class TnsLogs(object):
         # Generate prepare messages
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
+            if not bundle and not hmr:
+                if platform == Platform.IOS:
+                    logs.append('Successfully transferred all files on device')
+            if bundle or hmr:
+                if platform == Platform.IOS:
+                    logs.append('Successfully transferred bundle.js on device')
+                    logs.append('Successfully transferred package.json on device')
+                    logs.append('Successfully transferred starter.js on device')
+                    logs.append('Successfully transferred vendor.js on device')
 
         # Generate build messages
         # TODO: Check if file is in app resources and require native build
@@ -90,22 +99,27 @@ class TnsLogs(object):
 
         # File transfer messages
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
-                                                    bundle=bundle, hmr=hmr, uglify=uglify))
+                                                    bundle=bundle, hmr=hmr, uglify=uglify, angular=angular))
 
         # App restart messages:
         if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
-            logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform, instrumented=instrumented))
+            logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
+                                                       instrumented=instrumented, angular=angular))
         else:
-            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented))
+            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, angular=angular))
 
         # Add message for successful sync
         logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
+
+        if angular:
+            logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
+                        'the production mode.')
 
         # Return logs
         return logs
 
     @staticmethod
-    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify):
+    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, angular):
         logs = []
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
@@ -127,6 +141,7 @@ class TnsLogs(object):
                     logs.append('HMR: Successfully applied update with hmr hash')
                 else:
                     logs.append('Successfully transferred bundle.js')
+
                     if uglify:
                         logs.append('Successfully transferred vendor.js')
             else:
@@ -154,18 +169,23 @@ class TnsLogs(object):
         return should_restart
 
     @staticmethod
-    def __app_restart_messages(app_name, platform, instrumented):
+    def __app_restart_messages(app_name, platform, instrumented, angular):
         logs = ['Restarting application on device']
         if platform == Platform.ANDROID:
             logs.append('ActivityManager: Start proc')
             logs.append('activity org.nativescript.{0}/com.tns.NativeScriptActivity'.format(app_name))
         if instrumented:
             logs.append('QA: Application started')
+            if angular:
+                logs.append('QA: items component on init')
         return logs
 
     @staticmethod
-    def __app_refresh_messages(instrumented):
-        return ['Refreshing application on device']
+    def __app_refresh_messages(instrumented, angular):
+        logs = ['Refreshing application on device']
+        if angular:
+            logs.append('QA: items component on init')
+        return logs
 
     @staticmethod
     def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=3):
