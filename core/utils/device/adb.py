@@ -113,7 +113,9 @@ class Adb(object):
             time.sleep(1)
             Adb.pull(device_id=device_id, source='/sdcard/window_dump.xml', target=temp_file)
             if File.exists(temp_file):
-                return File.read(temp_file)
+                result = File.read(temp_file)
+                File.delete(temp_file)
+                return result
             else:
                 return ''
         else:
