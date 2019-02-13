@@ -55,7 +55,7 @@ class TnsLogs(object):
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False,
-                     app_type=AppType.NG, file_name=None, instrumented=False, sync_all_file=False, plugins=None):
+                     app_type=None, file_name=None, instrumented=False, sync_all_file=False, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -82,11 +82,11 @@ class TnsLogs(object):
 
         # Generate build messages
         # TODO: Check if file is in app resources and require native build
-        if not app_type==AppType.NG:
+        if not app_type == AppType.NG:
             logs.extend(TnsLogs.build_messages(platform=platform, run_type=run_type))
 
         # App install messages
-        if not app_type==AppType.NG:
+        if not app_type == AppType.NG:
             if run_type in [RunType.FIRST_TIME, RunType.FULL]:
                 logs.append('Installing on device')
                 logs.append('Successfully installed')
@@ -115,7 +115,7 @@ class TnsLogs(object):
         # Add message for successful sync
         logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
 
-        if app_type == AppType.NG:
+        if app_type==AppType.NG:
             logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
                         'the production mode.')
 
