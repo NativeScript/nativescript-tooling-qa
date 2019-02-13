@@ -71,7 +71,9 @@ class Device(object):
         actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, img_name)
         File.delete(actual_image_path)
         self.get_screen(path=actual_image_path, log_level=logging.DEBUG)
-        return ImageUtils.get_text(image_path=actual_image_path)
+        text = ImageUtils.get_text(image_path=actual_image_path)
+        File.delete(path=actual_image_path)
+        return text
 
     def wait_for_text(self, text, timeout=60, retry_delay=1):
         t_end = time.time() + timeout
@@ -166,7 +168,9 @@ class Device(object):
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, self.name,
                                   'screen_{0}.png'.format(int(time.time() * 1000)))
         self.get_screen(image_path, log_level=logging.DEBUG)
-        return ImageUtils.get_pixels_by_color(image_path, color)
+        result = ImageUtils.get_pixels_by_color(image_path, color)
+        File.delete(path=image_path)
+        return result
 
     # noinspection PyShadowingBuiltins
     def wait_for_color(self, color, pixel_count, delta=10, timeout=30):
@@ -191,7 +195,9 @@ class Device(object):
     def get_main_color(self):
         image_path = os.path.join(Settings.TEST_OUT_IMAGES, self.name, 'screen_{0}.png'.format(int(time.time() * 1000)))
         self.get_screen(image_path, log_level=logging.DEBUG)
-        return ImageUtils.get_main_color(image_path)
+        result = ImageUtils.get_main_color(image_path)
+        File.delete(path=image_path)
+        return result
 
     # noinspection PyUnresolvedReferences
     def wait_for_main_color(self, color, timeout=60):
