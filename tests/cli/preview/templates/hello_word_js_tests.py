@@ -72,4 +72,3 @@ class PreviewIOSJSTests(TnsPreviewJSTests):
     def test_100_preview_ios(self):
         """Preview project on simulator. Make valid changes in JS, CSS and XML"""
         preview_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
-
