@@ -198,6 +198,53 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
+    def __webpack_messages():
+        logs = []
+        logs.append('File change detected.')
+        logs.append('Starting incremental webpack compilation...')
+        logs.append('Webpack compilation complete.')
+        logs.append('Webpack build done!')
+        return logs
+
+    @staticmethod
+    def __hmr_messages():
+        logs = []
+        logs.append('Successfully transferred bundle.')
+        logs.append('hot-update.json')
+        logs.append('HMR: Checking for updates to the bundle with hmr hash')
+        logs.append('HMR: The following modules were updated:')
+        logs.append('HMR: Successfully applied update with hmr hash')
+        return logs
+
+    @staticmethod
+    def preview_initial_messages(platform, bundle=False, hmr=False, instrumented=False):
+        logs = ['Start sending initial files for platform {0}'.format(str(platform)), \
+            'Successfully sent initial files for platform {0}'.format(str(platform))]
+
+        if bundle or hmr:
+            logs.extend(TnsLogs.__webpack_messages())
+        if instrumented:
+            logs.append('QA: Application started')
+        return logs
+
+    @staticmethod
+    def preview_file_changed_messages(platform, file_name, run_type=RunType.INCREMENTAL, \
+                                    bundle=False, hmr=False, instrumented=False):
+        logs = ['Start syncing changes for platform {0}'.format(str(platform))]
+        if bundle or hmr:
+            logs.extend(TnsLogs.__webpack_messages())
+            logs.append(file_name)
+        else:
+            logs.append('Successfully synced {0} for platform {1}'.format(file_name, str(platform)))
+        if hmr:
+            logs.extend(TnsLogs.__hmr_messages())
+        if instrumented:
+            if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
+                logs.append('QA: Application started')
+        return logs
+
+
+    @staticmethod
     def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=3):
         """
         Wait until log file contains list of string.

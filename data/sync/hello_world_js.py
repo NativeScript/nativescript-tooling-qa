@@ -13,6 +13,8 @@ from data.const import Colors
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.preview_helpers import Preview
+from core.enums.platform_type import Platform
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
@@ -126,3 +128,23 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
 
     # Assert final and initial states are same
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
+
+def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
+                                 instrumented=False):
+    result = Tns.preview(app_name)
+
+    # Read the log and extract the url to load the app on emulator
+    log = File.read(result.log_file)
+    url = Preview.get_url(log)
+    Preview.run_app(url, device.id, platform)
+
+    # Verify logs
+    strings = TnsLogs.preview_initial_messages(platform=platform,hmr=hmr,bundle=bundle)
+    TnsLogs.wait_for_log(log_file=result.log_file,string_list = strings)
+    
+    # Verify app looks properly
+    device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=60, retry_delay=5)
+    device.wait_for_text(text=Changes.JSHelloWord.XML.old_text, timeout=30)
+    device.wait_for_main_color(color=Colors.WHITE)
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
+    device.get_screen(path=initial_state)

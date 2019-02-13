@@ -11,6 +11,8 @@ from data.const import Colors
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
+from products.nativescript.tns_logs import TnsLogs
+from data.sync.hello_world_js import preview_hello_world_js_ts
 
 class TnsPreviewJSTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
@@ -38,6 +40,9 @@ class TnsPreviewJSTests(TnsTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
+        target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
+        File.copy(src=src, target=target)
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
@@ -60,34 +65,11 @@ class PreviewAndroidJSTests(TnsPreviewJSTests):
 
     def test_100_preview_android(self):
         """Preview project on emulator. Make valid changes in JS, CSS and XML"""
-        result = Tns.preview(self.app_name)
-
-        # Read the log and extract the url to load the app on emulator
-        log = File.read(result.log_file)
-        url = Preview.get_url(log)
-        Preview.run_app(url, self.emu.id, Platform.ANDROID)
-
-        # Verify app looks properly
-        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=60, retry_delay=5)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text, timeout=30)
-        self.emu.wait_for_main_color(color=Colors.WHITE)
-        initial_state = os.path.join(Settings.TEST_OUT_IMAGES, self.emu.name, 'initial_state.png')
-        self.emu.get_screen(path=initial_state)
+        preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
 
 @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
 class PreviewIOSJSTests(TnsPreviewJSTests):
     def test_100_preview_ios(self):
         """Preview project on simulator. Make valid changes in JS, CSS and XML"""
-        result = Tns.preview(self.app_name)
+        preview_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
 
-        # Read the log and extract the url to load the app on emulator
-        log = File.read(result.log_file)
-        url = Preview.get_url(log)
-        Preview.run_app(url, self.sim.id, Platform.IOS)
-
-        # Verify app looks properly
-        self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=60, retry_delay=5)
-        self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text, timeout=30)
-        self.sim.wait_for_main_color(color=Colors.WHITE)
-        initial_state = os.path.join(Settings.TEST_OUT_IMAGES, self.emu.name, 'initial_state.png')
-        self.emu.get_screen(path=initial_state)
