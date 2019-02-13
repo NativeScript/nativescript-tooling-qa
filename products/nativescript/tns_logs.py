@@ -7,6 +7,7 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from products.nativescript.run_type import RunType
+from products.nativescript.tns_paths import TnsPaths
 
 
 # noinspection PyUnusedLocal
@@ -157,8 +158,9 @@ class TnsLogs(object):
     def __app_restart_messages(app_name, platform, instrumented):
         logs = ['Restarting application on device']
         if platform == Platform.ANDROID:
+            app_id = TnsPaths.get_bundle_if(app_name)
             logs.append('ActivityManager: Start proc')
-            logs.append('activity org.nativescript.{0}/com.tns.NativeScriptActivity'.format(app_name))
+            logs.append('activity org.nativescript.{0}/com.tns.NativeScriptActivity'.format(app_id))
         if instrumented:
             logs.append('QA: Application started')
         return logs

@@ -2,28 +2,30 @@ import os
 
 from parameterized import parameterized
 
-from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.adb import Adb
-from core.utils.device.device_manager import DeviceManager
+from core.utils.device.simctl import Simctl
 from core.utils.file_utils import Folder, File
 from core.utils.gradle import Gradle
 from core.utils.npm import Npm
 from data.const import Colors
 from data.templates import Template
 from products.nativescript.app import App
+from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
+from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.tns_paths import TnsPaths
 
 
 # noinspection PyUnusedLocal
 # noinspection PyMethodMayBeStatic
-class TemplateTests(TnsTest):
+class TemplateTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
-    app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
-    emu = None
-    sim = None
+    app_folder = TnsPaths.get_app_path(app_name=app_name)
 
     test_data = [
         [Template.BLANK_JS.name, Template.BLANK_JS],
@@ -47,25 +49,11 @@ class TemplateTests(TnsTest):
         [Template.PATIENT_CARE_NG.name, Template.PATIENT_CARE_NG],
         [Template.TAB_NAVIGATION_JS.name, Template.TAB_NAVIGATION_JS],
         [Template.TAB_NAVIGATION_TS.name, Template.TAB_NAVIGATION_TS],
-        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG]
+        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG],
+        [Template.ENTERPRISE_AUTH_JS.name, Template.ENTERPRISE_AUTH_JS],
+        [Template.ENTERPRISE_AUTH_TS.name, Template.ENTERPRISE_AUTH_TS],
+        [Template.ENTERPRISE_AUTH_NG.name, Template.ENTERPRISE_AUTH_NG]
     ]
-
-    @classmethod
-    def setUpClass(cls):
-        TnsTest.setUpClass()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS is OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
-
-    def setUp(self):
-        TnsTest.setUp(self)
-
-    def tearDown(self):
-        TnsTest.tearDown(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
 
     @parameterized.expand(test_data)
     def test(self, template_name, template_info):
@@ -84,7 +72,9 @@ class TemplateTests(TnsTest):
 
         # Run Android
         Adb.open_home(device_id=self.emu.id)
-        Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True, justlaunch=True)
+        result = Tns.run_android(app_name=app_name, device=self.emu.id, bundle=True)
+        strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.FULL, platform=Platform.ANDROID, bundle=True)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
         if template_info.texts is not None:
             for text in template_info.texts:
                 self.emu.wait_for_text(text=text, timeout=60)
@@ -93,7 +83,10 @@ class TemplateTests(TnsTest):
 
         # Run iOS
         if Settings.HOST_OS is OSType.OSX:
-            Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True, justlaunch=True)
+            Simctl.uninstall_all(simulator_info=self.sim)
+            Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True)
+            strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.FULL, platform=Platform.IOS, bundle=True)
+            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
             if template_info.texts is not None:
                 for text in template_info.texts:
                     self.sim.wait_for_text(text=text, timeout=60)
