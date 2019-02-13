@@ -27,3 +27,7 @@ class TnsPaths(object):
     @staticmethod
     def get_app(app_name):
         return ''
+
+    @staticmethod
+    def get_bundle_if(app_name):
+        return app_name.replace('-', '')
