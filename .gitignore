@@ -1,16 +1,24 @@
+#IDEs
 .DS_Store
 .idea
+.vscode
+
+# nativescript-tooling-qa specific
 package-lock.json
 nosetests.*
 node_modules
 TestApp*
 out/*
-nativescript-sdk-*
-sample-Groceries
-master-detail*
-hello-world*
-tab-navigation*
-.vscode
+/data/temp
+
+# Test applications
+/TestApp*
+/nativescript-sdk-*
+/sample-Groceries
+/master-detail*
+/hello-world*
+/tab-navigation*
+/blank*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

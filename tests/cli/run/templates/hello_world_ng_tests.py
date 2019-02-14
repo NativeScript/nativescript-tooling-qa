@@ -5,7 +5,7 @@ from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -22,6 +22,12 @@ class TnsRunNGTests(TnsRunTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
+        src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ng', 'main.ts')
+        target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'src')
+        File.copy(src=src, target=target)
+        src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ng', 'items.component.ts')
+        target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'src', 'app', 'item')
+        File.copy(src=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -41,11 +47,11 @@ class TnsRunNGTests(TnsRunTest):
     def test_100_run_android(self):
         sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu)
 
-    def test_200_run_android_bundle(self):
-        sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True)
-
-    def test_210_run_android_bundle_hmr(self):
+    def test_200_run_android_bundle_hmr(self):
         sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, hmr=True)
+
+    def test_210_run_android_bundle(self):
+        sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True)
 
     def test_300_run_android_bundle_aot(self):
         sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
@@ -61,12 +67,12 @@ class TnsRunNGTests(TnsRunTest):
         sync_hello_world_ng(self.app_name, Platform.IOS, self.sim)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_run_ios_bundle(self):
-        sync_hello_world_ng(self.app_name, Platform.IOS, self.sim, bundle=True)
+    def test_200_run_ios_bundle_hmr(self):
+        sync_hello_world_ng(self.app_name, Platform.IOS, self.sim, hmr=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_210_run_ios_bundle_hmr(self):
-        sync_hello_world_ng(self.app_name, Platform.IOS, self.sim, hmr=True)
+    def test_210_run_ios_bundle(self):
+        sync_hello_world_ng(self.app_name, Platform.IOS, self.sim, bundle=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_run_ios_bundle_aot(self):
