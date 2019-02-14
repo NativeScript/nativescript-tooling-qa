@@ -100,7 +100,8 @@ class TnsLogs(object):
             logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented))
 
         # Add message for successful sync
-        logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
+        app_id = TnsPaths.get_bundle_id(app_name)
+        logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_id))
 
         # Return logs
         return logs
@@ -158,7 +159,7 @@ class TnsLogs(object):
     def __app_restart_messages(app_name, platform, instrumented):
         logs = ['Restarting application on device']
         if platform == Platform.ANDROID:
-            app_id = TnsPaths.get_bundle_if(app_name)
+            app_id = TnsPaths.get_bundle_id(app_name)
             logs.append('ActivityManager: Start proc')
             logs.append('activity org.nativescript.{0}/com.tns.NativeScriptActivity'.format(app_id))
         if instrumented:
