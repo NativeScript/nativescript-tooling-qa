@@ -54,7 +54,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False,
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, aot=False,
                      app_type=None, file_name=None, instrumented=False, sync_all_file=False, plugins=None):
         """
         Get log messages that should be present when running a project.
@@ -77,8 +77,9 @@ class TnsLogs(object):
             bundle = True
 
         # Generate prepare messages
-        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-            logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
+        if not app_type == AppType.NG:
+            if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+                logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
 
         # Generate build messages
         # TODO: Check if file is in app resources and require native build
@@ -95,15 +96,16 @@ class TnsLogs(object):
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
                                                     bundle=bundle, hmr=hmr, uglify=uglify, app_type=app_type))
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-            if not bundle and not hmr:
-                if platform == Platform.IOS:
-                    logs.append('Successfully transferred all files on device')
-            if bundle or hmr:
-                if platform == Platform.IOS:
-                    logs.append('Successfully transferred bundle.js on device')
-                    logs.append('Successfully transferred package.json on device')
-                    logs.append('Successfully transferred starter.js on device')
-                    logs.append('Successfully transferred vendor.js on device')
+            if not app_type == AppType.NG:
+                if not bundle and not hmr:
+                    if platform == Platform.IOS:
+                        logs.append('Successfully transferred all files on device')
+                if bundle or hmr:
+                    if platform == Platform.IOS:
+                        logs.append('Successfully transferred bundle.js on device')
+                        logs.append('Successfully transferred package.json on device')
+                        logs.append('Successfully transferred starter.js on device')
+                        logs.append('Successfully transferred vendor.js on device')
 
         # App restart messages:
         if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
@@ -115,7 +117,7 @@ class TnsLogs(object):
         # Add message for successful sync
         logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_name))
 
-        if app_type==AppType.NG:
+        if app_type == AppType.NG:
             logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
                         'the production mode.')
 
