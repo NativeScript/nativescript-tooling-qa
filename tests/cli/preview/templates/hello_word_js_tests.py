@@ -12,23 +12,18 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
 from products.nativescript.tns_logs import TnsLogs
-from data.sync.hello_world_js import preview_hello_world_js_ts
+from data.sync.hello_world_js import preview_sync_hello_world_js_ts
+from core.enums.app_type import AppType
+from core.base_test.tns_run_test import TnsRunTest
 
-class TnsPreviewJSTests(TnsTest):
+class TnsPreviewJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
-    emu = None
-    sim = None
 
     @classmethod
     def setUpClass(cls):
-        TnsTest.setUpClass()
-
-        # Boot emulator and simulator
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS == OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+        TnsRunTest.setUpClass()
 
         # Download Preview and Playground packages
         Preview.get_app_packages()
@@ -61,14 +56,40 @@ class TnsPreviewJSTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
 
-class PreviewAndroidJSTests(TnsPreviewJSTests):
+class PreviewJSTests(TnsPreviewJSTests):
 
     def test_100_preview_android(self):
         """Preview project on emulator. Make valid changes in JS, CSS and XML"""
-        preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        # preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+                                       device=self.emu, instrumented=True)
 
-@unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
-class PreviewIOSJSTests(TnsPreviewJSTests):
+    def test_200_preview_android_bundle(self):
+        """Preview project on emulator. Make valid changes in JS, CSS and XML"""
+        # preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+                                       device=self.emu, instrumented=True, bundle=True)
+
+    def test_110_preview_android_hmr(self):
+        """Preview project on emulator. Make valid changes in JS, CSS and XML"""
+        # preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+                                       device=self.emu, instrumented=True, hmr=True)
+
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_preview_ios(self):
         """Preview project on simulator. Make valid changes in JS, CSS and XML"""
-        preview_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+                                       device=self.sim)
+
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_200_preview_ios_bundle(self):
+        """Preview project on simulator. Make valid changes in JS, CSS and XML"""
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+                                       device=self.sim, instrumented=True, bundle=True)
+
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_205_preview_ios_hmr(self):
+        """Preview project on simulator. Make valid changes in JS, CSS and XML"""
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+                                       device=self.sim, instrumented=True, hmr=True)

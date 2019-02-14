@@ -207,16 +207,6 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def __hmr_messages():
-        logs = []
-        logs.append('Successfully transferred bundle.')
-        logs.append('hot-update.json')
-        logs.append('HMR: Checking for updates to the bundle with hmr hash')
-        logs.append('HMR: The following modules were updated:')
-        logs.append('HMR: Successfully applied update with hmr hash')
-        return logs
-
-    @staticmethod
     def preview_initial_messages(platform, bundle=False, hmr=False, instrumented=False):
         logs = ['Start sending initial files for platform {0}'.format(str(platform)), \
             'Successfully sent initial files for platform {0}'.format(str(platform))]
@@ -237,7 +227,11 @@ class TnsLogs(object):
         else:
             logs.append('Successfully synced {0} for platform {1}'.format(file_name, str(platform)))
         if hmr:
-            logs.extend(TnsLogs.__hmr_messages())
+            logs.append('Successfully synced bundle.')
+            logs.append('hot-update.json')
+            logs.append('HMR: Checking for updates to the bundle with hmr hash')
+            logs.append('HMR: The following modules were updated:')
+            logs.append('HMR: Successfully applied update with hmr hash')
         if instrumented:
             if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
                 logs.append('QA: Application started')

@@ -36,7 +36,7 @@ class Simctl(object):
 
     @staticmethod
     def is_running(simulator_info):
-        sims = Simctl.__get_simulators()['devices']['com.apple.CoreSimulator.SimRuntime.iOS-12-0']
+        sims = Simctl.__get_simulators()['devices']['iOS {0}'.format(simulator_info.sdk)]
         for sim in sims:
             if sim['name'] == simulator_info.name and sim['state'] == 'Booted':
                 # simctl returns Booted too early, so we will wait some untill service is started
@@ -69,7 +69,7 @@ class Simctl(object):
 
     @staticmethod
     def is_available(simulator_info):
-        sims = Simctl.__get_simulators()['devices']['com.apple.CoreSimulator.SimRuntime.iOS-12-0']
+        sims = Simctl.__get_simulators()['devices']['iOS {0}'.format(simulator_info.sdk)]
         for sim in sims:
             if sim['name'] == simulator_info.name:
                 simulator_info.id = str(sim['udid'])
