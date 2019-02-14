@@ -192,7 +192,7 @@ class TnsLogs(object):
         if instrumented:
             if app_type == AppType.NG:
                 logs.append('QA: items component on init')
-            return logs
+        return logs
 
     @staticmethod
     def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=3):
