@@ -84,7 +84,7 @@ class TemplateTests(TnsRunTest):
         # Run iOS
         if Settings.HOST_OS is OSType.OSX:
             Simctl.uninstall_all(simulator_info=self.sim)
-            Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True)
+            result = Tns.run_ios(app_name=app_name, device=self.sim.id, bundle=True)
             strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.FULL, platform=Platform.IOS, bundle=True)
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
             if template_info.texts is not None:
