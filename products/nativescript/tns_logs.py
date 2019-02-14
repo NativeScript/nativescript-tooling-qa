@@ -193,12 +193,12 @@ class TnsLogs(object):
             for item in string_list:
                 if item in log:
                     Log.info("'{0}' found.".format(item))
-                    string_list.remove(item)
                 else:
                     not_found_list.append(item)
+            string_list = not_found_list
             if not not_found_list:
                 all_items_found = True
-                Log.info("Log contains: {0}".format(string_list))
+                Log.info("All items found")
                 break
             else:
                 Log.debug("'{0}' NOT found. Wait...".format(not_found_list))
