@@ -140,6 +140,7 @@ class Simulators(object):
 class AppName(object):
     DEFAULT = 'TestApp'
     DEFAULT_NG = 'TestApp'
+    APP_NAME = 'app'
     WITH_DASH = 'tns-app'
     WITH_SPACE = 'Test App'
     WITH_NUMBER = '123'
