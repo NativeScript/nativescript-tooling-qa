@@ -1,20 +1,19 @@
 import os
 import unittest
 from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.enums.app_type import AppType
 from core.settings import Settings
-from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
-from data.changes import Changes
-from data.const import Colors
+from data.sync.hello_world_js import preview_sync_hello_world_js_ts
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
-from products.nativescript.tns_logs import TnsLogs
-from data.sync.hello_world_js import preview_sync_hello_world_js_ts
-from core.enums.app_type import AppType
-from core.base_test.tns_run_test import TnsRunTest
+
+
+
 
 class TnsPreviewJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
