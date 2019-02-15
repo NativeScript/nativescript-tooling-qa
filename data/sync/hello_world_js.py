@@ -15,6 +15,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.preview_helpers import Preview
 
+
 def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
                         snapshot=False, instrumented=True):
     __sync_hello_world_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
@@ -127,8 +128,9 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     # Assert final and initial states are same
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
-def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,\
-                            instrumented=False):
+
+def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
+                              instrumented=False):
     result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify)
 
     # Read the log and extract the url to load the app on emulator
@@ -147,6 +149,7 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=Fals
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
     return result
+
 
 def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=False, hmr=False, uglify=False,
                                    aot=False, instrumented=False):

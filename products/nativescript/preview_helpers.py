@@ -11,6 +11,7 @@ from core.utils.run import run
 
 class Preview(object):
 
+
     @staticmethod
     def get_app_packages():
         """Copy Preview App packages from Shares to local folder"""
@@ -31,7 +32,7 @@ class Preview(object):
         package_android = os.path.join(TEST_SUT_HOME, 'app-universal-release.apk')
         package_ios = os.path.join(TEST_SUT_HOME, 'nsplaydev.app')
         if platform is Platform.IOS:
-            #Unpack the .tgz file to get the nsplaydev.app
+            # Unpack the .tgz file to get the nsplaydev.app
             File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
@@ -65,12 +66,12 @@ class Preview(object):
         if platform is Platform.IOS:
             cmd = "xcrun simctl openurl {0} {1}.".format(device_id, url)
             result = run(cmd)
-            assert not 'error' in result.output
+            assert  'error' not in result.output
         elif platform is Platform.ANDROID:
             cmd = 'adb -s {0} shell am start -a android.intent.action.VIEW -d \
             "{1}" org.nativescript.preview'.format(device_id, url)
             result = run(cmd)
-            assert not 'error' in result.output
+            assert  'error' not  in result.output
 
     @staticmethod
     def dismiss_simulator_alert():

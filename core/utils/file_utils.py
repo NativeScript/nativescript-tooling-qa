@@ -187,7 +187,7 @@ class File(object):
     @staticmethod
     def unpack_tar(file_path, dest_dir):
         try:
-            tarFile = tarfile.open(file_path, 'r:gz')
-            tarFile.extractall(dest_dir)
-        except:
+            tar_file = tarfile.open(file_path, 'r:gz')
+            tar_file.extractall(dest_dir)
+        except Exception:
             Log.debug('Failed to unpack .tar file {0}'.format(file_path))

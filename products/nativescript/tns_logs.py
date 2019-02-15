@@ -208,8 +208,8 @@ class TnsLogs(object):
 
     @staticmethod
     def preview_initial_messages(platform, bundle=False, hmr=False, instrumented=False):
-        logs = ['Start sending initial files for platform {0}'.format(str(platform)), \
-            'Successfully sent initial files for platform {0}'.format(str(platform))]
+        logs = ['Start sending initial files for platform {0}'.format(str(platform)),
+                'Successfully sent initial files for platform {0}'.format(str(platform))]
 
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
@@ -218,8 +218,8 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def preview_file_changed_messages(platform, file_name, run_type=RunType.INCREMENTAL, \
-                                    bundle=False, hmr=False, instrumented=False):
+    def preview_file_changed_messages(platform, file_name, run_type=RunType.INCREMENTAL,
+                                      bundle=False, hmr=False, instrumented=False):
         logs = ['Start syncing changes for platform {0}'.format(str(platform))]
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
@@ -236,7 +236,6 @@ class TnsLogs(object):
             if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
                 logs.append('QA: Application started')
         return logs
-
 
     @staticmethod
     def wait_for_log(log_file, string_list, not_existing_string_list=None, timeout=60, check_interval=3):

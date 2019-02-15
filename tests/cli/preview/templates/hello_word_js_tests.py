@@ -13,8 +13,6 @@ from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
 
 
-
-
 class TnsPreviewJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
@@ -54,6 +52,7 @@ class TnsPreviewJSTests(TnsRunTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
+
 
 class PreviewJSTests(TnsPreviewJSTests):
 
