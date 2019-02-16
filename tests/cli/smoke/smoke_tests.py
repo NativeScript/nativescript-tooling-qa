@@ -38,8 +38,10 @@ class SmokeTests(TnsRunTest):
         sync_hello_world_js(app_name=self.js_app, platform=Platform.IOS, device=self.sim, instrumented=False)
 
     def test_100_run_android_ng(self):
-        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu, bundle=True)
+        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu, bundle=True,
+                            instrumented=False)
 
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_101_run_ios_ng(self):
-        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim, bundle=True)
+        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim, bundle=True,
+                            instrumented=False)

@@ -24,7 +24,7 @@ def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, ugl
 
 
 def sync_hello_world_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
-                        snapshot=False, instrumented=False):
+                        snapshot=False, instrumented=True):
     __sync_hello_world_js_ts(app_type=AppType.TS, app_name=app_name, platform=platform,
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
