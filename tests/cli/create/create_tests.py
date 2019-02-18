@@ -153,9 +153,34 @@ class CreateTests(TnsTest):
         assert "404" in result.output
 
     def test_018_create_project_with_empty_template_path(self):
-        result = Tns.create(app_name=Settings.AppName.DEFAULT, template="invalidEntry", update=False, verify=False)
+        result = Tns.create(app_name=Settings.AppName.DEFAULT, template="", update=False, verify=False)
         assert "successfully created" not in result.output
         assert "requires non-empty value" in result.output
+
+    def test_019_create_project_in_folder_with_existing_project(self):
+        """Create project with name that already exist should show friendly error message"""
+        Tns.create(app_name=Settings.AppName.DEFAULT, update=False)
+        result = Tns.create(app_name=Settings.AppName.DEFAULT, update=False, verify=False, force_clean=False)
+        assert "successfully created" not in result.output
+        assert "Path already exists and is not empty" in result.output
+
+    # def test_020_create_project_with_no_name(self):
+    #     """Create project without name should show friendly error message"""
+    #
+    #     result = Tns.create(app_name="")
+    #     assert "You must specify <App name> when creating a new project" in result.output
+    #     assert "# tns create" in result.output
+
+    def test_021_create_project_with_template_and_ng(self):
+        result = Tns.create(app_name=Settings.AppName.DEFAULT, template="--ng", update=False)
+        assert "successfully created" not in result.output
+        assert "requires non-empty value" in result.output
+
+    def test_022_create_app_with_space_without_quotes(self):
+        """Create project with space without quotes."""
+        result = Tns.exec_command("create fake fake", log_trace=False)
+        assert "The parameter fake is not valid for this command" in result.output
+        assert "# tns create" in result.output
 
     @staticmethod
     def __clean_folders():
