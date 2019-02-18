@@ -17,11 +17,13 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
                         instrumented=True, app_type=AppType.NG):
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False,
                      bundle=bundle, aot=aot, uglify=uglify, hmr=hmr)
+    # Check logs
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented, app_type=app_type)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
+
     # Verify it looks properly
-    device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text, timeout=300, retry_delay=5)
+    device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)

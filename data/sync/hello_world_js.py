@@ -24,7 +24,7 @@ def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, ugl
 
 
 def sync_hello_world_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
-                        snapshot=False, instrumented=False):
+                        snapshot=False, instrumented=True):
     __sync_hello_world_js_ts(app_type=AppType.TS, app_name=app_name, platform=platform,
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
@@ -67,10 +67,10 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
     # Verify it looks properly
-    device.wait_for_text(text=js_change.old_text, timeout=60, retry_delay=5)
+    device.wait_for_text(text=js_change.old_text)
     device.wait_for_text(text=xml_change.old_text)
     blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
     assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)

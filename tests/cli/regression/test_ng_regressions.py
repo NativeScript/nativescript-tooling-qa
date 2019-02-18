@@ -33,11 +33,11 @@ class NGRegressionTests(TnsTest):
             Simctl.stop_all(self.sim)
 
     def test_100_run_android(self):
-        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu)
+        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.ANDROID, device=self.emu, instrumented=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_101_run_ios(self):
-        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim)
+        sync_hello_world_ng(app_name=self.ng_app, platform=Platform.IOS, device=self.sim, instrumented=False)
 
     def test_200_build_android_release(self):
         if Settings.HOST_OS != OSType.WINDOWS:

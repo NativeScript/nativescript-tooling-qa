@@ -1,4 +1,3 @@
-# pylint: disable=unused-argument
 import time
 
 from core.enums.app_type import AppType
@@ -11,7 +10,6 @@ from products.nativescript.run_type import RunType
 from products.nativescript.tns_paths import TnsPaths
 
 
-# noinspection PyUnusedLocal
 class TnsLogs(object):
     SKIP_NODE_MODULES = ['Skipping node_modules folder!', 'Use the syncAllFiles option to sync files from this folder.']
 
@@ -35,16 +33,13 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def build_messages(platform, run_type=RunType.FULL, plugins=None):
+    def build_messages(platform, run_type=RunType.FULL):
         """
         Get log messages that should be present when project is build.
         :param platform: Platform.ANDROID or Platform.IOS
         :param run_type: RunType enum value.
-        :param plugins: Array of plugins available in the project.
         :return: Array of strings.
         """
-        if plugins is None:
-            plugins = []
         logs = []
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             logs = ['Building project...', 'Project successfully built.']
@@ -55,8 +50,8 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, aot=False,
-                     app_type=None, file_name=None, instrumented=False, sync_all_file=False, plugins=None):
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, app_type=None,
+                     file_name=None, instrumented=False, plugins=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -65,9 +60,9 @@ class TnsLogs(object):
         :param bundle: True if `--bundle is specified.`
         :param hmr: True if `--hmr is specified.`
         :param uglify: True if `--env.uglify is specified.`
+        :param app_type: AppType enum value.
         :param file_name: Name of changed file.
         :param instrumented: If true it will return logs we place inside app (see files in assets/logs).
-        :param sync_all_file: If false will check for logs that syncAllFiles is skipped.
         :param plugins: List of plugins.
         :return: Array of strings.
         """
@@ -95,7 +90,7 @@ class TnsLogs(object):
 
         # File transfer messages
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
-                                                    bundle=bundle, hmr=hmr, uglify=uglify, app_type=app_type))
+                                                    bundle=bundle, hmr=hmr, uglify=uglify))
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             if not app_type == AppType.NG:
                 if not bundle and not hmr:
@@ -127,7 +122,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, app_type):
+    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify):
         logs = []
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
