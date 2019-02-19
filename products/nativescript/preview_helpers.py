@@ -9,8 +9,8 @@ from core.utils.device.simctl import Simctl
 from core.utils.device.adb import Adb
 from core.utils.run import run
 
-class Preview(object):
 
+class Preview(object):
 
     @staticmethod
     def get_app_packages():
@@ -66,12 +66,12 @@ class Preview(object):
         if platform is Platform.IOS:
             cmd = "xcrun simctl openurl {0} {1}.".format(device_id, url)
             result = run(cmd)
-            assert  'error' not in result.output
+            assert 'error' not in result.output
         elif platform is Platform.ANDROID:
             cmd = 'adb -s {0} shell am start -a android.intent.action.VIEW -d \
             "{1}" org.nativescript.preview'.format(device_id, url)
             result = run(cmd)
-            assert  'error' not  in result.output
+            assert 'error' not in result.output
 
     @staticmethod
     def dismiss_simulator_alert():

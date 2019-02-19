@@ -6,4 +6,3 @@ class TnsRunPreviewNGTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-
