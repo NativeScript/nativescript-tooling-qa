@@ -89,10 +89,10 @@ class CreateTests(TnsTest):
 
         # Create project should fail without --force
         result = Tns.create(app_name=Settings.AppName.APP_NAME, verify=False, update=False)
-        assert "You cannot build applications named '" + self.app_name_app + "' in Xcode." in result.output
+        assert "You cannot build applications named '" + Settings.AppName.APP_NAME + "' in Xcode." in result.output
 
     def test_011_create_app_default(self):
-        Folder.cleanup(os.path.join(Settings.AppName.APP_NAME))
+        Folder.clean(os.path.join(Settings.AppName.APP_NAME))
         Tns.create(app_name=Settings.AppName.DEFAULT, default=True, update=False)
 
     def test_012_create_app_remove_app_resources(self):
@@ -103,7 +103,7 @@ class CreateTests(TnsTest):
                   local_folder="template-hello-world")
         Folder.clean(os.path.join(Settings.TEST_RUN_HOME,  'template-hello-world', 'app', 'App_Resources'))
         file_path = os.path.join(Settings.TEST_RUN_HOME, 'template-hello-world', 'package.json')
-        File.replace(file_path=file_path, old_string="tns-template-hello-world",
+        File.replace(path=file_path, old_string="tns-template-hello-world",
                      new_string="test-tns-template-hello-world")
         path = os.path.join(Settings.TEST_RUN_HOME, 'template-hello-world')
         Tns.create(app_name=Settings.AppName.DEFAULT, template=path)
@@ -123,7 +123,7 @@ class CreateTests(TnsTest):
         "ng",
         "angular",
         "default",
-        # "default@4.0.0"
+        "default@5.0.1"
     ])
     def test_014_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
@@ -143,7 +143,7 @@ class CreateTests(TnsTest):
         Tns.create(app_name=Settings.AppName.DEFAULT, template="tns-template-hello-world-ts@2.0.0", update=False,
                    verify=False)
         res_path = os.path.join(Settings.AppName.DEFAULT, 'app', 'App_Resources')
-        assert File.exists(res_path), "App Resouces not added by {N} CLI if missing in template"
+        assert Folder.exists(res_path), "App Resouces not added by {N} CLI if missing in template"
 
     def test_017_create_project_with_wrong_template_path(self):
         """--template should not create project if value is no npm installable"""
@@ -164,15 +164,15 @@ class CreateTests(TnsTest):
         assert "successfully created" not in result.output
         assert "Path already exists and is not empty" in result.output
 
-    # def test_020_create_project_with_no_name(self):
-    #     """Create project without name should show friendly error message"""
-    #
-    #     result = Tns.create(app_name="")
-    #     assert "You must specify <App name> when creating a new project" in result.output
-    #     assert "# tns create" in result.output
+    def test_020_create_project_with_no_name(self):
+        """Create project without name should show friendly error message"""
+
+        result = Tns.create(app_name="", force_clean=False, verify=False, update=False)
+        assert "You must specify <App name> when creating a new project" in result.output
+        assert "# tns create" in result.output
 
     def test_021_create_project_with_template_and_ng(self):
-        result = Tns.create(app_name=Settings.AppName.DEFAULT, template="--ng", update=False)
+        result = Tns.create(app_name=Settings.AppName.DEFAULT, template="--ng", update=False, verify=False)
         assert "successfully created" not in result.output
         assert "requires non-empty value" in result.output
 
