@@ -34,6 +34,10 @@ class Folder(object):
         return os.path.isdir(folder)
 
     @staticmethod
+    def is_empty(folder):
+        return not os.listdir(folder)
+
+    @staticmethod
     def create(folder):
         Log.debug("Create folder: " + folder)
         if not os.path.exists(folder):
