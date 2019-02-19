@@ -117,13 +117,9 @@ class CreateTests(TnsTest):
         "https://github.com/NativeScript/template-hello-world.git",
         "https://github.com/NativeScript/template-hello-world-ts/tarball/master",
         "https://github.com/NativeScript/template-hello-world-ts.git#master",
-        "https://github.com/NativeScript/template-hello-world-ng.git#master",
-        "typescript",
-        "tsc",
+        "ts",
         "ng",
-        "angular",
-        "default",
-        "default@5.0.1"
+        "js"
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
@@ -159,15 +155,9 @@ class CreateTests(TnsTest):
 
     def test_403_create_project_with_no_name(self):
         """Create project without name should show friendly error message"""
-
         result = Tns.create(app_name="", force_clean=False, verify=False, update=False)
         assert "You must specify <App name> when creating a new project" in result.output
         assert "# tns create" in result.output
-
-    def test_404_create_project_with_template_and_ng(self):
-        result = Tns.create(app_name=Settings.AppName.DEFAULT, template="--ng", update=False, verify=False)
-        assert "successfully created" not in result.output
-        assert "requires non-empty value" in result.output
 
     def test_405_create_app_with_space_without_quotes(self):
         """Create project with space without quotes."""
