@@ -84,6 +84,15 @@ class Packages(object):
     NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable='nativescript_schematics')
     NG_CLI = resolve_package(name='@angular/cli', variable='ng_cli', default='latest')
 
+    # Preview and Playground packages
+    PREVIEW_PATH = os.environ.get('preview', os.path.join("/tns-dist", "Playground", "ns-play-dev", "debug"))
+    PLAYGROUND_PATH = os.environ.get('playground', os.path.join("/tns-dist", "Playground", "ns-play", "debug"))
+
+    PREVIEW_APP_IOS = os.path.join(PREVIEW_PATH, "nsplaydev.tgz")
+    PREVIEW_APP_ANDROID = os.path.join(PREVIEW_PATH, "app-universal-release.apk")
+    PLAYGROUND_APP_IOS = os.path.join(PLAYGROUND_PATH, "nsplay.tgz")
+    PLAYGROUND_APP_ANDROID = os.path.join(PLAYGROUND_PATH, "app-release.apk")
+
     # Runtimes
     ANDROID = resolve_package(name='tns-android', variable='tns_android')
     IOS = resolve_package(name='tns-ios', variable='tns_ios')

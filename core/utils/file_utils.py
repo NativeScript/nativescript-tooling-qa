@@ -5,6 +5,7 @@ import errno
 import os
 import shutil
 import stat
+import tarfile
 
 from core.log.log import Log
 from core.settings import Settings
@@ -182,3 +183,11 @@ class File(object):
         index = text.rfind(key_word)
         text = text[index:]
         return text
+
+    @staticmethod
+    def unpack_tar(file_path, dest_dir):
+        try:
+            tar_file = tarfile.open(file_path, 'r:gz')
+            tar_file.extractall(dest_dir)
+        except Exception:
+            Log.debug('Failed to unpack .tar file {0}'.format(file_path))
