@@ -36,7 +36,7 @@ class Preview(object):
             File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
-            Adb.install(package_android, device_info)
+            Adb.install(package_android, device_info.id)
 
     @staticmethod
     def install_playground_app(device_info, platform):
@@ -48,16 +48,16 @@ class Preview(object):
             File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplay.tgz'), TEST_SUT_HOME)
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
-            Adb.install(package_android, device_info)
+            Adb.install(package_android, device_info.id)
 
     @staticmethod
     def get_url(output):
         """Get preview URL form tns log.This is the url you need to load in Preview app
            in order to see and sync your project"""
-        url = re.findall("(nsplay[^\s']+)", output)[0]
+        url = re.findall(r"(nsplay[^\s']+)", output)[0]
         url = urllib.unquote(url)
-        url = url.replace('?', '\?')
-        url = url.replace('&', '\&')
+        url = url.replace(r'?', r'\?')
+        url = url.replace(r'&', r'\&')
         return url
 
     @staticmethod
