@@ -172,12 +172,12 @@ class Adb(object):
         Log.info('Open home screen of {0}.'.format(str(device_id)))
 
     @staticmethod
-    def install(apk_path, emulator_info):
+    def install(apk_path, device_id):
         """
         Install application.
         :param apk_path: File path to .apk.
         :param device_id: Device id.
         """
-        result = Adb.__run_adb_command(command='install -r {0} {1}'.format(apk_path, emulator_info.id))
+        result = Adb.__run_adb_command(command='install -r {0} {1}'.format(apk_path, device_id))
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
-        Log.info('{0} installed successfully on {1}.'.format(apk_path, emulator_info.id))
+        Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))

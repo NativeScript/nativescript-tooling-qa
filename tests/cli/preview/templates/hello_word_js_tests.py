@@ -49,10 +49,6 @@ class TnsPreviewJSTests(TnsRunTest):
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
 
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
-
 
 class PreviewJSTests(TnsPreviewJSTests):
 
