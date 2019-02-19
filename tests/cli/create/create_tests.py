@@ -42,12 +42,7 @@ class CreateTests(TnsTest):
         Tns.create(app_name=Settings.AppName.DEFAULT, template=Template.HELLO_WORLD_TS.local_package,
                    app_data=Apps.HELLO_WORLD_TS, update=False)
 
-    def test_004_create_app_template_ng(self):
-        """Create app with --template ng project"""
-        Tns.create(app_name=Settings.AppName.DEFAULT, template=Template.HELLO_WORLD_NG.local_package,
-                   app_data=Apps.HELLO_WORLD_NG, update=False)
-
-    def test_005_create_project_with_path(self):
+    def test_004_create_project_with_path(self):
         """Create project with --path option"""
         Tns.create(app_name=Settings.AppName.DEFAULT,
                    template=Template.HELLO_WORLD_JS.local_package,
@@ -55,17 +50,17 @@ class CreateTests(TnsTest):
                    path=os.path.join(Settings.TEST_RUN_HOME, 'folder', 'subfolder'),
                    update=False)
 
-    def test_006_create_project_with_dash(self):
+    def test_005_create_project_with_dash(self):
         """ Create project with dash is possible, but packageId will skip the space symbol"""
         Tns.create(app_name=Settings.AppName.WITH_DASH, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, update=False)
 
-    def test_007_create_project_with_space(self):
+    def test_006_create_project_with_space(self):
         """ Create project with space is possible, but packageId will skip the dash symbol"""
         Tns.create(app_name=Settings.AppName.WITH_SPACE, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, update=False)
 
-    def test_008_create_project_named_123(self):
+    def test_007_create_project_named_123(self):
         """Create app starting with digits should not be possible without --force option"""
         result = Tns.create(app_name=Settings.AppName.WITH_NUMBER, template=Template.HELLO_WORLD_JS.local_package,
                             app_data=Apps.HELLO_WORLD_JS, update=False, verify=False)
@@ -75,16 +70,16 @@ class CreateTests(TnsTest):
         Tns.create(app_name=Settings.AppName.WITH_NUMBER, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, force=True, update=False)
 
-    def test_009_create_project_with_appid(self):
+    def test_008_create_project_with_appid(self):
         """Create project with --appid option"""
         Tns.create(app_name=Settings.AppName.DEFAULT, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, update=False, app_id='org.nativescript.MyApp')
 
-    def test_010_create_app_default(self):
+    def test_009_create_app_default(self):
         Folder.clean(os.path.join(Settings.AppName.APP_NAME))
         Tns.create(app_name=Settings.AppName.DEFAULT, default=True, update=False)
 
-    def test_011_create_app_remove_app_resources(self):
+    def test_010_create_app_remove_app_resources(self):
         # creates valid project from local directory template
         Folder.clean(os.path.join("template-hello-world"))
         Folder.clean(os.path.join(Settings.AppName.DEFAULT))
@@ -97,11 +92,11 @@ class CreateTests(TnsTest):
         path = os.path.join(Settings.TEST_RUN_HOME, 'template-hello-world')
         Tns.create(app_name=Settings.AppName.DEFAULT, template=path)
 
-    def test_013_create_app_scoped_packages(self):
+    def test_011_create_app_scoped_packages(self):
         result = Tns.create(app_name=Settings.AppName.DEFAULT, template="@angular/core", verify=False)
         assert "Command npm install" not in result.output
 
-    def test_014_create_project_with_named_app(self):
+    def test_012_create_project_with_named_app(self):
         """Create app named 'app' should not be possible without --force option"""
         Tns.create(app_name=Settings.AppName.APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
                    app_data=Apps.HELLO_WORLD_JS, force=True, update=False)
@@ -116,10 +111,7 @@ class CreateTests(TnsTest):
         "tns-template-hello-world",
         "https://github.com/NativeScript/template-hello-world.git",
         "https://github.com/NativeScript/template-hello-world-ts/tarball/master",
-        "https://github.com/NativeScript/template-hello-world-ts.git#master",
-        "ts",
-        "ng",
-        "js"
+        "https://github.com/NativeScript/template-hello-world-ts.git#master"
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
