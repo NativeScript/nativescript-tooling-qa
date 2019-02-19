@@ -133,7 +133,6 @@ class TnsLogs(object):
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
                 logs.append('Skipping prepare.')
-
         else:
             if not hmr:
                 logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
