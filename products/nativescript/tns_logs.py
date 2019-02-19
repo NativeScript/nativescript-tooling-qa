@@ -51,7 +51,7 @@ class TnsLogs(object):
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, app_type=None,
-                     file_name=None, instrumented=False, plugins=None):
+                     file_name=None, instrumented=False, plugins=None, aot=False):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -90,7 +90,7 @@ class TnsLogs(object):
 
         # File transfer messages
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
-                                                    bundle=bundle, hmr=hmr, uglify=uglify))
+                                                    bundle=bundle, hmr=hmr, uglify=uglify, aot=aot))
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             if not app_type == AppType.NG:
                 if not bundle and not hmr:
@@ -108,7 +108,8 @@ class TnsLogs(object):
             logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
                                                        instrumented=instrumented, app_type=app_type))
         else:
-            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type))
+            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type,
+                                                       file_name=file_name, hmr=hmr))
 
         # Add message for successful sync
         app_id = TnsPaths.get_bundle_id(app_name)
@@ -117,16 +118,22 @@ class TnsLogs(object):
         if app_type == AppType.NG:
             logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
                         'the production mode.')
+            # If you are in NG with hmr project changes of app.css should not cause angular reload
+            if file_name is not None:
+                if hmr and 'app.css' in file_name:
+                    logs.remove('Angular is running in the development mode. Call enableProdMode() to enable '
+                                'the production mode.')
 
         # Return logs
         return logs
 
     @staticmethod
-    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify):
+    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, aot=False):
         logs = []
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
                 logs.append('Skipping prepare.')
+
         else:
             if not hmr:
                 logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
@@ -134,6 +141,12 @@ class TnsLogs(object):
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
                 logs.append(file_name)
+                # When env.aot html files are processed differently and you wont see
+                # the exact file name in the log
+                if aot:
+                    if file_name is not None:
+                        if '.html' in file_name:
+                            logs.remove(file_name)
                 logs.append('Webpack compilation complete.')
                 logs.append('Webpack build done!')
                 if hmr:
@@ -185,11 +198,16 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def __app_refresh_messages(instrumented, app_type):
+    def __app_refresh_messages(instrumented, app_type, hmr=False, file_name=None):
         logs = ['Refreshing application on device']
         if instrumented:
             if app_type == AppType.NG:
                 logs.append('QA: items component on init')
+                # If you are in NG with hmr project changes of app.css should not cause angular reload
+                if file_name is not None:
+                    if hmr and 'app.css' in file_name:
+                        logs.remove('QA: items component on init')
+
         return logs
 
     @staticmethod

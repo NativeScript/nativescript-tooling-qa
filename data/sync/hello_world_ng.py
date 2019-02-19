@@ -41,7 +41,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
     assert not device.is_text_visible(text=Changes.NGHelloWorld.TS.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='items.component.html', hmr=hmr, instrumented=instrumented,
-                                   app_type=app_type)
+                                   app_type=app_type, aot=aot)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
 
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
@@ -58,7 +58,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
     device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='items.component.html', hmr=hmr, instrumented=instrumented,
-                                   app_type=app_type)
+                                   app_type=app_type, aot=aot)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
 
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
