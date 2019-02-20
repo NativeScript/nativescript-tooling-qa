@@ -85,8 +85,10 @@ class Packages(object):
     NG_CLI = resolve_package(name='@angular/cli', variable='ng_cli', default='latest')
 
     # Preview and Playground packages
-    PREVIEW_PATH = os.environ.get('preview', os.path.join("/tns-dist", "Playground", "ns-play-dev", "debug"))
-    PLAYGROUND_PATH = os.environ.get('playground', os.path.join("/tns-dist", "Playground", "ns-play", "debug"))
+    PREVIEW_PATH = os.environ.get('preview_folder_path', os.path.join("/tns-dist", "Playground",
+                                                                      "ns-play-dev", "debug"))
+    PLAYGROUND_PATH = os.environ.get('playground_folder_path', os.path.join("/tns-dist", "Playground",
+                                                                            "ns-play", "debug"))
 
     PREVIEW_APP_IOS = os.path.join(PREVIEW_PATH, "nsplaydev.tgz")
     PREVIEW_APP_ANDROID = os.path.join(PREVIEW_PATH, "app-universal-release.apk")
