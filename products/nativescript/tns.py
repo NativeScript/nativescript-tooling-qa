@@ -194,6 +194,24 @@ class Tns(object):
                                 version=version, verify=verify, log_trace=log_trace)
 
     @staticmethod
+    def plugin_add(plugin_name, path=None, log_trace=False, verify=True):
+        result = Tns.exec_command(command="plugin add " + plugin_name, path=path, log_trace=log_trace)
+        if verify:
+            if "/src" in plugin_name:
+                short_name = plugin_name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
+            else:
+                short_name = plugin_name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
+            assert "Successfully installed plugin {0}".format(short_name) in result.output
+        return result
+
+    @staticmethod
+    def plugin_remove(plugin_name, path=None, log_trace=False, verify=True):
+        result = Tns.exec_command(command="plugin remove " + plugin_name, path=path, log_trace=log_trace)
+        if verify:
+            assert "Successfully removed plugin {0}".format(plugin_name.replace("@", "")) in result.output
+        return result
+
+    @staticmethod
     def prepare(app_name, platform, release=False, for_device=False, bundle=False, log_trace=False, verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
                                   for_device=for_device, bundle=bundle, wait=True, log_trace=log_trace)
