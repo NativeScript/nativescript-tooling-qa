@@ -27,8 +27,9 @@ class TnsPreviewJSTests(TnsRunTest):
 
         # Install Preview and Playground
         Preview.install_preview_app(cls.emu, Platform.ANDROID)
-        Preview.install_preview_app(cls.sim, Platform.IOS)
-        Preview.install_playground_app(cls.sim, Platform.IOS)
+        if Settings.HOST_OS is OSType.OSX:
+            Preview.install_preview_app(cls.sim, Platform.IOS)
+            Preview.install_playground_app(cls.sim, Platform.IOS)
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
