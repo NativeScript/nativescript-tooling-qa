@@ -3,8 +3,10 @@ Sync changes on JS/TS project helper.
 """
 
 import os
+import time
 
 from core.enums.app_type import AppType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.wait import Wait
@@ -137,6 +139,10 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=Fals
     log = File.read(result.log_file)
     url = Preview.get_url(log)
     Preview.run_app(url, device.id, platform)
+    # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
+    if platform == Platform.IOS:
+        time.sleep(2)
+        Preview.dismiss_simulator_alert()
 
     # Verify logs
     strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)

@@ -178,6 +178,6 @@ class Adb(object):
         :param apk_path: File path to .apk.
         :param device_id: Device id.
         """
-        result = Adb.__run_adb_command(command='install -r {0} {1}'.format(apk_path, device_id))
+        result = Adb.__run_adb_command(command='install -r {0} {1}'.format(apk_path, device_id), timeout=60)
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))

@@ -239,7 +239,6 @@ class TnsLogs(object):
         else:
             logs.append('Successfully synced {0} for platform {1}'.format(file_name, str(platform)))
         if hmr:
-            logs.append('Successfully synced bundle.')
             logs.append('hot-update.json')
             logs.append('HMR: Checking for updates to the bundle with hmr hash')
             logs.append('HMR: The following modules were updated:')
