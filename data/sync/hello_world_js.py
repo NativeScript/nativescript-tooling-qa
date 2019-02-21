@@ -6,6 +6,7 @@ import os
 import time
 
 from core.enums.app_type import AppType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.wait import Wait
@@ -15,7 +16,6 @@ from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.preview_helpers import Preview
-from core.enums.platform_type import Platform
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
