@@ -3,6 +3,7 @@ Sync changes on JS/TS project helper.
 """
 
 import os
+import time
 
 from core.enums.app_type import AppType
 from core.settings import Settings
@@ -14,6 +15,7 @@ from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.preview_helpers import Preview
+from core.enums.platform_type import Platform
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
@@ -137,6 +139,10 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=Fals
     log = File.read(result.log_file)
     url = Preview.get_url(log)
     Preview.run_app(url, device.id, platform)
+    # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
+    if platform == Platform.IOS:
+        time.sleep(2)
+        Preview.dismiss_simulator_alert()
 
     # Verify logs
     strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
