@@ -5,6 +5,7 @@ Sync changes on NG project helper.
 import os
 
 from core.enums.app_type import AppType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -36,8 +37,12 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
 
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
-    for number in ["8", "9"]:
-        device.wait_for_text(text=number)
+    if platform == Platform.IOS:
+        for number in ["10", "11"]:
+            device.wait_for_text(text=number)
+    else:
+        for number in ["8", "9"]:
+            device.wait_for_text(text=number)
     assert not device.is_text_visible(text=Changes.NGHelloWorld.TS.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='items.component.html', hmr=hmr, instrumented=instrumented,
@@ -46,8 +51,12 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
 
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
     device.wait_for_main_color(color=Colors.DARK)
-    for number in ["8", "9"]:
-        device.wait_for_text(text=number)
+    if platform == Platform.IOS:
+        for number in ["10", "1"]:
+            device.wait_for_text(text=number)
+    else:
+        for number in ["8", "9"]:
+            device.wait_for_text(text=number)
     assert not device.is_text_visible(text=Changes.NGHelloWorld.TS.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='app.css', hmr=hmr, instrumented=instrumented, app_type=app_type)
