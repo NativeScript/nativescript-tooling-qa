@@ -16,3 +16,4 @@ webdriver_manager>=1.7
 atomac>=1.1.0
 PyObjC>=5.1.1
 subprocess32>=3.5.3
+requests>=2.21.0
