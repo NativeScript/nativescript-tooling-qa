@@ -15,17 +15,20 @@ from products.angular.ng import NG, NS_SCHEMATICS
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_paths import TnsPaths
 
 
 # noinspection PyMethodMayBeStatic
 class NGNewTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
+    app_path = TnsPaths.get_app_path(app_name=app_name)
     emulator = None
     simulator = None
 
     def setUp(self):
         TnsRunTest.setUp(self)
         NG.kill()
+        Folder.clean(self.app_path)
         self.emulator = self.emu
         self.simulator = self.simulator
 
