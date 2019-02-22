@@ -22,15 +22,11 @@ from products.nativescript.tns_paths import TnsPaths
 class NGNewTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_path = TnsPaths.get_app_path(app_name=app_name)
-    emulator = None
-    simulator = None
 
     def setUp(self):
         TnsRunTest.setUp(self)
         NG.kill()
         Folder.clean(self.app_path)
-        self.emulator = self.emu
-        self.simulator = self.simulator
 
     def tearDown(self):
         NG.kill()
@@ -98,7 +94,7 @@ class NGNewTests(TnsRunTest):
 
         # Run the app
         NGNewTests.run_bundle(app_data=app_data, webpack=webpack, shared=shared, theme=theme,
-                              emu=NGNewTests.emulator, sim=NGNewTests.simulator)
+                              emu=NGNewTests.emu, sim=NGNewTests.sim)
 
     @staticmethod
     def create_app(app_data, shared, sample, theme, style, prefix, source_dir, webpack):
