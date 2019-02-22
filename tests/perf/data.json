@@ -38,8 +38,8 @@
       "build_incremental": 26.710038661956787,
       "build_initial": 122.92822297414143,
       "prepare_incremental": 9.067025264104208,
-      "prepare_initial": 22.27472996711731,
-      "prepare_skip": 11.065298318862915
+      "prepare_initial": 17.6259629726,
+      "prepare_skip": 8.58947936694
     },
     "android_bundle": {
       "build_incremental": 31.89138634999593,
@@ -52,7 +52,7 @@
       "build_incremental": 36.64054028193156,
       "build_initial": 37.41368063290914,
       "prepare_incremental": 12.144241015116373,
-      "prepare_initial": 24.89648501078288,
+      "prepare_initial": 19.7154362996,
       "prepare_skip": 14.811895052591959
     },
     "ios_bundle": {
