@@ -12,7 +12,7 @@ class SyncMessagesTests(unittest.TestCase):
     def test_01_constants(self):
         text = File.read(path=os.path.join(self.current_folder, 'preview.log'))
         url = Preview.get_url(output=text)
-        assert 'nsplay://boot' in url
+        assert 'nsplay://boot\\?instanceId=' in url
 
 
 if __name__ == '__main__':
