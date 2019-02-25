@@ -7,6 +7,8 @@ from core.utils.device.simctl import Simctl
 
 
 class TnsRunTest(TnsTest):
+    emu = None
+    sim = None
 
     @classmethod
     def setUpClass(cls):

@@ -1,16 +1,12 @@
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-statements
 import os
 import unittest
 
-from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.enums.styling_type import StylingType
 from core.settings import Settings
-from core.utils.device.adb import Adb
-from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from data.apps import Apps
@@ -19,35 +15,22 @@ from products.angular.ng import NG, NS_SCHEMATICS
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_paths import TnsPaths
 
 
 # noinspection PyMethodMayBeStatic
-class NGNewTests(TnsTest):
+class NGNewTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
-    app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
-    emu = None
-    sim = None
-
-    @classmethod
-    def setUpClass(cls):
-        TnsTest.setUpClass()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS is OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+    app_path = TnsPaths.get_app_path(app_name=app_name)
 
     def setUp(self):
-        TnsTest.setUp(self)
+        TnsRunTest.setUp(self)
         NG.kill()
-        Adb.open_home(device_id=self.emu.id)  # Open home page to be sure we do not find old text
-        Folder.clean(self.app_folder)
+        Folder.clean(self.app_path)
 
     def tearDown(self):
         NG.kill()
-        TnsTest.tearDown(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
+        TnsRunTest.tearDown(self)
 
     def test_001_simple(self):
         NGNewTests.create_and_run(shared=False)
@@ -110,7 +93,8 @@ class NGNewTests(TnsTest):
             App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=False)
 
         # Run the app
-        NGNewTests.run_bundle(app_data=app_data, webpack=webpack, shared=shared, theme=theme)
+        NGNewTests.run_bundle(app_data=app_data, webpack=webpack, shared=shared, theme=theme,
+                              emu=NGNewTests.emu, sim=NGNewTests.sim)
 
     @staticmethod
     def create_app(app_data, shared, sample, theme, style, prefix, source_dir, webpack):
@@ -163,14 +147,14 @@ class NGNewTests(TnsTest):
             assert Folder.exists(os.path.join(Settings.TEST_RUN_HOME, NGNewTests.app_name, source_dir))
 
     @staticmethod
-    def run_bundle(app_data, webpack, shared, theme):
+    def run_bundle(app_data, webpack, shared, theme, emu, sim):
         # Run android (if webpack is available -> use --bundle)
         Tns.run(app_name=NGNewTests.app_name, platform=Platform.ANDROID, emulator=True, bundle=webpack)
         for text in app_data.texts:
-            NGNewTests.emu.wait_for_text(text=text, timeout=300)
+            emu.wait_for_text(text=text, timeout=300)
             # Check if theme is really applied (only for non shared projects, shared is not good example to check)
             if not shared:
-                blue_pixels = NGNewTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+                blue_pixels = emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
                 if theme:
                     assert blue_pixels > 1000, 'Default {N} theme is NOT applied on Android.'
                 else:
@@ -180,10 +164,10 @@ class NGNewTests(TnsTest):
         if Settings.HOST_OS is OSType.OSX:
             Tns.run(app_name=NGNewTests.app_name, platform=Platform.IOS, emulator=True, bundle=webpack)
             for text in app_data.texts:
-                NGNewTests.sim.wait_for_text(text=text, timeout=300)
+                sim.wait_for_text(text=text, timeout=300)
                 # Check if theme is really applied (only for non shared projects, shared is not good example to check)
                 if not shared:
-                    blue_pixels = NGNewTests.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+                    blue_pixels = emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
                     if theme:
                         assert blue_pixels > 1000, 'Default {N} theme is NOT applied on iOS.'
                     else:

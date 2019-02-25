@@ -4,49 +4,41 @@ import unittest
 
 from parameterized import parameterized
 
-from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.chrome import Chrome
-from core.utils.device.adb import Adb
-from core.utils.device.device_manager import DeviceManager
 from products.angular.ng import NG, DEFAULT_WEB_URL
 from products.nativescript.tns import Tns
 
 
 # noinspection PyMethodMayBeStatic
-class MigrateWebToMobileTests(TnsTest):
+class MigrateWebToMobileTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
-    emu = None
-    sim = None
     chrome = None
 
     @classmethod
     def setUpClass(cls):
-        TnsTest.setUpClass()
+        TnsRunTest.setUpClass()
         NG.kill()
         NG.new(collection=None, project=cls.app_name)
         cls.chrome = Chrome()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS is OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
 
     def setUp(self):
-        TnsTest.setUp(self)
+        TnsRunTest.setUp(self)
         NG.kill()
-        Adb.open_home(device_id=self.emu.id)  # Open home screen just to be sure we do not find text of previous run.
 
     def tearDown(self):
         NG.kill()
-        TnsTest.tearDown(self)
+        TnsRunTest.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
         cls.chrome.kill()
-        TnsTest.tearDownClass()
+        TnsRunTest.tearDownClass()
 
     def test_01_ng_serve_web(self):
         self.ng_serve(prod=False)

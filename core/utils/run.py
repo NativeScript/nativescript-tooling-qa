@@ -4,12 +4,13 @@
 # pylint: disable=unused-variable
 import logging
 import os
-
-import psutil
 import time
 from datetime import datetime
 
+import psutil
+
 from core.base_test.test_context import TestContext
+from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
@@ -50,7 +51,10 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
     if wait:
         start = time.time()
         with open(log_file, mode='w') as log:
-            process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=log)
+            if Settings.HOST_OS == OSType.WINDOWS:
+                process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=log, stderr=log)
+            else:
+                process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=log)
 
         # Wait until command complete
         try:
