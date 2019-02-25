@@ -1,12 +1,12 @@
 import os
 import re
-import urllib
+
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
-from core.utils.file_utils import File
-from core.utils.device.simctl import Simctl
 from core.utils.device.adb import Adb
+from core.utils.device.simctl import Simctl
+from core.utils.file_utils import File
 from core.utils.run import run
 
 
@@ -55,7 +55,12 @@ class Preview(object):
         """Get preview URL form tns log.This is the url you need to load in Preview app
            in order to see and sync your project"""
         url = re.findall(r"(nsplay[^\s']+)", output)[0]
-        url = urllib.unquote(url)
+        if Settings.PYTHON_VERSION < 3:
+            import urllib
+            url = urllib.unquote(url)
+        else:
+            from urllib.parse import unquote
+            url = unquote(url, 'UTF-8')
         url = url.replace(r'?', r'\?')
         url = url.replace(r'&', r'\&')
         return url
