@@ -66,20 +66,22 @@ class NGGenE2ETestsNS(TnsRunTest):
         NG.exec_command(command='g c module-test/component-test', cwd=app_path)
 
         # Update app.modules.ts
-        app_module = os.path.join(app_path, 'app', 'app.module.ts')
+        app_module_name = 'app.module.ts'
+        app_module_path = os.path.join(app_path, 'app', app_module_name)
         old_string = "import { HomeComponent } from './home/home.component';"
         new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
-        File.replace(path=app_module, old_string=old_string, new_string=new_string)
-        File.replace(path=app_module, old_string='HomeComponent,', new_string='ComponentTestComponent,')
+        File.replace(path=app_module_path, old_string=old_string, new_string=new_string)
+        File.replace(path=app_module_path, old_string='HomeComponent,', new_string='ComponentTestComponent,')
 
         # Update app-routing.module.ts
-        app_routing_module = os.path.join(app_path, 'app', 'app-routing.module.ts')
+        app_routing_module_name = 'app-routing.module.ts'
+        app_routing_module_path = os.path.join(app_path, 'app', app_routing_module_name)
         old_string = "import { HomeComponent } from './home/home.component';"
         new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
-        File.replace(path=app_routing_module, old_string=old_string, new_string=new_string)
-        File.replace(path=app_routing_module, old_string='HomeComponent', new_string='ComponentTestComponent')
+        File.replace(path=app_routing_module_path, old_string=old_string, new_string=new_string)
+        File.replace(path=app_routing_module_path, old_string='HomeComponent', new_string='ComponentTestComponent')
 
         # Verify app is updated
-        logs = [app_module, app_routing_module, 'Successfully synced application']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=logs, timeout=300)
+        logs = [app_module_name, app_routing_module_name, 'Successfully synced application']
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=logs, timeout=120)
         device.wait_for_text(text='component-test works!')
