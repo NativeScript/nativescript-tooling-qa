@@ -4,7 +4,7 @@ import re
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
-from core.utils.device.adb import Adb
+from core.utils.device.adb import Adb, ADB_PATH
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File
 from core.utils.run import run
@@ -73,8 +73,8 @@ class Preview(object):
             result = run(cmd)
             assert 'error' not in result.output
         elif platform is Platform.ANDROID:
-            cmd = 'adb -s {0} shell am start -a android.intent.action.VIEW -d \
-            "{1}" org.nativescript.preview'.format(device_id, url)
+            cmd = '{0} -s {1} shell am start -a android.intent.action.VIEW -d \
+            "{2}" org.nativescript.preview'.format(ADB_PATH, device_id, url)
             result = run(cmd)
             assert 'error' not in result.output
 
