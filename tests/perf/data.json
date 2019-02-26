@@ -53,7 +53,7 @@
       "build_initial": 37.41368063290914,
       "prepare_incremental": 12.144241015116373,
       "prepare_initial": 19.7154362996,
-      "prepare_skip": 14.811895052591959
+      "prepare_skip": 12.25572427113851
     },
     "ios_bundle": {
       "build_incremental": 39.264984369277954,
