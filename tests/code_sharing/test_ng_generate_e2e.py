@@ -68,6 +68,9 @@ class NGGenE2ETestsNS(TnsRunTest):
         # Update app.modules.ts
         app_module_name = 'app.module.ts'
         app_module_path = os.path.join(app_path, 'app', app_module_name)
+        if shared:
+            app_module_name = 'app.module.tns.ts'
+            app_module_path = os.path.join(app_path, 'src', 'app', app_module_name)
         old_string = "import { HomeComponent } from './home/home.component';"
         new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
         File.replace(path=app_module_path, old_string=old_string, new_string=new_string)
@@ -76,6 +79,9 @@ class NGGenE2ETestsNS(TnsRunTest):
         # Update app-routing.module.ts
         app_routing_module_name = 'app-routing.module.ts'
         app_routing_module_path = os.path.join(app_path, 'app', app_routing_module_name)
+        if shared:
+            app_routing_module_name = 'app-routing.module.tns.ts'
+            app_routing_module_path = os.path.join(app_path, 'src', 'app', app_routing_module_name)
         old_string = "import { HomeComponent } from './home/home.component';"
         new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
         File.replace(path=app_routing_module_path, old_string=old_string, new_string=new_string)
