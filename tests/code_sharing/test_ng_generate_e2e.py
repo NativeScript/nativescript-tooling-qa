@@ -80,7 +80,7 @@ class NGGenE2ETestsNS(TnsRunTest):
         app_routing_module_name = 'app-routing.module.ts'
         app_routing_module_path = os.path.join(app_path, 'app', app_routing_module_name)
         if shared:
-            app_routing_module_name = 'app-routing.module.tns.ts'
+            app_routing_module_name = 'app.routes.ts'
             app_routing_module_path = os.path.join(app_path, 'src', 'app', app_routing_module_name)
         old_string = "import { HomeComponent } from './home/home.component';"
         new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
