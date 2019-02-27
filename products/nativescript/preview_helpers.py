@@ -50,13 +50,17 @@ class Preview(object):
         elif platform is Platform.ANDROID:
             Adb.install(package_android, device_info.id)
 
+    # noinspection PyUnresolvedReferences
     @staticmethod
     def get_url(output):
-        """Get preview URL form tns log.This is the url you need to load in Preview app
-           in order to see and sync your project"""
+        """
+        Get preview URL form tns log.
+        This is the url you need to load in Preview app in order to see and sync your project.
+        """
         url = re.findall(r"(nsplay[^\s']+)", output)[0]
         if Settings.PYTHON_VERSION < 3:
             import urllib
+            # pylint: disable=no-member
             url = urllib.unquote(url)
         else:
             from urllib.parse import unquote
