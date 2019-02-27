@@ -1,6 +1,5 @@
 import logging
 import os
-
 import time
 
 from core.enums.os_type import OSType
@@ -61,11 +60,11 @@ class Adb(object):
         :return: True if running, False if not running.
         """
         if Settings.HOST_OS is OSType.WINDOWS:
-            command = "shell dumpsys window windows | findstr mFocusedApp"
+            command = "shell dumpsys window windows | findstr mCurrentFocus"
         else:
-            command = "shell dumpsys window windows | grep -E 'mFocusedApp'"
+            command = "shell dumpsys window windows | grep -E 'mCurrentFocus'"
         result = Adb.__run_adb_command(command=command, device_id=device_id, timeout=10, fail_safe=True)
-        return bool('ActivityRecord' in result.output)
+        return bool('Window' in result.output)
 
     @staticmethod
     def wait_until_boot(device_id, timeout=180, check_interval=3):
