@@ -88,6 +88,7 @@ class NGGenE2ETestsNS(TnsRunTest):
         File.replace(path=app_routing_module_path, old_string='HomeComponent', new_string='ComponentTestComponent')
 
         # Verify app is updated
-        logs = [app_module_name, app_routing_module_name, 'Successfully synced application']
+        logs = [app_module_name.replace('.tns', ''), app_routing_module_name.replace('.tns', ''),
+                'Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=logs, timeout=120)
         device.wait_for_text(text='component-test works!')

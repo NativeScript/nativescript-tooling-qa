@@ -3,7 +3,6 @@ Tests for `ng g` in context of shared application.
 """
 import unittest
 
-from core.base_test.tns_run_test import TnsRunTest
 from core.base_test.tns_test import TnsTest
 from core.settings import Settings
 from core.utils.file_utils import Folder
