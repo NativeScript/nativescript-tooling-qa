@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # Run unit tests
 python -m nose core_tests/unit
