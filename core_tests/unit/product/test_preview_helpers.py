@@ -6,7 +6,7 @@ from products.nativescript.preview_helpers import Preview
 
 
 # noinspection PyMethodMayBeStatic
-class SyncMessagesTests(unittest.TestCase):
+class PreviewHelperTests(unittest.TestCase):
     current_folder = os.path.dirname(os.path.realpath(__file__))
 
     def test_01_constants(self):

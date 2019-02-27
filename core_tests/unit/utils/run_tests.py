@@ -1,9 +1,10 @@
 import os
+import time
 import unittest
 
-import time
 from nose.tools import timed
 
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
@@ -36,6 +37,7 @@ class RunTests(unittest.TestCase):
         assert result.output == '', 'Output should be empty.'
         assert self.current_file in File.read(path=out_file)
 
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'Skip on Windows.')
     def test_03_run_command_with_pipe(self):
         result = run(cmd='echo "test case" | wc -w ', wait=True, timeout=1)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'

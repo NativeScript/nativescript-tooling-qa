@@ -50,10 +50,16 @@ class Preview(object):
         elif platform is Platform.ANDROID:
             Adb.install(package_android, device_info.id)
 
+    # noinspection PyUnresolvedReferences
     @staticmethod
     def get_url(output):
-        """Get preview URL form tns log.This is the url you need to load in Preview app
-           in order to see and sync your project"""
+        # pylint: disable=no-member
+        # pylint: disable=no-name-in-module
+        # pylint: disable=import-error
+        """
+        Get preview URL form tns log.
+        This is the url you need to load in Preview app in order to see and sync your project.
+        """
         url = re.findall(r"(nsplay[^\s']+)", output)[0]
         if Settings.PYTHON_VERSION < 3:
             import urllib
@@ -67,14 +73,16 @@ class Preview(object):
 
     @staticmethod
     def run_app(url, device_id, platform):
-        """Runs your project in the Preview App on simulator or emulator"""
+        """
+        Runs project in the Preview App on simulator or emulator.
+        """
         if platform is Platform.IOS:
             cmd = "xcrun simctl openurl {0} {1}.".format(device_id, url)
             result = run(cmd)
             assert 'error' not in result.output
         elif platform is Platform.ANDROID:
-            cmd = '{0} -s {1} shell am start -a android.intent.action.VIEW -d \
-            "{2}" org.nativescript.preview'.format(ADB_PATH, device_id, url)
+            cmd = '{0} -s {1} shell am start -a android.intent.action.VIEW -d "{2}" org.nativescript.preview' \
+                .format(ADB_PATH, device_id, url)
             result = run(cmd)
             assert 'error' not in result.output
 
