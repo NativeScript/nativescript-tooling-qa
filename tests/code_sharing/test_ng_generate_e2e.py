@@ -1,3 +1,6 @@
+"""
+Tests for `ng g` during livesync.
+"""
 import os
 import unittest
 

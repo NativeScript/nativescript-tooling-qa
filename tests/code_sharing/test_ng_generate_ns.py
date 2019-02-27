@@ -1,5 +1,5 @@
 """
-Tests for `ng g` in context of shared application.
+Tests for `ng g` in context of NativeScript only application.
 """
 import unittest
 
