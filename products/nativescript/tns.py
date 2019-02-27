@@ -13,8 +13,8 @@ from core.utils.process import Process
 from core.utils.run import run
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
-from products.nativescript.tns_paths import TnsPaths
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.tns_paths import TnsPaths
 
 
 class Tns(object):
@@ -388,8 +388,8 @@ class Tns(object):
         result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify,
                                   wait=wait, log_trace=log_trace, timeout=timeout)
         if verify:
-            strings = ['Use NativeScript Playground app and scan the QR code above to preview '\
-                        'the application on your device']
-            TnsLogs.wait_for_log(result.log_file, strings)
+            strings = [
+                'Use NativeScript Playground app and scan the QR code above to preview the application on your device']
+            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         return result
