@@ -63,6 +63,8 @@ class Preview(object):
             # pylint: disable=no-member
             url = urllib.unquote(url)
         else:
+            # pylint: disable=no-name-in-module
+            # pylint: disable=import-error
             from urllib.parse import unquote
             url = unquote(url, 'UTF-8')
         url = url.replace(r'?', r'\?')
