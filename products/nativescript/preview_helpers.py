@@ -71,14 +71,16 @@ class Preview(object):
 
     @staticmethod
     def run_app(url, device_id, platform):
-        """Runs your project in the Preview App on simulator or emulator"""
+        """
+        Runs project in the Preview App on simulator or emulator.
+        """
         if platform is Platform.IOS:
             cmd = "xcrun simctl openurl {0} {1}.".format(device_id, url)
             result = run(cmd)
             assert 'error' not in result.output
         elif platform is Platform.ANDROID:
-            cmd = '{0} -s {1} shell am start -a android.intent.action.VIEW -d \
-            "{2}" org.nativescript.preview'.format(ADB_PATH, device_id, url)
+            cmd = '{0} -s {1} shell am start -a android.intent.action.VIEW -d "{2}" org.nativescript.preview' \
+                .format(ADB_PATH, device_id, url)
             result = run(cmd)
             assert 'error' not in result.output
 
