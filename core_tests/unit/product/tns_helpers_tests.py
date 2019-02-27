@@ -3,13 +3,15 @@ import unittest
 
 from core.enums.platform_type import Platform
 from core.settings import Settings
+from core.utils.file_utils import File
 from data.changes import Changes
+from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns_logs import TnsLogs
 
 
 # noinspection PyMethodMayBeStatic
-class SyncMessagesTests(unittest.TestCase):
+class TnsHelpersTests(unittest.TestCase):
 
     def test_01_constants(self):
         assert len(TnsLogs.SKIP_NODE_MODULES) == 2
@@ -157,6 +159,13 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Project successfully built.' not in logs
         assert 'Skipping prepare.' not in logs
         assert 'Successfully transferred main-view-model.js' in logs
+
+    @unittest.skipIf(os.environ.get('TRAVIS', None) is not None, 'Skip on Travis.')
+    def test_40_get_preview_url(self):
+        current_folder = os.path.dirname(os.path.realpath(__file__))
+        text = File.read(path=os.path.join(current_folder, 'preview.log'))
+        url = Preview.get_url(output=text)
+        assert 'nsplay://boot\\?instanceId=' in url
 
 
 if __name__ == '__main__':
