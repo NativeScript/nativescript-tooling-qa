@@ -29,7 +29,7 @@ class NGGenE2ETestsNS(TnsRunTest):
         NG.kill()
 
     def setUp(self):
-        TnsRunTest.setUpClass()
+        TnsRunTest.setUp(self)
         NG.kill()
 
     def tearDown(self):
