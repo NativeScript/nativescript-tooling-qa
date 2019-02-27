@@ -59,7 +59,7 @@ class NGGenE2ETestsNS(TnsRunTest):
         TnsAssert.created(app_name=app_name, app_data=None)
 
         # Run app initially
-        result = Tns.run_android(app_name=app_name, emulator=True, hmr=True)
+        result = Tns.run(app_name=app_name, platform=platform, emulator=True, hmr=True)
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, bundle=True, hmr=True, app_type=AppType.NG)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
         device.wait_for_text(text='TAP')
