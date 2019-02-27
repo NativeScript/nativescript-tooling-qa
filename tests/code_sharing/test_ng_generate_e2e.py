@@ -18,10 +18,8 @@ from products.nativescript.tns_paths import TnsPaths
 
 
 class NGGenE2ETestsNS(TnsRunTest):
-    ns_app_name = Settings.AppName.DEFAULT
-    shared_app_name = 'SharedApp'
-    ns_app_path = TnsPaths.get_app_path(app_name=ns_app_name)
-    shared_app_path = TnsPaths.get_app_path(app_name=shared_app_name)
+    app_name = Settings.AppName.DEFAULT
+    app_path = TnsPaths.get_app_path(app_name=app_name)
 
     @classmethod
     def setUpClass(cls):
@@ -37,18 +35,18 @@ class NGGenE2ETestsNS(TnsRunTest):
         TnsRunTest.tearDown(self)
 
     def test_100_ns_generate_during_run_android(self):
-        NGGenE2ETestsNS.workflow(app_name=self.ns_app_name, device=self.emu, platform=Platform.ANDROID, shared=False)
+        NGGenE2ETestsNS.workflow(app_name=self.app_name, device=self.emu, platform=Platform.ANDROID, shared=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Skip iOS tests on non macOS machines.')
     def test_100_ns_generate_during_run_ios(self):
-        NGGenE2ETestsNS.workflow(app_name=self.ns_app_name, device=self.sim, platform=Platform.IOS, shared=False)
+        NGGenE2ETestsNS.workflow(app_name=self.app_name, device=self.sim, platform=Platform.IOS, shared=False)
 
     def test_200_shared_generate_during_run_android(self):
-        NGGenE2ETestsNS.workflow(app_name=self.ns_app_name, device=self.emu, platform=Platform.ANDROID, shared=True)
+        NGGenE2ETestsNS.workflow(app_name=self.app_name, device=self.emu, platform=Platform.ANDROID, shared=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Skip iOS tests on non macOS machines.')
     def test_200_shared_generate_during_run_ios(self):
-        NGGenE2ETestsNS.workflow(app_name=self.ns_app_name, device=self.sim, platform=Platform.IOS, shared=True)
+        NGGenE2ETestsNS.workflow(app_name=self.app_name, device=self.sim, platform=Platform.IOS, shared=True)
 
     @staticmethod
     def workflow(app_name, device, platform, shared):
@@ -59,10 +57,13 @@ class NGGenE2ETestsNS(TnsRunTest):
         TnsAssert.created(app_name=app_name, app_data=None)
 
         # Run app initially
+        text = 'TAP'
+        if shared:
+            text = 'Welcome to'
         result = Tns.run(app_name=app_name, platform=platform, emulator=True, hmr=True)
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, bundle=True, hmr=True, app_type=AppType.NG)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
-        device.wait_for_text(text='TAP')
+        device.wait_for_text(text=text)
 
         # Generate module and component
         NG.exec_command(command='g m module-test', cwd=app_path)
