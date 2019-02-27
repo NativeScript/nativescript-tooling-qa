@@ -53,6 +53,9 @@ class Preview(object):
     # noinspection PyUnresolvedReferences
     @staticmethod
     def get_url(output):
+        # pylint: disable=no-member
+        # pylint: disable=no-name-in-module
+        # pylint: disable=import-error
         """
         Get preview URL form tns log.
         This is the url you need to load in Preview app in order to see and sync your project.
@@ -60,11 +63,8 @@ class Preview(object):
         url = re.findall(r"(nsplay[^\s']+)", output)[0]
         if Settings.PYTHON_VERSION < 3:
             import urllib
-            # pylint: disable=no-member
             url = urllib.unquote(url)
         else:
-            # pylint: disable=no-name-in-module
-            # pylint: disable=import-error
             from urllib.parse import unquote
             url = unquote(url, 'UTF-8')
         url = url.replace(r'?', r'\?')
