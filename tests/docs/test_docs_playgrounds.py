@@ -1,3 +1,5 @@
+import os
+
 from nose_parameterized import parameterized
 
 from core.base_test.tns_run_test import TnsRunTest
@@ -14,52 +16,64 @@ class PlaygroundDocSamples(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
 
     test_data = [
-        # ['t01', 'template=play-ng&tutorial=getting-started-ng'],
-        # ['t02', 'template=groceries-js&tutorial=groceries-js'],
-        ['t03', 'template=play-tsc&id=aLjBQg'],
-        ['t04', 'template=play-tsc&id=egSanf'],
-        ['t05', 'template=play-ng&id=MN31oP'],
-        ['t06', 'template=play-ng&id=lpCc2k'],
-        ['t07', 'template=play-tsc&id=h6g8J8'],
-        ['t08', 'template=play-tsc&id=tQRe9Q'],
-        ['t09', 'template=play-tsc&id=o41kGU'],
-        ['t10', 'template=play-tsc&id=qk6ACL'],
-        ['t11', 'template=play-tsc&id=obk2gB'],
-        ['t12', 'template=play-tsc&id=JY218G'],
-        ['t13', 'template=play-js&id=RTWLSH'],
-        ['t14', 'template=play-tsc&id=IrIZ5I'],
-        ['t15', 'template=play-js&id=kIs7uK'],
-        ['t16', 'template=play-tsc&id=8Rhm07'],
-        ['t17', 'template=play-tsc&id=6c9GA0'],
-        ['t18', 'template=play-ng&id=zJ51uY']
+        ['getting_started_ng', 'template=play-ng&tutorial=getting-started-ng', 'Play with NativeScript!'],
+        ['getting_started_js', 'template=groceries-js&tutorial=groceries-js', 'hello world'],
+        ['animate_background_color', 'template=play-tsc&id=aLjBQg', 'Tap to animate'],
+        ['animate_position', 'template=play-tsc&id=egSanf', 'Tap to animate'],
+        ['hub_modal', 'template=play-ng&id=MN31oP', 'Search'],
+        ['hub', 'template=play-ng&id=lpCc2k', 'Search'],
+        ['animation', 'template=play-tsc&id=h6g8J8', 'Run animation'],
+        ['keyframes_animation', 'template=play-tsc&id=tQRe9Q', 'Home'],
+        ['navigation', 'template=play-tsc&id=o41kGU', 'Navigate To Item'],
+        ['navigate_item_page', 'template=play-tsc&id=qk6ACL', 'Featured'],
+        ['layouts', 'template=play-tsc&id=obk2gB', 'Button'],
+        ['stack_layout', 'template=play-tsc&id=JY218G', 'Play with NativeScript!'],
+        ['stack_layout_ng', 'template=play-ng&id=zJ51uY', 'Play with NativeScript!'],
+        ['share_this', 'template=play-js&id=RTWLSH', 'Share This!'],
+        ['action_bar', 'template=play-tsc&id=IrIZ5I', 'Home Alone?'],
+        ['events-js', 'template=play-js&id=kIs7uK', 'Events'],
+        ['events-ts', 'template=play-tsc&id=8Rhm07', 'Events'],
+        ['is_user_iteraction_enabled', 'template=play-tsc&id=6c9GA0', 'TAP']
     ]
 
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
-        Preview.get_app_packages()
         Preview.install_preview_app(cls.emu, Platform.ANDROID)
         if Settings.HOST_OS is OSType.OSX:
             Preview.install_preview_app(cls.sim, Platform.IOS)
             Preview.install_playground_app(cls.sim, Platform.IOS)
-        cls.chrome = Chrome()
+
+    def setUp(self):
+        TnsRunTest.setUp(self)
+        self.chrome = Chrome()
+
+    def tearDown(self):
+        self.chrome.kill()
+        TnsRunTest.tearDown(self)
 
     @classmethod
     def tearDownClass(cls):
-        cls.chrome.kill()
         TnsRunTest.tearDownClass()
 
     @parameterized.expand(test_data)
-    def test(self, name, url):
+    def test(self, name, url, text):
         link = PlaygroundDocSamples.get_link(self.chrome, url)
-        Preview.run_app(url=link, device_id=self.emu.id, platform=Platform.ANDROID)
+        base_screen_path = Settings.TEST_OUT_IMAGES
+        image_name = '{0}_{1}.png'.format(name, str(Platform.ANDROID))
+        Preview.run_url(url=link, device=self.emu)
+        self.emu.wait_for_text(text=text)
+        self.emu.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
         if Settings.HOST_OS == OSType.OSX:
-            Preview.run_app(url=link, device_id=self.emu.id, platform=Platform.IOS)
+            image_name = '{0}_{1}.png'.format(name, str(Platform.IOS))
+            Preview.run_url(url=link, device=self.sim)
+            self.sim.wait_for_text(text=text)
+            self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
 
     # noinspection PyBroadException
     @staticmethod
     def get_link(chrome, url):
-        url = 'https://play.nativescript.org/?{0}'.format(url)
+        url = 'https://play.nativescript.org/?{0}&debug=true'.format(url)
         chrome.open(url)
         link = chrome.driver.find_element_by_xpath("//span[contains(.,'nsplay://boot')]").text
         return link

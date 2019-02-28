@@ -11,14 +11,14 @@ from core.utils.run import run
 class Simctl(object):
 
     @staticmethod
-    def __run_simctl_command(command, wait=True, timeout=60):
+    def run_simctl_command(command, wait=True, timeout=60):
         command = '{0} {1}'.format('xcrun simctl', command)
         return run(cmd=command, wait=wait, timeout=timeout)
 
     # noinspection PyBroadException
     @staticmethod
     def __get_simulators():
-        result = Simctl.__run_simctl_command(command='list --json devices')
+        result = Simctl.run_simctl_command(command='list --json devices')
         try:
             return json.loads(result.output)
         except ValueError:
@@ -28,7 +28,7 @@ class Simctl(object):
     @staticmethod
     def start(simulator_info):
         if simulator_info.id is not None:
-            Simctl.__run_simctl_command(command='boot {0}'.format(simulator_info.id))
+            Simctl.run_simctl_command(command='boot {0}'.format(simulator_info.id))
             Simctl.wait_until_boot(simulator_info)
             return simulator_info
         else:
@@ -43,7 +43,7 @@ class Simctl(object):
                 simulator_info.id = str(sim['udid'])
                 command = 'spawn {0} launchctl print system | grep com.apple.springboard.services'.format(
                     simulator_info.id)
-                service_state = Simctl.__run_simctl_command(command=command)
+                service_state = Simctl.run_simctl_command(command=command)
                 if "M   A   com.apple.springboard.services" in service_state.output:
                     Log.info('Simulator "{0}" booted.'.format(simulator_info.name))
                     return simulator_info
@@ -78,7 +78,7 @@ class Simctl(object):
 
     @staticmethod
     def stop_application(simulator_info, app_id):
-        return Simctl.__run_simctl_command('terminate {0} {1}'.format(simulator_info.id, app_id))
+        return Simctl.run_simctl_command('terminate {0} {1}'.format(simulator_info.id, app_id))
 
     @staticmethod
     def stop_all(simulator_info):
@@ -87,14 +87,14 @@ class Simctl(object):
 
     @staticmethod
     def install(simulator_info, path):
-        result = Simctl.__run_simctl_command('install {0} {1}'.format(simulator_info.id, path))
+        result = Simctl.run_simctl_command('install {0} {1}'.format(simulator_info.id, path))
         assert result.exit_code == 0, 'Failed to install {0} on {1}'.format(path, simulator_info.name)
         assert 'Failed to install the requested application' not in result.output, \
             'Failed to install {0} on {1}'.format(path, simulator_info.name)
 
     @staticmethod
     def uninstall(simulator_info, app_id):
-        result = Simctl.__run_simctl_command('uninstall {0} {1}'.format(simulator_info.id, app_id))
+        result = Simctl.run_simctl_command('uninstall {0} {1}'.format(simulator_info.id, app_id))
         assert result.exit_code == 0, 'Failed to uninstall {0} on {1}'.format(app_id, simulator_info.name)
         assert 'Failed to uninstall the requested application' not in result.output, \
             'Failed to uninstall {0} on {1}'.format(app_id, simulator_info.name)
@@ -109,19 +109,19 @@ class Simctl(object):
     @staticmethod
     def get_screen(sim_id, file_path):
         File.delete(file_path)
-        result = Simctl.__run_simctl_command('io {0} screenshot {1}'.format(sim_id, file_path))
+        result = Simctl.run_simctl_command('io {0} screenshot {1}'.format(sim_id, file_path))
         assert result.exit_code == 0, 'Failed to get screenshot of {0}'.format(sim_id)
         assert File.exists(file_path), 'Failed to get screenshot of {0}'.format(sim_id)
 
     @staticmethod
     def erase(simulator_info):
-        result = Simctl.__run_simctl_command('erase {0}'.format(simulator_info.id))
+        result = Simctl.run_simctl_command('erase {0}'.format(simulator_info.id))
         assert result.exit_code == 0, 'Failed to erase {0}'.format(simulator_info.name)
         Log.info('Erase {0}.'.format(simulator_info.name))
 
     @staticmethod
     def erase_all():
-        result = Simctl.__run_simctl_command('erase all')
+        result = Simctl.run_simctl_command('erase all')
         assert result.exit_code == 0, 'Failed to erase all iOS Simulators.'
         Log.info('Erase all iOS Simulators.')
 
