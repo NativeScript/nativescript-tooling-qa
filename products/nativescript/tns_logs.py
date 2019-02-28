@@ -237,7 +237,8 @@ class TnsLogs(object):
             logs.extend(TnsLogs.__webpack_messages())
             logs.append(file_name)
         else:
-            logs.append('Successfully synced {0} for platform {1}'.format(file_name, str(platform)))
+            logs.append('Successfully synced')
+            logs.append('{0} for platform {1}'.format(file_name.replace('.ts', '.js'), str(platform)))
         if hmr:
             logs.append('hot-update.json')
             logs.append('HMR: Checking for updates to the bundle with hmr hash')

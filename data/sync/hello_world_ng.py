@@ -3,7 +3,6 @@ Sync changes on NG project helper.
 """
 
 import os
-
 from core.enums.app_type import AppType
 from core.enums.platform_type import Platform
 from core.settings import Settings
@@ -12,6 +11,7 @@ from data.const import Colors
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.preview_helpers import Preview
 
 
 def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, aot=False, hmr=False,
@@ -86,3 +86,56 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
 
     # Assert final and initial states are same
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
+
+
+def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
+                           instrumented=False):
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, platform=platform,
+                             device=device, instrumented=instrumented)
+
+    # Verify app looks properly
+    device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
+    device.wait_for_main_color(color=Colors.WHITE)
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
+    device.get_screen(path=initial_state)
+    return result
+
+
+def preview_sync_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, uglify=False,
+                                aot=False, instrumented=False):
+    result = preview_hello_world_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+                                    uglify=uglify, aot=aot, instrumented=instrumented)
+
+    # Edit TS file and verify changes are applied
+    Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
+    device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
+                                                    file_name='item.service.ts', hmr=hmr, instrumented=instrumented)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+
+    # Edit HTML file and verify changes are applied
+    Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
+    if platform == Platform.IOS:
+        for number in ["10", "1"]:
+            device.wait_for_text(text=number)
+    else:
+        for number in ["8", "9"]:
+            device.wait_for_text(text=number)
+    assert not device.is_text_visible(text=Changes.NGHelloWorld.TS.new_text)
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='items.component.html',
+                                                    hmr=hmr, instrumented=instrumented)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+
+    # Edit CSS file and verify changes are applied
+    Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
+    device.wait_for_main_color(color=Colors.DARK)
+    if platform == Platform.IOS:
+        for number in ["10", "1"]:
+            device.wait_for_text(text=number)
+    else:
+        for number in ["8", "9"]:
+            device.wait_for_text(text=number)
+    assert not device.is_text_visible(text=Changes.NGHelloWorld.TS.new_text)
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='app.css',
+                                                    hmr=hmr, instrumented=instrumented)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)

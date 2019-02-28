@@ -1,6 +1,6 @@
 import os
 import re
-
+import time
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
@@ -8,6 +8,8 @@ from core.utils.device.adb import Adb, ADB_PATH
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File
 from core.utils.run import run
+from products.nativescript.tns import Tns
+from products.nativescript.tns_logs import TnsLogs
 
 
 class Preview(object):
@@ -72,9 +74,9 @@ class Preview(object):
         return url
 
     @staticmethod
-    def run_app(url, device_id, platform):
+    def run_url(url, device_id, platform):
         """
-        Runs project in the Preview App on simulator or emulator.
+        Runs your project in the Preview App on simulator or emulator
         """
         if platform is Platform.IOS:
             cmd = "xcrun simctl openurl {0} {1}.".format(device_id, url)
@@ -93,3 +95,22 @@ class Preview(object):
         dismiss_sim_alert = os.path.join(TEST_RUN_HOME, 'assets', 'scripts', 'send_enter_to_simulator.scpt')
         command = "osascript " + dismiss_sim_alert
         run(command)
+
+    @staticmethod
+    def run_app(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
+                instrumented=False):
+        result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify)
+
+        # Read the log and extract the url to load the app on emulator
+        log = File.read(result.log_file)
+        url = Preview.get_url(log)
+        Preview.run_url(url, device.id, platform)
+        # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
+        if platform == Platform.IOS:
+            time.sleep(2)
+            Preview.dismiss_simulator_alert()
+
+        # Verify logs
+        strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        return result
