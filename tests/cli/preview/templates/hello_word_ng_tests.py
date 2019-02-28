@@ -61,28 +61,28 @@ class PreviewNGTests(TnsPreviewNGTests):
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_preview_ios(self):
-        """Preview project on emulator. Make valid changes in TS, CSS and HTML"""
+        """Preview project on simulator. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS,
                                     device=self.sim, instrumented=True)
 
     def test_200_preview_android_bundle(self):
-        """Preview project on emulator. Make valid changes in TS, CSS and HTML"""
+        """Preview project on emulator with --bundle. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.ANDROID,
                                     device=self.emu, instrumented=True, bundle=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_200_preview_ios_hmr(self):
-        """Preview project on emulator. Make valid changes in TS, CSS and HTML"""
+        """Preview project on simulator with --bundle. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS,
                                     device=self.sim, instrumented=True, bundle=True)
 
     def test_205_preview_android_hmr(self):
-        """Preview project on emulator. Make valid changes in TS, CSS and HTML"""
+        """Preview project on emulator with --hmr. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.ANDROID,
                                     device=self.emu, instrumented=True, hmr=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_205_preview_ios_hmr(self):
-        """Preview project on emulator. Make valid changes in TS, CSS and HTML"""
+        """Preview project on simulator with --hmr. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS,
                                     device=self.sim, instrumented=True, hmr=True)

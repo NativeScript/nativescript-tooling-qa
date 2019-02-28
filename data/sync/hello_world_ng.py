@@ -87,6 +87,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
     # Assert final and initial states are same
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
+
 def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
                            instrumented=False):
     result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, platform=platform,
@@ -98,6 +99,7 @@ def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, 
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
     return result
+
 
 def preview_sync_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, uglify=False,
                                 aot=False, instrumented=False):
