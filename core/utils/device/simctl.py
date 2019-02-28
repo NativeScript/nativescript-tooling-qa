@@ -88,9 +88,14 @@ class Simctl(object):
     @staticmethod
     def install(simulator_info, path):
         result = Simctl.run_simctl_command('install {0} {1}'.format(simulator_info.id, path))
-        assert result.exit_code == 0, 'Failed to install {0} on {1}'.format(path, simulator_info.name)
-        assert 'Failed to install the requested application' not in result.output, \
-            'Failed to install {0} on {1}'.format(path, simulator_info.name)
+        if result.exit_code != 0:
+            # Since Xcode 10 sometimes xcrun simctl install fails first time (usually with iPhone X* devices).
+            Log.info('Failed to install {0} on {1}.'.format(path, simulator_info.name))
+            Log.info('Retry...')
+            result = Simctl.run_simctl_command('install {0} {1}'.format(simulator_info.id, path))
+            assert result.exit_code == 0, 'Failed to install {0} on {1}'.format(path, simulator_info.name)
+            assert 'Failed to install the requested application' not in result.output, \
+                'Failed to install {0} on {1}'.format(path, simulator_info.name)
 
     @staticmethod
     def uninstall(simulator_info, app_id):

@@ -4,6 +4,7 @@ import time
 
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
 from core.utils.device.adb import Adb
@@ -87,6 +88,7 @@ class Preview(object):
         url = url.replace(r'&', r'\&')
 
         # Run url
+        Log.info('Open "{0}" on {1}.'.format(url, device.name))
         if device.type == DeviceType.EMU or device.type == DeviceType.ANDROID:
             cmd = 'shell am start -a android.intent.action.VIEW -d "{0}" org.nativescript.preview'.format(url)
             result = Adb.run_adb_command(command=cmd, device_id=device.id)

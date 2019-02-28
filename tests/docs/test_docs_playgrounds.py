@@ -28,7 +28,7 @@ class PlaygroundDocSamples(TnsRunTest):
         ['navigate_item_page', 'template=play-tsc&id=qk6ACL', 'Featured'],
         ['layouts', 'template=play-tsc&id=obk2gB', 'Button'],
         ['stack_layout', 'template=play-tsc&id=JY218G', 'Play with NativeScript!'],
-        ['stack_layout_ng', 'template=play-ng&id=zJ51uY', 'Play with NativeScript!'],
+        ['dialogs', 'template=play-ng&id=zJ51uY', 'Confirm'],
         ['share_this', 'template=play-js&id=RTWLSH', 'Share This!'],
         ['action_bar', 'template=play-tsc&id=IrIZ5I', 'Home Alone?'],
         ['events-js', 'template=play-js&id=kIs7uK', 'Events'],
