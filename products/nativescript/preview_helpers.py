@@ -1,7 +1,6 @@
 import os
 import re
 import time
-import urllib
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
