@@ -40,6 +40,18 @@ class Adb(object):
         return devices
 
     @staticmethod
+    def __find_aapt():
+        """
+        Find aapt tool under $ANDROID_HOME/build-tools
+        :return: Path to appt.
+        """
+        aapt_executable = 'aapt'
+        if Settings.HOST_OS is OSType.WINDOWS:
+            aapt_executable += '.exe'
+        base_path = os.path.join(ANDROID_HOME, 'build-tools')
+        return File.find(base_path=base_path, file_name=aapt_executable, exact_match=True)
+
+    @staticmethod
     def restart():
         Log.info("Restart adb.")
         Adb.__run_adb_command('kill-server')
@@ -51,6 +63,16 @@ class Adb(object):
         # pylint: disable=unused-argument
         # TODO: Implement it!
         return []
+
+    @staticmethod
+    def get_package_permission(apk_file):
+        """
+        Get permission from apk file.
+        :param apk_file: Path to apk file.
+        :return: Permissions as string.
+        """
+        command = Adb.__find_aapt() + ' d permissions ' + apk_file
+        return run(cmd=command, log_level=logging.DEBUG)
 
     @staticmethod
     def is_running(device_id):

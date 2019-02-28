@@ -88,6 +88,19 @@ class Folder(object):
                 total_size += os.path.getsize(file_path)
         return total_size
 
+    @staticmethod
+    def get_current_folder():
+        current_folder = os.getcwd()
+        print "Current dir: " + current_folder
+        return current_folder
+
+    @staticmethod
+    def navigate_to(folder, relative_current_folder=True):
+        new_folder = folder
+        if relative_current_folder:
+            new_folder = os.path.join(Folder.get_current_folder(), folder).replace("\"", "")
+        print "Navigate to: " + new_folder
+        os.chdir(new_folder)
 
 # noinspection PyUnresolvedReferences
 class File(object):
@@ -158,6 +171,28 @@ class File(object):
             File.write(path, text='')
         else:
             raise IOError('Error: %s file not found' % path)
+
+    @staticmethod
+    def find(base_path, file_name, exact_match=False, match_index=0):
+        """
+        Find file in path.
+        :param base_path: Base path.
+        :param file_name: File/folder name.
+        :param exact_match: If True it will match exact file/folder name
+        :param match_index: Index of match (all matches are sorted by path len, 0 will return closest to root)
+        :return: Path to file.
+        """
+        matches = []
+        for root, dirs, files in os.walk(base_path, followlinks=True):
+            for current_file in files:
+                if exact_match:
+                    if file_name == current_file:
+                        matches.append(os.path.join(root, current_file))
+                else:
+                    if file_name in current_file:
+                        matches.append(os.path.join(root, current_file))
+        matches.sort(key=lambda s: len(s))
+        return matches[match_index]
 
     @staticmethod
     def find_by_extension(folder, extension):
