@@ -65,7 +65,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
                                        device=self.emu, instrumented=True, bundle=True)
 
-    def test_110_preview_android_hmr(self):
+    def test_205_preview_android_hmr(self):
         """Preview project on emulator. Make valid changes in JS, CSS and XML"""
         # preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,

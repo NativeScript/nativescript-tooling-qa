@@ -3,10 +3,8 @@ Sync changes on JS/TS project helper.
 """
 
 import os
-import time
 
 from core.enums.app_type import AppType
-from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.wait import Wait
@@ -133,20 +131,8 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
 
 def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
                               instrumented=False):
-    result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify)
-
-    # Read the log and extract the url to load the app on emulator
-    log = File.read(result.log_file)
-    url = Preview.get_url(log)
-    Preview.run_app(url, device.id, platform)
-    # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
-    if platform == Platform.IOS:
-        time.sleep(2)
-        Preview.dismiss_simulator_alert()
-
-    # Verify logs
-    strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, platform=platform,
+                             device=device, instrumented=instrumented)
 
     # Verify app looks properly
     device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=60, retry_delay=5)
