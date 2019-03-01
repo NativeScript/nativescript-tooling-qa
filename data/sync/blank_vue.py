@@ -9,6 +9,7 @@ from core.settings import Settings
 from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
+from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
@@ -19,15 +20,15 @@ def __run_vue(app_name, platform, bundle, hmr):
     return Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
 
 
-def __preview_vue(app_name, bundle, hmr):
+def __preview_vue(app_name, platform, device, bundle, hmr):
     # Execute `tns run` and wait until logs are OK
-    return Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
+    return Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform, device=device)
 
 
 def __workflow(preview, app_name, platform, device, bundle=False, hmr=False):
     # Execute tns command
     if preview:
-        result = __preview_vue(app_name=app_name, bundle=bundle, hmr=hmr)
+        result = __preview_vue(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
     else:
         result = __run_vue(app_name=app_name, platform=platform, bundle=bundle, hmr=hmr)
 
