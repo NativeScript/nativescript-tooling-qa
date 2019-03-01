@@ -88,17 +88,7 @@ class TnsLogs(object):
 
         # File transfer messages
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
-                                                    bundle=bundle, hmr=hmr, uglify=uglify, aot=aot))
-        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-            if not bundle and not hmr:
-                if platform == Platform.IOS:
-                    logs.append('Successfully transferred all files on device')
-            if bundle or hmr:
-                if platform == Platform.IOS:
-                    logs.append('Successfully transferred bundle.js on device')
-                    logs.append('Successfully transferred package.json on device')
-                    logs.append('Successfully transferred starter.js on device')
-                    logs.append('Successfully transferred vendor.js on device')
+                                                    bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, app_type=app_type))
 
         # App restart messages:
         if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
@@ -125,7 +115,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, aot=False):
+    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, aot=False, app_type=None):
         logs = []
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
@@ -160,6 +150,18 @@ class TnsLogs(object):
             else:
                 # If bundle is not used then TS files are transpiled and synced as JS
                 logs.append('Successfully transferred {0}'.format(file_name.replace('.ts', '.js')))
+
+        # Migrated
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            if platform == Platform.IOS:
+                if (bundle or hmr) and app_type != AppType.VUE:
+                    logs.append('Successfully transferred bundle.js on device')
+                    logs.append('Successfully transferred package.json on device')
+                    logs.append('Successfully transferred starter.js on device')
+                    logs.append('Successfully transferred vendor.js on device')
+                else:
+                    logs.append('Successfully transferred all files on device')
+
         return logs
 
     @staticmethod
