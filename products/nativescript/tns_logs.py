@@ -64,6 +64,7 @@ class TnsLogs(object):
         :param file_name: Name of changed file.
         :param instrumented: If true it will return logs we place inside app (see files in assets/logs).
         :param plugins: List of plugins.
+        :param aot: True if `--env.aot is specified.`
         :return: Array of strings.
         """
         if plugins is None:
@@ -73,35 +74,31 @@ class TnsLogs(object):
             bundle = True
 
         # Generate prepare messages
-        if not app_type == AppType.NG:
-            if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-                logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=plugins))
 
         # Generate build messages
         # TODO: Check if file is in app resources and require native build
-        if not app_type == AppType.NG:
-            logs.extend(TnsLogs.build_messages(platform=platform, run_type=run_type))
+        logs.extend(TnsLogs.build_messages(platform=platform, run_type=run_type))
 
         # App install messages
-        if not app_type == AppType.NG:
-            if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-                logs.append('Installing on device')
-                logs.append('Successfully installed')
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            logs.append('Installing on device')
+            logs.append('Successfully installed')
 
         # File transfer messages
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
                                                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot))
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-            if not app_type == AppType.NG:
-                if not bundle and not hmr:
-                    if platform == Platform.IOS:
-                        logs.append('Successfully transferred all files on device')
-                if bundle or hmr:
-                    if platform == Platform.IOS:
-                        logs.append('Successfully transferred bundle.js on device')
-                        logs.append('Successfully transferred package.json on device')
-                        logs.append('Successfully transferred starter.js on device')
-                        logs.append('Successfully transferred vendor.js on device')
+            if not bundle and not hmr:
+                if platform == Platform.IOS:
+                    logs.append('Successfully transferred all files on device')
+            if bundle or hmr:
+                if platform == Platform.IOS:
+                    logs.append('Successfully transferred bundle.js on device')
+                    logs.append('Successfully transferred package.json on device')
+                    logs.append('Successfully transferred starter.js on device')
+                    logs.append('Successfully transferred vendor.js on device')
 
         # App restart messages:
         if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
@@ -139,7 +136,8 @@ class TnsLogs(object):
             if bundle:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
-                logs.append(file_name)
+                if '.vue' not in file_name:
+                    logs.append(file_name)
                 # When env.aot html files are processed differently and you wont see
                 # the exact file name in the log
                 if aot:
@@ -211,18 +209,15 @@ class TnsLogs(object):
 
     @staticmethod
     def __webpack_messages():
-        logs = []
-        logs.append('File change detected.')
-        logs.append('Starting incremental webpack compilation...')
-        logs.append('Webpack compilation complete.')
-        logs.append('Webpack build done!')
-        return logs
+        return ['File change detected.',
+                'Starting incremental webpack compilation...',
+                'Webpack compilation complete.',
+                'Webpack build done!']
 
     @staticmethod
     def preview_initial_messages(platform, bundle=False, hmr=False, instrumented=False):
         logs = ['Start sending initial files for platform {0}'.format(str(platform)),
                 'Successfully sent initial files for platform {0}'.format(str(platform))]
-
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
         if instrumented:
