@@ -11,6 +11,7 @@ from core.utils.git import Git
 from core.utils.gradle import Gradle
 from core.utils.npm import Npm
 from data.templates import Template
+from products.nativescript.preview_helpers import Preview
 from products.nativescript.tns import Tns
 
 
@@ -130,7 +131,7 @@ def __install_schematics():
     Npm.install(package=Settings.Packages.NS_SCHEMATICS, folder=Settings.TEST_RUN_HOME)
 
 
-def prepare(clone_templates=True, install_ng_cli=False):
+def prepare(clone_templates=True, install_ng_cli=False, get_preivew_packages=False):
     Log.info('================== Prepare Test Run ==================')
     __cleanup()
     __install_ns_cli()
@@ -140,5 +141,7 @@ def prepare(clone_templates=True, install_ng_cli=False):
         __install_schematics()
     if clone_templates:
         __get_templates()
+    if get_preivew_packages:
+        Preview.get_app_packages()
 
     Log.settings()

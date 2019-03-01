@@ -17,6 +17,7 @@ class Chrome(object):
         path = ChromeDriverManager().install()
         Log.info('Starting Google Chrome ...')
         self.driver = webdriver.Chrome(executable_path=path)
+        self.driver.implicitly_wait(60)
         Log.info('Google Chrome started!')
 
     def open(self, url):

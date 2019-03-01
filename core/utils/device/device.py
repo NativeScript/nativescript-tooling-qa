@@ -76,6 +76,12 @@ class Device(object):
         return text
 
     def wait_for_text(self, text, timeout=60, retry_delay=1):
+        """
+        Wait until text is visible on device.
+        :param text: Text as string.
+        :param timeout: Timeout in seconds.
+        :param retry_delay: Retry interval in seconds.
+        """
         t_end = time.time() + timeout
         found = False
         error_msg = '{0} NOT found on {1}.'.format(text, self.name)

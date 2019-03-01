@@ -2,10 +2,12 @@ import os
 import re
 import time
 
+from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
-from core.utils.device.adb import Adb, ADB_PATH
+from core.utils.device.adb import Adb
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File
 from core.utils.run import run
@@ -62,6 +64,8 @@ class Preview(object):
         """
         Get preview URL form tns log.
         This is the url you need to load in Preview app in order to see and sync your project.
+        :param output: Output of `tns preview` command.
+        :return: Playground url.
         """
         url = re.findall(r"(nsplay[^\s']+)", output)[0]
         if Settings.PYTHON_VERSION < 3:
@@ -70,24 +74,30 @@ class Preview(object):
         else:
             from urllib.parse import unquote
             url = unquote(url, 'UTF-8')
-        url = url.replace(r'?', r'\?')
-        url = url.replace(r'&', r'\&')
         return url
 
     @staticmethod
-    def run_url(url, device_id, platform):
+    def run_url(url, device):
         """
-        Runs your project in the Preview App on simulator or emulator
+        Runs project in the Preview App.
+        :param url: Playground url.
+        :param device: DeviceInfo object.
         """
-        if platform is Platform.IOS:
-            cmd = "xcrun simctl openurl {0} {1}.".format(device_id, url)
-            result = run(cmd)
+        # Url needs to be escaped before open with adb or simctl
+        url = url.replace(r'?', r'\?')
+        url = url.replace(r'&', r'\&')
+
+        # Run url
+        Log.info('Open "{0}" on {1}.'.format(url, device.name))
+        if device.type == DeviceType.EMU or device.type == DeviceType.ANDROID:
+            cmd = 'shell am start -a android.intent.action.VIEW -d "{0}" org.nativescript.preview'.format(url)
+            result = Adb.run_adb_command(command=cmd, device_id=device.id)
             assert 'error' not in result.output
-        elif platform is Platform.ANDROID:
-            cmd = '{0} -s {1} shell am start -a android.intent.action.VIEW -d "{2}" org.nativescript.preview' \
-                .format(ADB_PATH, device_id, url)
-            result = run(cmd)
+        elif device.type == DeviceType.SIM:
+            result = Simctl.run_simctl_command(command='openurl {0} {1}.'.format(device.id, url))
             assert 'error' not in result.output
+        else:
+            raise NotImplementedError('Open url not implemented for real iOS devices.')
 
     @staticmethod
     def dismiss_simulator_alert():
@@ -104,7 +114,7 @@ class Preview(object):
         # Read the log and extract the url to load the app on emulator
         log = File.read(result.log_file)
         url = Preview.get_url(log)
-        Preview.run_url(url, device.id, platform)
+        Preview.run_url(url=url, device=device)
         # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
         if platform == Platform.IOS:
             time.sleep(2)
