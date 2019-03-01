@@ -91,12 +91,15 @@ class TnsLogs(object):
                                                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, app_type=app_type))
 
         # App restart messages:
-        if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
-            logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
-                                                       instrumented=instrumented, app_type=app_type))
+        if RunType.UNKNOWN:
+            Log.info('Can not define if app should be restarted or not.')
         else:
-            logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type,
-                                                       file_name=file_name, hmr=hmr))
+            if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
+                logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
+                                                           instrumented=instrumented, app_type=app_type))
+            else:
+                logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type,
+                                                           file_name=file_name, hmr=hmr))
 
         # Add message for successful sync
         app_id = TnsPaths.get_bundle_id(app_name)
