@@ -15,7 +15,7 @@ ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
 
 class Adb(object):
     @staticmethod
-    def __run_adb_command(command, device_id=None, wait=True, timeout=60, fail_safe=False, log_level=logging.DEBUG):
+    def run_adb_command(command, device_id=None, wait=True, timeout=60, fail_safe=False, log_level=logging.DEBUG):
         if device_id is None:
             command = '{0} {1}'.format(ADB_PATH, command)
         else:
@@ -28,7 +28,7 @@ class Adb(object):
         Get IDs of available android devices.
         """
         devices = []
-        output = Adb.__run_adb_command('devices -l').output
+        output = Adb.run_adb_command('devices -l').output
         # Example output:
         # emulator-5554          device product:sdk_x86 model:Android_SDK_built_for_x86 device:generic_x86
         # HT46BWM02644           device usb:336592896X product:m8_google model:HTC_One_M8 device:htc_m8
@@ -42,9 +42,9 @@ class Adb(object):
     @staticmethod
     def restart():
         Log.info("Restart adb.")
-        Adb.__run_adb_command('kill-server')
+        Adb.run_adb_command('kill-server')
         Process.kill(proc_name='adb')
-        Adb.__run_adb_command('start-server')
+        Adb.run_adb_command('start-server')
 
     @staticmethod
     def get_devices(include_emulators=False):
@@ -63,7 +63,7 @@ class Adb(object):
             command = "shell dumpsys window windows | findstr mCurrentFocus"
         else:
             command = "shell dumpsys window windows | grep -E 'mCurrentFocus'"
-        result = Adb.__run_adb_command(command=command, device_id=device_id, timeout=10, fail_safe=True)
+        result = Adb.run_adb_command(command=command, device_id=device_id, timeout=10, fail_safe=True)
         return bool('Window' in result.output)
 
     @staticmethod
@@ -87,7 +87,7 @@ class Adb(object):
 
     @staticmethod
     def reboot(device_id):
-        Adb.__run_adb_command(command='reboot', device_id=device_id)
+        Adb.run_adb_command(command='reboot', device_id=device_id)
         Adb.wait_until_boot(device_id=device_id)
 
     @staticmethod
@@ -96,18 +96,18 @@ class Adb(object):
         Disable screen lock after time of inactivity.
         :param device_id: Device identifier.
         """
-        Adb.__run_adb_command(command='shell settings put system screen_off_timeout -1', device_id=device_id)
+        Adb.run_adb_command(command='shell settings put system screen_off_timeout -1', device_id=device_id)
 
     @staticmethod
     def pull(device_id, source, target):
-        return Adb.__run_adb_command(command='pull {0} {1}'.format(source, target), device_id=device_id)
+        return Adb.run_adb_command(command='pull {0} {1}'.format(source, target), device_id=device_id)
 
     @staticmethod
     def get_page_source(device_id):
         temp_file = os.path.join(Settings.TEST_OUT_HOME, 'window_dump.xml')
         File.delete(temp_file)
-        Adb.__run_adb_command(command='shell rm /sdcard/window_dump.xml', device_id=device_id)
-        result = Adb.__run_adb_command(command='shell uiautomator dump', device_id=device_id)
+        Adb.run_adb_command(command='shell rm /sdcard/window_dump.xml', device_id=device_id)
+        result = Adb.run_adb_command(command='shell uiautomator dump', device_id=device_id)
         if 'UI hierchary dumped to' in result.output:
             time.sleep(1)
             Adb.pull(device_id=device_id, source='/sdcard/window_dump.xml', target=temp_file)
@@ -145,12 +145,12 @@ class Adb(object):
     def get_screen(device_id, file_path):
         File.delete(path=file_path)
         if Settings.HOST_OS == OSType.WINDOWS:
-            Adb.__run_adb_command(command='exec-out screencap -p > ' + file_path,
-                                  device_id=device_id,
-                                  log_level=logging.DEBUG)
+            Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
+                                device_id=device_id,
+                                log_level=logging.DEBUG)
         else:
-            Adb.__run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
-                                  device_id=device_id)
+            Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
+                                device_id=device_id)
         if File.exists(file_path):
             return
         else:
@@ -158,7 +158,7 @@ class Adb(object):
 
     @staticmethod
     def get_device_version(device_id):
-        result = Adb.__run_adb_command(command='shell getprop ro.build.version.release', device_id=device_id)
+        result = Adb.run_adb_command(command='shell getprop ro.build.version.release', device_id=device_id)
         if result.exit_code == 0:
             return result.output
         else:
@@ -167,7 +167,7 @@ class Adb(object):
     @staticmethod
     def open_home(device_id):
         cmd = 'shell am start -a android.intent.action.MAIN -c android.intent.category.HOME'
-        Adb.__run_adb_command(command=cmd, device_id=device_id)
+        Adb.run_adb_command(command=cmd, device_id=device_id)
         Log.info('Open home screen of {0}.'.format(str(device_id)))
 
     @staticmethod
@@ -177,6 +177,6 @@ class Adb(object):
         :param apk_path: File path to .apk.
         :param device_id: Device id.
         """
-        result = Adb.__run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60)
+        result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60)
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
