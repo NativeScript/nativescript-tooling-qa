@@ -300,6 +300,26 @@ class Tns(object):
         return result
 
     @staticmethod
+    def preview(app_name, bundle=False, hmr=False, log_trace=True, verify=True, timeout=120):
+        """
+        Execute `tns preview` command.
+        :param app_name: Pass --path <app_name>.
+        :param bundle: If true pass --bundle.
+        :param hmr: If true pass --hmr.
+        :param log_trace: If true pass --log trace.
+        :param verify: If true verify some logs.
+        :param timeout: Timeout in seconds.
+        :return: Result of `tns preview` command.
+        """
+        result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, wait=False,
+                                  log_trace=log_trace, timeout=timeout)
+        if verify:
+            strings = [
+                'Use NativeScript Playground app and scan the QR code above to preview the application on your device']
+            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        return result
+
+    @staticmethod
     def test_init(app_name, framework, verify=True):
         """
         Execute `tns test init` command.
@@ -381,15 +401,3 @@ class Tns(object):
         else:
             Process.kill(proc_name='node', proc_cmdline=Settings.Executables.TNS)
             Process.kill_by_commandline(cmdline='webpack.js')
-
-    @staticmethod
-    def preview(app_name, bundle=False, hmr=False, aot=False, uglify=False, wait=False,
-                log_trace=True, verify=True, timeout=60):
-        result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify,
-                                  wait=wait, log_trace=log_trace, timeout=timeout)
-        if verify:
-            strings = [
-                'Use NativeScript Playground app and scan the QR code above to preview the application on your device']
-            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
-        return result

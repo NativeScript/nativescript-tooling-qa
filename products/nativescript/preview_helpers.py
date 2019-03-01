@@ -1,6 +1,7 @@
 import os
 import re
 import time
+
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
@@ -97,9 +98,8 @@ class Preview(object):
         run(command)
 
     @staticmethod
-    def run_app(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
-                instrumented=False):
-        result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify)
+    def run_app(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+        result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator
         log = File.read(result.log_file)
