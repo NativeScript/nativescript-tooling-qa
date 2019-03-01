@@ -20,7 +20,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False,
                      bundle=bundle, aot=aot, uglify=uglify, hmr=hmr)
     # Check logs
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, bundle=bundle,
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented, app_type=AppType.NG)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
 

@@ -56,7 +56,7 @@ class TnsLogs(object):
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
         :param platform: Platform.ANDROID or Platform.IOS.
-        :param run_type: RunType enum value.
+        :param run_type: RunType enum value (None when it can not be defined strictly).
         :param bundle: True if `--bundle is specified.`
         :param hmr: True if `--hmr is specified.`
         :param uglify: True if `--env.uglify is specified.`
@@ -118,7 +118,7 @@ class TnsLogs(object):
     def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, aot=False, app_type=None):
         logs = []
         if file_name is None:
-            if run_type not in [RunType.FIRST_TIME, RunType.FULL]:
+            if run_type not in [RunType.FIRST_TIME, RunType.FULL, RunType.UNKNOWN]:
                 logs.append('Skipping prepare.')
         else:
             if not hmr:
