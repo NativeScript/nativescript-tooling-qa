@@ -165,6 +165,28 @@ class CreateTests(TnsTest):
         assert "android.permission.FLASHLIGHT" in result.output
         assert "android.permission.CAMERA" in result.output
 
+    def test_302_plugin_and_npm_modules_in_same_project(self):
+        Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
+        Tns.platform_add_android(app_name=self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        Tns.plugin_add(plugin_name='nativescript-social-share', path=self.app_name, verify=False)
+        result = Npm.install("install nativescript-appversion --save")
+        # result = run("npm install nativescript-appversion --save")
+        # os.chdir(current_dir)
+        assert "ERR!" not in result.output
+        assert "nativescript-appversion@" in result.output
 
 
+    def test_311_plugin_platforms_should_not_exist_in_tnsmodules(self):
+        # https://github.com/NativeScript/nativescript-cli/issues/3932
+        Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
+
+    def test_320_CFBundleURLTypes_overridden_from_plugin(self):
+        """
+        Test for issue https://github.com/NativeScript/nativescript-cli/issues/2936
+        """
+        Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
+
+
+    def test_401_plugin_add_invalid_plugin(self):
+        Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
 
