@@ -89,9 +89,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, 
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
-                           instrumented=False):
-    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, platform=platform,
+def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
                              device=device, instrumented=instrumented)
 
     # Verify app looks properly
@@ -102,10 +101,9 @@ def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, 
     return result
 
 
-def preview_sync_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, uglify=False,
-                                aot=False, instrumented=False):
+def preview_sync_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
     result = preview_hello_world_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
-                                    uglify=uglify, aot=aot, instrumented=instrumented)
+                                    instrumented=instrumented)
 
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)

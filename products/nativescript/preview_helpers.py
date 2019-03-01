@@ -115,8 +115,8 @@ class Preview(object):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=device)
-        # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
-        if platform == Platform.IOS:
+        # When you run preview on ios simulator on first run confirmation dialog is shown.
+        if device.type == DeviceType.SIM:
             time.sleep(2)
             Preview.dismiss_simulator_alert()
 
