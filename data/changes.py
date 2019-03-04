@@ -112,3 +112,14 @@ class Changes(object):
         HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                          old_value='"item.name"', new_value='"item.id"',
                          old_text=None, new_text=None)
+
+    class BlankVue(object):
+        VUE_SCRIPT = ChangeSet(file_path=os.path.join('app', 'components', 'Home.vue'),
+                               old_value='Blank {N}-Vue app', new_value='TEST APP',
+                               old_text='Blank {N}-Vue app', new_text='TEST APP')
+        VUE_TEMPLATE = ChangeSet(file_path=os.path.join('app', 'components', 'Home.vue'),
+                                 old_value='Home', new_value='TITLE',
+                                 old_text='Home', new_text='TITLE')
+        VUE_STYLE = ChangeSet(file_path=os.path.join('app', 'components', 'Home.vue'),
+                              old_value='font-size: 20;', new_value='font-size: 20; color: red;',
+                              old_color=Colors.DARK, new_color=Colors.RED)

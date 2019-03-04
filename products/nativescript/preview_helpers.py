@@ -108,16 +108,15 @@ class Preview(object):
         run(command)
 
     @staticmethod
-    def run_app(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
-                instrumented=False):
-        result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify)
+    def run_app(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+        result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=device)
-        # When you run preview on ios simulator on first run confirmation dialog is showh. This script will dismiss it
-        if platform == Platform.IOS:
+        # When you run preview on ios simulator on first run confirmation dialog is shown.
+        if device.type == DeviceType.SIM:
             time.sleep(2)
             Preview.dismiss_simulator_alert()
 

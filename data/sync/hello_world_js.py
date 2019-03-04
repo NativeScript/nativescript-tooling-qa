@@ -10,10 +10,10 @@ from core.utils.file_utils import File
 from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
+from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
-from products.nativescript.preview_helpers import Preview
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
@@ -129,9 +129,8 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
-                              instrumented=False):
-    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, platform=platform,
+def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
                              device=device, instrumented=instrumented)
 
     # Verify app looks properly
@@ -143,10 +142,9 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=Fals
     return result
 
 
-def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=False, hmr=False, uglify=False,
-                                   aot=False, instrumented=False):
+def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=False, hmr=False, instrumented=False):
     result = preview_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
-                                       uglify=uglify, aot=aot, instrumented=instrumented)
+                                       instrumented=instrumented)
 
     blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
     # Set changes
