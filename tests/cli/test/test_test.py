@@ -9,21 +9,21 @@ from core.base_test.tns_test import TnsTest
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
-from core.log.log import Log
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_paths import TnsPaths
 
 APP_NAME = Settings.AppName.DEFAULT
 
 TEST_DATA = [
-    ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
-    ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    # ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    # ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    # ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    # ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
     ('qunit-js-android', FrameworkType.QUNIT, Template.HELLO_WORLD_JS, Platform.ANDROID),
 ]
 
@@ -88,13 +88,13 @@ class TestsForTnsTest(TnsTest):
         else:
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
+        # Handle Qunit
+        if framework == FrameworkType.QUNIT:
+            Npm.uninstall(package='karma-qunit', option='--save-dev', folder=TnsPaths.get_app_path(app_name=APP_NAME))
+            Npm.install(package='karma-qunit@2', option='--save-dev', folder=TnsPaths.get_app_path(app_name=APP_NAME))
+
         # Run Tests
-        if Settings.HOST_OS != OSType.WINDOWS:
-            Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
-            # TODO: Modify hello-world test with some real test (importing modules) and run the test again.
-        else:
-            Log.info('Due to unknown issues --justlauch do not exit on Windows when tests are executed on Jenkins!')
-            # TODO: Fix it!
+        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
 
     def test_400_invalid_framework_name(self):
         result = Tns.create(app_name=APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)
