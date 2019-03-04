@@ -20,10 +20,10 @@ class Preview(object):
     @staticmethod
     def get_app_packages():
         """Copy Preview App packages from Shares to local folder"""
-        File.copy(src=Settings.Packages.PREVIEW_APP_IOS, target=TEST_SUT_HOME)
-        File.copy(src=Settings.Packages.PREVIEW_APP_ANDROID, target=TEST_SUT_HOME)
-        File.copy(src=Settings.Packages.PLAYGROUND_APP_IOS, target=TEST_SUT_HOME)
-        File.copy(src=Settings.Packages.PLAYGROUND_APP_ANDROID, target=TEST_SUT_HOME)
+        File.copy(source=Settings.Packages.PREVIEW_APP_IOS, target=TEST_SUT_HOME)
+        File.copy(source=Settings.Packages.PREVIEW_APP_ANDROID, target=TEST_SUT_HOME)
+        File.copy(source=Settings.Packages.PLAYGROUND_APP_IOS, target=TEST_SUT_HOME)
+        File.copy(source=Settings.Packages.PLAYGROUND_APP_ANDROID, target=TEST_SUT_HOME)
 
     @staticmethod
     def unpack_ios_simulator_packages():
