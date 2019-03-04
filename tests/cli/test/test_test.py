@@ -20,10 +20,10 @@ from products.nativescript.tns_paths import TnsPaths
 APP_NAME = Settings.AppName.DEFAULT
 
 TEST_DATA = [
-    # ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
-    # ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
-    # ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
-    # ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
+    ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
     ('qunit-js-android', FrameworkType.QUNIT, Template.HELLO_WORLD_JS, Platform.ANDROID),
 ]
 
