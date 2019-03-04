@@ -66,7 +66,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
                      bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot)
     __verify_snapshot_skipped(snapshot, result)
 
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
