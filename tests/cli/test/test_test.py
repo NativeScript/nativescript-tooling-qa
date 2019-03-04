@@ -5,12 +5,11 @@ import os
 
 from parameterized import parameterized
 
-from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.device.device_manager import DeviceManager
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -49,21 +48,7 @@ def get_data():
 
 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
-class TestsForTnsTest(TnsTest):
-
-    @classmethod
-    def setUpClass(cls):
-        TnsTest.setUpClass()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS is OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
-
-    def setUp(self):
-        TnsTest.setUp(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
+class TestsForTnsTest(TnsRunTest):
 
     @parameterized.expand(get_data())
     def test_100(self, title, framework, template, platform):
