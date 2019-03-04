@@ -19,6 +19,7 @@ from products.nativescript.tns_paths import TnsPaths
 
 class CreateTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
+    app_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'TestApp')
 
     @classmethod
     def setUpClass(cls):
@@ -26,13 +27,20 @@ class CreateTests(TnsTest):
         Tns.create(cls.app_name, app_data=Apps.HELLO_WORLD_JS, update=False)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
+        Folder.copy(cls.app_name, cls.app_path)
 
     def setUp(self):
         TnsTest.setUp(self)
+        Folder.copy(self.app_path, self.app_name)
 
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
+        Folder.clean(cls.app_path)
+
+    def tearDown(self):
+        TnsTest.tearDown(self)
+        Folder.clean(self.app_name)
 
     def test_100_plugin_add_after_platform_add(self):
         result = Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
@@ -167,26 +175,89 @@ class CreateTests(TnsTest):
 
     def test_302_plugin_and_npm_modules_in_same_project(self):
         Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
-        Tns.platform_add_android(app_name=self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        Tns.platform_add_ios(app_name=self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
         Tns.plugin_add(plugin_name='nativescript-social-share', path=self.app_name, verify=False)
-        result = Npm.install("install nativescript-appversion --save")
+        result = Npm.install(package='nativescript-appversion', option='--save')
         # result = run("npm install nativescript-appversion --save")
         # os.chdir(current_dir)
         assert "ERR!" not in result.output
         assert "nativescript-appversion@" in result.output
 
+        Tns.prepare_ios(app_name=self.app_name, verify=False)
+        # Verify plugin and npm module files
+        base_path = os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID_NPM_MODULES_PATH)
+        assert File.exists(os.path.join(base_path, "nativescript-social-share/package.json"))
+        assert File.exists(os.path.join(base_path, "nativescript-social-share/social-share.js"))
+        assert not File.exists(os.path.join(base_path, "nativescript-social-share/social-share.android.js"))
+        assert not File.exists(os.path.join(base_path, "nativescript-social-share/social-share.ios.js"))
+        assert File.exists(os.path.join(base_path, "nativescript-appversion/package.json"))
+        assert File.exists(os.path.join(base_path, "nativescript-appversion/appversion.js"))
+        assert not File.exists(os.path.join(base_path, "nativescript-appversion/appversion.android.js"))
+        assert not File.exists(os.path.join(base_path, "nativescript-appversion/appversion.ios.js"))
 
     def test_311_plugin_platforms_should_not_exist_in_tnsmodules(self):
         # https://github.com/NativeScript/nativescript-cli/issues/3932
         Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
+        Tns.plugin_add(plugin_name='nativescript-ui-listview', path=self.app_name, verify=False)
+        Folder.clean(os.path.join(self.app_name, 'node_modules'))
+        File.delete(os.path.join(self.app_name, 'package.json'))
+        copy = os.path.join('assets', 'issues', 'nativescript-cli-3932', 'nativescript-ui-listview')
+        paste = os.path.join(self.app_name, 'nativescript-ui-listview')
+        Folder.copy(copy, paste)
+        src = os.path.join('assets', 'issues', 'nativescript-cli-3932', 'package.json')
+        target = os.path.join(self.app_name)
+        File.copy(src=src, target=target)
+        Tns.platform_add_ios(app_name=self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
+        Folder.navigate_to(os.path.join(self.app_name, 'nativescript-ui-listview'))
+        Npm.install(option='--ignore-scripts')
+        Folder.navigate_to(os.path.join(Settings.TEST_RUN_HOME))
+        Tns.prepare_ios(app_name=self.app_name)
+        app_path = os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS)
+        assert not File.exists(os.path.join(self.app_name, 'nativescript-ui-listview', 'node_modules',
+                                                'nativescript-ui-core', 'platforms'))
+        # assert not File.exists(
+        #     folder + "/TestApp/app/tns_modules/nativescript-ui-listview/node_modules/nativescript-ui-core/platforms")
 
     def test_320_CFBundleURLTypes_overridden_from_plugin(self):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/2936
         """
         Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
-
+        plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'CFBundleURLName-Plugin.tgz')
+        Tns.plugin_add(plugin_path, path=self.app_name)
+        Tns.prepare_ios(app_name=self.app_name)
+        plist = File.read(os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS, self.app_name,
+                                       self.app_name + "-Info.plist"))
+        assert "<key>NSAllowsArbitraryLoads</key>" in plist, \
+            "NSAppTransportSecurity from plugin is not found in final Info.plist"
+        assert "<string>bar</string>" in plist, "CFBundleURLTypes from plugin is not found in final Info.plist"
 
     def test_401_plugin_add_invalid_plugin(self):
         Tns.platform_remove(app_name=self.app_name, platform=Platform.IOS)
+        Tns.platform_remove(app_name=self.app_name, platform=Platform.ANDROID)
+        result = Tns.plugin_add(plugin_name='wd', path=self.app_name, verify=False)
+        assert "wd is not a valid NativeScript plugin" in result.output
+        assert "Verify that the plugin package.json file " + \
+               "contains a nativescript key and try again" in result.output
+        Tns.platform_add_android(self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        Tns.platform_add_ios(self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
+        # Verify iOS only plugin
+        result = Tns.plugin_add(plugin_name='tns-plugin@1.0.2', path=self.app_name, verify=False)
+        assert "tns-plugin is not supported for android" in result.output
+        assert "Successfully installed plugin tns-plugin" in result.output
+
+        # Verify Android only plugin
+        result = Tns.plugin_add(plugin_name='acra-telerik-analytics', path=self.app_name, verify=False)
+        assert "acra-telerik-analytics is not supported for ios" in result.output
+        assert "Successfully installed plugin acra-telerik-analytics" in result.output
+
+        Tns.build_ios(app_name=self.app_name)
+        ios_path = os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS)
+        assert not File.pattern_exists(ios_path, pattern="*.aar")
+        assert not File.pattern_exists(ios_path, pattern="*acra*")
+
+        Tns.build_android(app_name=self.app_name)
+        android_path = os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID)
+        assert File.pattern_exists(android_path, pattern="*.aar")
+        assert File.pattern_exists(android_path, pattern="*acra*")

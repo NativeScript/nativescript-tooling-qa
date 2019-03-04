@@ -195,6 +195,23 @@ class File(object):
         return matches[match_index]
 
     @staticmethod
+    def pattern_exists(directory, pattern):
+        """
+        Check if file pattern exist at location.
+        :param directory: Base directory.
+        :param pattern: File pattern, for example: '*.aar' or '*.android.js'.
+        :return: True if exists, False if does not exist.
+        """
+        found = False
+        for root, dirs, files in os.walk(directory):
+            for basename in files:
+                if fnmatch.fnmatch(basename, pattern):
+                    filename = os.path.join(root, basename)
+                    print pattern + " exists: " + filename
+                    found = True
+        return found
+
+    @staticmethod
     def find_by_extension(folder, extension):
         """
         Find by file extension recursively.
