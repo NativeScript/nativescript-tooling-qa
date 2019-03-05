@@ -7,6 +7,7 @@ import shutil
 import stat
 import tarfile
 
+from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 
@@ -19,13 +20,14 @@ class Folder(object):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
-            except (Exception, IOError, OSError, WindowsError) as error:
+            except Exception as error:
                 Log.info('Failed to clean folder: ' + folder + os.linesep + str(error))
                 Log.info('Retry...')
                 for root, dirs, files in os.walk(folder, topdown=False):
                     for name in files:
                         filename = os.path.join(root, name)
-                        os.chmod(filename, stat.S_IWUSR)
+                        if Settings.HOST_OS != OSType.WINDOWS:
+                            os.chmod(filename, stat.S_IWUSR)
                         os.remove(filename)
                     for name in dirs:
                         os.rmdir(os.path.join(root, name))
