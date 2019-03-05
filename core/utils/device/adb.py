@@ -8,6 +8,7 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
+import re
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -38,6 +39,23 @@ class Adb(object):
                 if include_emulator:
                     devices.append(device_id)
         return devices
+
+    @staticmethod
+    def get_logcat(device_id):
+        """
+        Dump the log and then exit (don't block).
+        :param device_id: Device id.
+        """
+        return Adb.__run_adb_command(command='logcat -d', device_id=device_id, wait=True).output
+
+    @staticmethod
+    def clear_logcat(device_id):
+        """
+        Clear (flush) the entire log.
+        :param device_id: Device id.
+        """
+        Adb.__run_adb_command(command='logcat -c', device_id=device_id, wait=True)
+        print "The logcat on {0} is cleared.".format(device_id)
 
     @staticmethod
     def restart():
@@ -123,23 +141,51 @@ class Adb(object):
             # In such cases return empty string.
             return ''
 
-    # noinspection PyPep8Naming
     @staticmethod
     def is_text_visible(device_id, text, case_sensitive=False):
+        element = Adb.get_element_by_text(device_id, text, case_sensitive)
+        return element is not None
+
+    @staticmethod
+    def convert_element_bounds_to_x_y_coordinates(element):
+        bounds = element.attrib['bounds']
+        bound_groups = re.findall(r"(\d+,\d+)", bounds)
+        x = 0
+        y = 0
+        counter = 0
+        for bound_group in bound_groups:
+            arr_x_y = bound_group.split(",")
+            x = x + int(arr_x_y[0])
+            y = y + int(arr_x_y[1])
+            counter = counter + 1
+        return x/counter, y/counter
+
+    @staticmethod
+    def click_element_by_text(device_id, text, case_sensitive=False):
+        element = Adb.get_element_by_text(device_id, text, case_sensitive)
+        if element is not None:
+            coordinates = Adb.convert_element_bounds_to_x_y_coordinates(element)
+            Adb.__run_adb_command(command="shell input tap " + str(coordinates[0]) + " " + str(coordinates[1]))
+        else:
+            assert False, 'Element with text ' + text + ' not found!'
+
+    # noinspection PyPep8Naming
+    @staticmethod
+    def get_element_by_text(device_id, text, case_sensitive=False):
         import xml.etree.ElementTree as ET
         page_source = Adb.get_page_source(device_id)
         if page_source != '':
             xml = ET.ElementTree(ET.fromstring(page_source))
-            elements = xml.findall("//node[@text]")
+            elements = xml.findall(".//node[@text]")
             if elements:
                 for element in elements:
                     if case_sensitive:
                         if text in element.attrib['text']:
-                            return True
+                            return element
                     else:
                         if text.lower() in element.attrib['text'].lower():
-                            return True
-        return False
+                            return element
+        return None
 
     @staticmethod
     def get_screen(device_id, file_path):
@@ -180,3 +226,35 @@ class Adb(object):
         result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60)
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
+
+    @staticmethod
+    def __list_path(device_id, package_id, path):
+        """
+        List file of application.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Path relative to root folder of the package.
+        :return: List of files and folders
+        """
+        command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
+        output = Adb.__run_adb_command(command=command, device_id=device_id, log_level=logging.DEBUG, wait=True).output
+        return output
+
+    @staticmethod
+    def file_exists(device_id, package_id, file_name, timeout=20):
+        """file_exists
+        Wait until path exists (relative based on folder where package is deployed) on emulator/android device.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param file_name: File you want to check if exists.
+        :param timeout: Timeout in seconds.
+        :return: True if path exists, false if path does not exists
+        """
+        t_end = time.time() + timeout
+        found = False
+        while time.time() < t_end:
+            files = Adb.__list_path(device_id=device_id, package_id=package_id, path=file_name)
+            if 'No such file or directory' not in files:
+                found = True
+                break
+        return found
