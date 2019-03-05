@@ -1,8 +1,6 @@
-
 import os
 import unittest
 
-from nose_parameterized import parameterized
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
@@ -144,8 +142,8 @@ class CreateTests(TnsTest):
     def test_101_plugin_add_prepare_verify_app_ios(self):
         Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name, verify=False)
         Tns.build_ios(app_name=self.app_name)
-        # path_app = os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS_APP_PATH, "TestApp.app")
-        # assert File.exists(path_app)
+        path_app = os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS_APP_PATH, "TestApp.app")
+        assert Folder.exists(path_app)
         assert File.exists(os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS_NPM_MODULES_PATH,
                                         'tns-plugin', 'index.js'))
 
@@ -182,8 +180,8 @@ class CreateTests(TnsTest):
             os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test2.ios.xml"))
         assert not File.exists(
             os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test.android.js"))
-        assert not File.exists(
-            os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID_NPM_MODULES_PATH, "tns-plugin/test2.android.xml"))
+        assert not File.exists(os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID_NPM_MODULES_PATH,
+                               "tns-plugin/test2.android.xml"))
 
         apk_path = os.path.join(self.app_name, Settings.Paths.PLATFORM_ANDROID_APK_DEBUG_PATH, "app-debug.apk")
         output = Adb.get_package_permission(apk_path)
@@ -212,7 +210,7 @@ class CreateTests(TnsTest):
         Tns.build_ios(app_name=self.app_name)
         app_path = os.path.join(self.app_name, Settings.Paths.PLATFORM_IOS)
         assert not File.exists(os.path.join(app_path, 'nativescript-ui-listview', 'node_modules',
-                                                'nativescript-ui-core', 'platforms'))
+                               'nativescript-ui-core', 'platforms'))
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_320_CFBundleURLTypes_overridden_from_plugin_ios(self):
