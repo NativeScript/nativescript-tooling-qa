@@ -1,4 +1,5 @@
 import os
+import time
 
 from nose_parameterized import parameterized
 
@@ -66,6 +67,8 @@ class PlaygroundDocSamples(TnsRunTest):
         if Settings.HOST_OS == OSType.OSX:
             image_name = '{0}_{1}.png'.format(name, str(Platform.IOS))
             Preview.run_url(url=link, device=self.sim)
+            time.sleep(2)
+            Preview.dismiss_simulator_alert()
             self.sim.wait_for_text(text=text)
             self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
 
