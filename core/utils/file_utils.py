@@ -18,7 +18,7 @@ class Folder(object):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
-            except OSError as error:
+            except (FileNotFoundError, OSError) as error:
                 for root, dirs, files in os.walk(folder, topdown=False):
                     for name in files:
                         filename = os.path.join(root, name)
