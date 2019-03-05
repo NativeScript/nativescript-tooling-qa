@@ -171,6 +171,11 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, target=target)
 
+<<<<<<< HEAD
+=======
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
+>>>>>>> 9b5eb8a... Add android runtime tests.
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
 
         assert File.exists(os.path.join(TEST_RUN_HOME, APP_NAME,
