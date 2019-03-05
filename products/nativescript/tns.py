@@ -21,7 +21,7 @@ class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False,
-                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, justlaunch=False,
+                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -40,7 +40,7 @@ class Tns(object):
         :param uglify: If true pass `--env.uglify` to command.
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
-        :param justlaunch: If true pass `--justlaunch` to command.
+        :param just_launch: If true pass `--justlaunch` to command.
         :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
@@ -78,7 +78,7 @@ class Tns(object):
             cmd += ' --env.uglify'
         if snapshot:
             cmd += ' --env.snapshot'
-        if justlaunch:
+        if just_launch:
             cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
@@ -258,11 +258,11 @@ class Tns(object):
     @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
             for_device=False, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
-            log_trace=False, justlaunch=False, verify=True):
+            log_trace=False, just_launch=False, verify=True):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device,
                                   bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
-                                  wait=wait, log_trace=log_trace, justlaunch=justlaunch)
+                                  wait=wait, log_trace=log_trace, just_launch=just_launch)
         if verify:
             if wait:
                 assert result.exit_code == 0, 'tns run failed with non zero exit code.'
@@ -273,19 +273,19 @@ class Tns(object):
 
     @staticmethod
     def run_android(app_name, emulator=False, device=None, release=False, bundle=False, hmr=False, aot=False,
-                    uglify=False, snapshot=False, wait=False, log_trace=False, justlaunch=False, verify=True):
+                    uglify=False, snapshot=False, wait=False, log_trace=False, just_launch=False, verify=True):
         return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
                        bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
-                       wait=wait, log_trace=log_trace, justlaunch=justlaunch, verify=verify)
+                       wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify)
 
     @staticmethod
     def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
                 for_device=False, bundle=False, hmr=False, aot=False, uglify=False, wait=False, log_trace=False,
-                justlaunch=False, verify=True):
+                just_launch=False, verify=True):
         return Tns.run(app_name=app_name, platform=Platform.IOS, emulator=emulator, device=device, release=release,
                        provision=provision, for_device=for_device,
                        bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace,
-                       justlaunch=justlaunch, verify=verify)
+                       just_launch=just_launch, verify=verify)
 
     @staticmethod
     def debug(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
@@ -315,19 +315,19 @@ class Tns(object):
         return result
 
     @staticmethod
-    def test(app_name, platform, emulator=True, device=None, justlaunch=True, verify=True):
+    def test(app_name, platform, emulator=True, device=None, just_launch=True, verify=True):
         """
         Execute `tns test <platform>` command.
         :param app_name: App name (passed as --path <App name>)
         :param platform: PlatformType enum value.
         :param emulator: If true pass `--emulator` to the command.
         :param device: Pass `--device <value>` to command.
-        :param justlaunch: If true pass `--justlaunch` to the command.
+        :param just_launch: If true pass `--justlaunch` to the command.
         :param verify: Verify command was executed successfully.
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
-        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, justlaunch=justlaunch)
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, just_launch=just_launch)
         if verify:
             assert 'server started at' in result.output
             assert 'Launching browser' in result.output

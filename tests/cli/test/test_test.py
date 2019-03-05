@@ -90,7 +90,7 @@ class TestsForTnsTest(TnsTest):
 
         # Run Tests
         if Settings.HOST_OS != OSType.WINDOWS:
-            Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
+            Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, just_launch=True)
             # TODO: Modify hello-world test with some real test (importing modules) and run the test again.
         else:
             Log.info('Due to unknown issues --justlauch do not exit on Windows when tests are executed on Jenkins!')

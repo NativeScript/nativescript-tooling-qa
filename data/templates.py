@@ -60,7 +60,7 @@ class Template(object):
     PATIENT_CARE_NG = gen_template_info(name='template-patient-care-ng', app_type=AppType.NG, texts=login)
 
     # Vue templates
-    VUE_BLANK = gen_template_info(name='template-blank-vue', app_type=AppType.VUE)
+    VUE_BLANK = gen_template_info(name='tns-template-blank-vue', app_type=AppType.VUE)
     VUE_MASTER_DETAIL = gen_template_info(name='template-master-detail-vue', app_type=AppType.VUE, texts=md_str)
 
     # Enterprise templates
