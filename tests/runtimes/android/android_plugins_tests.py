@@ -5,14 +5,12 @@ Test for specific needs of Android runtime.
 import os
 
 from core.base_test.tns_test import TnsTest
-from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.utils.wait import Wait
 from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
 from core.enums.platform_type import Platform
 from data.templates import Template
-from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
@@ -27,7 +25,6 @@ class AndroidRuntimePluginTests(TnsTest):
         Folder.clean('./' + APP_NAME)
 
     def tearDown(self):
-        Tns.kill()
         TnsTest.tearDown(self)
 
     @classmethod

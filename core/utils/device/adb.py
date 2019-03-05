@@ -56,7 +56,7 @@ class Adb(object):
         :param device_id: Device id.
         """
         Adb.__run_adb_command(command='logcat -c', device_id=device_id, wait=True)
-        print "The logcat on {0} is cleared.".format(device_id)
+        Log.info("The logcat on {0} is cleared.".format(device_id))
 
     @staticmethod
     def restart():
@@ -148,7 +148,7 @@ class Adb(object):
         return element is not None
 
     @staticmethod
-    def convert_element_bounds_to_x_y_coordinates(element):
+    def get_element_coordinates(element):
         bounds = element.attrib['bounds']
         bound_groups = re.findall(r"(\d+,\d+)", bounds)
         x = 0
@@ -165,7 +165,7 @@ class Adb(object):
     def click_element_by_text(device_id, text, case_sensitive=False):
         element = Adb.get_element_by_text(device_id, text, case_sensitive)
         if element is not None:
-            coordinates = Adb.convert_element_bounds_to_x_y_coordinates(element)
+            coordinates = Adb.get_element_coordinates(element)
             Adb.__run_adb_command(command="shell input tap " + str(coordinates[0]) + " " + str(coordinates[1]))
         else:
             assert False, 'Element with text ' + text + ' not found!'

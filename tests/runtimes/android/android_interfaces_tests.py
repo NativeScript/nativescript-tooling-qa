@@ -25,7 +25,6 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         Folder.clean('./' + APP_NAME)
 
     def tearDown(self):
-        Tns.kill()
         TnsTest.tearDown(self)
 
     @classmethod
