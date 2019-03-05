@@ -14,7 +14,7 @@ class Template(object):
     # Texts used in templates
     hw_js = ['TAP']
     hw_ng = ['Ter Stegen']
-    md_str = ['BMW 5 Series']
+    md_str = ['Ford KA']
     dr_str = ['Home']
     tn_str = ['Item 1']
     login = ['Login']
