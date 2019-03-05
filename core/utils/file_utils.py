@@ -19,7 +19,7 @@ class Folder(object):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
-            except Exception as error:
+            except (Exception, IOError, OSError, WindowsError) as error:
                 Log.info('Failed to clean folder: ' + folder + os.linesep + str(error))
                 Log.info('Retry...')
                 for root, dirs, files in os.walk(folder, topdown=False):
