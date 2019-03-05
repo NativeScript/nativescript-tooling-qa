@@ -14,11 +14,14 @@ from core.settings import Settings
 class Folder(object):
     @staticmethod
     def clean(folder):
+        # pylint: disable=broad-except
         if Folder.exists(folder=folder):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
-            except (FileNotFoundError, OSError) as error:
+            except Exception as error:
+                Log.info('Failed to clean folder: ' + folder + os.linesep + str(error))
+                Log.info('Retry...')
                 for root, dirs, files in os.walk(folder, topdown=False):
                     for name in files:
                         filename = os.path.join(root, name)
@@ -27,7 +30,6 @@ class Folder(object):
                     for name in dirs:
                         os.rmdir(os.path.join(root, name))
                 os.rmdir(folder)
-                Log.error('Error: %s - %s.' % (error.filename, error.strerror))
 
     @staticmethod
     def exists(folder):
