@@ -14,7 +14,6 @@ from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
-from products.nativescript.tns_paths import TnsPaths
 
 APP_NAME = Settings.AppName.DEFAULT
 
