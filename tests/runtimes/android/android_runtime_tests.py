@@ -19,10 +19,6 @@ APP_NAME = AppName.DEFAULT
 
 
 class AndroidRuntimeTests(TnsTest):
-    custom_js_file = os.path.join(APP_NAME, "app", "my-custom-class.js")
-    tns_folder = os.path.join(APP_NAME, 'platforms', 'android/', 'app', 'src', 'main', "java", "com", "tns")
-    gen_folder = os.path.join(tns_folder, "gen")
-    generated_java_file = os.path.join(tns_folder, "MyJavaClass.java")
 
     @classmethod
     def setUpClass(cls):
@@ -31,7 +27,6 @@ class AndroidRuntimeTests(TnsTest):
         Folder.clean('./' + APP_NAME)
 
     def tearDown(self):
-        Tns.kill()
         TnsTest.tearDown(self)
 
     @classmethod

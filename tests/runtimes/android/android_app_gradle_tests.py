@@ -5,14 +5,13 @@ Test for specific needs of Android runtime.
 import os
 
 from core.base_test.tns_test import TnsTest
-from core.utils.device.device import Device, Adb
+from core.utils.device.device import Device
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.utils.wait import Wait
 from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
 from core.enums.platform_type import Platform
 from data.templates import Template
-from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
@@ -27,7 +26,6 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         Folder.clean('./' + APP_NAME)
 
     def tearDown(self):
-        Tns.kill()
         TnsTest.tearDown(self)
 
     @classmethod
@@ -114,7 +112,6 @@ class AndroidRuntimeAppGradleTests(TnsTest):
                    'Successfully installed on device with identifier', self.emulator.id,
                    'Successfully synced application',
                    '###TEST IMPLEMENTATION PASSED###']
-
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
