@@ -73,11 +73,6 @@ class TestsForTnsTest(TnsRunTest):
         else:
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
-        # Handle Qunit
-        if framework == FrameworkType.QUNIT:
-            Npm.uninstall(package='karma-qunit', option='--save-dev', folder=TnsPaths.get_app_path(app_name=APP_NAME))
-            Npm.install(package='karma-qunit@2', option='--save-dev', folder=TnsPaths.get_app_path(app_name=APP_NAME))
-
         # Run Tests
         Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
 
