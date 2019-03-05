@@ -1,5 +1,6 @@
 import logging
 import os
+
 import time
 
 from core.enums.os_type import OSType
