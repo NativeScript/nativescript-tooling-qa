@@ -164,7 +164,7 @@ class Paths(object):
     PLATFORM_IOS = os.path.join('platforms', 'ios/')
     PLATFORM_IOS_APP_PATH = os.path.join(PLATFORM_IOS, 'build', 'Debug-iphonesimulator')
     PLATFORM_ANDROID = os.path.join('platforms', 'android/')
-    PLATFORM_ANDROID_BUILD = os.path.join(PLATFORM_ANDROID, 'TestApp', 'build')
+    PLATFORM_ANDROID_BUILD = os.path.join(PLATFORM_ANDROID, 'app', 'build')
     PLATFORM_ANDROID_APK_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk')
     PLATFORM_ANDROID_APK_RELEASE_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk', 'release')
     PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk', 'debug')

@@ -6,6 +6,7 @@ import os
 import shutil
 import stat
 import tarfile
+import fnmatch
 
 from core.log.log import Log
 from core.settings import Settings

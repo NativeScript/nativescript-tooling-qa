@@ -72,7 +72,7 @@ class Adb(object):
         :return: Permissions as string.
         """
         command = Adb.__find_aapt() + ' d permissions ' + apk_file
-        return run(cmd=command, log_level=logging.DEBUG)
+        return run(cmd=command, log_level=logging.WARNING).output
 
     @staticmethod
     def is_running(device_id):
