@@ -9,7 +9,6 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
-import re
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -189,16 +188,16 @@ class Adb(object):
         page_source = Adb.get_page_source(device_id)
         if page_source != '':
             xml = ET.ElementTree(ET.fromstring(page_source))
-            elements = xml.findall(".//node[@text]")
+            elements = xml.findall("//node[@text]")
             if elements:
                 for element in elements:
                     if case_sensitive:
                         if text in element.attrib['text']:
-                            return element
+                            return True
                     else:
                         if text.lower() in element.attrib['text'].lower():
-                            return element
-        return None
+                            return True
+        return False
 
     @staticmethod
     def get_screen(device_id, file_path):

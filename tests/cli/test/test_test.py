@@ -9,7 +9,9 @@ from core.base_test.tns_run_test import TnsRunTest
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
+from core.utils.device.device_manager import DeviceManager
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
