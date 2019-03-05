@@ -66,7 +66,7 @@ class Changes(object):
     class MasterDetailNG(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'shared', 'car.model.ts'),
                        old_value='options.name;', new_value='"SyncTSTest";',
-                       old_text='BMW 5 Series', new_text='SyncTSTest')
+                       old_text='Ford KA', new_text='SyncTSTest')
         HTML = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.html'),
                          old_value='Browse', new_value='Best Car Ever!',
                          old_text='Browse', new_text='Best Car Ever!')
