@@ -46,7 +46,7 @@ class Adb(object):
         Dump the log and then exit (don't block).
         :param device_id: Device id.
         """
-        return Adb.__run_adb_command(command='logcat -d', device_id=device_id, wait=True).output
+        return Adb.run_adb_command(command='logcat -d', device_id=device_id, wait=True).output
 
     @staticmethod
     def clear_logcat(device_id):
@@ -54,7 +54,7 @@ class Adb(object):
         Clear (flush) the entire log.
         :param device_id: Device id.
         """
-        Adb.__run_adb_command(command='logcat -c', device_id=device_id, wait=True)
+        Adb.run_adb_command(command='logcat -c', device_id=device_id, wait=True)
         Log.info("The logcat on {0} is cleared.".format(device_id))
 
     @staticmethod
@@ -165,7 +165,7 @@ class Adb(object):
         element = Adb.get_element_by_text(device_id, text, case_sensitive)
         if element is not None:
             coordinates = Adb.get_element_coordinates(element)
-            Adb.__run_adb_command(command="shell input tap " + str(coordinates[0]) + " " + str(coordinates[1]))
+            Adb.run_adb_command(command="shell input tap " + str(coordinates[0]) + " " + str(coordinates[1]))
         else:
             assert False, 'Element with text ' + text + ' not found!'
 
@@ -237,7 +237,7 @@ class Adb(object):
         :return: List of files and folders
         """
         command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
-        output = Adb.__run_adb_command(command=command, device_id=device_id, log_level=logging.DEBUG, wait=True).output
+        output = Adb.run_adb_command(command=command, device_id=device_id, log_level=logging.DEBUG, wait=True).output
         return output
 
     @staticmethod
