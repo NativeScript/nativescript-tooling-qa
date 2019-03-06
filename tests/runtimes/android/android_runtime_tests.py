@@ -65,6 +65,7 @@ class AndroidRuntimeTests(TnsTest):
     def test_300_verbose_log_android(self):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'verbose_log', 'app.js'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
