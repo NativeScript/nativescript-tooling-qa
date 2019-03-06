@@ -9,9 +9,7 @@ from core.base_test.tns_run_test import TnsRunTest
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
-from core.log.log import Log
 from core.settings import Settings
-from core.utils.device.device_manager import DeviceManager
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -75,7 +73,7 @@ class TestsForTnsTest(TnsRunTest):
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
         # Run Tests
-        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
+        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, just_launch=True)
 
     def test_400_invalid_framework_name(self):
         result = Tns.create(app_name=APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)

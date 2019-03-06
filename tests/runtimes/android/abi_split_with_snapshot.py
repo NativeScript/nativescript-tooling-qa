@@ -80,7 +80,7 @@ class AbiSplitTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1234',
                                  'app.gradle')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True, bundle=True, release=True, snapshot=True)
 
         assert File.exists(

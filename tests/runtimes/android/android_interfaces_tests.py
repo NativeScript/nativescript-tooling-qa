@@ -42,7 +42,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-739',
                                  'javascript', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
@@ -66,7 +66,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-739', 'java',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
@@ -93,7 +93,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1157',
                                    'API23', 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -122,7 +122,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1157',
                                    'API25', 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -154,7 +154,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False, bundle=True)
 
@@ -172,7 +172,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         test_result = Wait.until(
             lambda: "'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"

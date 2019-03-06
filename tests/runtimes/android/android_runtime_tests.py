@@ -92,7 +92,7 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1060',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', '###TEST PASSED###']
@@ -109,23 +109,23 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'app.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'main-view-model.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         # Change app package.json so it contains the options for discardUncaughtJsExceptions
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'package.json')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
@@ -191,7 +191,7 @@ class AndroidRuntimeTests(TnsTest):
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1160',
                               'testActivity.android.js')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app')
-        File.copy(src=source, target=target)
+        File.copy(source=source, target=target)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
         activity_class_path = os.path.join(TEST_RUN_HOME, APP_NAME, "platforms", "android", "app", "src", "main",
@@ -214,7 +214,7 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1235',
                                  'package.json')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
@@ -255,7 +255,7 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1152',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False).output

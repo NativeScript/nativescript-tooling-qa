@@ -44,7 +44,7 @@ class AndroidRuntimePluginTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "plugins", 'compile', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app include.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "compile", 'app.gradle')
@@ -53,14 +53,14 @@ class AndroidRuntimePluginTests(TnsTest):
                                  'without_dependency', 'src', 'platforms', 'android', 'include.gradle')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "plugins", 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                    "plugins",
@@ -89,7 +89,7 @@ class AndroidRuntimePluginTests(TnsTest):
                                  "plugins",
                                  'implementation', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app include.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "implementation", 'app.gradle')
@@ -98,14 +98,14 @@ class AndroidRuntimePluginTests(TnsTest):
                                  'without_dependency', 'src', 'platforms', 'android', 'include.gradle')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "plugins", 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                    "plugins",
@@ -135,7 +135,7 @@ class AndroidRuntimePluginTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "plugins", 'api', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app include.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993', "api",
                                  'app.gradle')
@@ -144,14 +144,14 @@ class AndroidRuntimePluginTests(TnsTest):
                                  'without_dependency', 'src', 'platforms', 'android', 'include.gradle')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "plugins", 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                    "plugins",
@@ -181,7 +181,7 @@ class AndroidRuntimePluginTests(TnsTest):
                                  "plugins",
                                  'with_dependency', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
@@ -189,7 +189,7 @@ class AndroidRuntimePluginTests(TnsTest):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "plugins", 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                    "plugins",
                                    'with_dependency', 'src')
@@ -217,7 +217,7 @@ class AndroidRuntimePluginTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
         if File.exists(target_js):
@@ -253,7 +253,7 @@ class AndroidRuntimePluginTests(TnsTest):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                  'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                    "plugin", 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -282,14 +282,14 @@ class AndroidRuntimePluginTests(TnsTest):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                  'default_gradle', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         source_xml = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                   'AndroidManifest.xml')
         target_xml = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', "src", "main",
                                   'AndroidManifest.xml')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_xml, target=target_xml)
+        File.copy(source=source_xml, target=target_xml)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                    "plugin", 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -318,7 +318,7 @@ class AndroidRuntimePluginTests(TnsTest):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                  'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         source_xml = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                   "api17_AndroidManifest",
                                   'AndroidManifest.xml')
@@ -326,7 +326,7 @@ class AndroidRuntimePluginTests(TnsTest):
                                   'AndroidManifest.xml')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_xml, target=target_xml)
+        File.copy(source=source_xml, target=target_xml)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                    "plugin", 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -358,14 +358,14 @@ class AndroidRuntimePluginTests(TnsTest):
             File.delete(target_js)
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                  'api17_gradle', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         source_xml = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                   'AndroidManifest.xml')
         target_xml = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', "src", "main",
                                   'AndroidManifest.xml')
         if File.exists(target_js):
             File.delete(target_js)
-        File.copy(src=source_xml, target=target_xml)
+        File.copy(source=source_xml, target=target_xml)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1104',
                                    "plugin", 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -393,7 +393,7 @@ class AndroidRuntimePluginTests(TnsTest):
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1183',
                               'before-plugins.gradle')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
-        File.copy(src=source, target=target)
+        File.copy(source=source, target=target)
 
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
 
@@ -419,12 +419,12 @@ class AndroidRuntimePluginTests(TnsTest):
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1279',
                                          'in-plugin', 'app.gradle')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_app_gradle, target=target_app_gradle)
+        File.copy(source=source_app_gradle, target=target_app_gradle)
 
         source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                                   'android-runtime-1279', 'buildscript.gradle')
         target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
-        File.copy(src=source_build_script_gradle, target=target_build_script_gradle)
+        File.copy(source=source_build_script_gradle, target=target_build_script_gradle)
 
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1279',
                                    'in-plugin',

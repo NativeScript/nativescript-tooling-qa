@@ -43,12 +43,12 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1046',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1046',
                                  'app.gradle')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
@@ -69,12 +69,12 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "compile", 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "compile", 'app.gradle')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
@@ -98,12 +98,12 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "implementation", 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
                                  "implementation", 'app.gradle')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
@@ -127,12 +127,12 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993', "api",
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         # Change app app.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993', "api",
                                  'app.gradle')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
@@ -154,7 +154,7 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-755',
                               'app.gradle')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source, target=target)
+        File.copy(source=source, target=target)
 
         # Build the project
         output = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
@@ -169,7 +169,7 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-pr-937',
                               'app.gradle')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source, target=target)
+        File.copy(source=source, target=target)
 
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
@@ -206,12 +206,12 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1195',
                                          'app.gradle')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_app_gradle, target=target_app_gradle)
+        File.copy(source=source_app_gradle, target=target_app_gradle)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1195',
                                  'app.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
-        File.copy(src=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js)
 
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
@@ -238,13 +238,13 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1279',
                                          'app.gradle')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
-        File.copy(src=source_app_gradle, target=target_app_gradle)
+        File.copy(source=source_app_gradle, target=target_app_gradle)
 
         source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                                   'android-runtime-1279', 'buildscript.gradle')
 
         target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
-        File.copy(src=source_build_script_gradle, target=target_build_script_gradle)
+        File.copy(source=source_build_script_gradle, target=target_build_script_gradle)
 
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
