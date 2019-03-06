@@ -18,7 +18,11 @@ class DeviceManager(object):
         device_list = []
 
         if device_type is DeviceType.ANDROID or device_type is any:
-            device_list = Adb.get_devices(include_emulators=False)
+            result = []
+            for device_id in Adb.get_ids(include_emulators=False):
+                device = Device(id=device_id, name='Android Device', type=DeviceType.ANDROID, version=None)
+                result.append(device)
+            return result
 
         if device_type is DeviceType.IOS or device_type is any:
             device_list = IDevice.get_devices()

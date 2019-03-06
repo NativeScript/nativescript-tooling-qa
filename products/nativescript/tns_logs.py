@@ -103,7 +103,7 @@ class TnsLogs(object):
 
         # Add message for successful sync
         app_id = TnsPaths.get_bundle_id(app_name)
-        logs.append('Successfully synced application org.nativescript.{0} on device'.format(app_id))
+        logs.append('Successfully synced application {0} on device'.format(app_id))
 
         if app_type == AppType.NG:
             logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
@@ -192,7 +192,7 @@ class TnsLogs(object):
         if platform == Platform.ANDROID:
             app_id = TnsPaths.get_bundle_id(app_name)
             logs.append('ActivityManager: Start proc')
-            logs.append('activity org.nativescript.{0}/com.tns.NativeScriptActivity'.format(app_id))
+            logs.append('activity {0}/com.tns.NativeScriptActivity'.format(app_id))
         if instrumented:
             logs.append('QA: Application started')
             if app_type == AppType.NG:

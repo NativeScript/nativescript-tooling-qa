@@ -23,7 +23,7 @@ class Adb(object):
         return run(cmd=command, wait=wait, timeout=timeout, fail_safe=fail_safe, log_level=log_level)
 
     @staticmethod
-    def __get_ids(include_emulator=False):
+    def get_ids(include_emulators=False):
         """
         Get IDs of available android devices.
         """
@@ -35,7 +35,9 @@ class Adb(object):
         for line in output.splitlines():
             if 'model' in line and ' device ' in line:
                 device_id = line.split(' ')[0]
-                if include_emulator:
+                if 'emulator' in line and not include_emulators:
+                    Log.debug('{0} not included in android device list.'.format(device_id))
+                else:
                     devices.append(device_id)
         return devices
 
@@ -45,12 +47,6 @@ class Adb(object):
         Adb.run_adb_command('kill-server')
         Process.kill(proc_name='adb')
         Adb.run_adb_command('start-server')
-
-    @staticmethod
-    def get_devices(include_emulators=False):
-        # pylint: disable=unused-argument
-        # TODO: Implement it!
-        return []
 
     @staticmethod
     def is_running(device_id):
@@ -144,13 +140,20 @@ class Adb(object):
     @staticmethod
     def get_screen(device_id, file_path):
         File.delete(path=file_path)
-        if Settings.HOST_OS == OSType.WINDOWS:
-            Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
-                                device_id=device_id,
-                                log_level=logging.DEBUG)
+        if 'emulator' in device_id:
+            if Settings.HOST_OS == OSType.WINDOWS:
+                Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
+                                    device_id=device_id,
+                                    log_level=logging.DEBUG)
+            else:
+                Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
+                                    device_id=device_id)
         else:
-            Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
-                                device_id=device_id)
+            Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
+            Adb.run_adb_command(command='shell screencap -p /sdcard/image.png', device_id=device_id)
+            result = Adb.run_adb_command(command='pull /sdcard/image.png {0}'.format(file_path), device_id=device_id)
+            assert '1 file pulled' in result.output, 'Failed to pull image from {0}'.format(device_id)
+            Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
         if File.exists(file_path):
             return
         else:
@@ -180,3 +183,7 @@ class Adb(object):
         result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60)
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
+
+    @staticmethod
+    def stop_application(app_id, device_id):
+        Adb.run_adb_command(command='shell am force-stop {0}'.format(app_id), device_id=device_id)
