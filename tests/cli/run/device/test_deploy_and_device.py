@@ -27,7 +27,7 @@ APP_NAME = Settings.AppName.DEFAULT
 class TnsDeviceTests(TnsRunTest):
     ANDROID_DEVICES = DeviceManager.get_devices(device_type=DeviceType.ANDROID)
     if Settings.HOST_OS == OSType.OSX:
-        IOS_DEVICES = DeviceManager.get_devices(device_type=DeviceType.iOS)
+        IOS_DEVICES = DeviceManager.get_devices(device_type=DeviceType.IOS)
 
     PATH = os.environ.get('PATH')
     ANDROID_HOME = os.environ.get('ANDROID_HOME')
@@ -87,9 +87,9 @@ class TnsDeviceTests(TnsRunTest):
             result = Tns.exec_command(command='device ios --available-devices')
             assert self.sim.name in result.output
             assert self.sim.id in result.output
-            assert Settings.Simulators.SIM_IOS11.device_type in result.output
-            assert Settings.Simulators.SIM_IOS11.name in result.output
-            assert Settings.Simulators.SIM_IOS11.sdk in result.output
+            assert str(self.sim.version) in result.output
+            assert 'Device Name' and 'Platform' and 'Version' and 'Device Identifier' in result.output
+            assert 'iPhone' and 'iPad' in result.output
             assert not DeviceManager.Simulator.is_running(
                 Settings.Simulators.DEFAULT), 'Simulator is started after "tns device ios --available-devices"!'
 

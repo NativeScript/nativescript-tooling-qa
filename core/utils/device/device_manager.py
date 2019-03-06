@@ -15,18 +15,18 @@ from core.utils.run import run
 class DeviceManager(object):
     @staticmethod
     def get_devices(device_type=any):
-        device_list = []
-
+        devices = []
+        # Get Android devices
         if device_type is DeviceType.ANDROID or device_type is any:
-            result = []
             for device_id in Adb.get_ids(include_emulators=False):
                 device = Device(id=device_id, name='Android Device', type=DeviceType.ANDROID, version=None)
-                result.append(device)
-            return result
-
+                devices.append(device)
+        # Get iOS devices
         if device_type is DeviceType.IOS or device_type is any:
-            device_list = IDevice.get_devices()
-        return device_list
+            for device_id in IDevice.get_devices():
+                device = Device(id=device_id, name='iOS Device', type=DeviceType.IOS, version=None)
+                devices.append(device)
+        return devices
 
     @staticmethod
     def get_device(device_type):
