@@ -1,6 +1,7 @@
 """
 File and Folder utils.
 """
+# pylint: disable=unused-variable
 import errno
 import os
 import shutil
