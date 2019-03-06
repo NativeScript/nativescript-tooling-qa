@@ -147,8 +147,7 @@ class AndroidRuntimeAppGradleTests(TnsTest):
 
     def test_319_build_project_with_foursquare_android_oauth(self):
         # This is required when build with different SDK
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         # Add foursquare native library as dependency
@@ -165,14 +164,12 @@ class AndroidRuntimeAppGradleTests(TnsTest):
     def test_420_include_gradle_flavor(self):
         # https://github.com/NativeScript/android-runtime/pull/937
         # https://github.com/NativeScript/nativescript-cli/pull/3467
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-pr-937',
                               'app.gradle')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
         File.copy(src=source, target=target)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
 
@@ -203,6 +200,8 @@ class AndroidRuntimeAppGradleTests(TnsTest):
 
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1195',
                                          'app.gradle')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
@@ -212,8 +211,6 @@ class AndroidRuntimeAppGradleTests(TnsTest):
                                  'app.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
         File.copy(src=source_js, target=target_js)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
@@ -230,3 +227,25 @@ class AndroidRuntimeAppGradleTests(TnsTest):
                             os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
                                          'Emulator-Api23-Default',
                                          "hello-world-js.png"), timeout=120, tolerance=1)
+
+    def test_450_support_external_buildscript_config_in_app_res_android_folder(self):
+        """
+        Support external buildscript configurations - buildscript.gradle file placed in `App_Resources/Android` folder
+        https://github.com/NativeScript/android-runtime/issues/1279
+        """
+
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1279',
+                                         'app.gradle')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source_app_gradle, target=target_app_gradle)
+
+        source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                                  'android-runtime-1279', 'buildscript.gradle')
+
+        target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(src=source_build_script_gradle, target=target_build_script_gradle)
+
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)

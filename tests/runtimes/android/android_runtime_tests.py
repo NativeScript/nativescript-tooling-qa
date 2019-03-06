@@ -63,7 +63,9 @@ class AndroidRuntimeTests(TnsTest):
         assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
 
     def test_300_verbose_log_android(self):
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'verbose_log', 'app.js'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
@@ -183,8 +185,7 @@ class AndroidRuntimeTests(TnsTest):
         Static Binding Generator fails if class has static properties that are used within the class
         https://github.com/NativeScript/android-runtime/issues/1160
         """
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1160',
@@ -208,8 +209,7 @@ class AndroidRuntimeTests(TnsTest):
 
         https://github.com/NativeScript/android-runtime/issues/1235
         """
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1235',
                                  'package.json')

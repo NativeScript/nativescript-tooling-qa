@@ -38,6 +38,7 @@ class AndroidRuntimePluginTests(TnsTest):
          https://github.com/NativeScript/android-runtime/issues/993
         """
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         # Change main-page.js so it contains only logging information
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
@@ -66,7 +67,6 @@ class AndroidRuntimePluginTests(TnsTest):
                                    'without_dependency', 'src')
         output = Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
         assert "Successfully installed plugin mylib" in output.output, "mylib plugin not installed correctly!"
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
@@ -395,6 +395,8 @@ class AndroidRuntimePluginTests(TnsTest):
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
         File.copy(src=source, target=target)
 
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'sample-plugin', 'src')
         Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
 
@@ -404,3 +406,32 @@ class AndroidRuntimePluginTests(TnsTest):
         output = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
         messages = "MESSAGE: Before plugins gradle is applied!\nMESSAGE: Plugin include gradle is applied!"
         assert messages in output.output, "FAIL: before-plugins.gradle is NOT applied correctly!"
+
+    def test_451_support_external_buildscript_config_in_plugin(self):
+        """
+        Support external buildscript configurations - buildscript.gradle file placed in plugin folder
+        https://github.com/NativeScript/android-runtime/issues/1279
+        """
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1279',
+                                         'in-plugin', 'app.gradle')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(src=source_app_gradle, target=target_app_gradle)
+
+        source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                                  'android-runtime-1279', 'buildscript.gradle')
+        target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(src=source_build_script_gradle, target=target_build_script_gradle)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1279',
+                                   'in-plugin',
+                                   'sample-plugin-2', 'src')
+        Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
+
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)

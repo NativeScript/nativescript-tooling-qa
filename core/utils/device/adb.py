@@ -66,9 +66,20 @@ class Adb(object):
 
     @staticmethod
     def get_devices(include_emulators=False):
-        # pylint: disable=unused-argument
-        # TODO: Implement it!
-        return []
+        """
+        Get available android devices (only real devices).
+        """
+        devices = []
+        output = Adb.run_adb_command('devices -l').output
+        for line in output.splitlines():
+            if 'model' in line and ' device ' in line:
+                if include_emulators:
+                    device_id = line.split(' ')[0]
+                    devices.append(device_id)
+                elif 'emulator' not in line:
+                    device_id = line.split(' ')[0]
+                    devices.append(device_id)
+        return devices
 
     @staticmethod
     def is_running(device_id):
@@ -223,9 +234,23 @@ class Adb(object):
         :param apk_path: File path to .apk.
         :param device_id: Device id.
         """
-        result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60)
+        result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60, wait=True)
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
+
+    @staticmethod
+    def uninstall(app_id, device_id, assert_success=True):
+        """
+        Uninstall application.
+        :param app_id: Package identifier - org.nativescript.testapp.
+        :param device_id: Device id.
+        :param assert_success: Assert if uninstall is successful.
+        """
+        command = 'uninstall ' + app_id
+        output = Adb.run_adb_command(command=command, device_id=device_id, wait=True).output
+        if assert_success:
+            assert 'Success' in output, 'Failed to uninstall {0}. Output: {1}'.format(app_id, output)
+            Log.info('{0} uninstalled successfully from {1}.'.format(app_id, device_id))
 
     @staticmethod
     def __list_path(device_id, package_id, path):
@@ -258,3 +283,35 @@ class Adb(object):
                 found = True
                 break
         return found
+
+    @staticmethod
+    def start_application(device_id, app_id):
+        """
+        Start application.
+        :param device_id: Device id.
+        :param app_id: App id.
+        """
+        command = 'shell monkey -p ' + app_id + ' -c android.intent.category.LAUNCHER 1'
+        output = Adb.run_adb_command(command=command, device_id=device_id, wait=True).output
+        assert 'Events injected: 1' in output, 'Failed to start {0}.'.format(app_id)
+        Log.info('{0} started successfully.'.format(app_id))
+
+    @staticmethod
+    def stop_application(device_id, app_id):
+        """
+        Stop application
+        :param device_id: Device identifier
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        """
+        command = " -s " + device_id + " shell am force-stop " + app_id
+        output = Adb.run_adb_command(command=command, wait=True).output
+        assert app_id not in output, "Failed to stop " + app_id
+
+    @staticmethod
+    def get_version(device_id):
+        """
+        Get device version
+        :param device_id: Device identifier
+        """
+        command = " -s " + device_id + " shell getprop ro.build.version.release "
+        return Adb.run_adb_command(command=command, wait=True).output
