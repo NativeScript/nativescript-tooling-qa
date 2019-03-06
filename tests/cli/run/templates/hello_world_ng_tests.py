@@ -24,10 +24,10 @@ class TnsRunNGTests(TnsRunTest):
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ng', 'main.ts')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'src')
-        File.copy(src=src, target=target)
+        File.copy(source=src, target=target)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ng', 'items.component.ts')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'src', 'app', 'item')
-        File.copy(src=src, target=target)
+        File.copy(source=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)

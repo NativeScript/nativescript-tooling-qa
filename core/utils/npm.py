@@ -37,14 +37,14 @@ class Npm(object):
         src_file = os.path.join(Settings.TEST_SUT_HOME, npm_package)
         File.delete(path=output_file)
         Npm.__run_npm_command('pack ' + output, folder=Settings.TEST_SUT_HOME)
-        File.copy(src=src_file, target=output_file)
+        File.copy(source=src_file, target=output_file)
         File.delete(src_file)
 
     @staticmethod
     def pack(folder, output_file):
         Npm.__run_npm_command('pack', folder=folder)
         src_file = File.find_by_extension(folder=folder, extension='tgz')[0]
-        File.copy(src=src_file, target=output_file)
+        File.copy(source=src_file, target=output_file)
         File.delete(src_file)
 
     @staticmethod

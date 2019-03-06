@@ -35,7 +35,7 @@ class TnsPreviewJSTests(TnsRunTest):
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
-        File.copy(src=src, target=target)
+        File.copy(source=src, target=target)
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)

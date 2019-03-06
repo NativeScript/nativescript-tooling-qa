@@ -20,7 +20,7 @@ class FileUtilsTests(unittest.TestCase):
         new_value = 'Android here\n.page { background-color: red;}'
 
         # Create new file (so we don't break original one).
-        File.copy(src=old_scss, target=new_scss)
+        File.copy(source=old_scss, target=new_scss)
         assert len(File.read(path=new_scss).splitlines()) == 14, 'Unexpected lines count.'
 
         # Replace

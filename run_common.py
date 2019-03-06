@@ -72,7 +72,7 @@ def __get_runtimes():
     # Copy or download tns-android
     android_package = os.path.join(Settings.TEST_SUT_HOME, 'tns-android.tgz')
     if '.tgz' in Settings.Packages.ANDROID:
-        File.copy(src=Settings.Packages.ANDROID, target=android_package)
+        File.copy(source=Settings.Packages.ANDROID, target=android_package)
         Settings.Packages.ANDROID = android_package
     else:
         Npm.download(package=Settings.Packages.ANDROID, output_file=android_package)
@@ -81,7 +81,7 @@ def __get_runtimes():
     if Settings.HOST_OS == OSType.OSX:
         ios_package = os.path.join(Settings.TEST_SUT_HOME, 'tns-ios.tgz')
         if '.tgz' in Settings.Packages.IOS:
-            File.copy(src=Settings.Packages.IOS, target=ios_package)
+            File.copy(source=Settings.Packages.IOS, target=ios_package)
             Settings.Packages.IOS = ios_package
         else:
             Npm.download(package=Settings.Packages.IOS, output_file=ios_package)
@@ -95,7 +95,7 @@ def __install_ns_cli():
     # Copy NativeScript CLI (if used from local package)
     if '.tgz' in Settings.Packages.NS_CLI:
         cli_package = os.path.join(Settings.TEST_SUT_HOME, 'nativescript.tgz')
-        File.copy(src=Settings.Packages.NS_CLI, target=cli_package)
+        File.copy(source=Settings.Packages.NS_CLI, target=cli_package)
         Settings.Packages.NS_CLI = cli_package
 
     # Install NativeScript CLI
