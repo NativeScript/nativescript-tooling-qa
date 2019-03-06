@@ -141,9 +141,9 @@ class File(object):
         return os.path.isfile(path)
 
     @staticmethod
-    def copy(src, target):
-        shutil.copy(src, target)
-        Log.info('Copy {0} to {1}'.format(os.path.abspath(src), os.path.abspath(target)))
+    def copy(source, target):
+        shutil.copy(source, target)
+        Log.info('Copy {0} to {1}'.format(os.path.abspath(source), os.path.abspath(target)))
 
     @staticmethod
     def delete(path):
