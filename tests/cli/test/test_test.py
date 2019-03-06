@@ -5,13 +5,11 @@ import os
 
 from parameterized import parameterized
 
-from core.base_test.tns_test import TnsTest
+from core.base_test.tns_run_test import TnsRunTest
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
-from core.log.log import Log
 from core.settings import Settings
-from core.utils.device.device_manager import DeviceManager
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -49,21 +47,7 @@ def get_data():
 
 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
-class TestsForTnsTest(TnsTest):
-
-    @classmethod
-    def setUpClass(cls):
-        TnsTest.setUpClass()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
-        if Settings.HOST_OS is OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
-
-    def setUp(self):
-        TnsTest.setUp(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
+class TestsForTnsTest(TnsRunTest):
 
     @parameterized.expand(get_data())
     def test_100(self, title, framework, template, platform):
@@ -89,12 +73,7 @@ class TestsForTnsTest(TnsTest):
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
         # Run Tests
-        if Settings.HOST_OS != OSType.WINDOWS:
-            Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
-            # TODO: Modify hello-world test with some real test (importing modules) and run the test again.
-        else:
-            Log.info('Due to unknown issues --justlauch do not exit on Windows when tests are executed on Jenkins!')
-            # TODO: Fix it!
+        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, justlaunch=True)
 
     def test_400_invalid_framework_name(self):
         result = Tns.create(app_name=APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)
