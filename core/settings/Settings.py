@@ -155,24 +155,3 @@ class AppName(object):
     WITH_DASH = 'tns-app'
     WITH_SPACE = 'Test App'
     WITH_NUMBER = '123'
-
-
-class Paths(object):
-    NODE_MODULES = 'node_modules'
-    TNS_MODULES = os.path.join(NODE_MODULES, 'tns-core-modules')
-    HOOKS = 'hooks'
-    PLATFORM_IOS = os.path.join('platforms', 'ios/')
-    PLATFORM_IOS_APP_PATH = os.path.join(PLATFORM_IOS, 'build', 'Debug-iphonesimulator')
-    PLATFORM_ANDROID = os.path.join('platforms', 'android/')
-    PLATFORM_ANDROID_BUILD = os.path.join(PLATFORM_ANDROID, 'app', 'build')
-    PLATFORM_ANDROID_APK_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk')
-    PLATFORM_ANDROID_APK_RELEASE_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk', 'release')
-    PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join(PLATFORM_ANDROID_BUILD, 'outputs', 'apk', 'debug')
-    PLATFORM_ANDROID_SRC_MAIN_PATH = os.path.join(PLATFORM_ANDROID, 'app', 'src', 'main/')
-    PLATFORM_ANDROID_APP_PATH = os.path.join(PLATFORM_ANDROID_SRC_MAIN_PATH, 'assets', 'app/')
-    PLATFORM_ANDROID_NPM_MODULES_PATH = os.path.join(PLATFORM_ANDROID_APP_PATH, 'tns_modules/')
-    PLATFORM_ANDROID_TNS_MODULES_PATH = os.path.join(PLATFORM_ANDROID_NPM_MODULES_PATH, 'tns-core-modules/')
-    PLATFORM_IOS_NPM_MODULES_PATH = os.path.join(PLATFORM_IOS, AppName.DEFAULT, 'app', 'tns_modules')
-    tns_plugin = os.path.join(AppName.DEFAULT, 'node_modules', 'tns-plugin')
-    tns_plugin_platform_ios = os.path.join(AppName.DEFAULT, 'platforms', 'ios', 'TestApp', 'app', 'tns_modules',
-                                           'tns-plugin')

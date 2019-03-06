@@ -185,7 +185,7 @@ class File(object):
         :return: Path to file.
         """
         matches = []
-        for root, files in os.walk(base_path, followlinks=True):
+        for root, dirs, files in os.walk(base_path, followlinks=True):
             for current_file in files:
                 if exact_match:
                     if file_name == current_file:
@@ -205,7 +205,7 @@ class File(object):
         :return: True if exists, False if does not exist.
         """
         found = False
-        for root, files in os.walk(directory):
+        for root, dirs, files in os.walk(directory):
             for basename in files:
                 if fnmatch.fnmatch(basename, pattern):
                     filename = os.path.join(root, basename)
