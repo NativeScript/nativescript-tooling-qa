@@ -257,9 +257,10 @@ class Tns(object):
 
     @staticmethod
     def deploy(app_name, platform, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
-               log_trace=False, verify=True):
+               wait=False, justlaunch=False, log_trace=False, verify=True):
         result = Tns.exec_command(command='deploy', path=app_name, platform=platform, device=device, release=release,
-                                  provision=provision, for_device=for_device, wait=True, log_trace=log_trace)
+                                  provision=provision, for_device=for_device, wait=wait, justlaunch=justlaunch,
+                                  log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'tns run failed with non zero exit code.'
             assert 'successfully installed on device' in result.output.lower()

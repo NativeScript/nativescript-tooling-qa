@@ -96,11 +96,11 @@ class TnsDeviceTests(TnsRunTest):
     def test_300_device_list_and_run_applications(self):
         # Deploy test application
         app_id = TnsPaths.get_bundle_id(app_name=APP_NAME)
-        result = Tns.deploy(app_name=APP_NAME, platform=Platform.ANDROID)
+        result = Tns.deploy(app_name=APP_NAME, platform=Platform.ANDROID, justlaunch=True, wait=True)
         for device in self.ANDROID_DEVICES:
             assert device.id in result.output
         if Settings.HOST_OS == OSType.OSX:
-            result = Tns.deploy(app_name=APP_NAME, platform=Platform.IOS)
+            result = Tns.deploy(app_name=APP_NAME, platform=Platform.IOS, justlaunch=True, wait=True)
             for device in self.IOS_DEVICES:
                 assert device.id in result.output
 
