@@ -4,12 +4,10 @@ Tests for `tns devices` and `tns deploy` commands.
 import os
 import unittest
 
-from core.base_test.tns_run_test import TnsRunTest
-from core.enums.device_type import DeviceType
+from core.base_test.tns_device_test import TnsDeviceTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
@@ -19,18 +17,14 @@ APP_NAME = Settings.AppName.DEFAULT
 
 
 # noinspection PyMethodMayBeStatic
-class TnsRunOnDevices(TnsRunTest):
-    android_device = DeviceManager.get_devices(device_type=DeviceType.ANDROID)[0]
-    if Settings.HOST_OS == OSType.OSX:
-        ios_device = DeviceManager.get_devices(device_type=DeviceType.IOS)[0]
-
+class TnsRunOnDevices(TnsDeviceTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
 
     @classmethod
     def setUpClass(cls):
-        TnsRunTest.setUpClass()
+        TnsDeviceTest.setUpClass()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
@@ -48,7 +42,7 @@ class TnsRunOnDevices(TnsRunTest):
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):
-        TnsRunTest.setUp(self)
+        TnsDeviceTest.setUp(self)
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.
         source_src = os.path.join(self.target_project_dir, 'src')
