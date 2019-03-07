@@ -1,5 +1,6 @@
 import logging
 import os
+
 import time
 
 from core.enums.os_type import OSType
@@ -8,6 +9,7 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
+import re
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -40,6 +42,23 @@ class Adb(object):
                 else:
                     devices.append(device_id)
         return devices
+
+    @staticmethod
+    def get_logcat(device_id):
+        """
+        Dump the log and then exit (don't block).
+        :param device_id: Device id.
+        """
+        return Adb.run_adb_command(command='logcat -d', device_id=device_id, wait=True).output
+
+    @staticmethod
+    def clear_logcat(device_id):
+        """
+        Clear (flush) the entire log.
+        :param device_id: Device id.
+        """
+        Adb.run_adb_command(command='logcat -c', device_id=device_id, wait=True)
+        Log.info("The logcat on {0} is cleared.".format(device_id))
 
     @staticmethod
     def __find_aapt():
@@ -144,20 +163,49 @@ class Adb(object):
     # noinspection PyPep8Naming
     @staticmethod
     def is_text_visible(device_id, text, case_sensitive=False):
+        element = Adb.get_element_by_text(device_id, text, case_sensitive)
+        return element is not None
+
+    @staticmethod
+    def get_element_coordinates(element):
+        bounds = element.attrib['bounds']
+        bound_groups = re.findall(r"(\d+,\d+)", bounds)
+        x = 0
+        y = 0
+        counter = 0
+        for bound_group in bound_groups:
+            arr_x_y = bound_group.split(",")
+            x = x + int(arr_x_y[0])
+            y = y + int(arr_x_y[1])
+            counter = counter + 1
+        return x/counter, y/counter
+
+    @staticmethod
+    def click_element_by_text(device_id, text, case_sensitive=False):
+        element = Adb.get_element_by_text(device_id, text, case_sensitive)
+        if element is not None:
+            coordinates = Adb.get_element_coordinates(element)
+            Adb.run_adb_command(command="shell input tap " + str(coordinates[0]) + " " + str(coordinates[1]))
+        else:
+            assert False, 'Element with text ' + text + ' not found!'
+
+    # noinspection PyPep8Naming
+    @staticmethod
+    def get_element_by_text(device_id, text, case_sensitive=False):
         import xml.etree.ElementTree as ET
         page_source = Adb.get_page_source(device_id)
         if page_source != '':
             xml = ET.ElementTree(ET.fromstring(page_source))
-            elements = xml.findall("//node[@text]")
+            elements = xml.findall(".//node[@text]")
             if elements:
                 for element in elements:
                     if case_sensitive:
                         if text in element.attrib['text']:
-                            return True
+                            return element
                     else:
                         if text.lower() in element.attrib['text'].lower():
-                            return True
-        return False
+                            return element
+        return None
 
     @staticmethod
     def get_screen(device_id, file_path):
@@ -203,10 +251,88 @@ class Adb(object):
         :param apk_path: File path to .apk.
         :param device_id: Device id.
         """
-        result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60)
+        result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60, wait=True)
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
 
     @staticmethod
     def stop_application(app_id, device_id):
         Adb.run_adb_command(command='shell am force-stop {0}'.format(app_id), device_id=device_id)
+    
+    @staticmethod
+    def uninstall(app_id, device_id, assert_success=True):
+        """
+        Uninstall application.
+        :param app_id: Package identifier - org.nativescript.testapp.
+        :param device_id: Device id.
+        :param assert_success: Assert if uninstall is successful.
+        """
+        command = 'uninstall ' + app_id
+        output = Adb.run_adb_command(command=command, device_id=device_id, wait=True).output
+        if assert_success:
+            assert 'Success' in output, 'Failed to uninstall {0}. Output: {1}'.format(app_id, output)
+            Log.info('{0} uninstalled successfully from {1}.'.format(app_id, device_id))
+
+    @staticmethod
+    def __list_path(device_id, package_id, path):
+        """
+        List file of application.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param path: Path relative to root folder of the package.
+        :return: List of files and folders
+        """
+        command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
+        output = Adb.run_adb_command(command=command, device_id=device_id, log_level=logging.DEBUG, wait=True).output
+        return output
+
+    @staticmethod
+    def file_exists(device_id, package_id, file_name, timeout=20):
+        """file_exists
+        Wait until path exists (relative based on folder where package is deployed) on emulator/android device.
+        :param device_id: Device identifier.
+        :param package_id: Package identifier.
+        :param file_name: File you want to check if exists.
+        :param timeout: Timeout in seconds.
+        :return: True if path exists, false if path does not exists
+        """
+        t_end = time.time() + timeout
+        found = False
+        while time.time() < t_end:
+            files = Adb.__list_path(device_id=device_id, package_id=package_id, path=file_name)
+            if 'No such file or directory' not in files:
+                found = True
+                break
+        return found
+
+    @staticmethod
+    def start_application(device_id, app_id):
+        """
+        Start application.
+        :param device_id: Device id.
+        :param app_id: App id.
+        """
+        command = 'shell monkey -p ' + app_id + ' -c android.intent.category.LAUNCHER 1'
+        output = Adb.run_adb_command(command=command, device_id=device_id, wait=True).output
+        assert 'Events injected: 1' in output, 'Failed to start {0}.'.format(app_id)
+        Log.info('{0} started successfully.'.format(app_id))
+
+    @staticmethod
+    def stop_application(device_id, app_id):
+        """
+        Stop application
+        :param device_id: Device identifier
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        """
+        command = " -s " + device_id + " shell am force-stop " + app_id
+        output = Adb.run_adb_command(command=command, wait=True).output
+        assert app_id not in output, "Failed to stop " + app_id
+
+    @staticmethod
+    def get_version(device_id):
+        """
+        Get device version
+        :param device_id: Device identifier
+        """
+        command = " -s " + device_id + " shell getprop ro.build.version.release "
+        return Adb.run_adb_command(command=command, wait=True).output

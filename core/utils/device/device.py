@@ -211,9 +211,9 @@ class Device(object):
         assert result, "Expected main color: " + str(color) + os.linesep + \
                        "Actual main color: " + str(self.get_main_color())
 
-    def click(self, text):
+    def click(self, text, case_sensitive=False):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            raise NotImplementedError('Click not implemented for Android devices.')
+            Adb.click_element_by_text(self.id, text, case_sensitive)
         elif self.type is DeviceType.SIM:
             SimAuto.click(self, text=text)
         else:
