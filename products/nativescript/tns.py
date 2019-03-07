@@ -40,7 +40,7 @@ class Tns(object):
         :param uglify: If true pass `--env.uglify` to command.
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
-        :param just_launch: If true pass `--just_launch` to command.
+        :param just_launch: If true pass `--justlaunch` to command.
         :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
@@ -79,7 +79,7 @@ class Tns(object):
         if snapshot:
             cmd += ' --env.snapshot'
         if just_launch:
-            cmd += ' --just_launch'
+            cmd += ' --justlaunch'
         if log_trace:
             cmd += ' --log trace'
         if options:

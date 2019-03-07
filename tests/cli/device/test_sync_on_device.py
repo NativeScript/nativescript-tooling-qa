@@ -15,7 +15,7 @@ from products.nativescript.tns import Tns
 
 
 # noinspection PyMethodMayBeStatic
-class TnsRunOnDevices(TnsDeviceTest):
+class TnsSyncOnDevices(TnsDeviceTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
