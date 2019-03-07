@@ -1,6 +1,6 @@
 import logging
 import os
-
+import re
 import time
 
 from core.enums.os_type import OSType
@@ -9,7 +9,6 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
-import re
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -178,7 +177,7 @@ class Adb(object):
             x = x + int(arr_x_y[0])
             y = y + int(arr_x_y[1])
             counter = counter + 1
-        return x/counter, y/counter
+        return x / counter, y / counter
 
     @staticmethod
     def click_element_by_text(device_id, text, case_sensitive=False):
@@ -256,10 +255,6 @@ class Adb(object):
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
 
     @staticmethod
-    def stop_application(app_id, device_id):
-        Adb.run_adb_command(command='shell am force-stop {0}'.format(app_id), device_id=device_id)
-    
-    @staticmethod
     def uninstall(app_id, device_id, assert_success=True):
         """
         Uninstall application.
@@ -324,9 +319,8 @@ class Adb(object):
         :param device_id: Device identifier
         :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         """
-        command = " -s " + device_id + " shell am force-stop " + app_id
-        output = Adb.run_adb_command(command=command, wait=True).output
-        assert app_id not in output, "Failed to stop " + app_id
+        result = Adb.run_adb_command(command='shell am force-stop {0}'.format(app_id), device_id=device_id, wait=True)
+        assert app_id not in result.output, 'Failed to stop ' + app_id
 
     @staticmethod
     def get_version(device_id):

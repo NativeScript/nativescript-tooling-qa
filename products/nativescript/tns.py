@@ -40,7 +40,7 @@ class Tns(object):
         :param uglify: If true pass `--env.uglify` to command.
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
-        :param just_launch: If true pass `--justlaunch` to command.
+        :param just_launch: If true pass `--just_launch` to command.
         :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
@@ -79,7 +79,7 @@ class Tns(object):
         if snapshot:
             cmd += ' --env.snapshot'
         if just_launch:
-            cmd += ' --justlaunch'
+            cmd += ' --just_launch'
         if log_trace:
             cmd += ' --log trace'
         if options:
@@ -257,9 +257,9 @@ class Tns(object):
 
     @staticmethod
     def deploy(app_name, platform, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
-               wait=False, justlaunch=False, log_trace=False, verify=True):
+               wait=False, just_launch=False, log_trace=False, verify=True):
         result = Tns.exec_command(command='deploy', path=app_name, platform=platform, device=device, release=release,
-                                  provision=provision, for_device=for_device, wait=wait, justlaunch=justlaunch,
+                                  provision=provision, for_device=for_device, wait=wait, just_launch=just_launch,
                                   log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'tns run failed with non zero exit code.'
@@ -354,7 +354,7 @@ class Tns(object):
         :param platform: PlatformType enum value.
         :param emulator: If true pass `--emulator` to the command.
         :param device: Pass `--device <value>` to command.
-        :param just_launch: If true pass `--justlaunch` to the command.
+        :param just_launch: If true pass `--just_launch` to the command.
         :param verify: Verify command was executed successfully.
         :return: Result of `tns test` command.
         """

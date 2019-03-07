@@ -96,11 +96,11 @@ class TnsDeviceTests(TnsRunTest):
     def test_300_deploy_list_and_run_applications(self):
         # Deploy test application
         app_id = TnsPaths.get_bundle_id(app_name=APP_NAME)
-        result = Tns.deploy(app_name=APP_NAME, platform=Platform.ANDROID, justlaunch=True, wait=True)
+        result = Tns.deploy(app_name=APP_NAME, platform=Platform.ANDROID, just_launch=True, wait=True)
         for device in self.ANDROID_DEVICES:
             assert device.id in result.output
         if Settings.HOST_OS == OSType.OSX:
-            result = Tns.deploy(app_name=APP_NAME, platform=Platform.IOS, justlaunch=True, wait=True)
+            result = Tns.deploy(app_name=APP_NAME, platform=Platform.IOS, just_launch=True, wait=True)
             for device in self.IOS_DEVICES:
                 assert device.id in result.output
 
@@ -112,9 +112,10 @@ class TnsDeviceTests(TnsRunTest):
 
         # Verify `device run <bundle-id>` will start the app
         device = self.ANDROID_DEVICES[0]
-        Adb.stop_application(app_id=app_id, device_id=device.id)
+        Adb.stop_application(device_id=device.id, app_id=app_id)
         assert not device.is_text_visible(text=Changes.JSHelloWord.JS.old_value), 'Failed to stop the app.'
-        result = Tns.exec_command(command='device run {0}'.format(app_id), device=device.id, wait=True, justlaunch=True)
+        result = Tns.exec_command(command='device run {0}'.format(app_id), device=device.id, wait=True,
+                                  just_launch=True)
         if Settings.HOST_OS == OSType.WINDOWS:
             assert 'iTunes is not installed. Install it on your system and run this command again.' in result.output
         device.wait_for_text(text=Changes.JSHelloWord.JS.old_value)
