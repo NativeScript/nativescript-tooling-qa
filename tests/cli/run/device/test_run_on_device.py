@@ -13,8 +13,6 @@ from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
 
-APP_NAME = Settings.AppName.DEFAULT
-
 
 # noinspection PyMethodMayBeStatic
 class TnsRunOnDevices(TnsDeviceTest):

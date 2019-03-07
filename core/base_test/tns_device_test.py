@@ -13,12 +13,12 @@ class TnsDeviceTest(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        android_device = DeviceManager.get_devices(device_type=DeviceType.ANDROID)[0]
-        assert android_device is not None, 'Failed to find android device.'
+        cls.android_device = DeviceManager.get_devices(device_type=DeviceType.ANDROID)[0]
+        assert cls.android_device is not None, 'Failed to find android device.'
         if Settings.HOST_OS == OSType.OSX:
-            ios_device = DeviceManager.get_devices(device_type=DeviceType.IOS)[0]
-            assert ios_device is not None, 'Failed to find ios device.'
+            cls.ios_device = DeviceManager.get_devices(device_type=DeviceType.IOS)[0]
+            assert cls.ios_device is not None, 'Failed to find ios device.'
 
     def setUp(self):
         TnsTest.setUp(self)
-        Adb.open_home(self.android_device.id)
+        Adb.open_home(device_id=self.android_device.id)

@@ -18,10 +18,15 @@ from products.nativescript.tns_logs import TnsLogs
 
 def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, aot=False, hmr=False,
                         instrumented=True):
+    # Define if it should be executed on device or emulator
     emulator = True
+    device_id = None
     if device.type == DeviceType.ANDROID or device.type == DeviceType.IOS:
         emulator = False
-    result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, wait=False,
+        device_id = device.id
+
+    # Execute tns run command
+    result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, device=device_id, wait=False,
                      bundle=bundle, aot=aot, uglify=uglify, hmr=hmr)
     # Check logs
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
