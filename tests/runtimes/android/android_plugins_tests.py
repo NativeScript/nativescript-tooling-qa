@@ -38,7 +38,6 @@ class AndroidRuntimePluginTests(TnsTest):
          https://github.com/NativeScript/android-runtime/issues/993
         """
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         # Change main-page.js so it contains only logging information
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
