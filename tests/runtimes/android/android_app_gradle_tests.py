@@ -165,7 +165,6 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         # https://github.com/NativeScript/android-runtime/pull/937
         # https://github.com/NativeScript/nativescript-cli/pull/3467
         Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-pr-937',
                               'app.gradle')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
