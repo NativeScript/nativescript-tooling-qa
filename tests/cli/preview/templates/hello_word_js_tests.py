@@ -59,39 +59,39 @@ class TnsPreviewJSTests(TnsRunTest):
 
 class PreviewJSTests(TnsPreviewJSTests):
 
-    def test_100_preview_android(self):
-        """Preview project on emulator. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, instrumented=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_100_preview_ios(self):
-        """Preview project on simulator. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
-                                       device=self.sim)
-
-    def test_200_preview_android_bundle(self):
-        """Preview project on emulator with --bundle. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, instrumented=True, bundle=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_preview_ios_bundle(self):
-        """Preview project on simulator with --bundle. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
-                                       device=self.sim, instrumented=True, bundle=True)
-
-    def test_205_preview_android_hmr(self):
-        """Preview project on emulator with --hmr. Make valid changes in JS, CSS and XML"""
-        # preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, instrumented=True, hmr=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_205_preview_ios_hmr(self):
-        """Preview project on simulator with --hmr. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
-                                       device=self.sim, instrumented=True, hmr=True)
+    # def test_100_preview_android(self):
+    #     """Preview project on emulator. Make valid changes in JS, CSS and XML"""
+    #     preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+    #                                    device=self.emu, instrumented=True)
+    #
+    # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    # def test_100_preview_ios(self):
+    #     """Preview project on simulator. Make valid changes in JS, CSS and XML"""
+    #     preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+    #                                    device=self.sim)
+    #
+    # def test_200_preview_android_bundle(self):
+    #     """Preview project on emulator with --bundle. Make valid changes in JS, CSS and XML"""
+    #     preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+    #                                    device=self.emu, instrumented=True, bundle=True)
+    #
+    # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    # def test_200_preview_ios_bundle(self):
+    #     """Preview project on simulator with --bundle. Make valid changes in JS, CSS and XML"""
+    #     preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+    #                                    device=self.sim, instrumented=True, bundle=True)
+    #
+    # def test_205_preview_android_hmr(self):
+    #     """Preview project on emulator with --hmr. Make valid changes in JS, CSS and XML"""
+    #     # preview_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+    #     preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+    #                                    device=self.emu, instrumented=True, hmr=True)
+    #
+    # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    # def test_205_preview_ios_hmr(self):
+    #     """Preview project on simulator with --hmr. Make valid changes in JS, CSS and XML"""
+    #     preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+    #                                    device=self.sim, instrumented=True, hmr=True)
 
     def test_210_tns_preview_android_livesync_on_two_emulators(self):
         """
