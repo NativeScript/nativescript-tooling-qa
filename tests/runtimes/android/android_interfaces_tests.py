@@ -146,7 +146,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         https://github.com/NativeScript/android-runtime/issues/1181
         """
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(APP_NAME, template=Template.VUE_BLANK.name, verify=False)
+        Tns.create(APP_NAME, template=Template.VUE_BLANK.local_package, verify=False)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1181', 'js',
