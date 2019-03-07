@@ -57,8 +57,8 @@ class Adb(object):
         """
         Adb.run_adb_command(command='logcat -c', device_id=device_id, wait=True)
         Log.info("The logcat on {0} is cleared.".format(device_id))
-    
-    @staticmethod    
+
+    @staticmethod
     def __find_aapt():
         """
         Find aapt tool under $ANDROID_HOME/build-tools
