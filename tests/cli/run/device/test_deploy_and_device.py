@@ -93,7 +93,7 @@ class TnsDeviceTests(TnsRunTest):
             assert not DeviceManager.Simulator.is_running(
                 Settings.Simulators.DEFAULT), 'Simulator is started after "tns device ios --available-devices"!'
 
-    def test_300_device_list_and_run_applications(self):
+    def test_300_deploy_list_and_run_applications(self):
         # Deploy test application
         app_id = TnsPaths.get_bundle_id(app_name=APP_NAME)
         result = Tns.deploy(app_name=APP_NAME, platform=Platform.ANDROID, justlaunch=True, wait=True)
@@ -168,4 +168,6 @@ class TnsDeviceTests(TnsRunTest):
                 path_without_android = path_without_android + path + ':'
         os.environ['PATH'] = path_without_android
         os.environ['ANDROID_HOME'] = 'WRONG_PATH'
-        self.test_100_list_devices()
+        result = Tns.exec_command(command='device')
+        assert self.emu.name in result.output
+        assert self.emu.id in result.output
