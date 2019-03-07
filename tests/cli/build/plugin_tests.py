@@ -184,8 +184,8 @@ class PluginTests(TnsTest):
             os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name), 'tns-plugin', 'test2.ios.xml'))
         assert not File.exists(
             os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name), 'tns-plugin', 'test.android.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                               'tns-plugin', 'test2.android.xml'))
+        assert not File.exists(
+            os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name), 'tns-plugin', 'test2.android.xml'))
 
         apk_path = os.path.join(TnsPaths.get_apk_path(self.app_name), 'debug', 'app-debug.apk')
         output = Adb.get_package_permission(apk_path)
@@ -213,11 +213,11 @@ class PluginTests(TnsTest):
         Npm.install(option='--ignore-scripts', folder=folder_path)
         Tns.build_ios(app_name=self.app_name)
         app_path = os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name))
-        assert not File.exists(os.path.join(app_path, 'nativescript-ui-listview', 'node_modules',
-                               'nativescript-ui-core', 'platforms'))
+        assert not File.exists(
+            os.path.join(app_path, 'nativescript-ui-listview', 'node_modules', 'nativescript-ui-core', 'platforms'))
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_320_CFBundleURLTypes_overridden_from_plugin_ios(self):
+    def test_320_cfbundleurltypes_overridden_from_plugin_ios(self):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/2936
         """
