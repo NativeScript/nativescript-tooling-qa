@@ -9,7 +9,6 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from data.changes import Changes, Sync
-from data.const import Colors
 from data.templates import Template
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
@@ -33,12 +32,15 @@ class TnsRunOnDevices(TnsDeviceTest):
     def test_100_run_on_all_devices(self):
         result = Tns.run(app_name=self.app_name, platform=Platform.NONE, bundle=True, hmr=True)
 
+        # Wait for logs
+        strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID, run_type=RunType.FULL,
+                                       bundle=True, hmr=True)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
+
         # Verify it looks properly
         for device in DeviceManager.get_devices(device_type=any):
             device.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
             device.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-            blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
-            assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
 
         # Edit JS file and verify changes are applied
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
