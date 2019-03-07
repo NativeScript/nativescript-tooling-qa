@@ -1,5 +1,7 @@
 # pylint: disable=unused-argument
+
 from core.log.log import Log
+from core.utils.file_utils import File
 from core.utils.run import run
 
 
@@ -23,9 +25,14 @@ class IDevice(object):
         return device_ids
 
     @staticmethod
-    def is_text_visible(device_id, text):
-        return False
-
-    @staticmethod
     def get_screen(device_id, file_path):
-        return None
+        """
+        Save screen of iOS real device.
+        :param device_id: Device identifier.
+        :param file_path: Path where image will be saved.
+        """
+        tiff_image_path = file_path.replace('.png', '.tiff')
+
+        run(cmd="idevicescreenshot -u {0} {1}".format(device_id, tiff_image_path))
+        run(cmd="sips -s format png {0} --out {1}".format(tiff_image_path, file_path))
+        File.clean(tiff_image_path)

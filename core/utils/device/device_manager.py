@@ -19,12 +19,12 @@ class DeviceManager(object):
         # Get Android devices
         if device_type is DeviceType.ANDROID or device_type is any:
             for device_id in Adb.get_ids(include_emulators=False):
-                device = Device(id=device_id, name='Android Device', type=DeviceType.ANDROID, version=None)
+                device = Device(id=device_id, name=device_id, type=DeviceType.ANDROID, version=None)
                 devices.append(device)
         # Get iOS devices
         if device_type is DeviceType.IOS or device_type is any:
             for device_id in IDevice.get_devices():
-                device = Device(id=device_id, name='iOS Device', type=DeviceType.IOS, version=None)
+                device = Device(id=device_id, name=device_id, type=DeviceType.IOS, version=None)
                 devices.append(device)
         return devices
 

@@ -174,7 +174,8 @@ class Adb(object):
             Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
             Adb.run_adb_command(command='shell screencap -p /sdcard/image.png', device_id=device_id)
             result = Adb.run_adb_command(command='pull /sdcard/image.png {0}'.format(file_path), device_id=device_id)
-            assert '1 file pulled' in result.output, 'Failed to pull image from {0}'.format(device_id)
+            assert '1 file pulled' in result.output, 'Failed to pull image from {0}.\n{1}'.format(device_id,
+                                                                                                  result.output)
             Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
         if File.exists(file_path):
             return
