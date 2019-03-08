@@ -1,6 +1,6 @@
 import logging
 import os
-
+import re
 import time
 
 from core.enums.os_type import OSType
@@ -9,7 +9,6 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
-import re
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -25,7 +24,7 @@ class Adb(object):
         return run(cmd=command, wait=wait, timeout=timeout, fail_safe=fail_safe, log_level=log_level)
 
     @staticmethod
-    def __get_ids(include_emulator=False):
+    def get_ids(include_emulators=False):
         """
         Get IDs of available android devices.
         """
@@ -37,7 +36,9 @@ class Adb(object):
         for line in output.splitlines():
             if 'model' in line and ' device ' in line:
                 device_id = line.split(' ')[0]
-                if include_emulator:
+                if 'emulator' in line and not include_emulators:
+                    Log.debug('{0} not included in android device list.'.format(device_id))
+                else:
                     devices.append(device_id)
         return devices
 
@@ -76,23 +77,6 @@ class Adb(object):
         Adb.run_adb_command('kill-server')
         Process.kill(proc_name='adb')
         Adb.run_adb_command('start-server')
-
-    @staticmethod
-    def get_devices(include_emulators=False):
-        """
-        Get available android devices (only real devices).
-        """
-        devices = []
-        output = Adb.run_adb_command('devices -l').output
-        for line in output.splitlines():
-            if 'model' in line and ' device ' in line:
-                if include_emulators:
-                    device_id = line.split(' ')[0]
-                    devices.append(device_id)
-                elif 'emulator' not in line:
-                    device_id = line.split(' ')[0]
-                    devices.append(device_id)
-        return devices
 
     @staticmethod
     def get_package_permission(apk_file):
@@ -193,7 +177,7 @@ class Adb(object):
             x = x + int(arr_x_y[0])
             y = y + int(arr_x_y[1])
             counter = counter + 1
-        return x/counter, y/counter
+        return x / counter, y / counter
 
     @staticmethod
     def click_element_by_text(device_id, text, case_sensitive=False):
@@ -225,13 +209,21 @@ class Adb(object):
     @staticmethod
     def get_screen(device_id, file_path):
         File.delete(path=file_path)
-        if Settings.HOST_OS == OSType.WINDOWS:
-            Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
-                                device_id=device_id,
-                                log_level=logging.DEBUG)
+        if 'emulator' in device_id:
+            if Settings.HOST_OS == OSType.WINDOWS:
+                Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
+                                    device_id=device_id,
+                                    log_level=logging.DEBUG)
+            else:
+                Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
+                                    device_id=device_id)
         else:
-            Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
-                                device_id=device_id)
+            Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
+            Adb.run_adb_command(command='shell screencap -p /sdcard/image.png', device_id=device_id)
+            result = Adb.run_adb_command(command='pull /sdcard/image.png {0}'.format(file_path), device_id=device_id)
+            assert '1 file pulled' in result.output, 'Failed to pull image from {0}.\n{1}'.format(device_id,
+                                                                                                  result.output)
+            Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
         if File.exists(file_path):
             return
         else:
@@ -327,9 +319,8 @@ class Adb(object):
         :param device_id: Device identifier
         :param app_id: Bundle identifier (example: org.nativescript.TestApp)
         """
-        command = " -s " + device_id + " shell am force-stop " + app_id
-        output = Adb.run_adb_command(command=command, wait=True).output
-        assert app_id not in output, "Failed to stop " + app_id
+        result = Adb.run_adb_command(command='shell am force-stop {0}'.format(app_id), device_id=device_id, wait=True)
+        assert app_id not in result.output, 'Failed to stop ' + app_id
 
     @staticmethod
     def get_version(device_id):

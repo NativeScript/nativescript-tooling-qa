@@ -64,8 +64,8 @@ class Tns(object):
                                                                Settings.Android.ANDROID_KEYSTORE_PASS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS)
-            if platform is Platform.IOS:
-                cmd = cmd + ' --provision ' + provision
+        if platform is not Platform.ANDROID and not emulator and '-' not in (device or ''):
+            cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
         if bundle:
@@ -256,6 +256,18 @@ class Tns(object):
                          app_data=app_data)
 
     @staticmethod
+    def deploy(app_name, platform, device=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
+               wait=False, just_launch=False, log_trace=False, verify=True):
+        result = Tns.exec_command(command='deploy', path=app_name, platform=platform, device=device, release=release,
+                                  provision=provision, for_device=for_device, wait=wait, just_launch=just_launch,
+                                  log_trace=log_trace)
+        if verify:
+            assert result.exit_code == 0, 'tns run failed with non zero exit code.'
+            assert 'successfully installed on device' in result.output.lower()
+
+        return result
+
+    @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
             for_device=False, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
             log_trace=False, just_launch=False, verify=True):
@@ -342,7 +354,7 @@ class Tns(object):
         :param platform: PlatformType enum value.
         :param emulator: If true pass `--emulator` to the command.
         :param device: Pass `--device <value>` to command.
-        :param just_launch: If true pass `--justlaunch` to the command.
+        :param just_launch: If true pass `--just_launch` to the command.
         :param verify: Verify command was executed successfully.
         :return: Result of `tns test` command.
         """

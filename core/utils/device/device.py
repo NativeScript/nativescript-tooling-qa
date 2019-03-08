@@ -53,8 +53,6 @@ class Device(object):
             is_visible = Adb.is_text_visible(device_id=self.id, text=text)
         if self.type is DeviceType.SIM:
             is_visible = SimAuto.is_text_visible(self, text)
-        if self.type is DeviceType.IOS:
-            is_visible = IDevice.is_text_visible(device_id=self.id, text=text)
 
         # Retry find with ORC (only for IOS, for example if macOS automation fails)
         if not is_visible and (self.type is DeviceType.SIM or self.type is DeviceType.IOS):

@@ -52,4 +52,4 @@ class TnsPaths(object):
 
     @staticmethod
     def get_bundle_id(app_name):
-        return app_name.replace('-', '')
+        return 'org.nativescript.' + app_name.replace('-', '')
