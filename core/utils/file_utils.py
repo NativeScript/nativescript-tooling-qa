@@ -196,7 +196,7 @@ class File(object):
             for basename in files:
                 if fnmatch.fnmatch(basename, pattern):
                     filename = os.path.join(root, basename)
-                    print pattern + " exists: " + filename
+                    Log.info(pattern + " exists: " + filename)
                     found = True
         return found
 
