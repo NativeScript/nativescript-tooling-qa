@@ -64,10 +64,11 @@ class Tns(object):
                                                                Settings.Android.ANDROID_KEYSTORE_PASS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS)
-        if ('run' in cmd or 'debug' in cmd or 'deploy' in cmd) \
+        if ('prepare' in cmd or 'build' in cmd or 'run' in cmd or 'debug' in cmd or 'deploy' in cmd) \
                 and platform is not Platform.ANDROID \
                 and not emulator \
-                and '-' not in (device or ''):
+                and '-' not in (device or '') \
+                and Settings.HOST_OS == OSType.OSX:
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
