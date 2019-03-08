@@ -26,10 +26,10 @@ APP_NAME = Settings.AppName.DEFAULT
 # noinspection PyMethodMayBeStatic
 class TnsDeviceTests(TnsRunTest):
     ANDROID_DEVICES = DeviceManager.get_devices(device_type=DeviceType.ANDROID)
-    assert len(ANDROID_DEVICES) > 0, 'Android devices not found.'
+    assert ANDROID_DEVICES, 'Android devices not found.'
     if Settings.HOST_OS == OSType.OSX:
         IOS_DEVICES = DeviceManager.get_devices(device_type=DeviceType.IOS)
-        assert len(IOS_DEVICES) > 0, 'iOS devices not found.'
+        assert IOS_DEVICES, 'iOS devices not found.'
 
     PATH = os.environ.get('PATH')
     ANDROID_HOME = os.environ.get('ANDROID_HOME')
@@ -121,10 +121,7 @@ class TnsDeviceTests(TnsRunTest):
         device = self.ANDROID_DEVICES[0]
         Adb.stop_application(device_id=device.id, app_id=app_id)
         assert not device.is_text_visible(text=Changes.JSHelloWord.JS.old_value), 'Failed to stop the app.'
-        result = Tns.exec_command(command='device run {0}'.format(app_id), device=device.id, wait=True,
-                                  just_launch=True)
-        if Settings.HOST_OS == OSType.WINDOWS:
-            assert 'iTunes is not installed. Install it on your system and run this command again.' in result.output
+        Tns.exec_command(command='device run {0}'.format(app_id), device=device.id, wait=True, just_launch=True)
         device.wait_for_text(text=Changes.JSHelloWord.JS.old_value)
 
         # Get Android device logs
@@ -149,13 +146,6 @@ class TnsDeviceTests(TnsRunTest):
         invalid_platform = 'fakePlatform'
         result = Tns.exec_command(command='device {0}'.format(invalid_platform))
         assert "'{0}' is not a valid device platform.".format(invalid_platform) in result.output
-
-    def test_401_device_commands_with_invalid_device_id(self):
-        invalid_device_id = 'fakeDevice'
-        for command in ['log', 'run android', 'list-applications']:
-            output = Tns.exec_command('device {0} --device {1}'.format(command, invalid_device_id)).output
-            assert "Could not find device by specified identifier '{0}'.".format(invalid_device_id) in output
-            assert "To list currently connected devices and verify that the specified identifier exists" in output
 
     def test_402_deploy_invalid_platform(self):
         result = Tns.exec_command(command='deploy platform', path=APP_NAME)
