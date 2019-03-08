@@ -46,6 +46,11 @@ class TnsDeviceTests(TnsRunTest):
         os.environ['PATH'] = self.PATH
         os.environ['ANDROID_HOME'] = self.ANDROID_HOME
 
+    def tearDown(self):
+        TnsRunTest.tearDown(self)
+        os.environ['PATH'] = self.PATH
+        os.environ['ANDROID_HOME'] = self.ANDROID_HOME
+
     def test_100_list_devices(self):
         # Verify both device and devices are valid and return correct results
         device_result = Tns.exec_command(command='device')
