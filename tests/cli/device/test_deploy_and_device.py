@@ -26,8 +26,10 @@ APP_NAME = Settings.AppName.DEFAULT
 # noinspection PyMethodMayBeStatic
 class TnsDeviceTests(TnsRunTest):
     ANDROID_DEVICES = DeviceManager.get_devices(device_type=DeviceType.ANDROID)
+    assert len(ANDROID_DEVICES) > 0, 'Android devices not found.'
     if Settings.HOST_OS == OSType.OSX:
         IOS_DEVICES = DeviceManager.get_devices(device_type=DeviceType.IOS)
+        assert len(IOS_DEVICES) > 0, 'iOS devices not found.'
 
     PATH = os.environ.get('PATH')
     ANDROID_HOME = os.environ.get('ANDROID_HOME')

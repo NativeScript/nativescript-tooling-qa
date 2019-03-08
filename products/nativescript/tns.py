@@ -21,7 +21,7 @@ from products.nativescript.tns_paths import TnsPaths
 class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
-                     device=None, release=False, for_device=False, provision=Settings.IOS.DEV_PROVISION, bundle=False,
+                     device=None, release=False, for_device=False, provision=None, bundle=False,
                      hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
                      options=None, wait=True, timeout=600):
         """
@@ -65,11 +65,7 @@ class Tns(object):
                                                                Settings.Android.ANDROID_KEYSTORE_PASS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS)
-        if ('prepare' in cmd or 'build' in cmd or 'run' in cmd or 'debug' in cmd or 'deploy' in cmd) \
-                and platform is not Platform.ANDROID \
-                and not emulator \
-                and '-' not in (device or '') \
-                and Settings.HOST_OS == OSType.OSX:
+        if provision is not None and platform != Platform.ANDROID and Settings.HOST_OS == OSType.OSX:
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
