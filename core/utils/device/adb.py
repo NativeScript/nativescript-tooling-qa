@@ -277,7 +277,7 @@ class Adb(object):
         :param path: Path relative to root folder of the package.
         :return: List of files and folders
         """
-        command = 'shell run-as {0} ls -la /data/data/{1}/files/{2}'.format(package_id, package_id, path)
+        command = 'shell run-as {id} ls -la /data/data/{id}/files/{path}'.format(id=package_id, path=path)
         output = Adb.run_adb_command(command=command, device_id=device_id, log_level=logging.DEBUG, wait=True).output
         return output
 

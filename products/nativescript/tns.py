@@ -1,3 +1,4 @@
+# pylint: disable=too-many-boolean-expressions
 # pylint: disable=too-many-branches
 import logging
 import os
