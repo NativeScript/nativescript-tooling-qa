@@ -3,18 +3,18 @@ File and Folder utils.
 """
 # pylint: disable=unused-variable
 import errno
+import fnmatch
 import os
 import shutil
 import stat
 import tarfile
-import fnmatch
 
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.process import Process
 
 
-# noinspection PyBroadException
 class Folder(object):
     @staticmethod
     def clean(folder):
@@ -24,6 +24,7 @@ class Folder(object):
             try:
                 shutil.rmtree(folder)
             except OSError as error:
+                # noinspection PyBroadException
                 try:
                     for root, dirs, files in os.walk(folder, topdown=False):
                         for name in files:
@@ -36,6 +37,8 @@ class Folder(object):
                     os.rmdir(folder)
                     Log.error('Error: %s - %s.' % (error.filename, error.strerror))
                 except Exception:
+                    Log.info('Kill processes with handle to ' + folder)
+                    Process.kill_by_handle(folder)
                     shutil.rmtree(folder, ignore_errors=True)
 
     @staticmethod
