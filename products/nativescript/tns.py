@@ -64,7 +64,10 @@ class Tns(object):
                                                                Settings.Android.ANDROID_KEYSTORE_PASS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS)
-        if platform is not Platform.ANDROID and not emulator and '-' not in (device or ''):
+        if ('run' in cmd or 'debug' in cmd or 'deploy' in cmd) \
+                and platform is not Platform.ANDROID \
+                and not emulator \
+                and '-' not in (device or ''):
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
