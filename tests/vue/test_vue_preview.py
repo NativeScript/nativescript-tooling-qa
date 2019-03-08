@@ -53,6 +53,7 @@ class VueJSPreviewTests(TnsRunTest):
     def test_200_preview_android_bundle_hmr(self):
         preview_blank_vue(self.app_name, Platform.ANDROID, self.emu, hmr=True)
 
+    @unittest.skip('Skip temporary.')
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_200_preview_ios_bundle_hmr(self):
         preview_blank_vue(self.app_name, Platform.IOS, self.sim, hmr=True)
