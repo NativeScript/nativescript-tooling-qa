@@ -39,7 +39,7 @@ class Folder(object):
                 except Exception:
                     Log.info('Kill processes with handle to ' + folder)
                     Process.kill_by_handle(folder)
-                    shutil.rmtree(folder, ignore_errors=True)
+                    os.system('rm -rf {0}'.format(folder))
 
     @staticmethod
     def exists(folder):
