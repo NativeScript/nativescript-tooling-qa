@@ -185,7 +185,8 @@ class Adb(object):
         element = Adb.get_element_by_text(device_id, text, case_sensitive)
         if element is not None:
             coordinates = Adb.get_element_coordinates(element)
-            Adb.run_adb_command(command='shell input tap {0} {1}'.format(str(coordinates[0]), str(coordinates[1])))
+            Adb.run_adb_command(command="-s {0} shell input tap {1} {2}".format(device_id, str(coordinates[0]),
+                                                                                str(coordinates[1])))
         else:
             assert False, 'Element with text ' + text + ' not found!'
 
@@ -198,7 +199,7 @@ class Adb(object):
             xml = ET.ElementTree(ET.fromstring(page_source))
             elements = xml.findall(".//node[@text]")
             if elements:
-                for element in elements:
+                 for element in elements:
                     if case_sensitive:
                         if text in element.attrib['text']:
                             return element
