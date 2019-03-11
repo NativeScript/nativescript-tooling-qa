@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 """
 Image utils.
 
@@ -63,7 +64,6 @@ class ImageUtils(object):
         :param image_path: Image path.
         :return: Image as opencv object.
         """
-        # pylint: disable=no-member
         return cv2.imread(image_path)
 
     @staticmethod
@@ -114,11 +114,10 @@ class ImageUtils(object):
 
         # Add extra text
         if use_cv2:
-            import cv2
             img = cv2.imread(image_path)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # convert to grayscale
             gray = cv2.medianBlur(gray, 5)  # smooth the image to avoid noises
-            height, width, channels = img.shape
+            height, width, _ = img.shape
 
             # Apply adaptive threshold
             thresh = cv2.adaptiveThreshold(gray, 255, 1, 1, 11, 2)
@@ -128,7 +127,7 @@ class ImageUtils(object):
             thresh = cv2.erode(thresh, None, iterations=15)
 
             # Find the contours
-            contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
             # For each contour, find the bounding rectangle and draw it
             for cnt in contours:
