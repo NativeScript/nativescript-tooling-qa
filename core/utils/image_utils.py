@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 """
 Image utils.
 
@@ -63,7 +64,6 @@ class ImageUtils(object):
         :param image_path: Image path.
         :return: Image as opencv object.
         """
-        # pylint: disable=no-member
         return cv2.imread(image_path)
 
     @staticmethod
@@ -101,7 +101,7 @@ class ImageUtils(object):
         return main_color
 
     @staticmethod
-    def get_text(image_path):
+    def get_text(image_path, use_cv2=True):
         char_whitelist = string.digits
         char_whitelist += string.ascii_lowercase
         char_whitelist += string.ascii_uppercase
@@ -110,4 +110,36 @@ class ImageUtils(object):
         row_text = pytesseract.image_to_string(image, lang='eng',
                                                config="-c tessedit_char_whitelist=%s_-." % char_whitelist).strip()
         text = "".join([s for s in row_text.splitlines(True) if s.strip()])
-        return text.encode(encoding='utf-8', errors='ignore')
+        text = text.encode(encoding='utf-8', errors='ignore').decode('utf-8')
+
+        # Add extra text
+        if use_cv2:
+            img = cv2.imread(image_path)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # convert to grayscale
+            gray = cv2.medianBlur(gray, 5)  # smooth the image to avoid noises
+            height, width, _ = img.shape
+
+            # Apply adaptive threshold
+            thresh = cv2.adaptiveThreshold(gray, 255, 1, 1, 11, 2)
+
+            # apply some dilation and erosion to join the gaps - change iteration to detect more or less area's
+            thresh = cv2.dilate(thresh, None, iterations=15)
+            thresh = cv2.erode(thresh, None, iterations=15)
+
+            # Find the contours
+            contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+            # For each contour, find the bounding rectangle and draw it
+            for cnt in contours:
+                x, y, w, h = cv2.boundingRect(cnt)
+                if 100 < w < width and 50 < h < height * 0.1:
+                    temp_image = img[y:y + h, x:x + w]
+                    temp_text = pytesseract \
+                        .image_to_string(temp_image, lang='eng',
+                                         config="-c tessedit_char_whitelist=%s_-." % char_whitelist) \
+                        .strip()
+                    temp_text = "".join([s for s in temp_text.splitlines(True) if s.strip()])
+                    temp_text = temp_text.encode(encoding='utf-8', errors='ignore').decode('utf-8')
+                    if temp_text not in text:
+                        text = text + '\n' + temp_text
+        return text
