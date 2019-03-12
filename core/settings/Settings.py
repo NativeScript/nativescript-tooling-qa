@@ -134,6 +134,8 @@ class Emulators(object):
                               emu_id='emulator-5560')
     EMU_API_23 = EmulatorInfo(avd=os.environ.get('EMU_API_23', 'Emulator-Api23-Default'), os_version=6.0, port='5562',
                               emu_id='emulator-5562')
+    EMU_API_24 = EmulatorInfo(avd=os.environ.get('EMU_API_24', 'Emulator-Api24-Default'), os_version=6.0, port='5568',
+                              emu_id='emulator-5568')
     EMU_API_26 = EmulatorInfo(avd=os.environ.get('EMU_API_26', 'Emulator-Api26-Google'), os_version=8.0, port='5564',
                               emu_id='emulator-5564')
     EMU_API_28 = EmulatorInfo(avd=os.environ.get('EMU_API_28', 'Emulator-Api28-Google'), os_version=9.0, port='5566',

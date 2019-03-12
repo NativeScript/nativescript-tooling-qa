@@ -26,14 +26,14 @@ class TnsPreviewJSTests(TnsRunTest):
     def setUpClass(cls):
         TnsRunTest.setUpClass()
         # Start second emulator for tests
-        cls.emu_API28 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_28)
+        cls.emu_API24 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_24)
 
         # Download Preview and Playground packages
         Preview.get_app_packages()
 
         # Install Preview and Playground
         Preview.install_preview_app(cls.emu, Platform.ANDROID)
-        Preview.install_preview_app(cls.emu_API28, Platform.ANDROID)
+        Preview.install_preview_app(cls.emu_API24, Platform.ANDROID)
         if Settings.HOST_OS is OSType.OSX:
             Preview.install_preview_app(cls.sim, Platform.IOS)
             Preview.install_playground_app(cls.sim, Platform.IOS)
@@ -117,8 +117,8 @@ class PreviewJSTests(TnsPreviewJSTests):
         Adb.click_element_by_text(self.emu.id, 'TAP', case_sensitive=True)
 
         # Preview on second emulator
-        Preview.run_url(url=url, device=self.emu_API28)
-        self.emu_API28.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
+        Preview.run_url(url=url, device=self.emu_API24)
+        self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Verify first emulator is not refreshed, state of app is preserved
         self.emu.wait_for_text(text='41 taps left', timeout=30)
@@ -126,12 +126,12 @@ class PreviewJSTests(TnsPreviewJSTests):
         # Edit JS file and verify changes are applied on both emulators
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
-        self.emu_API28.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
+        self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
 
         # Edit XML file and verify changes are applied
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        self.emu_API28.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
+        self.emu_API24.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_210_tns_preview_on_simulator_and_emulator_livesync(self):
