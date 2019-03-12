@@ -9,6 +9,7 @@ from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
+from core.utils.version import Version
 
 ANDROID_HOME = os.environ.get('ANDROID_HOME')
 ADB_PATH = os.path.join(ANDROID_HOME, 'platform-tools', 'adb')
@@ -326,7 +327,7 @@ class Adb(object):
     def get_version(device_id):
         """
         Get device version
-        :param device_id: Device identifier
+        :param device_id: Device identifier as float.
         """
-        command = " -s " + device_id + " shell getprop ro.build.version.release "
-        return Adb.run_adb_command(command=command, wait=True).output
+        result = Adb.run_adb_command(command='shell getprop ro.build.version.release', wait=True, device_id=device_id)
+        return Version.get(result.output)

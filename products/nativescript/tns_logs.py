@@ -51,7 +51,7 @@ class TnsLogs(object):
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, app_type=None,
-                     file_name=None, instrumented=False, plugins=None, aot=False):
+                     file_name=None, instrumented=False, plugins=None, aot=False, device=None):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -65,6 +65,7 @@ class TnsLogs(object):
         :param instrumented: If true it will return logs we place inside app (see files in assets/logs).
         :param plugins: List of plugins.
         :param aot: True if `--env.aot is specified.`
+        :param device: Device object.
         :return: Array of strings.
         """
         if plugins is None:
@@ -96,7 +97,7 @@ class TnsLogs(object):
         else:
             if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
                 logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
-                                                           instrumented=instrumented, app_type=app_type))
+                                                           instrumented=instrumented, app_type=app_type, device=device))
             else:
                 logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type,
                                                            file_name=file_name, hmr=hmr))
@@ -187,12 +188,13 @@ class TnsLogs(object):
         return should_restart
 
     @staticmethod
-    def __app_restart_messages(app_name, platform, instrumented, app_type):
+    def __app_restart_messages(app_name, platform, instrumented, app_type, device):
         logs = ['Restarting application on device']
         if platform == Platform.ANDROID:
             app_id = TnsPaths.get_bundle_id(app_name)
-            logs.append('ActivityManager: Start proc')
-            logs.append('activity {0}/com.tns.NativeScriptActivity'.format(app_id))
+            if device is not None and device.version < 7.0:
+                logs.append('ActivityManager: Start proc')
+                logs.append('activity {0}/com.tns.NativeScriptActivity'.format(app_id))
         if instrumented:
             logs.append('QA: Application started')
             if app_type == AppType.NG:

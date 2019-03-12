@@ -67,7 +67,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     __verify_snapshot_skipped(snapshot, result)
 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
-                                   hmr=hmr, instrumented=instrumented)
+                                   hmr=hmr, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
     # Verify it looks properly
@@ -82,7 +82,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     Sync.replace(app_name=app_name, change_set=js_change)
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name=js_file, instrumented=instrumented)
+                                   hmr=hmr, file_name=js_file, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit XML file and verify changes are applied
@@ -90,7 +90,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='main-page.xml', instrumented=instrumented)
+                                   hmr=hmr, file_name='main-page.xml', instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit CSS file and verify changes are applied
@@ -99,7 +99,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='app.css', instrumented=instrumented)
+                                   hmr=hmr, file_name='app.css', instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Revert all the changes
@@ -107,14 +107,14 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.wait_for_text(text=js_change.old_text)
     device.wait_for_text(text=xml_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name=js_file, instrumented=instrumented)
+                                   hmr=hmr, file_name=js_file, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=xml_change)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='main-page.xml', instrumented=instrumented)
+                                   hmr=hmr, file_name='main-page.xml', instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=css_change)
@@ -122,7 +122,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='app.css', instrumented=instrumented)
+                                   hmr=hmr, file_name='app.css', instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Assert final and initial states are same
