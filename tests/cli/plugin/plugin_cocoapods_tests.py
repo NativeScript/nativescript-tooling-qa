@@ -94,7 +94,7 @@ class PluginTests(TnsTest):
                                         'contents.xcworkspacedata'))
         assert "location = \"group:TestApp.xcodeproj\">" in output
         assert "location = \"group:Pods/Pods.xcodeproj\">" in output
-        assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Pods', 'Pods.xcodeproj'))
+        assert Folder.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Pods', 'Pods.xcodeproj'))
 
         # This deployment target comes from the CLI
         output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
@@ -113,7 +113,7 @@ class PluginTests(TnsTest):
         output = File.read(os.path.join(self.app_name, 'package.json'))
         assert "invalidpod" in output
 
-        result = Tns.prepare_ios(self.app_name)
+        result = Tns.prepare_ios(self.app_name, verify=False)
         assert "Installing pods..." in result.output
         assert "'pod install' command failed" in result.output
         assert "pod 'InvalidPod'" in File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
