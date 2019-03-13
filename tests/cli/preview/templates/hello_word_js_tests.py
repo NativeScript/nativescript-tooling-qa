@@ -154,6 +154,8 @@ class PreviewJSTests(TnsPreviewJSTests):
 
         # Preview on simulator
         Preview.run_url(url=url, device=self.sim)
+        strings = TnsLogs.preview_initial_messages(platform=Platform.IOS)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Verify emulator is not refreshed, state of app is preserved
