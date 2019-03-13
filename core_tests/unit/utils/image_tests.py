@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Tests for image utils.
 
@@ -11,6 +12,7 @@ import unittest
 
 import numpy
 
+from core.log.log import Log
 from core.utils.image_utils import ImageUtils
 
 
@@ -19,6 +21,7 @@ class ImageUtilsTests(unittest.TestCase):
     current_folder = os.path.dirname(os.path.realpath(__file__))
 
     app_image = os.path.join(current_folder, 'resources', 'app.png')
+    app_image_ng = os.path.join(current_folder, 'resources', 'app_ng.png')
     app_image_ios = os.path.join(current_folder, 'resources', 'app_ios.png')
     iphone_image = os.path.join(current_folder, 'resources', 'screenshot.png')
     unicode_image = os.path.join(current_folder, 'resources', 'unicode.png')
@@ -60,10 +63,17 @@ class ImageUtilsTests(unittest.TestCase):
         assert 'Reminders' in text
         assert 'Settings' in text
 
-        # Unicode text
+    @unittest.skipIf(os.environ.get('TRAVIS', None) is not None, 'Skip on Travis.')
+    def test_05_get_text_unicode(self):
         text = ImageUtils.get_text(self.unicode_image)
+        Log.info(text)
         assert 'Ter Stegen' in text
         assert 'Neymar' in text
+
+        text = ImageUtils.get_text(self.app_image_ng)
+        Log.info(text)
+        assert 'Ter Stegen' in text
+        assert 'Piqué' in text
 
 
 if __name__ == '__main__':

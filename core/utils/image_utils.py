@@ -7,6 +7,7 @@ Notes: OpenCV color order is:
 1 - green
 2 - red
 """
+import os
 import string
 
 import cv2
@@ -110,7 +111,7 @@ class ImageUtils(object):
         row_text = pytesseract.image_to_string(image, lang='eng',
                                                config="-c tessedit_char_whitelist=%s_-." % char_whitelist).strip()
         text = "".join([s for s in row_text.splitlines(True) if s.strip()])
-        text = text.encode(encoding='utf-8', errors='ignore').decode('utf-8')
+        text = text.encode(encoding='utf-8', errors='ignore')
 
         # Add extra text
         if use_cv2:
@@ -139,7 +140,8 @@ class ImageUtils(object):
                                          config="-c tessedit_char_whitelist=%s_-." % char_whitelist) \
                         .strip()
                     temp_text = "".join([s for s in temp_text.splitlines(True) if s.strip()])
-                    temp_text = temp_text.encode(encoding='utf-8', errors='ignore').decode('utf-8')
+                    temp_text = temp_text.encode(encoding='utf-8', errors='ignore')
                     if temp_text not in text:
-                        text = text + '\n' + temp_text
+                        text = text + os.linesep + temp_text
+
         return text
