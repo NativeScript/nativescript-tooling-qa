@@ -1,8 +1,10 @@
 import os
 import unittest
 
+from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
 from core.settings import Settings
+from core.utils.device.device import Device
 from data.changes import Changes
 from products.nativescript.run_type import RunType
 from products.nativescript.tns_logs import TnsLogs
@@ -26,7 +28,8 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name='QAApp',
                                     platform=Platform.ANDROID,
                                     run_type=RunType.FIRST_TIME,
-                                    file_name=None)
+                                    file_name=None,
+                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=6.0))
         assert 'Skipping prepare.' not in logs
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
@@ -46,14 +49,15 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
-                                    file_name='main-view-model.js')
+                                    file_name='main-view-model.js',
+                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=8.0))
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
         assert 'Successfully transferred main-view-model.js' in logs
         assert 'Restarting application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
-        assert 'ActivityManager: Start proc' in logs
-        assert 'activity org.nativescript.TestApp/com.tns.NativeScriptActivity' in logs
+        assert 'ActivityManager: Start proc' not in logs
+        assert 'activity org.nativescript.TestApp/com.tns.NativeScriptActivity' not in logs
 
     def test_12_get_run_messages_sync_js_bundle(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
@@ -70,17 +74,17 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Successfully transferred vendor.js' not in logs
         assert 'Restarting application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
-        assert 'ActivityManager: Start proc' in logs
-        assert 'activity org.nativescript.TestApp/com.tns.NativeScriptActivity' in logs
         assert 'Refreshing application on device' not in logs
         assert 'hot-update.json on device' not in logs
 
-    def test_12_get_run_messages_sync_js_bundle_uglify(self):
+    def test_13_get_run_messages_sync_js_bundle_uglify(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
                                     file_name='main-view-model.js',
-                                    bundle=True, uglify=True)
+                                    bundle=True,
+                                    uglify=True,
+                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=4.4))
         assert 'Skipping prepare.' not in logs
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
@@ -96,7 +100,7 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Refreshing application on device' not in logs
         assert 'hot-update.json on device' not in logs
 
-    def test_13_get_run_messages_sync_js_hmr(self):
+    def test_14_get_run_messages_sync_js_hmr(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
@@ -114,14 +118,14 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Successfully transferred bundle.js on device' not in logs
         assert 'Restarting application on device' not in logs
 
-    def test_14_get_run_messages_sync_xml_bundle_no_hmr(self):
+    def test_15_get_run_messages_sync_xml_bundle_no_hmr(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT, platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL, bundle=True, hmr=False, file_name='main-page.xml',
                                     instrumented=True)
         assert 'Refreshing application on device' not in logs
         assert 'Restarting application on device' in logs
 
-    def test_15_get_run_messages_sync_xml_bundle_and_uglify(self):
+    def test_16_get_run_messages_sync_xml_bundle_and_uglify(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT, platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL, bundle=True, hmr=False, uglify=True,
                                     file_name='main-page.xml',
@@ -129,7 +133,7 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Refreshing application on device' not in logs
         assert 'Restarting application on device' in logs
 
-    def test_16_get_run_messages_sync_js(self):
+    def test_17_get_run_messages_sync_js(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
@@ -138,7 +142,7 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Skipping prepare.' not in logs
         assert 'Successfully transferred main-view-model.js' in logs
 
-    def test_17_get_run_messages_sync_ts(self):
+    def test_18_get_run_messages_sync_ts(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
@@ -147,7 +151,7 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Skipping prepare.' not in logs
         assert 'Successfully transferred main-view-model.js' in logs
 
-    def test_18_get_run_messages_incremental_prepare(self):
+    def test_19_get_run_messages_incremental_prepare(self):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
