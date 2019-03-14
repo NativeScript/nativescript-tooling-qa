@@ -23,7 +23,7 @@ class PluginTests(TnsTest):
         TnsTest.setUpClass()
         Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        if Platform is Platform.IOS:
+        if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
         Folder.copy(cls.app_name, cls.app_path)
 
