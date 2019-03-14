@@ -3,7 +3,6 @@ import os
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.ci.jenkins import Jenkins
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
@@ -39,11 +38,8 @@ def __get_templates():
     Clone hello-world templates and pack them as local npm packages.
     Hints: Creating project from local npm package is much faster than from GitHub repo.
     """
-    branch = 'master'
-    if Jenkins.is_pr():
-        branch = Jenkins.get_pr_info().source_branch
     local_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates')
-    Git.clone(repo_url=Template.REPO, branch=branch, local_folder=local_folder)
+    Git.clone(repo_url=Template.REPO, branch='master', local_folder=local_folder)
 
     apps = [Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS, Template.HELLO_WORLD_NG, Template.MASTER_DETAIL_NG,
             Template.VUE_BLANK]
