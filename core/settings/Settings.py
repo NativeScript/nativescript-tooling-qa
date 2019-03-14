@@ -80,7 +80,7 @@ class Executables(object):
 # noinspection SpellCheckingInspection
 class Packages(object):
     # CLIs
-    NS_CLI = resolve_package(name='nativescript', variable='nativescript_cli')
+    NS_CLI = resolve_package(name='nativescript', variable='nativescript')
     NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable='nativescript_schematics')
     NG_CLI = resolve_package(name='@angular/cli', variable='ng_cli', default='latest')
 
