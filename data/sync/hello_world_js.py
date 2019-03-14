@@ -5,6 +5,7 @@ Sync changes on JS/TS project helper.
 import os
 
 from core.enums.app_type import AppType
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.wait import Wait
@@ -161,12 +162,14 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     else:
         raise ValueError('Invalid app_type value.')
 
+    if hmr and instrumented:
+        not_existing_string_list = ['QA: Application started']
+
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, hmr=hmr,
                                                     file_name=js_file, instrumented=instrumented)
-    if hmr and instrumented:
-        not_existing_string_list = ['QA: Application started']
+    if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
     else:
@@ -177,8 +180,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     Sync.replace(app_name=app_name, change_set=xml_change)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
                                                     hmr=hmr, file_name='main-page.xml', instrumented=instrumented)
-    if hmr and instrumented:
-        not_existing_string_list = ['QA: Application started']
+    if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
     else:
@@ -190,8 +192,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     Sync.replace(app_name=app_name, change_set=css_change)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
                                                     hmr=hmr, file_name='app.css', instrumented=instrumented)
-    if hmr and instrumented:
-        not_existing_string_list = ['QA: Application started']
+    if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
     else:

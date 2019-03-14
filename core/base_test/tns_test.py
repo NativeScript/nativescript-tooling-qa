@@ -95,6 +95,7 @@ class TnsTest(unittest.TestCase):
         DeviceManager.Emulator.stop()
         if Settings.HOST_OS is OSType.OSX:
             DeviceManager.Simulator.stop()
+        TestContext.STARTED_DEVICES = []
 
     @staticmethod
     def get_screenshots():
