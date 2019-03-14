@@ -8,13 +8,13 @@ from core.enums.app_type import AppType
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
 from core.utils.device.adb import Adb
+from core.utils.device.device_manager import DeviceManager
 from data.sync.hello_world_js import preview_sync_hello_world_js_ts, preview_hello_world_js_ts
 from data.templates import Template
+from data.changes import Changes, Sync
 from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
 from products.nativescript.tns_logs import TnsLogs
-from core.utils.device.device_manager import DeviceManager
-from data.changes import Changes, Sync
 
 
 class TnsPreviewJSTests(TnsRunTest):
@@ -46,9 +46,6 @@ class TnsPreviewJSTests(TnsRunTest):
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
-
-        # Start second emulator for tests
-        cls.emu_API26 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_26)
 
     def setUp(self):
         TnsTest.setUp(self)
@@ -169,7 +166,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         # Edit XML file and verify changes are applied
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text) 
+        self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
     def test_240_tns_preview_android_verify_plugin_warnings(self):
         """Test if correct messages are shown if plugin is missing or versions differ in Preview App."""
