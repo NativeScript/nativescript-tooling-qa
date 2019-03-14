@@ -199,7 +199,7 @@ class Adb(object):
             xml = ET.ElementTree(ET.fromstring(page_source))
             elements = xml.findall(".//node[@text]")
             if elements:
-                 for element in elements:
+                for element in elements:
                     if case_sensitive:
                         if text in element.attrib['text']:
                             return element
