@@ -185,7 +185,8 @@ class Adb(object):
         element = Adb.get_element_by_text(device_id, text, case_sensitive)
         if element is not None:
             coordinates = Adb.get_element_coordinates(element)
-            Adb.run_adb_command(command="shell input tap {0} {1}".format(str(coordinates[0]), str(coordinates[1])), device_id=device_id)
+            Adb.run_adb_command(command="shell input tap {0} {1}".format(str(coordinates[0]), str(coordinates[1])),
+                                device_id=device_id)
         else:
             assert False, 'Element with text ' + text + ' not found!'
 
