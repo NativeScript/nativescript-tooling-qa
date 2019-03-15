@@ -1,6 +1,7 @@
 """
 Test for specific needs Android ABI Split.
 """
+# pylint: disable=duplicate-code
 import os
 from sys import platform
 
@@ -13,6 +14,7 @@ from core.utils.file_utils import File, Folder
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
+from runtime_helpers.abi_split_helper import AbiSplitHelper
 
 APP_NAME = AppName.DEFAULT
 PLATFORM_ANDROID_APK_RELEASE_PATH = os.path.join('platforms', 'android', 'app', 'build', 'outputs', 'apk', 'release')
@@ -36,22 +38,6 @@ class AbiSplitTests(TnsTest):
             cls.device = Device(id=device_id, name=device_id, type=DeviceType.ANDROID,
                                 version=Adb.get_version(device_id))
         Adb.uninstall(cls.app_id, device_id, assert_success=False)
-
-    def tearDown(self):
-        TnsTest.tearDown(self)
-
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
-
-    @staticmethod
-    def assert_apk(apk, device, app_id, image):
-        Adb.install(apk,
-                    device.id)
-        Adb.start_application(device.id, app_id)
-        Device.screen_match(device, expected_image=image, timeout=90, tolerance=1)
-        Adb.stop_application(device_id=device.id, app_id=app_id)
-        Adb.uninstall(app_id, device.id)
 
     def test_100_build_app_with_abi_split_and_snapshot(self):
         """
@@ -95,14 +81,14 @@ class AbiSplitTests(TnsTest):
         assert File.exists(os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
                                         "app-x86-release.apk"))
 
-        self.assert_apk(os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
-                                     "app-x86-release.apk"),
-                        self.emulator, self.app_id,
-                        os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                     'Emulator-Api23-Default', "abi-split-emulator.png"))
+        AbiSplitHelper.assert_apk(
+            os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH, "app-x86-release.apk"),
+            self.emulator, self.app_id,
+            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images', 'Emulator-Api23-Default',
+                         "abi-split-emulator.png"))
 
-        self.assert_apk(
-            os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
-                         "app-universal-release.apk"),
-            self.emulator, self.app_id, os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                                     'Emulator-Api23-Default', "abi-split-emulator.png"))
+        AbiSplitHelper.assert_apk(
+            os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH, "app-universal-release.apk"),
+            self.emulator, self.app_id,
+            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images', 'Emulator-Api23-Default',
+                         "abi-split-emulator.png"))

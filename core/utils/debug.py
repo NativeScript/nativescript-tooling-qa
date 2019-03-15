@@ -18,7 +18,7 @@ class Debug(object):
         self.driver = driver
         if reconnect_to_dev_tools:
             self.reconnect_to_devtools()
-        root_element_selector="div[slot='insertion-point-main'][class='vbox flex-auto tabbed-pane']"
+        root_element_selector = "div[slot='insertion-point-main'][class='vbox flex-auto tabbed-pane']"
         shadow_dom_element = driver.find_element(By.CSS_SELECTOR, root_element_selector)
         self.root_element = driver.execute_script(self.shadow_root_element_script, shadow_dom_element)
         self.left_toolbar = self.get_shadow_element_in_shadow_dom("div.tabbed-pane-left-toolbar.toolbar")

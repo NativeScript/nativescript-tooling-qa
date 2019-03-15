@@ -1,7 +1,7 @@
 """
 Test for specific needs of Debug tests.
 """
-# pylint: disable=invalid-name
+# pylint: disable=duplicate-code
 import os
 
 from selenium.webdriver.common.by import By
@@ -23,6 +23,7 @@ APP_NAME = AppName.DEFAULT
 
 
 class EmulatorDebugTests(TnsTest):
+    chrome = None
 
     @classmethod
     def setUpClass(cls):
@@ -55,30 +56,27 @@ class EmulatorDebugTests(TnsTest):
         assert test_result, "TAP Button is missing on the device"
         self.debug = Debug(self.chrome.driver)
 
-    def tearDown(self):
-        TnsTest.tearDown(self)
-
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         cls.chrome.kill()
 
-    def test_100_debug_session_could_be_start(self):
+    def test_100_debug_session_could_be_start_for_emulator(self):
         """
-         Test debug session could be start
+         Test debug session could be start for emulator
         """
         self.debug.get_element_in_shadow_dom(By.ID, "tab-elements").click()
         element_to_find = '<ActionBar icon title="My App" className="action-bar"></ActionBar>'
         title_span = self.debug.get_element_by_css_selector_and_text("span",
                                                                      element_to_find, self.debug.content)
-        assert title_span is not None, "Session is not opened successfully! App title is missing in Elements tab!"
+        assert title_span is not None, "Session is not opened successfully!App title is missing for emulator!"
 
-    def test_101_console_log_is_shown_in_dev_tools_console(self):
+    def test_101_console_log_is_shown_in_dev_tools_console_for_emulator(self):
         """
-         Test console log is shown in devTools console
+         Test console log is shown in devTools console for emulator
         """
-        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'debug', "console_log",
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'debug', 'files', "console_log",
                                  'main-view-model.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
         File.copy(source=source_js, target=target_js)
@@ -103,8 +101,7 @@ class EmulatorDebugTests(TnsTest):
             timeout=20,
             period=5)
         assert test_result, "Console log is not shown in DevTools!"
-        assert Device.is_text_in_log(self.emulator,
-                                     "Test Debug!"), "Console log not found in adb logcat! Logs: " + Device.get_log(
-            self.emulator)
+        error_message = "Console log not found in adb logcat! Logs: " + Device.get_log(self.emulator)
+        assert Device.is_text_in_log(self.emulator, "Test Debug!"), error_message
         assert "Test Debug!" in File.read(self.log.log_file), "Console log not found in tns logs! Logs: " + File.read(
             self.log.log_file)
