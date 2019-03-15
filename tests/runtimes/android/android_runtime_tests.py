@@ -59,6 +59,8 @@ class AndroidRuntimeTests(TnsTest):
             "App crashed with error activity"
         # check if we got called from custom activity that overrides the default one
         assert "we got called from onCreate of custom-activity.js" in output, "Expected output not found"
+        Wait.until(lambda: "we got called from onCreate of my-custom-class.js" in Adb.get_logcat(
+            device_id=self.emulator.id))
         # make sure we called custom activity declared in manifest
         assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
 
