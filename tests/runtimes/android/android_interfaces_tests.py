@@ -22,7 +22,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
-        Folder.clean('./' + APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -30,7 +30,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def test_302_check_if_class_implements_java_interface_javascript(self):
         """

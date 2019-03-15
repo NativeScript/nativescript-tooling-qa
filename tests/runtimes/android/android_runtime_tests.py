@@ -24,7 +24,7 @@ class AndroidRuntimeTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
-        Folder.clean('./' + APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -32,7 +32,7 @@ class AndroidRuntimeTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def test_200_calling_custom_generated_classes_declared_in_manifest(self):
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)

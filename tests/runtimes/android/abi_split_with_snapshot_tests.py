@@ -24,7 +24,7 @@ class AbiSplitTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
-        Folder.clean('./' + APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_NG.local_package, update=True)
         json = App.get_package_json(app_name=APP_NAME)
         cls.app_id = json['nativescript']['id']
@@ -106,25 +106,3 @@ class AbiSplitTests(TnsTest):
                          "app-universal-release.apk"),
             self.emulator, self.app_id, os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
                                                      'Emulator-Api23-Default', "abi-split-emulator.png"))
-
-    def test_201_run_app_with_abi_split_and_snapshot_on_32_phone(self):
-        """
-         Test if the apk for arm devices is working
-         https://github.com/NativeScript/android-runtime/issues/1234
-        """
-        self.assert_apk(
-            os.path.join(TEST_RUN_HOME, "Test_apks",
-                         "app-armeabi-v7a-release.apk"),
-            self.device, self.app_id, os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                                   'ARM-32-Phone', "abi-split-32-phone.png"))
-
-    def test_202_run_app_with_abi_split_and_snapshot_on_64_phone(self):
-        """
-         Test if the apk for arm64 devices is working
-         https://github.com/NativeScript/android-runtime/issues/1234
-        """
-        self.assert_apk(
-            os.path.join(TEST_RUN_HOME, "Test_apks",
-                         "app-arm64-v8a-release.apk"),
-            self.device, self.app_id, os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                                   'ARM-64-Phone', "abi-split-64-phone.png"))
