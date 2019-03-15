@@ -50,7 +50,7 @@ class AndroidRuntimeTests(TnsTest):
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'custom-activity.js'))
         Adb.clear_logcat(device_id=self.emulator.id)
         Tns.run_android(APP_NAME, device=self.emulator.id, just_launch=True, wait=True)
-        Wait.until(lambda: 'we got called from onCreate of custom-activity.js' in Adb.get_logcat(
+        assert_result = Wait.until(lambda: 'we got called from onCreate of custom-activity.js' in Adb.get_logcat(
             device_id=self.emulator.id))
         output = Adb.get_logcat(device_id=self.emulator.id)
 
@@ -58,11 +58,11 @@ class AndroidRuntimeTests(TnsTest):
         assert "Displayed org.nativescript.TNSApp/com.tns.ErrorReportActivity" not in output, \
             "App crashed with error activity"
         # check if we got called from custom activity that overrides the default one
-        assert "we got called from onCreate of custom-activity.js" in output, "Expected output not found"
-        Wait.until(lambda: "we got called from onCreate of my-custom-class.js" in Adb.get_logcat(
+        assert assert_result, "Expected output not found! Logs: " + Adb.get_logcat(device_id=self.emulator.id)
+        assert_result = Wait.until(lambda: "we got called from onCreate of my-custom-class.js" in Adb.get_logcat(
             device_id=self.emulator.id))
         # make sure we called custom activity declared in manifest
-        assert "we got called from onCreate of my-custom-class.js" in output, "Expected output not found"
+        assert assert_result, "Expected output not found! Logs: " + Adb.get_logcat(device_id=self.emulator.id)
 
     def test_300_verbose_log_android(self):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
