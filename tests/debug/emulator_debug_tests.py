@@ -32,7 +32,7 @@ class EmulatorDebugTests(TnsTest):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
-        cls.chrome = Chrome()
+        cls.chrome = Chrome(implicitly_wait=6)
         cls.log = Tns.debug(APP_NAME, Platform.ANDROID, device=cls.emulator.id, wait=False, verify=False)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', cls.emulator.id,
                    "chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:40000"]
@@ -54,7 +54,7 @@ class EmulatorDebugTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=60,
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
-        self.debug = Debug(self.chrome.driver)
+        self.debug = Debug(self.chrome)
 
     @classmethod
     def tearDownClass(cls):
@@ -88,7 +88,7 @@ class EmulatorDebugTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=30,
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
-        self.debug = Debug(self.chrome.driver)
+        self.debug = Debug(self.chrome)
         self.debug.get_element_in_shadow_dom(By.ID, "tab-console").click()
         Adb.clear_logcat(self.emulator.id)
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=30,

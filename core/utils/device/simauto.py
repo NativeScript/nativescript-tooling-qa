@@ -68,7 +68,7 @@ class SimAuto(object):
             raise Exception('Can not locate "{0}" in {1} simulator.'.format(text, device_info.name))
 
     @staticmethod
-    def get_logs(device_id):
+    def get_log_file(device_id):
         command = "spawn"
         parameters = "log stream --level=debug"
         log_file = SimAuto.run_simctl_command(command=command, device_id=device_id, parameters=parameters,

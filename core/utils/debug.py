@@ -1,7 +1,4 @@
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 
 from core.log.log import Log
 from core.utils.wait import Wait
@@ -11,19 +8,20 @@ class Debug(object):
     root_element = None
     left_toolbar = None
     content = None
+    chrome = None
     shadow_root_element_script = "return arguments[0].shadowRoot"
     shadow_inner_element_script = "return arguments[0].querySelector(arguments[1]).shadowRoot"
 
-    def __init__(self, driver, reconnect_to_dev_tools=True):
-        self.driver = driver
+    def __init__(self, chrome, reconnect_to_dev_tools=True):
+        self.chrome = chrome
         if reconnect_to_dev_tools:
             self.reconnect_to_devtools()
         root_element_selector = "div[slot='insertion-point-main'][class='vbox flex-auto tabbed-pane']"
-        shadow_dom_element = driver.find_element(By.CSS_SELECTOR, root_element_selector)
-        self.root_element = driver.execute_script(self.shadow_root_element_script, shadow_dom_element)
+        shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR, root_element_selector)
+        self.root_element = self.chrome.driver.execute_script(self.shadow_root_element_script, shadow_dom_element)
         self.left_toolbar = self.get_shadow_element_in_shadow_dom("div.tabbed-pane-left-toolbar.toolbar")
-        self.content = driver.execute_script(self.shadow_root_element_script,
-                                             driver.find_element(By.XPATH, '//*[@id="elements-content"]/div'))
+        content_element = self.chrome.driver.find_element(By.XPATH, '//*[@id="elements-content"]/div')
+        self.content = self.chrome.driver.execute_script(self.shadow_root_element_script, content_element)
         self.wait_until_shadow_dom_element_located(By.CSS_SELECTOR,
                                                    "button[aria-label='Toggle screencast']",
                                                    shadow_dom_root_element=self.left_toolbar, timeout=15)
@@ -50,9 +48,9 @@ class Debug(object):
 
     def get_shadow_element_in_shadow_dom(self, value, shadow_dom_root_element=None):
         if shadow_dom_root_element:
-            return self.driver.execute_script(self.shadow_inner_element_script, shadow_dom_root_element, value)
+            return self.chrome.driver.execute_script(self.shadow_inner_element_script, shadow_dom_root_element, value)
         else:
-            return self.driver.execute_script(self.shadow_inner_element_script, self.root_element, value)
+            return self.chrome.driver.execute_script(self.shadow_inner_element_script, self.root_element, value)
 
     def get_element_by_css_selector_and_text(self, value, text, shadow_dom_root_element=None, contains_text=False):
         if shadow_dom_root_element:
@@ -87,20 +85,13 @@ class Debug(object):
                 "Element " + value + " by expression " + by_expression + " for " + str(timeout) + " is not located!")
 
     def reconnect_to_devtools(self):
-        self.wait_until_element_is_visible(By.CSS_SELECTOR, 'div.vbox.flex-auto.dimmed-pane', timeout=15)
-        shadow_dom_element = self.driver.find_elements(By.CSS_SELECTOR, 'div.vbox.flex-auto.dimmed-pane')
+        self.chrome.wait_until_element_is_visible(By.CSS_SELECTOR, 'div.vbox.flex-auto.dimmed-pane', timeout=15)
+        shadow_dom_element = self.chrome.driver.find_elements(By.CSS_SELECTOR, 'div.vbox.flex-auto.dimmed-pane')
         if shadow_dom_element:
-            shadow_div_element = self.driver.execute_script(self.shadow_root_element_script, shadow_dom_element[0])
+            shadow_div_element = self.chrome.driver.execute_script(self.shadow_root_element_script,
+                                                                   shadow_dom_element[0])
             shadow_elements = self.get_shadow_element_in_shadow_dom(".vbox.flex-auto", shadow_div_element)
             reconnect_button = self.get_element_by_css_selector_and_text("button", "Reconnect DevTools",
                                                                          shadow_elements)
             if reconnect_button is not None:
                 reconnect_button.click()
-
-    def wait_until_element_is_visible(self, by_expression, value, timeout=15):
-        try:
-            WebDriverWait(self.driver, timeout).until(
-                expected_conditions.visibility_of_element_located((by_expression, value)))
-        except TimeoutException:
-            Log.info(
-                "Element " + value + " by expression " + by_expression + " for " + str(timeout) + " is not located!")

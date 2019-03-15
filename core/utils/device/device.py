@@ -31,7 +31,7 @@ class Device(object):
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
-            self.device_log = SimAuto.get_logs(self.id)
+            self.device_log_file = SimAuto.get_log_file(self.id)
         else:
             self.name = name
 
@@ -227,7 +227,7 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             return Adb.get_logcat(self.id)
         elif self.type is DeviceType.SIM:
-            return File.read(self.device_log)
+            return File.read(self.device_log_file)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
@@ -238,7 +238,7 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.clear_logcat(self.id)
         elif self.type is DeviceType.SIM:
-            self.device_log = SimAuto.get_logs(self.id)
+            self.device_log_file = SimAuto.get_log_file(self.id)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
@@ -246,6 +246,6 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             return Wait.until(lambda: text_to_check in Adb.get_logcat(self.id), timeout=timeout, period=1)
         elif self.type is DeviceType.SIM:
-            return Wait.until(lambda: text_to_check in File.read(self.device_log), timeout=timeout, period=1)
+            return Wait.until(lambda: text_to_check in File.read(self.device_log_file), timeout=timeout, period=1)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')

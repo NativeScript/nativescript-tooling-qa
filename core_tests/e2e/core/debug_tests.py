@@ -17,7 +17,7 @@ class DebugTests(unittest.TestCase):
     def setUpClass(cls):
         cls.chrome = Chrome()
         cls.chrome.open(url='chrome-devtools://devtools/bundled/inspector.html')
-        cls.debug = Debug(cls.chrome.driver)
+        cls.debug = Debug(cls.chrome)
 
     @classmethod
     def tearDownClass(cls):
@@ -96,16 +96,6 @@ class DebugTests(unittest.TestCase):
                                                                          self.debug.left_toolbar)
         assert_message = "wait_until_shadow_dom_element_located method is not working!"
         assert not toggle_screencast_button, assert_message
-
-    def test_07_assert_wait_until_element_is_visible_is_working(self):
-        self.debug.wait_until_element_is_visible(By.CSS_SELECTOR, 'body#-blink-dev-tools', timeout=15)
-        element = self.debug.driver.find_elements(By.CSS_SELECTOR, 'body#-blink-dev-tools',)
-        assert_message = "wait_until_element_is_visible method is not working!"
-        assert element, assert_message
-        self.debug.wait_until_element_is_visible(By.CSS_SELECTOR, 'body#-blink-dev-tools2222222222', timeout=15)
-        element = self.debug.driver.find_elements(By.CSS_SELECTOR, 'body#-blink-dev-tools2222222222', )
-        assert_message = "wait_until_element_is_visible method is not working!"
-        assert not element, assert_message
 
 
 if __name__ == '__main__':

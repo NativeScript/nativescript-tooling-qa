@@ -31,7 +31,7 @@ class EmulatorDebugTests(TnsTest):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-        cls.chrome = Chrome()
+        cls.chrome = Chrome(implicitly_wait=6)
         cls.log = Tns.debug(APP_NAME, Platform.IOS, device=cls.simulator.id, wait=False, verify=False)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', cls.simulator.id,
                    "chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:41000"]
@@ -54,7 +54,7 @@ class EmulatorDebugTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.simulator, "TAP", True), timeout=60,
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
-        self.debug = Debug(self.chrome.driver)
+        self.debug = Debug(self.chrome)
 
     @classmethod
     def tearDownClass(cls):
@@ -90,7 +90,7 @@ class EmulatorDebugTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.simulator, "TAP", True), timeout=60,
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
-        self.debug = Debug(self.chrome.driver)
+        self.debug = Debug(self.chrome)
         self.debug.get_element_in_shadow_dom(By.ID, "tab-console").click()
         test_result = Wait.until(lambda: Device.is_text_visible(self.simulator, "TAP", True), timeout=60,
                                  period=5)
@@ -98,7 +98,7 @@ class EmulatorDebugTests(TnsTest):
         Device.click(self.simulator, "TAP", True)
         console_element = self.chrome.driver.find_element(By.ID, "console-messages")
         test_result = Wait.until(
-            lambda: self.debug.get_element_by_css_selector_and_text("span", ": Test Debug!", console_element,
+            lambda: self.debug.get_element_by_css_selector_and_text("span", "Test Debug!", console_element,
                                                                     True) is not None, timeout=20, period=5)
         assert test_result, "Console log is not shown in DevTools!"
         error_message = "Console log not found in device logs! Logs: " + Device.get_log(self.simulator)
