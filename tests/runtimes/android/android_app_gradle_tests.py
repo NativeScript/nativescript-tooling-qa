@@ -23,7 +23,7 @@ class AndroidRuntimeAppGradleTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
-        Folder.clean('./' + APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -31,7 +31,7 @@ class AndroidRuntimeAppGradleTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def test_301_native_package_starting_with_in_are_working(self):
         """

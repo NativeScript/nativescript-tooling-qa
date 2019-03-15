@@ -31,6 +31,7 @@ class Device(object):
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
+            self.device_log_file = SimAuto.get_log_file(self.id)
         else:
             self.name = name
 
@@ -47,10 +48,10 @@ class Device(object):
         else:
             raise Exception('are_texts_visible needs array as texts param.')
 
-    def is_text_visible(self, text):
+    def is_text_visible(self, text, case_sensitive=False):
         is_visible = False
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            is_visible = Adb.is_text_visible(device_id=self.id, text=text)
+            is_visible = Adb.is_text_visible(device_id=self.id, text=text, case_sensitive=case_sensitive)
         if self.type is DeviceType.SIM:
             is_visible = SimAuto.is_text_visible(self, text)
 
@@ -216,5 +217,35 @@ class Device(object):
             Adb.click_element_by_text(self.id, text, case_sensitive)
         elif self.type is DeviceType.SIM:
             SimAuto.click(self, text=text)
+        else:
+            raise NotImplementedError('Click not implemented for iOS devices.')
+
+    def get_log(self):
+        """
+        Get device log.
+        """
+        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
+            return Adb.get_logcat(self.id)
+        elif self.type is DeviceType.SIM:
+            return File.read(self.device_log_file)
+        else:
+            raise NotImplementedError('Click not implemented for iOS devices.')
+
+    def clear_log(self):
+        """
+        Get device log.
+        """
+        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
+            Adb.clear_logcat(self.id)
+        elif self.type is DeviceType.SIM:
+            self.device_log_file = SimAuto.get_log_file(self.id)
+        else:
+            raise NotImplementedError('Click not implemented for iOS devices.')
+
+    def is_text_in_log(self, text_to_check, timeout=15):
+        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
+            return Wait.until(lambda: text_to_check in Adb.get_logcat(self.id), timeout=timeout, period=1)
+        elif self.type is DeviceType.SIM:
+            return Wait.until(lambda: text_to_check in File.read(self.device_log_file), timeout=timeout, period=1)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')

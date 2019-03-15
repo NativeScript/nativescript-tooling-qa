@@ -22,7 +22,7 @@ class AndroidRuntimePluginTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
-        Folder.clean('./' + APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -30,7 +30,7 @@ class AndroidRuntimePluginTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(APP_NAME)
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def test_308_native_package_in_plugin_include_gradle_with_compile(self):
         """
