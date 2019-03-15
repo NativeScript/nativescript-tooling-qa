@@ -67,7 +67,6 @@ class TnsRunOnDevices(TnsDeviceTest):
         # Verify it looks properly
         for device in DeviceManager.get_devices(device_type=any):
             device.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-            device.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 

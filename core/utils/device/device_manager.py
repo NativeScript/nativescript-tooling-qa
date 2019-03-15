@@ -27,6 +27,9 @@ class DeviceManager(object):
             for device_id in IDevice.get_devices():
                 device = Device(id=device_id, name=device_id, type=DeviceType.IOS, version=None)
                 devices.append(device)
+
+        for device in devices:
+            TestContext.STARTED_DEVICES.append(device)
         return devices
 
     @staticmethod
