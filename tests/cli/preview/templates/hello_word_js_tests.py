@@ -9,7 +9,7 @@ from core.settings import Settings
 from core.utils.file_utils import File, Folder
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from data.sync.hello_world_js import preview_sync_hello_world_js_ts, preview_hello_world_js_ts
+from data.sync.hello_world_js import preview_sync_hello_world_js_ts
 from data.templates import Template
 from data.changes import Changes, Sync
 from products.nativescript.tns import Tns
@@ -172,8 +172,14 @@ class PreviewJSTests(TnsPreviewJSTests):
         # Add some plugins
         Tns.plugin_add("nativescript-barcodescanner", path=self.app_name)
         Tns.plugin_add("nativescript-geolocation@3.0.1", path=self.app_name)
-        result = preview_hello_world_js_ts(app_name=self.app_name, platform=Platform.ANDROID,
-                                           device=self.emu)
+
+        result = Tns.preview(app_name=self.app_name)
+
+        # Read the log and extract the url to load the app on emulator
+        log = File.read(result.log_file)
+        url = Preview.get_url(log)
+        Preview.run_url(url=url, device=self.emu)
+
         # Verify warnings for plugins
         strings = [
             'Plugin nativescript-barcodescanner is not included in preview app',
