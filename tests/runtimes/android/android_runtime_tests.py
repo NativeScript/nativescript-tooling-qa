@@ -2,9 +2,15 @@
 Test for specific needs of Android runtime.
 """
 # pylint: disable=invalid-name
+import datetime
 import os
+import re
+import time
+
+import pytz
 
 from core.base_test.tns_test import TnsTest
+from core.utils.run import run
 from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
@@ -266,3 +272,119 @@ class AndroidRuntimeTests(TnsTest):
         assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
                "java.util.List in file: main-page" in log
         assert "Execution failed for task ':app:runSbg'" in log
+
+    def test_440_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
+        """
+         Test new date is working as expected. Test in different timezones
+        """
+        output = Adb.run_adb_command("shell settings put global auto_time_zone 0", self.emulator.id, wait=True)
+        assert '' in output.output, "Failed to change auto timezone!"
+
+        output = Adb.run_adb_command("shell settings put system time_12_24 24", self.emulator.id, wait=True)
+        assert '' in output.output, "Failed to change system format to 24!"
+
+        output = Adb.run_adb_command("shell settings put global time_zone UTC", self.emulator.id, wait=True)
+        assert '' in output.output, "Failed to change timezone!"
+        output = Adb.run_adb_command("shell setprop persist.sys.timezone UTC", self.emulator.id, wait=True)
+        assert '' in output.output, "Failed to change timezone!"
+
+        # Change main-page.js so it contains only logging information
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
+                                 'main-page.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
+        File.copy(source=source_js, target=target_js)
+        # Change main-view-model.js so it contains the new date logging functionality
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js)
+        # Change app package.json so it contains the options for remove V8 date cache
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
+                                 'package.json')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json')
+
+        File.copy(source=source_js, target=target_js)
+
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application', '### TEST END ###']
+        assert_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
+                                   period=5)
+        assert assert_result, "Application not build correct! Logs: " + File.read(log.log_file)
+        # Get UTC date and time
+        time_utc = datetime.datetime.utcnow()
+
+        # Generate regex for asserting date and time
+        date_to_find_gmt = time_utc.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\+0000 \(UTC\)"
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=200,
+                                 period=5)
+        assert test_result, "TAP Button is missing on the device"
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        assert_result = Wait.until(lambda: "GMT+0000 (UTC)" in File.read(log.log_file), timeout=30, period=5)
+        assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
+        # Assert date time is correct
+        assert_result = Wait.until(lambda: re.search(date_to_find_gmt, File.read(log.log_file)), timeout=20,
+                                   period=5)
+        assert assert_result, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_gmt, file.read(file(log)))
+        # Get Los Angeles date and time
+        los_angeles_time = time_utc.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("America/Los_Angeles"))
+
+        # Open Date and time settings to change the timezone
+        output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id, wait=True)
+        assert_text = 'Starting: Intent { act=android.settings.DATE_SETTINGS }'
+        assert assert_text in output.output, "Failed to start Date and Time settings activity!"
+
+        # Change TimeZone
+        # time.sleep(20)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Select time zone", True), timeout=30,
+                                 period=5)
+        assert test_result, "Select time zone Button is missing on the device"
+        Device.click(self.emulator, text="Select time zone")
+        # time.sleep(25)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Pacific Daylight Time", True),
+                                 timeout=30, period=5)
+        assert test_result, "Pacific Daylight Time Button is missing on the device"
+        Device.click(self.emulator, text="Pacific Daylight Time")
+        # time.sleep(10)
+
+        # Open the test app again
+        output = Adb.run_adb_command("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity",
+                                     self.emulator.id, wait=True)
+        assert_text = 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }'
+        assert assert_text in output.output, "Failed to start Nativescript test app activity!"
+
+        # time.sleep(15)
+
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        assert_result = Wait.until(lambda: "GMT-0700 (PDT)" in File.read(log.log_file), timeout=240, period=5)
+        assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
+        # Generate regex for asserting date and time
+        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0700 \(PDT\)"
+        # Assert date time is correct
+        assert_result = Wait.until(lambda: re.search(date_to_find_los_angeles, File.read(log.log_file)), timeout=20,
+                                   period=5)
+        assert assert_result, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles,
+                                                                              file.read(file(log)))
+
+    def test_442_assert_arm64_is_enabled_by_default(self):
+        """
+         Test arm64-v8 is enabled by default
+        """
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+        apk_folder = os.path.join(TEST_RUN_HOME, APP_NAME, "platforms", "android", "app", "build", "outputs", "apk",
+                                  "debug")
+        apk_file = os.path.join(apk_folder, "app-debug.apk")
+        apk_folder_to_unzip = os.path.join(apk_folder, "apk")
+        command = "mkdir " + os.path.join(apk_folder, "apk")
+        output = run(command, wait=True, timeout=90).output
+        assert output is '', 'APK folder was not created!Logs: ' + output
+        command = "unzip " + apk_file + " -d " + apk_folder_to_unzip
+        run(command, wait=False)
+        time.sleep(20)
+        unzip_apk_folder = os.path.join(apk_folder, "apk")
+        arm64_folder = os.path.join(unzip_apk_folder, "lib", "arm64-v8a")
+        assert Folder.exists(arm64_folder), "arm64-v8a architecture is missing!"
+        error_message = "libNativeScript.so in arm64-v8a folder is missing!"
+        assert File.exists(os.path.join(arm64_folder, "libNativeScript.so")), error_message
