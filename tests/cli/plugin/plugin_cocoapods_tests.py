@@ -1,9 +1,11 @@
 import os
-
+import unittest
 
 from core.base_test.tns_test import TnsTest
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
+from core.utils.run import run
 from data.apps import Apps
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
@@ -14,6 +16,7 @@ class PluginTests(TnsTest):
     app_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
     app_identifier = "org.nativescript.testapp"
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
@@ -21,15 +24,18 @@ class PluginTests(TnsTest):
         Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
         Folder.copy(cls.app_name, cls.app_path)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def setUp(self):
         TnsTest.setUp(self)
         Folder.copy(self.app_path, self.app_name)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
         Folder.clean(cls.app_path)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def tearDown(self):
         TnsTest.tearDown(self)
         Folder.clean(self.app_name)
@@ -95,6 +101,34 @@ class PluginTests(TnsTest):
         output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
                                         'TestApp.xcodeproj', 'project.pbxproj'))
         assert "IPHONEOS_DEPLOYMENT_TARGET = 9.0;" in output
+
+    def test_210_plugin_add_static_lib_universal(self):
+        plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'hello-plugin.tgz')
+        result = Tns.plugin_add(plugin_path, path=Settings.AppName.DEFAULT, verify=False)
+        assert "Successfully installed plugin hello." in result.output
+
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'hello', 'package.json'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'hello',
+                                        'hello-plugin.ios.js'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'hello', 'platforms',
+                                        'ios', 'HelloLib.a'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'hello', 'platforms',
+                                        'ios', 'include', 'HelloLib', 'Bye.h'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'hello', 'platforms',
+                                        'ios', 'include', 'HelloLib', 'Hello.h'))
+        output = File.read(os.path.join(self.app_name, 'package.json'))
+        assert "plugins/hello-plugin" in output
+
+        Tns.prepare_ios(self.app_name)
+
+        assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp', 'app',
+                                        'tns_modules', 'hello', 'package.json'))
+        assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp', 'app',
+                                        'tns_modules', 'hello', 'hello-plugin.js'))
+        result = run(
+            "cat " + os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp.xcodeproj',
+                                  'project.pbxproj | grep \"HelloLib.a\"'))
+        assert "HelloLib.a in Frameworks" in result.output
 
     def test_401_plugin_add_invalid_pod(self):
         plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'CocoaPods', 'invalidpod.tgz')
