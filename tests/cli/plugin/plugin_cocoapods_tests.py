@@ -11,12 +11,12 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
 
 
-@unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
 class PluginTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
     app_identifier = "org.nativescript.testapp"
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
@@ -24,15 +24,18 @@ class PluginTests(TnsTest):
         Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
         Folder.copy(cls.app_name, cls.app_path)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def setUp(self):
         TnsTest.setUp(self)
         Folder.copy(self.app_path, self.app_name)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
         Folder.clean(cls.app_path)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def tearDown(self):
         TnsTest.tearDown(self)
         Folder.clean(self.app_name)
