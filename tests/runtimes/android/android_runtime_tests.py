@@ -337,25 +337,20 @@ class AndroidRuntimeTests(TnsTest):
         assert assert_text in output.output, "Failed to start Date and Time settings activity!"
 
         # Change TimeZone
-        # time.sleep(20)
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Select time zone", True), timeout=30,
                                  period=5)
         assert test_result, "Select time zone Button is missing on the device"
         Device.click(self.emulator, text="Select time zone")
-        # time.sleep(25)
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Pacific Daylight Time", True),
                                  timeout=30, period=5)
         assert test_result, "Pacific Daylight Time Button is missing on the device"
         Device.click(self.emulator, text="Pacific Daylight Time")
-        # time.sleep(10)
 
         # Open the test app again
         output = Adb.run_adb_command("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity",
                                      self.emulator.id, wait=True)
         assert_text = 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }'
         assert assert_text in output.output, "Failed to start Nativescript test app activity!"
-
-        # time.sleep(15)
 
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         assert_result = Wait.until(lambda: "GMT-0700 (PDT)" in File.read(log.log_file), timeout=240, period=5)
@@ -379,7 +374,7 @@ class AndroidRuntimeTests(TnsTest):
         apk_folder_to_unzip = os.path.join(apk_folder, "apk")
         command = "mkdir " + os.path.join(apk_folder, "apk")
         output = run(command, wait=True, timeout=90).output
-        assert output is '', 'APK folder was not created!Logs: ' + output
+        assert output == '', 'APK folder was not created!Logs: ' + output
         command = "unzip " + apk_file + " -d " + apk_folder_to_unzip
         run(command, wait=False)
         time.sleep(20)
