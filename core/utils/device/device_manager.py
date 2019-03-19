@@ -8,6 +8,7 @@ from core.utils.device.device import Device
 from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import Folder
+from core.utils.java import Java
 from core.utils.process import Process
 from core.utils.run import run
 
@@ -89,13 +90,18 @@ class DeviceManager(object):
 
         @staticmethod
         def is_available(avd_name):
-            avd_manager = os.path.join(ANDROID_HOME, 'tools', 'bin', 'avdmanager')
-            result = run(cmd='{0} list avd -c'.format(avd_manager))
-            avds = result.output.splitlines()
-            for avd in avds:
-                if avd == avd_name:
-                    return True
-            return False
+            if Java.version() > 1.8:
+                Log.warning('Can not check if {0} is available, because avdmanager is not compatible with java {1}.'
+                            .format(avd_name, Java.version()))
+                return True
+            else:
+                avd_manager = os.path.join(ANDROID_HOME, 'tools', 'bin', 'avdmanager')
+                result = run(cmd='{0} list avd -c'.format(avd_manager))
+                avds = result.output.splitlines()
+                for avd in avds:
+                    if avd == avd_name:
+                        return True
+                return False
 
         @staticmethod
         def is_running(emulator):
