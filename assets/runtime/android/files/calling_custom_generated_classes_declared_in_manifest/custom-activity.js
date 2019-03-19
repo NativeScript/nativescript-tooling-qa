@@ -15,7 +15,7 @@ var MyCustomActivityClass = (function (_super) {
     };
 
     MyCustomActivityClass = __decorate([
-        JavaProxy("com.tns.NativeScriptActivity")
+        JavaProxy("com.tns.NativeScriptCustomActivity")
     ], MyCustomActivityClass);
 
     return MyCustomActivityClass;

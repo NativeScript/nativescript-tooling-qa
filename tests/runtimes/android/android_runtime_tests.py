@@ -351,7 +351,9 @@ class AndroidRuntimeTests(TnsTest):
                                      self.emulator.id, wait=True)
         assert_text = 'Starting: Intent { cmp=org.nativescript.TestApp/com.tns.NativeScriptActivity }'
         assert assert_text in output.output, "Failed to start Nativescript test app activity!"
-
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=30,
+                                 period=5)
+        assert test_result, "TAP Button is missing on the device"
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         assert_result = Wait.until(lambda: "GMT-0700 (PDT)" in File.read(log.log_file), timeout=240, period=5)
         assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
