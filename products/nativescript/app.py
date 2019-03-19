@@ -44,7 +44,7 @@ class App(object):
         Npm.install(package='{0}@{1}'.format(dependency, version), option='--save-dev', folder=app_path)
 
     @staticmethod
-    def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, ns_plugins=False):
+    def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, vue=True):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         modules_path = os.path.join(app_path, 'node_modules')
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):
@@ -73,5 +73,6 @@ class App(object):
             assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
             assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
             Npm.install(folder=app_path)
-        if ns_plugins:
-            pass
+        if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
+            Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
+            Npm.install(package='nativescript-vue@latest', option='--save', folder=app_path)
