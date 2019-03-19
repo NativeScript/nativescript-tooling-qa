@@ -278,15 +278,15 @@ class AndroidRuntimeTests(TnsTest):
          Test new date is working as expected. Test in different timezones
         """
         output = Adb.run_adb_command("shell settings put global auto_time_zone 0", self.emulator.id, wait=True)
-        assert '' in output.output, "Failed to change auto timezone!"
+        assert output.output == '', "Failed to change auto timezone!"
 
         output = Adb.run_adb_command("shell settings put system time_12_24 24", self.emulator.id, wait=True)
-        assert '' in output.output, "Failed to change system format to 24!"
+        assert output.output == '', "Failed to change system format to 24!"
 
         output = Adb.run_adb_command("shell settings put global time_zone UTC", self.emulator.id, wait=True)
-        assert '' in output.output, "Failed to change timezone!"
+        assert output.output == '', "Failed to change timezone!"
         output = Adb.run_adb_command("shell setprop persist.sys.timezone UTC", self.emulator.id, wait=True)
-        assert '' in output.output, "Failed to change timezone!"
+        assert output.output == '', "Failed to change timezone!"
 
         # Change main-page.js so it contains only logging information
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
@@ -372,9 +372,7 @@ class AndroidRuntimeTests(TnsTest):
                                   "debug")
         apk_file = os.path.join(apk_folder, "app-debug.apk")
         apk_folder_to_unzip = os.path.join(apk_folder, "apk")
-        command = "mkdir " + os.path.join(apk_folder, "apk")
-        output = run(command, wait=True, timeout=90).output
-        assert output == '', 'APK folder was not created!Logs: ' + output
+        Folder.create(apk_folder_to_unzip)
         command = "unzip " + apk_file + " -d " + apk_folder_to_unzip
         run(command, wait=False)
         time.sleep(20)
