@@ -36,7 +36,7 @@ class EmulatorDebugTests(TnsTest):
         cls.log = Tns.debug(APP_NAME, Platform.ANDROID, device=cls.emulator.id, wait=False, verify=False)
         strings = ['Project successfully built', 'Successfully installed on device with identifier', cls.emulator.id,
                    "chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:40000"]
-        test_result = Wait.until(lambda: all(string in File.read(cls.log.log_file) for string in strings), timeout=240,
+        test_result = Wait.until(lambda: all(string in File.read(cls.log.log_file) for string in strings), timeout=320,
                                  period=5)
         assert test_result, "Debug built is not successful! Log: " + File.read(cls.log.log_file)
         test_result = Wait.until(lambda: Device.is_text_visible(cls.emulator, "TAP", True), timeout=60,
