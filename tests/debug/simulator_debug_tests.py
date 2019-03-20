@@ -21,7 +21,7 @@ from products.nativescript.tns import Tns
 APP_NAME = AppName.DEFAULT
 
 
-class EmulatorDebugTests(TnsTest):
+class SimulatorDebugTests(TnsTest):
     chrome = None
 
     @classmethod
@@ -92,6 +92,7 @@ class EmulatorDebugTests(TnsTest):
         assert test_result, "TAP Button is missing on the device"
         self.debug = Debug(self.chrome)
         self.debug.get_element_in_shadow_dom(By.ID, "tab-console").click()
+        self.chrome.driver.minimize_window()
         test_result = Wait.until(lambda: Device.is_text_visible(self.simulator, "TAP", True), timeout=60,
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
