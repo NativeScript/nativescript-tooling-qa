@@ -62,7 +62,7 @@ class EmulatorDebugTests(TnsTest):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         cls.chrome.kill()
 
-    def test_100_debug_session_could_be_start_for_emulator(self):
+    def test_100_debug_session_starts_for_emulator(self):
         """
          Test debug session could be start for emulator
         """
