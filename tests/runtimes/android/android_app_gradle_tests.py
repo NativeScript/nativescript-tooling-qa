@@ -249,3 +249,31 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+
+    def test_452_assert_static_binding_generator_is_generating_correct_code(self):
+        """
+        Test static binding generator is generationg correct code
+        https://github.com/NativeScript/android-runtime/issues/689
+        """
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-689',
+                                         'app.gradle')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(source=source_app_gradle, target=target_app_gradle)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-689',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js)
+
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.emulator.id,
+                   'Test Pass!']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=320,
+                                 period=5)
+
+        assert test_result, 'Static binding generator did not generated code! Logs: ' + File.read(log.log_file)
+
