@@ -255,6 +255,10 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         Test static binding generator is generationg correct code
         https://github.com/NativeScript/android-runtime/issues/689
         """
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-689',
+                                 'app.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
+        File.copy(source=source_js, target=target_js)
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-689',
                                          'app.gradle')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
@@ -267,10 +271,8 @@ class AndroidRuntimeAppGradleTests(TnsTest):
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
-        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.emulator.id,
+        strings = ['Successfully synced application', 'on device', self.emulator.id,
                    'Test Pass!']
-
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=320,
                                  period=5)
-
         assert test_result, 'Static binding generator did not generated code! Logs: ' + File.read(log.log_file)
