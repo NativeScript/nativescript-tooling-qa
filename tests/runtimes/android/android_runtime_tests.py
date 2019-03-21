@@ -10,6 +10,7 @@ import time
 import pytz
 
 from core.base_test.tns_test import TnsTest
+from core.utils.npm import Npm
 from core.utils.run import run
 from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
@@ -383,3 +384,28 @@ class AndroidRuntimeTests(TnsTest):
         assert Folder.exists(arm64_folder), "arm64-v8a architecture is missing!"
         error_message = "libNativeScript.so in arm64-v8a folder is missing!"
         assert File.exists(os.path.join(arm64_folder, "libNativeScript.so")), error_message
+
+    def test_443_build_app_and_assert_that_tns_core_modules_could_be_updated(self):
+        """
+         Test update of tns-core-modules works correctly if you have build the app first
+         https://github.com/NativeScript/android-runtime/issues/1257
+        """
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Successfully synced application', 'on device', self.emulator.id]
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
+        Npm.install(package="tns-core-modules@next", folder=os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.plugin_add(plugin_name="nativescript-ui-dataform", path=os.path.join(TEST_RUN_HOME, APP_NAME))
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Successfully synced application', 'on device', self.emulator.id]
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=120,
+                                 period=5)
+        assert test_result, "App not build correctly after updating tns-core modules! Logs: " + File.read(log.log_file)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=90,
+                                 period=5)
+        assert test_result, "TAP Button is missing on the device! Update of tns-core-modules not successful!"
