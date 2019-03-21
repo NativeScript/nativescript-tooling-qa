@@ -255,8 +255,6 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         Test static binding generator is generationg correct code
         https://github.com/NativeScript/android-runtime/issues/689
         """
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-689',
                                          'app.gradle')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
