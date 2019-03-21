@@ -276,4 +276,3 @@ class AndroidRuntimeAppGradleTests(TnsTest):
                                  period=5)
 
         assert test_result, 'Static binding generator did not generated code! Logs: ' + File.read(log.log_file)
-
