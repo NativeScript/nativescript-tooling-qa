@@ -40,7 +40,8 @@ class AndroidErrorActivityTests(TnsTest):
         Sync.replace(app_name=APP_NAME, change_set=change)
 
         # Verify logs and screen
-        TnsLogs.wait_for_log(log_file=result, string_list=['StackTrace:', 'Error: Kill the app!', 'line:', 'column:'])
+        TnsLogs.wait_for_log(log_file=result.log_file,
+                             string_list=['StackTrace:', 'Error: Kill the app!', 'line:', 'column:'])
         self.emu.wait_for_text('Exception')
         self.emu.wait_for_text('Logcat')
         self.emu.wait_for_text('Error: Kill the app!')
