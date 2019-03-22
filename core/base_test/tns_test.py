@@ -9,7 +9,7 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.gradle import Gradle
 from core.utils.process import Process
 from core.utils.xcode import Xcode
@@ -76,7 +76,7 @@ class TnsTest(unittest.TestCase):
         if result.errors == [] and result.failures == []:
             outcome = 'PASSED'
         else:
-            self.get_screenshots()
+            self.get_screenshots_and_logs()
             self.archive_apps()
         Log.test_end(test_name=TestContext.TEST_NAME, outcome=outcome)
 
@@ -98,10 +98,11 @@ class TnsTest(unittest.TestCase):
         TestContext.STARTED_DEVICES = []
 
     @staticmethod
-    def get_screenshots():
+    def get_screenshots_and_logs():
         for device in TestContext.STARTED_DEVICES:
             base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
             device.get_screen(path=os.path.join(base_path, device.name + '.png'))
+            File.write(path=os.path.join(base_path, device.name + '.log'), text=device.get_log())
 
     @staticmethod
     def archive_apps():
