@@ -26,8 +26,11 @@ class IDevice(object):
 
     @staticmethod
     def get_name(device_id):
-        info = run(cmd='ideviceinfo -u {0} | grep ProductType'.format(device_id)).output
-        return info.replace(',', '').replace('ProductType:', '').strip(' ')
+        result = run(cmd='ideviceinfo -u {0} | grep ProductType'.format(device_id))
+        if result.exit_code == 0:
+            return result.output.replace(',', '').replace('ProductType:', '').strip(' ')
+        else:
+            return device_id
 
     @staticmethod
     def get_screen(device_id, file_path):

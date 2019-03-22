@@ -27,6 +27,8 @@ class Device(object):
         self.name = name
         if type is DeviceType.SIM:
             self.device_log_file = Simctl.get_log_file(self.id)
+        elif type is DeviceType.IOS:
+            self.name = IDevice.get_name(device_id=self.id)
 
     def are_texts_visible(self, texts):
         is_list = isinstance(texts, list)
