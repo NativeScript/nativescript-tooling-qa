@@ -12,7 +12,6 @@ from core.utils.device.idevice import IDevice
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File, Folder
 from core.utils.image_utils import ImageUtils
-from core.utils.run import run
 from core.utils.wait import Wait
 
 if Settings.HOST_OS is OSType.OSX:
@@ -25,15 +24,9 @@ class Device(object):
         self.id = id
         self.type = type
         self.version = version
-
-        if type is DeviceType.IOS:
-            type = run(cmd="ideviceinfo | grep ProductType").output
-            type = type.replace(',', '')
-            type = type.replace('ProductType:', '').strip(' ')
-            self.name = type
-            self.device_log_file = SimAuto.get_log_file(self.id)
-        else:
-            self.name = name
+        self.name = name
+        if type is DeviceType.SIM:
+            self.device_log_file = Simctl.get_log_file(self.id)
 
     def are_texts_visible(self, texts):
         is_list = isinstance(texts, list)
@@ -227,9 +220,12 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             return Adb.get_logcat(self.id)
         elif self.type is DeviceType.SIM:
-            return File.read(self.device_log_file)
+            if File.exists(self.device_log_file):
+                return File.read(self.device_log_file)
+            else:
+                return ''
         else:
-            raise NotImplementedError('Click not implemented for iOS devices.')
+            return IDevice.get_log(self.id)
 
     def clear_log(self):
         """
@@ -238,7 +234,7 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.clear_logcat(self.id)
         elif self.type is DeviceType.SIM:
-            self.device_log_file = SimAuto.get_log_file(self.id)
+            self.device_log_file = Simctl.get_log_file(self.id)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
