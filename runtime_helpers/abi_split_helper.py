@@ -7,7 +7,6 @@ from core.utils.device.device import Device, Adb
 
 class AbiSplitHelper(object):
 
-
     @staticmethod
     def assert_apk(apk, device, app_id, image):
         Adb.install(apk,
