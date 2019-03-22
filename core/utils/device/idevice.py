@@ -25,6 +25,11 @@ class IDevice(object):
         return device_ids
 
     @staticmethod
+    def get_name(device_id):
+        info = run(cmd='ideviceinfo -u {0} | grep ProductType'.format(device_id)).output
+        return info.replace(',', '').replace('ProductType:', '').strip(' ')
+
+    @staticmethod
     def get_screen(device_id, file_path):
         """
         Save screen of iOS real device.
@@ -36,3 +41,11 @@ class IDevice(object):
         run(cmd="idevicescreenshot -u {0} {1}".format(device_id, tiff_image_path))
         run(cmd="sips -s format png {0} --out {1}".format(tiff_image_path, file_path))
         File.clean(tiff_image_path)
+
+    @staticmethod
+    def get_log(device_id):
+        """
+        Get device logs as string.
+        :param device_id: Device id.
+        """
+        return device_id

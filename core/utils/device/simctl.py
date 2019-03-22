@@ -141,3 +141,9 @@ class Simctl(object):
             if '.' in bundle_id:
                 bundle_ids.append(bundle_id)
         return bundle_ids
+
+    @staticmethod
+    def get_log_file(device_id):
+        command = 'spawn {0} log stream --level=debug'.format(device_id)
+        log_file = Simctl.run_simctl_command(command=command, wait=False).log_file
+        return log_file
