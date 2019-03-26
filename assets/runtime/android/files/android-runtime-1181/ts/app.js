@@ -7,7 +7,13 @@ export class Home extends BaseVueComponent {
 }
 
 new Vue({
-   render: h => {
-       return h("frame", [h(Home )]);
-   }
-}).$start()
+
+    template: `
+        <Frame>
+            <Home />
+        </Frame>`,
+
+    components: {
+        Home
+    }
+}).$start();
