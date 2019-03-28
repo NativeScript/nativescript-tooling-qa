@@ -11,7 +11,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
 
 
-class PluginTests(TnsTest):
+class PluginCocoapodsTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
     app_identifier = "org.nativescript.testapp"
