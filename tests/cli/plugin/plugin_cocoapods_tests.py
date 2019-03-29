@@ -4,6 +4,7 @@ from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
+from core.utils.run import run
 from data.apps import Apps
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
@@ -39,7 +40,8 @@ class PluginCocoapodsTests(TnsTest):
             plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'CocoaPods', 'carousel.tgz')
             result = Tns.plugin_add(plugin_path, path=Settings.AppName.DEFAULT)
             assert "Successfully installed plugin carousel." in result.output
-            assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'carousel', 'package.json'))
+            assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'carousel',
+                                            'package.json'))
             assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'carousel', 'platforms',
                                             'ios', 'Podfile'))
             assert "carousel" in File.read(os.path.join(self.app_name, 'package.json'))
@@ -47,7 +49,8 @@ class PluginCocoapodsTests(TnsTest):
             plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'CocoaPods', 'keychain.tgz')
             result = Tns.plugin_add(plugin_path, path=Settings.AppName.DEFAULT)
             assert "Successfully installed plugin keychain." in result.output
-            assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'keychain', 'package.json'))
+            assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'keychain',
+                                            'package.json'))
             assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'keychain', 'platforms',
                                             'ios', 'Podfile'))
             assert "keychain" in File.read(os.path.join(self.app_name, 'package.json'))
@@ -67,7 +70,8 @@ class PluginCocoapodsTests(TnsTest):
             plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'CocoaPods', 'googlesdk.tgz')
             result = Tns.plugin_add(plugin_path, path=Settings.AppName.DEFAULT)
             assert "Successfully installed plugin googlesdk." in result.output
-            assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'googlesdk', 'package.json'))
+            assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'googlesdk',
+                                            'package.json'))
             assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'googlesdk', 'platforms',
                                             'ios', 'Podfile'))
 
@@ -90,7 +94,8 @@ class PluginCocoapodsTests(TnsTest):
                                             'contents.xcworkspacedata'))
             assert "location = \"group:TestApp.xcodeproj\">" in output
             assert "location = \"group:Pods/Pods.xcodeproj\">" in output
-            assert Folder.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Pods', 'Pods.xcodeproj'))
+            assert Folder.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Pods',
+                                              'Pods.xcodeproj'))
 
             # This deployment target comes from the CLI
             output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
@@ -143,5 +148,7 @@ class PluginCocoapodsTests(TnsTest):
             assert "pod 'InvalidPod'" in File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
                                                                 'Podfile'))
 
-            assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp.xcworkspace'))
-            assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Pods', 'Pods.xcodeproj'))
+            assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
+                                                'TestApp.xcworkspace'))
+            assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
+                                                'Pods', 'Pods.xcodeproj'))
