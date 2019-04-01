@@ -24,6 +24,7 @@ from data.templates import Template
 APP_NAME = AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
 IMAGE_PATH = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'images', 'iPhoneXR_12')
+ASSERT_TEXT = 'Tap the button'
 
 
 class IOSRuntimeTests(TnsTest):
@@ -126,8 +127,8 @@ class IOSRuntimeTests(TnsTest):
                                    'tns_modules', 'nativescript-ui-core')
         assert Folder.exists(folder_path), "Cannot find folder: " + folder_path
 
-        # Verify app looks correct inside simulator
-        Device.screen_match(self.sim, expected_image=os.path.join(IMAGE_PATH, 'livesync-hello-world_home.png'))
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text=ASSERT_TEXT)
 
     def test_385_methods_with_same_name_and_different_parameters(self):
         """
@@ -151,8 +152,8 @@ class IOSRuntimeTests(TnsTest):
                    'SayName no param!', 'SayName with 1 param!', 'SayName with 2 params!']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
 
-        # Verify app looks correct inside simulator
-        Device.screen_match(self.sim, expected_image=os.path.join(IMAGE_PATH, 'livesync-hello-world_home.png'))
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text=ASSERT_TEXT)
 
     def test_386_check_native_crash_will_not_crash_when_discardUncaughtJsExceptions_used(self):
         """
@@ -180,7 +181,10 @@ class IOSRuntimeTests(TnsTest):
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
-        Device.screen_match(self.sim, expected_image=os.path.join(IMAGE_PATH, 'no-crash-image.png'), tolerance=1)
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text=ASSERT_TEXT)
+
         assert test_result, 'Native crash should not crash the app when discardUncaughtJsExceptions is used!'
 
     def test_387_test_pointers_and_conversions_to_string(self):
