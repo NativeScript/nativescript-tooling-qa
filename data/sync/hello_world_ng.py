@@ -16,7 +16,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
-def sync_hello_world_ng(app_name, platform, device, bundle=False, uglify=False, aot=False, hmr=False,
+def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
                         instrumented=True):
     # Define if it should be executed on device or emulator
     emulator = True
@@ -114,7 +114,7 @@ def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, 
     return result
 
 
-def preview_sync_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=True, instrumented=False):
     result = preview_hello_world_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
                                     instrumented=instrumented)
 

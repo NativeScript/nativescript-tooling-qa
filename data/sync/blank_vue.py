@@ -25,7 +25,7 @@ def __preview_vue(app_name, platform, device, bundle, hmr):
     return Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform, device=device)
 
 
-def __workflow(preview, app_name, platform, device, bundle=False, hmr=False):
+def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     # Execute tns command
     if preview:
         result = __preview_vue(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
