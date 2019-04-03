@@ -116,9 +116,9 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def sync_blank_vue(app_name, platform, device, bundle=False, hmr=False):
+def sync_blank_vue(app_name, platform, device, bundle=True, hmr=True):
     __workflow(preview=False, app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
 
 
-def preview_blank_vue(app_name, platform, device, bundle=False, hmr=False):
+def preview_blank_vue(app_name, platform, device, bundle=True, hmr=True):
     __workflow(preview=True, app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
