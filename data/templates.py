@@ -36,6 +36,7 @@ class Template(object):
     MASTER_DETAIL_JS = gen_template_info(name='template-master-detail', app_type=AppType.JS, texts=md_str)
     MASTER_DETAIL_TS = gen_template_info(name='template-master-detail-ts', app_type=AppType.TS, texts=md_str)
     MASTER_DETAIL_NG = gen_template_info(name='template-master-detail-ng', app_type=AppType.NG, texts=md_str)
+    MASTER_DETAIL_VUE = gen_template_info(name='template-master-detail-vue', app_type=AppType.VUE, texts=md_str)
 
     # Master-Detail templates (with Kinvey)
     MASTER_DETAIL_KINVEY_JS = gen_template_info(name='template-master-detail-kinvey', app_type=AppType.JS,

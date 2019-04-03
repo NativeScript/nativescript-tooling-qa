@@ -130,7 +130,7 @@ class TnsLogs(object):
             if bundle:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
-                if '.vue' not in file_name:
+                if app_type != AppType.VUE:
                     logs.append(file_name)
                 # When env.aot html files are processed differently and you wont see
                 # the exact file name in the log

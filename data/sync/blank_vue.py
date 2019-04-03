@@ -42,7 +42,7 @@ def __workflow(preview, app_name, platform, device, bundle=False, hmr=False):
     # Verify it looks properly
     device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text)
     device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.old_text)
-    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES,device.name,  'initial_state.png')
     device.get_screen(path=initial_state)
 
     # Edit script in .vue file

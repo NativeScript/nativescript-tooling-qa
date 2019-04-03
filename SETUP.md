@@ -12,7 +12,7 @@ In order to get OCR features working you need to install `tesseract`.
 
 **macOS**
 ```bash
-brew install tesseract --with-all-languages
+brew install tesseract
 ```
 
 **Linux**

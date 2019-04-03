@@ -45,6 +45,7 @@ class TemplateTests(TnsRunTest):
         [Template.MASTER_DETAIL_JS.name, Template.MASTER_DETAIL_JS],
         [Template.MASTER_DETAIL_TS.name, Template.MASTER_DETAIL_TS],
         [Template.MASTER_DETAIL_NG.name, Template.MASTER_DETAIL_NG],
+        [Template.MASTER_DETAIL_VUE.name, Template.MASTER_DETAIL_VUE],
         [Template.VUE_MASTER_DETAIL.name, Template.VUE_MASTER_DETAIL],
         [Template.PATIENT_CARE_NG.name, Template.PATIENT_CARE_NG],
         [Template.TAB_NAVIGATION_JS.name, Template.TAB_NAVIGATION_JS],
