@@ -47,7 +47,7 @@ class PluginTests(TnsTest):
         assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
                                         'package.json'))
 
-        output = File.read(os.path.join(self.app_name, 'package.json'))
+        output = File.read(os.path.join(self.app_folder, 'package.json'))
         assert 'org.nativescript.TestApp' in output
         assert 'dependencies' in output
         assert 'tns-plugin' in output
