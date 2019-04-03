@@ -5,13 +5,11 @@ import os
 
 from core.base_test.tns_test import TnsTest
 from core.settings import Settings
-from core.utils.file_utils import Folder
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
 
 APP_NAME = Settings.AppName.DEFAULT
-APP_NAME_OLD = 'TestApp4'
 
 
 # noinspection PyMethodMayBeStatic
@@ -29,7 +27,6 @@ class ResourcesGenerateTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(os.path.join(Settings.TEST_RUN_HOME, APP_NAME_OLD))
 
     def test_001_tns_resources_generate_icons(self):
         command = 'resources generate icons {0}'.format(self.star_image)
