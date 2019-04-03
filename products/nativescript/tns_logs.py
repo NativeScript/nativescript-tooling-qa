@@ -50,7 +50,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=False, hmr=False, uglify=False, app_type=None,
+    def run_messages(app_name, platform, run_type=RunType.FULL, bundle=True, hmr=True, uglify=False, app_type=None,
                      file_name=None, instrumented=False, plugins=None, aot=False, device=None):
         """
         Get log messages that should be present when running a project.

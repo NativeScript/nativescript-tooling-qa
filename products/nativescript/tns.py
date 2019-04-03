@@ -21,8 +21,8 @@ from products.nativescript.tns_paths import TnsPaths
 class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
-                     device=None, release=False, for_device=False, provision=None, bundle=False,
-                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
+                     device=None, release=False, for_device=False, provision=None, bundle=True,
+                     hmr=True, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -69,10 +69,10 @@ class Tns(object):
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
-        if bundle:
-            cmd += ' --bundle'
-        if hmr:
-            cmd += ' --hmr'
+        if not bundle:
+            cmd += ' --no-bundle'
+        if not hmr:
+            cmd += ' --no-hmr'
         if aot:
             cmd += ' --env.aot'
         if uglify:
@@ -270,7 +270,7 @@ class Tns(object):
 
     @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
-            for_device=False, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
+            for_device=False, bundle=True, hmr=True, aot=False, uglify=False, snapshot=False, wait=False,
             log_trace=False, just_launch=False, verify=True):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device,
