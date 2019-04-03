@@ -15,8 +15,8 @@ from products.nativescript.tns_paths import TnsPaths
 
 class PluginTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
-    app_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
-    app_folder = TnsPaths.get_app_path(app_name=app_name)
+    app_path = TnsPaths.get_app_path(app_name=app_name)
+    app_temp_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
 
     @classmethod
     def setUpClass(cls):
@@ -25,12 +25,12 @@ class PluginTests(TnsTest):
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
-        Folder.copy(cls.app_folder, cls.app_path)
+        Folder.copy(cls.app_path, cls.app_temp_path)
 
     def setUp(self):
         TnsTest.setUp(self)
-        Folder.clean(self.app_folder)
-        Folder.copy(self.app_path, self.app_folder)
+        Folder.clean(self.app_path)
+        Folder.copy(self.app_temp_path, self.app_path)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -38,7 +38,7 @@ class PluginTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(cls.app_path)
+        Folder.clean(cls.app_temp_path)
 
     def test_100_plugin_add_after_platform_add_android(self):
         result = Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
@@ -47,7 +47,7 @@ class PluginTests(TnsTest):
         assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
                                         'package.json'))
 
-        output = File.read(os.path.join(self.app_folder, 'package.json'))
+        output = File.read(os.path.join(self.app_path, 'package.json'))
         assert 'org.nativescript.TestApp' in output
         assert 'dependencies' in output
         assert 'tns-plugin' in output
@@ -69,18 +69,19 @@ class PluginTests(TnsTest):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/3932
         """
+        issue_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'issues', 'nativescript-cli-3932')
         Tns.platform_remove(app_name=self.app_name, platform=Platform.ANDROID)
         Tns.plugin_add(plugin_name='nativescript-ui-listview', path=self.app_name)
         Folder.clean(os.path.join(self.app_name, 'node_modules'))
         File.delete(os.path.join(self.app_name, 'package.json'))
-        copy = os.path.join('assets', 'issues', 'nativescript-cli-3932', 'nativescript-ui-listview')
-        paste = os.path.join(self.app_name, 'nativescript-ui-listview')
+        copy = os.path.join(issue_path, 'nativescript-ui-listview')
+        paste = os.path.join(self.app_path, 'nativescript-ui-listview')
         Folder.copy(copy, paste)
-        copy = os.path.join('assets', 'issues', 'nativescript-cli-3932', 'package.json')
+        copy = os.path.join(issue_path, 'package.json')
         paste = os.path.join(self.app_name)
         File.copy(copy, paste)
         Tns.platform_add_android(app_name=self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        folder_path = os.path.join(self.app_name, 'nativescript-ui-listview')
+        folder_path = os.path.join(self.app_path, 'nativescript-ui-listview')
         Npm.install(option='--ignore-scripts', folder=folder_path)
         Tns.build_android(app_name=self.app_name)
         app_path = os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name))
@@ -97,7 +98,7 @@ class PluginTests(TnsTest):
 
     def test_302_plugin_and_npm_modules_in_same_project_android(self):
         Tns.plugin_add(plugin_name='nativescript-social-share', path=self.app_name)
-        output = Npm.install(package='nativescript-appversion', option='--save', folder=self.app_name)
+        output = Npm.install(package='nativescript-appversion', option='--save', folder=self.app_path)
         assert 'ERR!' not in output
         assert 'nativescript-appversion@' in output
 
