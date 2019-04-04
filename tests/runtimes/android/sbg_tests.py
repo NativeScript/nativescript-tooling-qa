@@ -8,6 +8,7 @@ Test for android runtime static binding generator
 import os
 
 from core.base_test.tns_test import TnsTest
+from core.enums.platform_type import Platform
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
@@ -43,3 +44,14 @@ class SBGTests(TnsTest):
             .format(sbg_bindings_path, js_parser_path)
         assert "BUILD FAILED" in result.output, "Expected output not found"
         assert exception_text in result.output, "Expected output not found"
+
+    def test_301_check_if_sbg_is_working_correctly_with_nativescript_purchase_plugin(self):
+        """
+        https://github.com/NativeScript/android-runtime/issues/1329
+        """
+        Tns.plugin_add("nativescript-purchase", path=APP_NAME, verify=False)
+
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
