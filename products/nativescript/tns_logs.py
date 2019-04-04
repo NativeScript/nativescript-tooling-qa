@@ -141,7 +141,6 @@ class TnsLogs(object):
                 logs.append('Webpack compilation complete.')
                 logs.append('Webpack build done!')
                 if hmr:
-                    logs.append('Successfully transferred bundle.')
                     logs.append('hot-update.json')
                     logs.append('HMR: Checking for updates to the bundle with hmr hash')
                     logs.append('HMR: The following modules were updated:')
