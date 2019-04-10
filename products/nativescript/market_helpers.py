@@ -21,8 +21,8 @@ class Market(object):
             flavors = sample['links']
             for key in flavors:
                 record = []
-                if url:
-                    sample_url = flavors[key]
+                sample_url = str(flavors[key]).strip()
+                if sample_url:
                     record.append(sample_name)
                     record.append(sample_url)
                     record.append(control_string)
