@@ -10,6 +10,7 @@ from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import Folder
+from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
 from products.nativescript.app import App
@@ -333,18 +334,23 @@ class Tns(object):
         return result
 
     @staticmethod
-    def test_init(app_name, framework, verify=True):
+    def test_init(app_name, framework, update=True, verify=True):
         """
         Execute `tns test init` command.
         :param app_name: App name (passed as --path <App name>)
         :param framework: Unit testing framework as string (jasmin, mocha, quinit).
+        :param update: Update nativescript-unit-test-runner if True.
         :param verify: Verify command was executed successfully.
         :return: Result of `tns test init` command.
         """
+        app_path = TnsPaths.get_app_path(app_name=app_name)
         command = 'test init --framework {0}'.format(str(framework))
         result = Tns.exec_command(command=command, path=app_name, timeout=300)
         if verify:
             TnsAssert.test_initialized(app_name=app_name, framework=framework, output=result.output)
+        if update:
+            Npm.uninstall(package='nativescript-unit-test-runner', option='--save', folder=app_path)
+            Npm.uninstall(package='nativescript-unit-test-runner@next', option='--save', folder=app_path)
         return result
 
     @staticmethod
