@@ -350,7 +350,7 @@ class Tns(object):
             TnsAssert.test_initialized(app_name=app_name, framework=framework, output=result.output)
         if update:
             Npm.uninstall(package='nativescript-unit-test-runner', option='--save', folder=app_path)
-            Npm.uninstall(package='nativescript-unit-test-runner@next', option='--save', folder=app_path)
+            Npm.install(package='nativescript-unit-test-runner@next', option='--save', folder=app_path)
         return result
 
     @staticmethod
