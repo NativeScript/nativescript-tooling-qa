@@ -62,7 +62,10 @@ class IOSRuntimeTests(TnsTest):
 
         result = Tns.exec_command("test ios", cwd=APP_PATH, emulator=True,
                                   log_trace=True, wait=False)
-        strings = ['JavaScript stack trace', '@file:///app/tests/example.js:5:25']
+        # TODO: Bundle: Add path to stack trace assert, (e.g. @file:///app/tests/example.js:5:25')
+        # https://github.com/NativeScript/nativescript-cli/issues/4524
+        strings = ['JavaScript stack trace',
+                   'JS ERROR AssertionError: expected -1 to equal 1']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
 
     def test_280_tns_run_ios_console_time(self):
