@@ -87,6 +87,7 @@ class Packages(object):
     # Preview and Playground packages
     PREVIEW_PATH = os.environ.get('preview_folder_path', os.path.join("/tns-dist", "Playground",
                                                                       "ns-play-dev", "debug"))
+    PREVIEW_APP_ID = "org.nativescript.preview"
     PLAYGROUND_PATH = os.environ.get('playground_folder_path', os.path.join("/tns-dist", "Playground",
                                                                             "ns-play", "debug"))
 
