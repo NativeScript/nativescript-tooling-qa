@@ -44,6 +44,20 @@ class Preview(object):
             Adb.install(package_android, device_info.id)
 
     @staticmethod
+    def install_preview_app_no_unpack(device_info, platform, uninstall=True):
+        """Installs Preview App on emulator and simulator"""
+        package_android = os.path.join(TEST_SUT_HOME, 'app-universal-release.apk')
+        package_ios = os.path.join(TEST_SUT_HOME, 'nsplaydev.app')
+        if platform is Platform.IOS:
+            if uninstall:
+                Simctl.uninstall(device_info, Settings.Packages.PREVIEW_APP_ID)
+            Simctl.install(device_info, package_ios)
+        elif platform is Platform.ANDROID:
+            if uninstall:
+                Adb.uninstall(Settings.Packages.PREVIEW_APP_ID, device_info.id, False)
+            Adb.install(package_android, device_info.id)
+
+    @staticmethod
     def install_playground_app(device_info, platform):
         """Installs Playground App on emulator and simulator"""
         package_android = os.path.join(TEST_SUT_HOME, "app-release.apk")

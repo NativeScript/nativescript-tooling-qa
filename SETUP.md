@@ -12,7 +12,17 @@ In order to get OCR features working you need to install `tesseract`.
 
 **macOS**
 ```bash
-brew install tesseract --with-all-languages
+brew install tesseract
+```
+
+Note: If you are unable to install 'atomac' on Mojave and get the error below:
+```
+ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/Carbon.framework/Headers/Carbon.h:34:10: fatal error: 'CarbonSound/CarbonSound.h' file not found
+    #include <CarbonSound/CarbonSound.h>
+```
+use this command:
+```
+open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
 ```
 
 **Linux**
