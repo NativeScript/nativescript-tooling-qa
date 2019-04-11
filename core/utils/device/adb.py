@@ -217,8 +217,12 @@ class Adb(object):
                                     device_id=device_id,
                                     log_level=logging.DEBUG)
             else:
-                Adb.run_adb_command(command="shell screencap -p | perl -pe \\'s/\\x0D\\x0A/\\x0A/g\\' > " + file_path,
-                                    device_id=device_id)
+                if Version.is_os_mojave():
+                    command = "shell screencap -p | perl -pe \\'s/\\x0D\\x0A/\\x0A/g\\' > " + file_path
+                    Adb.run_adb_command(command=command, device_id=device_id)
+                else:
+                    Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
+                                        device_id=device_id)
         else:
             Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
             Adb.run_adb_command(command='shell screencap -p /sdcard/image.png', device_id=device_id)
