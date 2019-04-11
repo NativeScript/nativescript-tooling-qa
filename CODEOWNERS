@@ -1,0 +1,2 @@
+# CLI team owns the tests, so QAs within the team must review changes in the core directory
+/core @endarova @dtopuzov @miroslavaivanova
