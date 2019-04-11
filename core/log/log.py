@@ -13,7 +13,7 @@ class Log(object):
         # pylint: disable=superfluous-parens
         if level != logging.DEBUG:
             date = datetime.datetime.now().strftime('%H:%M:%S')
-            print('{0} {1}'.format(date, msg))
+            print('{0} {1} test'.format(date, msg))
 
     @staticmethod
     def debug(message):
