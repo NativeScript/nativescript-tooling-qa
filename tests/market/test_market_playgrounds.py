@@ -20,6 +20,9 @@ class PlaygroundMarketSamples(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     is_ios_fail = None
     test_data = Market.get_data()
+    # test_data = [
+    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-ng&id=IwTaEy&v=2', 'Play', ""]
+    # ]
 
     @classmethod
     def setUpClass(cls):
@@ -50,6 +53,7 @@ class PlaygroundMarketSamples(TnsRunTest):
         link = PlaygroundMarketSamples.get_link(self.chrome, url)
         original_name = str(name).replace("_", " ")
         if link == "":
+            Log.info('No Playground URL found ...')
             data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor)}
             Market.preserve_data(data)
         else:
@@ -89,21 +93,25 @@ class PlaygroundMarketSamples(TnsRunTest):
         url = '{0}&debug=true'.format(url)
         chrome.open(url)
         link = ""
-        for _ in range(1):
+        timeout = 25  # In seconds
+        end_time = time.time() + timeout
+        while end_time > time.time():
             try:
                 Log.info('Searching for QR url ...')
                 link = chrome.driver.find_element_by_xpath("//span[contains(.,'nsplay://boot')]").text
             except NoSuchElementException:
-                Log.info('No Playground URL found ...')
+                Log.info('No Playground URL element found ...')
             if "nsplay" in link:
+                Log.info('Url link found ...')
                 break
-            time.sleep(1)
         return link
 
     @staticmethod
     def get_error(chrome, previous_errors=0):
         exceptions = 0
-        for _ in range(2 + previous_errors):
+        timeout = 20  # In seconds
+        end_time = time.time() + timeout
+        while end_time > time.time():
             Log.info(' Searching for exception ...')
             elements = chrome.driver.find_elements_by_xpath("//span[contains(.,'Exception')]")
             exceptions = len(elements) - previous_errors
@@ -111,8 +119,6 @@ class PlaygroundMarketSamples(TnsRunTest):
                 error = elements[previous_errors].text
                 print error
                 break
-            else:
-                time.sleep(1)
         return exceptions
 
     @staticmethod
