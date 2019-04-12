@@ -138,3 +138,14 @@ class Preview(object):
         strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         return result
+
+    @staticmethod
+    def is_running_on_ios(device_info, app_id):
+        """
+        Get preview URL form tns log.
+        This is the url you need to load in Preview app in order to see and sync your project.
+        :param device_info: Information about the device we will search in.
+        :param app_id: the App ID of the process.
+        :return: boolean.
+        """
+        return Simctl.is_process_running(device_info, app_id)

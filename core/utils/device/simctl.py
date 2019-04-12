@@ -153,3 +153,11 @@ class Simctl(object):
             if '.' in bundle_id:
                 bundle_ids.append(bundle_id)
         return bundle_ids
+
+    @staticmethod
+    def is_process_running(simulator_info, app_id):
+        result = Simctl.run_simctl_command('spawn {0} launchctl list | grep \'{1}\''.format(simulator_info.id, app_id))
+        is_running = result.exit_code == 0
+        if not is_running:
+            Log.info('Process {0} is not running !'.format(app_id))
+        return is_running
