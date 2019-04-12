@@ -18,7 +18,7 @@ class Simctl(object):
     # noinspection PyBroadException
     @staticmethod
     def __get_simulators():
-        result = Simctl.run_simctl_command(command='list --json devices')
+        result = Simctl.run_simctl_command(command='list --json devices &', wait=True, timeout=10)
         try:
             return json.loads(result.output)
         except ValueError:
