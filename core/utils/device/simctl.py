@@ -36,7 +36,13 @@ class Simctl(object):
 
     @staticmethod
     def is_running(simulator_info):
-        sims = Simctl.__get_simulators()['devices']['iOS {0}'.format(simulator_info.sdk)]
+        devices = Simctl.__get_simulators()['devices']
+        placeholder = 'iOS {0}'
+        device_key = placeholder.format(simulator_info.sdk)
+        if device_key not in devices:
+            placeholder_dash = placeholder.format(simulator_info.sdk).replace(' ', '-').replace('.', '-')
+            device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
+        sims = devices[device_key]
         for sim in sims:
             if sim['name'] == simulator_info.name and sim['state'] == 'Booted':
                 # simctl returns Booted too early, so we will wait some untill service is started
@@ -69,7 +75,13 @@ class Simctl(object):
 
     @staticmethod
     def is_available(simulator_info):
-        sims = Simctl.__get_simulators()['devices']['iOS {0}'.format(simulator_info.sdk)]
+        devices = Simctl.__get_simulators()['devices']
+        placeholder = 'iOS {0}'
+        device_key = placeholder.format(simulator_info.sdk)
+        if device_key not in devices:
+            placeholder_dash = placeholder.format(simulator_info.sdk).replace(' ', '-').replace('.', '-')
+            device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
+        sims = devices[device_key]
         for sim in sims:
             if sim['name'] == simulator_info.name:
                 simulator_info.id = str(sim['udid'])
@@ -141,3 +153,11 @@ class Simctl(object):
             if '.' in bundle_id:
                 bundle_ids.append(bundle_id)
         return bundle_ids
+
+    @staticmethod
+    def is_process_running(simulator_info, app_id):
+        result = Simctl.run_simctl_command('spawn {0} launchctl list | grep \'{1}\''.format(simulator_info.id, app_id))
+        is_running = result.exit_code == 0
+        if not is_running:
+            Log.info('Process {0} is not running !'.format(app_id))
+        return is_running

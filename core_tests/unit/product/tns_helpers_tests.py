@@ -50,6 +50,8 @@ class SyncMessagesTests(unittest.TestCase):
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
                                     file_name='main-view-model.js',
+                                    bundle=False,
+                                    hmr=False,
                                     device=Device(id='123', name='Emu', type=DeviceType.EMU, version=8.0))
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (Android)' in logs
@@ -63,8 +65,9 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
-                                    file_name='main-view-model.js',
-                                    bundle=True)
+                                    bundle=True,
+                                    hmr=False,
+                                    file_name='main-view-model.js')
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
         assert 'Webpack compilation complete.' in logs
@@ -84,6 +87,7 @@ class SyncMessagesTests(unittest.TestCase):
                                     file_name='main-view-model.js',
                                     bundle=True,
                                     uglify=True,
+                                    hmr=False,
                                     device=Device(id='123', name='Emu', type=DeviceType.EMU, version=4.4))
         assert 'Skipping prepare.' not in logs
         assert 'File change detected.' in logs
@@ -138,7 +142,8 @@ class SyncMessagesTests(unittest.TestCase):
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
                                     file_name='main-view-model.js',
-                                    bundle=False)
+                                    bundle=False,
+                                    hmr=False)
         assert 'Skipping prepare.' not in logs
         assert 'Successfully transferred main-view-model.js' in logs
 
@@ -147,7 +152,8 @@ class SyncMessagesTests(unittest.TestCase):
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
                                     file_name='main-view-model.ts',
-                                    bundle=False)
+                                    bundle=False,
+                                    hmr=False)
         assert 'Skipping prepare.' not in logs
         assert 'Successfully transferred main-view-model.js' in logs
 
@@ -155,6 +161,8 @@ class SyncMessagesTests(unittest.TestCase):
         logs = TnsLogs.run_messages(app_name=Settings.AppName.DEFAULT,
                                     platform=Platform.ANDROID,
                                     run_type=RunType.INCREMENTAL,
+                                    bundle=False,
+                                    hmr=False,
                                     file_name=os.path.basename(Changes.JSHelloWord.JS.file_path))
 
         assert 'Building project...' not in logs

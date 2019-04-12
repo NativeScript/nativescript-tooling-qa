@@ -43,17 +43,9 @@ class VueJSPreviewTests(TnsRunTest):
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
 
-    def test_100_preview_android_bundle(self):
-        preview_blank_vue(self.app_name, Platform.ANDROID, self.emu, bundle=True)
+    def test_100_preview_android(self):
+        preview_blank_vue(self.app_name, Platform.ANDROID, self.emu)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_100_preview_ios_bundle(self):
-        preview_blank_vue(self.app_name, Platform.IOS, self.sim, bundle=True)
-
-    def test_200_preview_android_bundle_hmr(self):
-        preview_blank_vue(self.app_name, Platform.ANDROID, self.emu, hmr=True)
-
-    @unittest.skip('Skip temporary.')
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_preview_ios_bundle_hmr(self):
-        preview_blank_vue(self.app_name, Platform.IOS, self.sim, hmr=True)
+    def test_100_preview_ios(self):
+        preview_blank_vue(self.app_name, Platform.IOS, self.sim)

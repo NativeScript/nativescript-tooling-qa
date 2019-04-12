@@ -17,7 +17,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
-def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
+def sync_hello_world_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
                         snapshot=False, instrumented=True):
     __sync_hello_world_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
                              device=device,
@@ -25,7 +25,7 @@ def sync_hello_world_js(app_name, platform, device, bundle=False, hmr=False, ugl
                              instrumented=instrumented)
 
 
-def sync_hello_world_ts(app_name, platform, device, bundle=False, hmr=False, uglify=False, aot=False,
+def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
                         snapshot=False, instrumented=True):
     __sync_hello_world_js_ts(app_type=AppType.TS, app_name=app_name, platform=platform,
                              device=device,
@@ -47,7 +47,7 @@ def __verify_snapshot_skipped(snapshot, result):
 
 
 def __sync_hello_world_js_ts(app_type, app_name, platform, device,
-                             bundle=False, hmr=False, uglify=False, aot=False, snapshot=False, instrumented=False):
+                             bundle=True, hmr=True, uglify=False, aot=False, snapshot=False, instrumented=False):
     # Set changes
     js_file = os.path.basename(Changes.JSHelloWord.JS.file_path)
     if app_type == AppType.JS:
@@ -143,7 +143,7 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=Fals
     return result
 
 
-def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, hmr=True, instrumented=False):
     result = preview_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
                                        instrumented=instrumented)
 

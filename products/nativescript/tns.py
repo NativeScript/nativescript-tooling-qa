@@ -10,6 +10,7 @@ from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import Folder
+from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
 from products.nativescript.app import App
@@ -21,8 +22,8 @@ from products.nativescript.tns_paths import TnsPaths
 class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
-                     device=None, release=False, for_device=False, provision=None, bundle=False,
-                     hmr=False, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
+                     device=None, release=False, for_device=False, provision=None, bundle=True,
+                     hmr=True, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -69,10 +70,10 @@ class Tns(object):
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
-        if bundle:
-            cmd += ' --bundle'
-        if hmr:
-            cmd += ' --hmr'
+        if not bundle:
+            cmd += ' --no-bundle'
+        if not hmr:
+            cmd += ' --no-hmr'
         if aot:
             cmd += ' --env.aot'
         if uglify:
@@ -270,7 +271,7 @@ class Tns(object):
 
     @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
-            for_device=False, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
+            for_device=False, bundle=True, hmr=True, aot=False, uglify=False, snapshot=False, wait=False,
             log_trace=False, just_launch=False, verify=True):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device,
@@ -333,18 +334,23 @@ class Tns(object):
         return result
 
     @staticmethod
-    def test_init(app_name, framework, verify=True):
+    def test_init(app_name, framework, update=True, verify=True):
         """
         Execute `tns test init` command.
         :param app_name: App name (passed as --path <App name>)
         :param framework: Unit testing framework as string (jasmin, mocha, quinit).
+        :param update: Update nativescript-unit-test-runner if True.
         :param verify: Verify command was executed successfully.
         :return: Result of `tns test init` command.
         """
+        app_path = TnsPaths.get_app_path(app_name=app_name)
         command = 'test init --framework {0}'.format(str(framework))
         result = Tns.exec_command(command=command, path=app_name, timeout=300)
         if verify:
             TnsAssert.test_initialized(app_name=app_name, framework=framework, output=result.output)
+        if update:
+            Npm.uninstall(package='nativescript-unit-test-runner', option='--save', folder=app_path)
+            Npm.install(package='nativescript-unit-test-runner@next', option='--save', folder=app_path)
         return result
 
     @staticmethod

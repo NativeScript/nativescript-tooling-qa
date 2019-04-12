@@ -46,41 +46,34 @@ class TnsRunTSTests(TnsRunTest):
     def test_100_run_android(self):
         sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu)
 
-    def test_200_run_android_bundle(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True)
-
-    def test_210_run_android_bundle_hmr(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, hmr=True)
-
-    def test_300_run_android_bundle_aot(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True)
-
-    def test_310_run_android_bundle_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True, uglify=True)
-
-    def test_320_run_android_bundle_aot_and_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=True, aot=True, uglify=True)
-
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_run_ios(self):
         sync_hello_world_ts(self.app_name, Platform.IOS, self.sim)
 
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_run_ios_bundle(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, bundle=True)
+    def test_200_run_android_no_bundle_no_hmr(self):
+        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, bundle=False, hmr=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_210_run_ios_bundle_hmr(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, bundle=True, hmr=True)
+    def test_200_run_ios_no_bundle_no_hmr(self):
+        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, bundle=False, hmr=False)
+
+    def test_300_run_android_bundle_aot(self):
+        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, aot=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_run_ios_bundle_aot(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True)
+        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, aot=True)
+
+    def test_310_run_android_bundle_uglify(self):
+        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_310_run_ios_bundle_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, bundle=True, uglify=True)
+        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, uglify=True)
+
+    def test_320_run_android_bundle_aot_and_uglify(self):
+        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, bundle=True, aot=True, uglify=True)
+        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)
