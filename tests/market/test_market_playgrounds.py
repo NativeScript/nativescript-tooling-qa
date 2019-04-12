@@ -1,7 +1,7 @@
 import os
 import time
 
-from nose_parameterized import parameterized
+from parameterized import parameterized
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -21,7 +21,7 @@ class PlaygroundMarketSamples(TnsRunTest):
     is_ios_fail = None
     test_data = Market.get_data()
     # test_data = [
-    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-ng&id=IwTaEy&v=2', 'Play', ""]
+    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-ng&id=G78alI&v=2', 'Play', ""]
     # ]
 
     @classmethod
@@ -76,8 +76,9 @@ class PlaygroundMarketSamples(TnsRunTest):
                 Preview.dismiss_simulator_alert()
                 # simulator_result = PlaygroundMarketSamples.wait_for_text(self.sim, text)
                 simulator_result = PlaygroundMarketSamples.get_error(self.chrome, emulator_result)
+                is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
                 # if not simulator_result:
-                self.is_ios_fail = simulator_result > 0
+                self.is_ios_fail = simulator_result > 0 or not is_app_active
                 os.environ["is_ios_fail"] = str(self.is_ios_fail)
                 if self.is_ios_fail:
                     self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
