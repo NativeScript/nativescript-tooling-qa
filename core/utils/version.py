@@ -1,10 +1,6 @@
 """
 Version utils
 """
-import platform
-
-from core.enums.os_type import OSType
-from core.settings import Settings
 
 
 class Version(object):
