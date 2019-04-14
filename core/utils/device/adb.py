@@ -211,18 +211,10 @@ class Adb(object):
     @staticmethod
     def get_screen(device_id, file_path):
         File.delete(path=file_path)
-        if 'emulator' in device_id:
-            if Settings.HOST_OS == OSType.WINDOWS:
-                Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
-                                    device_id=device_id,
-                                    log_level=logging.DEBUG)
-            else:
-                if Version.is_os_mojave():
-                    command = "shell screencap -p | perl -pe \\'s/\\x0D\\x0A/\\x0A/g\\' > " + file_path
-                    Adb.run_adb_command(command=command, device_id=device_id)
-                else:
-                    Adb.run_adb_command(command="shell screencap -p | perl -pe 's/\\x0D\\x0A/\\x0A/g' > " + file_path,
-                                        device_id=device_id)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
+                                device_id=device_id,
+                                log_level=logging.DEBUG)
         else:
             Adb.run_adb_command(command='shell rm /sdcard/image.png', device_id=device_id)
             Adb.run_adb_command(command='shell screencap -p /sdcard/image.png', device_id=device_id)
