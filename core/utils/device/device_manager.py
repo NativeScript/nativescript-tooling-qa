@@ -96,10 +96,10 @@ class DeviceManager(object):
                 return True
             else:
                 avd_manager = os.path.join(ANDROID_HOME, 'tools', 'bin', 'avdmanager')
-                result = run(cmd='{0} list avd -c'.format(avd_manager))
+                result = run(cmd='{0} list avd'.format(avd_manager))
                 avds = result.output.splitlines()
                 for avd in avds:
-                    if avd == avd_name:
+                    if avd_name in avd:
                         return True
                 return False
 
