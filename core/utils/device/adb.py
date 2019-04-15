@@ -211,7 +211,7 @@ class Adb(object):
     @staticmethod
     def get_screen(device_id, file_path):
         File.delete(path=file_path)
-        if Settings.HOST_OS == OSType.WINDOWS:
+        if Settings.HOST_OS == OSType.WINDOWS and 'emulator' in device_id:
             Adb.run_adb_command(command='exec-out screencap -p > ' + file_path,
                                 device_id=device_id,
                                 log_level=logging.DEBUG)
