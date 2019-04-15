@@ -6,7 +6,6 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
-from data.sync.blank_vue import sync_blank_vue
 from data.sync.master_detail_vue import sync_master_detail_vue
 
 from data.templates import Template
