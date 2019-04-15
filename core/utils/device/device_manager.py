@@ -64,7 +64,7 @@ class DeviceManager(object):
         def start(emulator):
             # Define emulator start options and command
             emulator_path = os.path.join(ANDROID_HOME, 'emulator', 'emulator')
-            options = '-port {0} -wipe-data -no-snapshot-save -no-boot-anim -no-audio'.format(emulator.port)
+            options = '-port {0} -wipe-data -no-snapshot-save -no-boot-anim -no-audio -netspeed lte'.format(emulator.port)
 
             # Check if clean snapshot is available and use it
             snapshot_name = 'clean_boot'
