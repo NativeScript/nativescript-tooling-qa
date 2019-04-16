@@ -23,7 +23,6 @@ Note: If you are unable to install 'atomac' on Mojave and get the error below:
 use this command:
 ```
 open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
->>>>>>> master
 ```
 
 **Linux**
