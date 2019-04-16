@@ -64,7 +64,8 @@ class DeviceManager(object):
         def start(emulator):
             # Define emulator start options and command
             emulator_path = os.path.join(ANDROID_HOME, 'emulator', 'emulator')
-            options = '-port {0} -wipe-data -no-snapshot-save -no-boot-anim -no-audio'.format(emulator.port)
+            options = '-port {0} -wipe-data -no-snapshot-save -no-boot-anim -no-audio -netspeed lte'.format(
+                emulator.port)
 
             # Check if clean snapshot is available and use it
             snapshot_name = 'clean_boot'
@@ -96,10 +97,10 @@ class DeviceManager(object):
                 return True
             else:
                 avd_manager = os.path.join(ANDROID_HOME, 'tools', 'bin', 'avdmanager')
-                result = run(cmd='{0} list avd -c'.format(avd_manager))
+                result = run(cmd='{0} list avd'.format(avd_manager))
                 avds = result.output.splitlines()
                 for avd in avds:
-                    if avd == avd_name:
+                    if avd_name in avd:
                         return True
                 return False
 

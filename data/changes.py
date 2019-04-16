@@ -123,3 +123,18 @@ class Changes(object):
         VUE_STYLE = ChangeSet(file_path=os.path.join('app', 'components', 'Home.vue'),
                               old_value='font-size: 20;', new_value='font-size: 20; color: red;',
                               old_color=Colors.DARK, new_color=Colors.RED)
+
+    class MasterDetailVUE(object):
+        VUE_SCRIPT = ChangeSet(file_path=os.path.join('app', 'components', 'Home.vue'),
+                               old_value='Blank {N}-Vue app', new_value='TEST APP',
+                               old_text='Blank {N}-Vue app', new_text='TEST APP')
+        VUE_TEMPLATE = ChangeSet(file_path=os.path.join('app', 'components', 'CarList.vue'),
+                                 old_value='Car List', new_value='Master Detail',
+                                 old_text='Car List', new_text='Master Detail')
+        VUE_STYLE = ChangeSet(file_path=os.path.join('app', 'components', 'CarList.vue'),
+                              old_value='background-color: $background-light;',
+                              new_value='background-color: rgb(229, 4, 5);',
+                              old_color=Colors.WHITE, new_color=Colors.RED_DARK)
+        VUE_DETAIL_PAGE_TEMPLATE = ChangeSet(file_path=os.path.join(('app', 'components', 'CarDetails')),
+                                             old_value='<Span text="/day" />', new_value='<Span text="/24h" />',
+                                             old_text='/day', new_text='/24h')
