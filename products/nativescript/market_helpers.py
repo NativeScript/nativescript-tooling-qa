@@ -2,6 +2,7 @@ import json
 import os
 import urllib
 
+from core.log.log import Log
 from core.settings import Settings
 
 
@@ -37,11 +38,11 @@ class Market(object):
         file_path = os.path.join(Settings.TEST_OUT_HOME, 'results.txt')
         with open(file_path, "a") as myfile:
             myfile.write(str(record)+"\n")
-        print "++++============DATA==============++++"
-        print record["name"]
-        print "Android Pass: " + record["android"]
-        print "iOS Pass: " + record["ios"]
-        print "++++============END==============++++"
+        Log.info("++++============DATA==============++++")
+        Log.info(record["name"])
+        Log.info("Android Pass: " + record["android"])
+        Log.info("iOS Pass: " + record["ios"])
+        Log.info("++++============END==============++++")
 
     @staticmethod
     def remove_results_file():
