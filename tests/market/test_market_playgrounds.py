@@ -20,8 +20,10 @@ class PlaygroundMarketSamples(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     is_ios_fail = None
     test_data = Market.get_data()
+    # test_data = [x for x in test_data1 if u'Getting_a_User\'s_Current_Location' in x]
+    # print test_data
     # test_data = [
-    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-ng&id=G78alI&v=2', 'Play', ""]
+    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-tsc&id=veTP4B&v=2', 'Play', ""]
     # ]
 
     @classmethod
@@ -51,13 +53,13 @@ class PlaygroundMarketSamples(TnsRunTest):
     def test(self, name, url, text, flavor):
         print text
         link = PlaygroundMarketSamples.get_link(self.chrome, url)
-        original_name = str(name).replace("_", " ")
+        original_name = name.replace("_", " ")
         if link == "":
             Log.info('No Playground URL found ...')
             data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor)}
             Market.preserve_data(data)
         else:
-            image_name = '{0}_{1}.png'.format(name, str(Platform.ANDROID))
+            image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
             Preview.run_url(url=link, device=self.emu)
             # emulator_result = PlaygroundMarketSamples.wait_for_text(self.emu, text)
             emulator_result = PlaygroundMarketSamples.get_error(self.chrome)
@@ -66,7 +68,7 @@ class PlaygroundMarketSamples(TnsRunTest):
             if is_android_fail:
                 self.emu.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
             if Settings.HOST_OS == OSType.OSX:
-                image_name = '{0}_{1}.png'.format(name, str(Platform.IOS))
+                image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.IOS))
                 if self.is_ios_fail:
                     Log.info(' Installing Preview app on iOS ...')
                     Preview.install_preview_app_no_unpack(self.sim, Platform.IOS)
@@ -85,7 +87,7 @@ class PlaygroundMarketSamples(TnsRunTest):
 
             ios = str(not self.is_ios_fail)
             android = str(not is_android_fail)
-            data = {"name": original_name, "ios": ios, "android": android, "flavor": str(flavor)}
+            data = {"name": original_name.encode("utf8"), "ios": ios, "android": android, "flavor": str(flavor)}
             Market.preserve_data(data)
 
     # noinspection PyBroadException
