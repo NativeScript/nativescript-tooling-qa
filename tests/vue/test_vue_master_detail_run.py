@@ -7,7 +7,6 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from data.sync.master_detail_vue import sync_master_detail_vue
-
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -39,9 +38,9 @@ class VueJSTests(TnsRunTest):
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
 
-    def test_100_run_android_bundle_hmr(self):
-        sync_master_detail_vue(self.app_name, Platform.ANDROID, self.emu, bundle=True)
+    def test_100_run_android_bundle(self):
+        sync_master_detail_vue(self.app_name, Platform.ANDROID, self.emu)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_100_run_ios_bundle_hmr(self):
-        sync_master_detail_vue(self.app_name, Platform.IOS, self.sim, bundle=True, hmr=True)
+    def test_100_run_ios_bundle(self):
+        sync_master_detail_vue(self.app_name, Platform.IOS, self.sim)
