@@ -135,6 +135,6 @@ class Changes(object):
                               old_value='background-color: $background-light;',
                               new_value='background-color: rgb(229, 4, 5);',
                               old_color=Colors.WHITE, new_color=Colors.RED_DARK)
-        VUE_DETAIL_PAGE_TEMPLATE = ChangeSet(file_path=os.path.join(('app', 'components', 'CarDetails')),
+        VUE_DETAIL_PAGE_TEMPLATE = ChangeSet(file_path=os.path.join('app', 'components', 'CarDetails'),
                                              old_value='<Span text="/day" />', new_value='<Span text="/24h" />',
                                              old_text='/day', new_text='/24h')
