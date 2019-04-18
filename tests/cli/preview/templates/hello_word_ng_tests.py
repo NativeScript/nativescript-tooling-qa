@@ -68,13 +68,13 @@ class PreviewNGTests(TnsPreviewNGTests):
     def test_200_preview_android_no_bundle(self):
         """Preview project on emulator with --bundle. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.ANDROID,
-                                    device=self.emu, instrumented=True, bundle=False)
+                                    device=self.emu, instrumented=True, bundle=False, hmr=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_200_preview_ios_no_bundle(self):
         """Preview project on simulator with --bundle. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS,
-                                    device=self.sim, instrumented=True, bundle=False)
+                                    device=self.sim, instrumented=True, bundle=False, hmr=False)
 
     def test_205_preview_android_no_hmr(self):
         """Preview project on emulator with --hmr. Make valid changes in TS, CSS and HTML"""
