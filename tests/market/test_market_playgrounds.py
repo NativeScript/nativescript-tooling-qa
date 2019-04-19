@@ -53,10 +53,10 @@ class PlaygroundMarketSamples(TnsRunTest):
     def test(self, name, url, text, flavor):
         print text
         link = PlaygroundMarketSamples.get_link(self.chrome, url)
-        original_name = name.replace("_", " ")
+        original_name = name.replace("_", " ").encode("utf8")
         if link == "":
             Log.info('No Playground URL found ...')
-            data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor)}
+            data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor), "timeout": "True"}
             Market.preserve_data(data)
         else:
             image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
@@ -87,7 +87,7 @@ class PlaygroundMarketSamples(TnsRunTest):
 
             ios = str(not self.is_ios_fail)
             android = str(not is_android_fail)
-            data = {"name": original_name.encode("utf8"), "ios": ios, "android": android, "flavor": str(flavor)}
+            data = {"name": original_name, "ios": ios, "android": android, "flavor": str(flavor)}
             Market.preserve_data(data)
 
     # noinspection PyBroadException
