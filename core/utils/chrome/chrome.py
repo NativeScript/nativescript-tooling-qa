@@ -1,7 +1,6 @@
 import os
 
 from selenium import webdriver
-from selenium.webdriver import ActionChains
 from webdriver_manager.chrome import ChromeDriverManager
 
 from core.enums.os_type import OSType
@@ -51,7 +50,3 @@ class Chrome(object):
                 Process.kill(proc_name="chrome", proc_cmdline=None)
             Process.kill(proc_name='chromedriver')
         Log.info('Kill Chrome browser!')
-
-    def double_click(self, element):
-        actions = ActionChains(self.driver)
-        actions.double_click(element).perform()

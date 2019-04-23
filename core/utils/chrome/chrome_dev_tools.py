@@ -41,30 +41,24 @@ class ChromeDevTools(object):
         Log.info('Chrome dev tools loaded.')
 
     def __expand_shadow_element(self, element):
-        shadow_root = self.chrome.driver.execute_script('return arguments[0].shadowRoot', element)
-        return shadow_root
+        return self.chrome.driver.execute_script(self.shadow_root_element_script, element)
+
+    def __get_shadow_element_in_shadow_dom(self, value, shadow_dom_root_element):
+        return self.chrome.driver.execute_script(self.shadow_inner_element_script, shadow_dom_root_element, value)
 
     def __refresh_main_panel(self):
         content_panel_selector = "div[slot='insertion-point-main'][class='vbox flex-auto tabbed-pane']"
         content_holder = self.chrome.driver.find_element(By.CSS_SELECTOR, content_panel_selector)
-        action = ActionChains(self.chrome.driver)
-        action.move_to_element_with_offset(content_holder, 5, 5)
-        action.click()
-        action.perform()
         self.main_panel = self.__expand_shadow_element(content_holder)
         assert self.main_panel is not None, 'Failed to load chrome dev tools.'
 
     def __expand_main_panel(self):
-        # Expand main panel
         button_container = self.main_panel.find_element(By.CSS_SELECTOR, 'div.tabbed-pane-left-toolbar.toolbar')
         button_root = self.__expand_shadow_element(button_container)
         button = button_root.find_element(By.CSS_SELECTOR, "button[aria-label='Toggle screencast']")
         if bool(button.get_attribute("aria-pressed")):
             Log.info('Expand dev tools main pannel.')
             button.click()
-
-    def __get_shadow_element_in_shadow_dom(self, value, shadow_dom_root_element):
-        return self.chrome.driver.execute_script(self.shadow_inner_element_script, shadow_dom_root_element, value)
 
     def find_element_by_text(self, text):
         self.__refresh_main_panel()
