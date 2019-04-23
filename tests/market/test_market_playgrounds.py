@@ -2,16 +2,16 @@ import os
 import time
 
 from parameterized import parameterized
+from selenium.common.exceptions import NoSuchElementException
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.chrome import Chrome
-from products.nativescript.preview_helpers import Preview
+from core.utils.chrome.chrome import Chrome
 from products.nativescript.market_helpers import Market
-from selenium.common.exceptions import NoSuchElementException
+from products.nativescript.preview_helpers import Preview
 
 
 # noinspection PyUnusedLocal
@@ -20,6 +20,7 @@ class PlaygroundMarketSamples(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     is_ios_fail = None
     test_data = Market.get_data()
+
     # test_data = [x for x in test_data1 if u'Getting_a_User\'s_Current_Location' in x]
     # print test_data
     # test_data = [
