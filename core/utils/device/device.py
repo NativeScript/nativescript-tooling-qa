@@ -220,6 +220,17 @@ class Device(object):
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
+    def clear_log(self):
+        """
+        Clean device log.
+        """
+        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
+            Adb.clear_logcat(self.id)
+        elif self.type is DeviceType.SIM:
+            self.device_log_file = SimAuto.get_log_file(self.id)
+        else:
+            raise NotImplementedError('Click not implemented for iOS devices.')
+
     def get_log(self):
         """
         Get device log.
@@ -231,21 +242,11 @@ class Device(object):
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
-    def clear_log(self):
+    def wait_for_log(self, text, timeout=15):
         """
-        Get device log.
+        Wait until text is available in device logs.
+        :param text: Text to be searched in logs.
+        :param timeout: Timeout in seconds.
+        :return: True if text found in device logs.
         """
-        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            Adb.clear_logcat(self.id)
-        elif self.type is DeviceType.SIM:
-            self.device_log_file = SimAuto.get_log_file(self.id)
-        else:
-            raise NotImplementedError('Click not implemented for iOS devices.')
-
-    def is_text_in_log(self, text_to_check, timeout=15):
-        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            return Wait.until(lambda: text_to_check in Adb.get_logcat(self.id), timeout=timeout, period=1)
-        elif self.type is DeviceType.SIM:
-            return Wait.until(lambda: text_to_check in File.read(self.device_log_file), timeout=timeout, period=1)
-        else:
-            raise NotImplementedError('Click not implemented for iOS devices.')
+        return Wait.until(lambda: text in self.get_log(), timeout=timeout, period=1)

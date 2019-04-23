@@ -40,6 +40,9 @@ class Changes(object):
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
                         old_text='TAP', new_text='HIT')
+        XML_ACTION_BAR = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                                   old_value='My App', new_value='TestApp',
+                                   old_text='My App', new_text='TestApp')
 
     class TSHelloWord(object):
         TS = ChangeSet(file_path=os.path.join('app', 'main-view-model.ts'),

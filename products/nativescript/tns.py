@@ -9,7 +9,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
@@ -303,14 +303,20 @@ class Tns(object):
 
     @staticmethod
     def debug(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
-              for_device=False, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
-              log_trace=False, verify=True):
+              for_device=False, bundle=True, hmr=True, aot=False, uglify=False, wait=False, log_trace=False,
+              verify=True):
         result = Tns.exec_command(command='debug', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device,
-                                  bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
-                                  wait=wait, log_trace=log_trace)
+                                  bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace)
         if verify:
-            pass
+            string = ['To start debugging, open the following URL in Chrome:',
+                      'chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:40000',
+                      'Successfully synced application']
+            TnsLogs.wait_for_log(log_file=result.log_file, string_list=string, timeout=300)
+            logs = File.read(result.log_file)
+            assert 'closed' not in logs
+            assert 'detached' not in logs
+            assert "did not start in time" not in logs
         return result
 
     @staticmethod
