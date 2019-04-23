@@ -8,6 +8,7 @@ from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.utils.device.emulator_info import EmulatorInfo
 from core.utils.device.simulator_info import SimulatorInfo
+from core.utils.device.appium_capabilities import AppiumCapabilities
 
 
 def get_os():
@@ -158,3 +159,8 @@ class AppName(object):
     WITH_DASH = 'tns-app'
     WITH_SPACE = 'Test App'
     WITH_NUMBER = '123'
+
+
+class AppiumCaps(object):
+    SIM_iOS12 = AppiumCapabilities(platform_name='iOS', platform_version='12.0', automation_name='XCUITest')
+    EMU_API_23 = AppiumCapabilities(platform_name='android', platform_version='6.0', automation_name='UIAutomator2')
