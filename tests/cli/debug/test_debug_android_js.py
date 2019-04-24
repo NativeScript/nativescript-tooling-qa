@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.platform_type import Platform
@@ -48,6 +49,12 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.emu.wait_for_text(text=change.new_text)
         assert self.dev_tools.wait_element_by_text(text=change.new_text) is not None, 'Elements tab not updated.'
 
+        # Update label in CDT and verify it is updated on device
+        self.dev_tools.edit_text(old_text=change.new_text, new_text=change.old_text)
+        element = self.dev_tools.wait_element_by_text(text=change.old_text)
+        assert element is not None, 'Failed to change text in elements tab.'
+        self.emu.wait_for_text(text=change.old_text), 'Device not updated after change in elements tab.'
+
     def test_010_debug_console_log(self):
         # Instrument the app so it console log events.
         source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'runtime', 'debug', 'files', "console_log",
@@ -79,7 +86,12 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         log = self.dev_tools.wait_element_by_text(text='Test Debug!')
         assert log is not None, 'Console logs not displayed in Chrome Dev Tools.'
 
+    @unittest.skip('Not Implemented.')
     def test_011_debug_console_evaluate(self):
+        pass
+
+    @unittest.skip('Not Implemented.')
+    def test_012_debug_watch_expressions(self):
         pass
 
     def test_020_debug_sources(self):
@@ -103,6 +115,35 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
 
+        # Add steps to verify https://github.com/NativeScript/nativescript-cli/issues/4227
+
         # Notes:
         # - When breakpoint is hit adb can not get page source and methods like is_text_vibible() and click() fail!
         # - TODO: Check how to interact with app when paused on breakpoint.
+
+    @unittest.skip('Not Implemented.')
+    def test_030_debug_network(self):
+        # Ensure we verify https://github.com/NativeScript/nativescript-cli/issues/3187
+        pass
+
+    @unittest.skip('Not Implemented.')
+    def test_040_debug_brk(self):
+        """
+        Deploy on device/emulator, run the app and stop at the first code statement.
+        """
+        pass
+
+    @unittest.skip('Not Implemented.')
+    def test_050_debug_start(self):
+        """
+        Attach the debug tools to a running app on device/emulator.
+        """
+
+        # Ensure we verify:
+        # https://github.com/NativeScript/nativescript-cli/issues/3629
+        # https://github.com/NativeScript/nativescript-cli/issues/2831
+        pass
+
+    @unittest.skip('Not Implemented.')
+    def test_100_reload_chrome_page(self):
+        pass
