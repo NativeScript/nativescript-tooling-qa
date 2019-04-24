@@ -248,3 +248,14 @@ class File(object):
         # pylint: disable=broad-except
         except Exception:
             Log.debug('Failed to unpack .tar file {0}'.format(file_path))
+
+    @staticmethod
+    def unzip(file_path, dest_dir):
+        # noinspection PyBroadException
+        try:
+            zipFile = zipfile.ZipFile(file_path, 'r')
+            zipFile.extractall(dest_dir)
+            zipFile.close()
+        # pylint: disable=broad-except
+        except:
+            print "Failed to unzip file {0}".format(file_path)

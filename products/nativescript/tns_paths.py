@@ -19,6 +19,15 @@ class TnsPaths(object):
         return os.path.join(TnsPaths.get_app_path(app_name=app_name, path=path), 'node_modules')
 
     @staticmethod
+    def get_path_app_resources(app_name, path=Settings.TEST_RUN_HOME):
+        return os.path.join(TnsPaths.get_app_path(app_name=app_name, path=path), 'app', 'App_Resources')
+
+    @staticmethod
+    def get_path_app_resources_main_android(app_name, path=Settings.TEST_RUN_HOME):
+        return os.path.join(TnsPaths.get_app_path(app_name=app_name, path=path), 'app', 'App_Resources',
+                            'Android', 'src', 'main')
+
+    @staticmethod
     def get_platforms_android_folder(app_name, path=Settings.TEST_RUN_HOME):
         return os.path.join(TnsPaths.get_app_path(app_name=app_name, path=path), 'platforms', 'android')
 
