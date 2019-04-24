@@ -60,11 +60,15 @@ class ChromeDevTools(object):
             Log.info('Expand dev tools main pannel.')
             button.click()
 
-    def find_element_by_text(self, text):
+    def find_element_by_text(self, text, control='*', exact_match=False):
         self.__refresh_main_panel()
-        for element in self.main_panel.find_elements_by_css_selector('*'):
-            if text in element.text:
-                return element
+        for element in self.main_panel.find_elements_by_css_selector(control):
+            if exact_match:
+                if text == element.text:
+                    return element
+            else:
+                if text in element.text:
+                    return element
         return None
 
     def wait_element_by_text(self, text, timeout=30):
@@ -95,7 +99,7 @@ class ChromeDevTools(object):
         sleep(1)
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR,
                                                              "div[style='z-index: 3000;'][class='vbox flex-auto']")
-        shadow_root = self.chrome.driver.execute_script(ChromeDevTools.shadow_root_element_script, shadow_dom_element)
+        shadow_root = self.__expand_shadow_element(shadow_dom_element)
 
         popup = self.__get_shadow_element_in_shadow_dom(".vbox.flex-auto", shadow_root)
         search_box = popup.find_element(By.CSS_SELECTOR, "span > div > div")
@@ -110,7 +114,7 @@ class ChromeDevTools(object):
 
     def breakpoint(self, line):
         """
-        Toggle breakpoint on like.
+        Toggle breakpoint on line number.
         :param line: Line number
         """
 
@@ -121,3 +125,30 @@ class ChromeDevTools(object):
         assert len(lines) >= line, "Line {0} not found! Total lines of code: {1}".format(str(line), str(length))
         lines[line - 1].click()
         Log.info("Toggle breakpoint on line {0}".format(str(line)))
+
+    def __find_span_by_text(self, text):
+        shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='elements-content'] > div")
+        shadow_root = self.__expand_shadow_element(shadow_dom_element)
+
+        for line in shadow_root.find_elements(By.CSS_SELECTOR, "li"):
+            if text in line.text:
+                spans = line.find_elements(By.CSS_SELECTOR, "span")
+                for span in spans:
+                    if span.text == text:
+                        return span
+        return None
+
+    def edit_text(self, old_text, new_text):
+        """
+        Edit text on element tab.
+        :param old_text: Old text.
+        :param new_text: New text.
+        """
+        span = self.__find_span_by_text(text=old_text)
+        assert span is not None, "Failed to find element with text " + old_text
+        actions = ActionChains(self.chrome.driver)
+        actions.double_click(span).perform()
+        self.chrome.driver.execute_script('arguments[0].innerHTML = "{0}";'.format(new_text), span)
+        actions.double_click(span).perform()
+        actions.send_keys(Keys.ENTER).perform()
+        Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))

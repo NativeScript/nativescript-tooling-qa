@@ -49,6 +49,12 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.emu.wait_for_text(text=change.new_text)
         assert self.dev_tools.wait_element_by_text(text=change.new_text) is not None, 'Elements tab not updated.'
 
+        # Update label in CDT and verify it is updated on device
+        self.dev_tools.edit_text(old_text=change.new_text, new_text=change.old_text)
+        element = self.dev_tools.wait_element_by_text(text=change.old_text)
+        assert element is not None, 'Failed to change text in elements tab.'
+        self.emu.wait_for_text(text=change.old_text), 'Device not updated after change in elements tab.'
+
     def test_010_debug_console_log(self):
         # Instrument the app so it console log events.
         source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'runtime', 'debug', 'files', "console_log",
