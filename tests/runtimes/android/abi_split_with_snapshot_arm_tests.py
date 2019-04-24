@@ -41,7 +41,5 @@ class AbiSplitTestsForArmDevices(TnsTest):
          https://github.com/NativeScript/android-runtime/issues/1234
         """
         AbiSplitHelper.assert_apk(
-            os.path.join(TEST_RUN_HOME, "Test_apks",
-                         "app-armeabi-v7a-release.apk"),
-            self.device, self.app_id, os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                                   'ARM-32-Phone', "abi-split-32-phone.png"))
+            os.path.join(TEST_RUN_HOME, "Test_apks", "app-armeabi-v7a-release.apk"),
+            self.device, self.app_id)
