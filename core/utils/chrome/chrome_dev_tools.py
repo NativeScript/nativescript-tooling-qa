@@ -58,9 +58,11 @@ class ChromeDevTools(object):
         button_container = self.main_panel.find_element(By.CSS_SELECTOR, 'div.tabbed-pane-left-toolbar.toolbar')
         button_root = self.__expand_shadow_element(button_container)
         button = button_root.find_element(By.CSS_SELECTOR, "button[aria-label='Toggle screencast']")
-        if bool(button.get_attribute("aria-pressed")):
+        if 'toolbar-state-on' in button.get_attribute("class"):
             Log.info('Expand dev tools main pannel.')
             button.click()
+        else:
+            Log.info("Deb tools main panel already expanded.")
 
     def find_element_by_text(self, text, control='*', exact_match=False):
         self.__refresh_main_panel()

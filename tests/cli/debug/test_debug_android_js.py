@@ -1,5 +1,6 @@
 import os
 import unittest
+from time import sleep
 
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.platform_type import Platform
@@ -96,7 +97,6 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
 
     def test_020_debug_sources(self):
         # Start debug and wait until app is deployed
-
         Tns.debug(app_name=self.app_name, platform=Platform.ANDROID)
         self.emu.wait_for_text(text='TAP')
 
@@ -144,6 +144,24 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         # https://github.com/NativeScript/nativescript-cli/issues/2831
         pass
 
-    @unittest.skip('Not Implemented.')
     def test_100_reload_chrome_page(self):
-        pass
+        # Start debug and wait until app is deployed
+        Tns.debug(app_name=self.app_name, platform=Platform.ANDROID)
+        self.emu.wait_for_text(text='TAP')
+
+        # Open CDT with debug url twice
+        self.dev_tools = ChromeDevTools(self.chrome)
+        sleep(1)
+        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools.open_tab(ChromeDevToolsTabs.SOURCES)
+        webpack_element = self.dev_tools.wait_element_by_text(text='webpack')
+        assert webpack_element is not None, 'Failed to load app sources.'
+        self.emu.wait_for_text(text='TAP')
+
+        # Open another site and then back to CDT
+        self.chrome.open(url='https://www.nativescript.org')
+        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools.open_tab(ChromeDevToolsTabs.SOURCES)
+        webpack_element = self.dev_tools.wait_element_by_text(text='webpack')
+        assert webpack_element is not None, 'Failed to load app sources.'
+        self.emu.wait_for_text(text='TAP')
