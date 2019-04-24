@@ -5,7 +5,9 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+from core.enums.os_type import OSType
 from core.log.log import Log
+from core.settings import Settings
 from core.utils.wait import Wait
 
 
@@ -91,7 +93,10 @@ class ChromeDevTools(object):
         :param file_name: Name of file.
         """
         actions = ActionChains(self.chrome.driver)
-        actions.send_keys(Keys.CONTROL, 'p').perform()
+        if Settings.HOST_OS == OSType.OSX:
+            actions.send_keys(Keys.COMMAND, 'p').perform()
+        else:
+            actions.send_keys(Keys.CONTROL, 'p').perform()
         sleep(1)
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR,
                                                              "div[style='z-index: 3000;'][class='vbox flex-auto']")
