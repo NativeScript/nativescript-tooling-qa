@@ -100,6 +100,7 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
 
     def test_020_debug_sources(self):
         # Start debug and wait until app is deployed
+        Tns.run_android(app_name=self.app_name, emulator=True, source_map=True, just_launch=True)
         Tns.debug(app_name=self.app_name, platform=Platform.ANDROID, emulator=True)
         self.emu.wait_for_text(text='TAP')
 
@@ -129,12 +130,18 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         # Ensure we verify https://github.com/NativeScript/nativescript-cli/issues/3187
         pass
 
-    @unittest.skip('Not Implemented.')
     def test_040_debug_brk(self):
-        """
-        Deploy on device/emulator, run the app and stop at the first code statement.
-        """
-        pass
+        # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/4567
+        Tns.run_android(app_name=self.app_name, emulator=True, source_map=True, just_launch=True)
+        self.emu.wait_for_text(text='TAP')
+
+        Tns.debug(app_name=self.app_name, platform=Platform.ANDROID, emulator=True, debug_brk=True)
+        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools.open_tab(ChromeDevToolsTabs.SOURCES)
+        pause_element = self.dev_tools.wait_element_by_text(text="Debugger paused", timeout=30)
+        assert pause_element is not None, 'Failed to stop on first line of code.'
+        assert self.dev_tools.find_element_by_text(text="function") is not None, 'Failed to stop on first line of code.'
+        assert 'NativeScript' in self.emu.get_text(), 'Failed to stop on first line of code.'
 
     def test_050_debug_start(self):
         # Run the app and verify it is deployed
