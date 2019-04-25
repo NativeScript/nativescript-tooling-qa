@@ -170,12 +170,11 @@ class ChromeDevTools(object):
         actions.send_keys(Keys.ENTER).perform()
         Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))
 
-    def type_on_console(self, text, clear_console=True, hit_enter=True):
+    def type_on_console(self, text, clear_console=True):
         """
         Type in console in console tab.
         :param text: Text.
         :param clear_console: IF True clear the console before type.
-        :param hit_enter: IF True hit Keys.ENTER at the end.
         """
         if clear_console:
             root_holder = self.chrome.driver.find_element(By.CSS_SELECTOR, "*[class='console-main-toolbar toolbar']")
@@ -185,10 +184,8 @@ class ChromeDevTools(object):
         console = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='console-prompt']")
         actions = ActionChains(self.chrome.driver)
         actions.click(console).perform()
-        for i in range(1, 25):
+        for _ in range(1, 25):
             actions.send_keys(Keys.BACKSPACE).perform()
         actions.send_keys(text).perform()
+        actions.send_keys(Keys.ENTER).perform()
         Log.info('"{0}" typed in the console.'.format(text))
-        if hit_enter:
-            actions.send_keys(Keys.ENTER).perform()
-            Log.info('Press ENTER key.')
