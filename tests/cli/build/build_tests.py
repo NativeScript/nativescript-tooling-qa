@@ -1,4 +1,3 @@
-import datetime
 import os
 
 from core.base_test.tns_test import TnsTest
@@ -61,9 +60,7 @@ class BuildTests(TnsTest):
         File.copy(src, dest_1)
         File.copy(src, dest_2)
 
-        before_build = datetime.datetime.now()
         result = Tns.build_android(self.app_name, bundle=True)
-        after_build = datetime.datetime.now()
         assert "Gradle build..." in result.output, "Gradle build not called."
         assert result.output.count("Gradle build...") == 1, "Only one gradle build is triggered."
 
@@ -85,11 +82,8 @@ class BuildTests(TnsTest):
         Folder.clean(temp_folder)
 
         # Verify incremental native build
-        before_build = datetime.datetime.now()
         result = Tns.exec_command(command='build --clean', bundle=True, path=self.app_name,
                                   platform=Platform.ANDROID)
-        after_build = datetime.datetime.now()
-        build_time = (after_build - before_build).total_seconds()
         assert "Gradle clean..." in result.output, "Gradle clean is not called."
         assert "Gradle build..." in result.output, "Gradle build is not called."
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
