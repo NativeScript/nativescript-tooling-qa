@@ -1,13 +1,11 @@
 import datetime
 import os
-import unittest
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_RUN_HOME
-from core.utils.device.adb import Adb
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
 from core.utils.run import run
@@ -31,7 +29,8 @@ class BuildTests(TnsTest):
         Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
         Tns.create(cls.app_name_with_space, update=False)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"', framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
+        Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
+                                 framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
         Folder.copy(cls.app_path, cls.app_temp_path)
@@ -106,14 +105,14 @@ class BuildTests(TnsTest):
 
         # Create zip
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
-        run(command, wait=False)
+        run(command, wait=True)
         assert File.exists(os.path.join(self.app_name, 'app', 'app.tar.gz'))
 
     def test_301_build_project_with_space_release(self):
 
-        # TO DO Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
+        #Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
         Folder.create("with space")
-        base_path, file_name = os.path.split(Settings.Android.ANDROID_KEYSTORE_PATH)
+        file_name = os.path.basename(Settings.Android.ANDROID_KEYSTORE_PATH)
         cert_with_space_path = os.path.join("with space", file_name)
         File.copy(Settings.Android.ANDROID_KEYSTORE_PATH, cert_with_space_path)
 
@@ -135,11 +134,11 @@ class BuildTests(TnsTest):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
         Tns.platform_add_android(self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.exec_command(command='build --compileSdk 28', path=self.app_name,
-                                  platform=Platform.ANDROID, bundle=True)
+                         platform=Platform.ANDROID, bundle=True)
 
         File.delete(self.debug_apk)
         Tns.exec_command(command='build --copy-to ./', path=self.app_name,
-                                  platform=Platform.ANDROID, bundle=True)
+                         platform=Platform.ANDROID, bundle=True)
         assert File.exists(self.debug_apk)
         File.delete(self.debug_apk)
 
@@ -163,7 +162,8 @@ class BuildTests(TnsTest):
                result.output
         assert File.exists(os.path.join(TnsPaths.get_path_app_resources(self.app_name), 'Android-Pre-v4', 'app.gradle'))
         assert File.exists(os.path.join(TnsPaths.get_path_app_resources(self.app_name), 'Android', 'app.gradle'))
-        assert File.exists(os.path.join(TnsPaths.get_path_app_resources_main_android(self.app_name), 'AndroidManifest.xml'))
+        assert File.exists(os.path.join(TnsPaths.get_path_app_resources_main_android(self.app_name),
+                                        'AndroidManifest.xml'))
         assert Folder.exists(os.path.join(TnsPaths.get_path_app_resources_main_android(self.app_name), 'assets'))
         assert Folder.exists(os.path.join(TnsPaths.get_path_app_resources_main_android(self.app_name), 'java'))
         assert Folder.exists(os.path.join(TnsPaths.get_path_app_resources_main_android(self.app_name), 'res', 'values'))

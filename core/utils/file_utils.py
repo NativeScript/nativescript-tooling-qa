@@ -8,6 +8,7 @@ import os
 import shutil
 import stat
 import tarfile
+import zipfile
 
 from core.enums.os_type import OSType
 from core.log.log import Log
@@ -253,9 +254,9 @@ class File(object):
     def unzip(file_path, dest_dir):
         # noinspection PyBroadException
         try:
-            zipFile = zipfile.ZipFile(file_path, 'r')
-            zipFile.extractall(dest_dir)
-            zipFile.close()
+            zfile = zipfile.ZipFile(file_path, 'r')
+            zfile.extractall(dest_dir)
+            zfile.close()
         # pylint: disable=broad-except
-        except:
-            print "Failed to unzip file {0}".format(file_path)
+        except Exception:
+            Log.debug('Failed to unzip file {0}'.format(file_path))
