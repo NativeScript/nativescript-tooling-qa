@@ -72,7 +72,7 @@ class BuildTests(TnsTest):
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
 
-        #Verify apk does not contain aar files
+        # Verify apk does not contain aar files
         archive = os.path.join(TnsPaths.get_apk_path(self.app_name), self.debug_apk)
         File.unzip(archive, 'temp')
         # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
@@ -110,7 +110,7 @@ class BuildTests(TnsTest):
 
     def test_301_build_project_with_space_release(self):
 
-        #Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
+        # Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
         Folder.create("with space")
         file_name = os.path.basename(Settings.Android.ANDROID_KEYSTORE_PATH)
         cert_with_space_path = os.path.join("with space", file_name)
