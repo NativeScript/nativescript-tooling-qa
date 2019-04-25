@@ -65,7 +65,7 @@ class BuildTests(TnsTest):
         result = Tns.build_android(self.app_name, bundle=True)
         after_build = datetime.datetime.now()
         assert "Gradle build..." in result.output, "Gradle build not called."
-        assert result.output.count("Gradle build...") is 1, "Only one gradle build is triggered."
+        assert result.output.count("Gradle build...") == 1, "Only one gradle build is triggered."
         assert (after_build - before_build).total_seconds() < 20, "Incremental build takes more then 20 sec."
 
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.plist'))
@@ -93,7 +93,7 @@ class BuildTests(TnsTest):
         build_time = (after_build - before_build).total_seconds()
         assert "Gradle clean..." in result.output, "Gradle clean is not called."
         assert "Gradle build..." in result.output, "Gradle build is not called."
-        assert result.output.count("Gradle build...") is 1, "More than 1 gradle build is triggered."
+        assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
         assert build_time > 10, "Clean build takes less then 15 sec."
         assert build_time < 90, "Clean build takes more than 90 sec."
 
