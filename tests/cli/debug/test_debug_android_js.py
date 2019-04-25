@@ -74,6 +74,10 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.dev_tools = ChromeDevTools(self.chrome)
         self.dev_tools.open_tab(ChromeDevToolsTabs.CONSOLE)
 
+        # Evaluate on console
+        self.dev_tools.type_on_console("1024+1024")
+        self.dev_tools.wait_element_by_text(text='2048', timeout=10)
+
         # TAP the button to trigger console log
         self.emu.click(text='TAP', case_sensitive=True)
 
@@ -87,10 +91,6 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         # Verify console logs are available in Chrome dev tools
         log = self.dev_tools.wait_element_by_text(text='Test Debug!')
         assert log is not None, 'Console logs not displayed in Chrome Dev Tools.'
-
-    @unittest.skip('Not Implemented.')
-    def test_011_debug_console_evaluate(self):
-        pass
 
     @unittest.skip('Not Implemented.')
     def test_012_debug_watch_expressions(self):
@@ -115,7 +115,6 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.emu.click(text="TAP", case_sensitive=True)
         pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
-        # Notes: When breakpoint is hit adb can not get page source and methods like click() fail!
 
         # TODO: Add test for https://github.com/NativeScript/nativescript-cli/issues/4227
 

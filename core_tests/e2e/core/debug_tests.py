@@ -31,6 +31,11 @@ class DebugTests(unittest.TestCase):
         dev_tools.open_tab(ChromeDevToolsTabs.ELEMENTS)
         assert dev_tools.wait_element_by_text(text="Styles", timeout=10) is not None
 
+    def test_02_type_in_console(self):
+        dev_tools = ChromeDevTools(self.chrome, port=None)
+        dev_tools.open_tab(ChromeDevToolsTabs.CONSOLE)
+        dev_tools.type_on_console("1+1")
+
 
 if __name__ == '__main__':
     unittest.main()
