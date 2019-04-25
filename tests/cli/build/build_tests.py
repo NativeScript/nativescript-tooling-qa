@@ -194,23 +194,3 @@ class BuildTests(TnsTest):
         Tns.prepare_android(self.app_name)
         assert File.exists(
             os.path.join(TnsPaths.get_platforms_android_src_main_path(self.app_name), 'AndroidManifest.xml'))
-
-
-    def test_001_build_ios(self):
-        # Tns.build_ios(self.app_name, bundle=True)
-        # Tns.build_ios(self.app_name, bundle=True, release=True)
-        Tns.build_ios(self.app_name, bundle=True, for_device=True)
-        Tns.build_ios(self.app_name, bundle=True, for_device=True, release=True)
-
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), '*.framework'))
-
-        # Verify ipa has both armv7 and arm64 archs
-        ipa_path = os.path.join(self.app_name, "platforms", "ios", "build", "Release-iphoneos", "TestApp.ipa")
-        run("mv " + ipa_path + " TestApp-ipa.tgz")
-        run("unzip -o TestApp-ipa.tgz")
-        output = run("lipo -info Payload/TestApp.app/TestApp")
-        Folder.cleanup("Payload")
-        assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
-
-
-
