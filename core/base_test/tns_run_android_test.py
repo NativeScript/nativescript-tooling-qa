@@ -16,3 +16,10 @@ class TnsRunAndroidTest(TnsTest):
         TnsTest.setUp(self)
         Adb.open_home(self.emu.id)
         Adb.clear_logcat(self.emu.id)
+
+    def tearDown(self):
+        TnsTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()

@@ -24,3 +24,10 @@ class TnsRunTest(TnsTest):
         Adb.clear_logcat(self.emu.id)
         if Settings.HOST_OS is OSType.OSX:
             Simctl.stop_all(self.sim)
+
+    def tearDown(self):
+        TnsTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()

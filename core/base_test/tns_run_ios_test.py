@@ -14,3 +14,10 @@ class TnsRunIOSTest(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         Simctl.stop_all(self.sim)
+
+    def tearDown(self):
+        TnsTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()
