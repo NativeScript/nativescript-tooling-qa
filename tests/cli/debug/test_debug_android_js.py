@@ -35,7 +35,6 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
 
     def tearDown(self):
         self.chrome.kill()
-        self.emu.wait_for_text(text='TAP', timeout=5)
         TnsRunAndroidTest.tearDown(self)
 
     def test_001_debug_elements(self):
