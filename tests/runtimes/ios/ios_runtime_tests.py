@@ -240,3 +240,27 @@ class IOSRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'toHexString and toDecimalString are not working correctly!'
+
+    def test_388_unicode_char_in_xml(self):
+        """
+        Test app does not crash when xml includes Unicode characters outside of the basic ASCII set
+        https://github.com/NativeScript/ios-runtime/issues/1130
+        """
+
+        Folder.clean(APP_NAME)
+        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1130',
+                               'main-page.xml'),
+                  os.path.join(APP_PATH, 'app', 'main-page.xml'))
+
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+        error = ['JS ERROR Error: Invalid autocapitalizationType value:undefined']
+        is_error_thrown = Wait.until(lambda: all(er in File.read(log.log_file) for er in error), timeout=30,
+                                     period=5)
+        assert is_error_thrown is False, 'App should not crash when xml includes Unicode characters outside of the ' \
+                                         'basic ASCII set'
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
