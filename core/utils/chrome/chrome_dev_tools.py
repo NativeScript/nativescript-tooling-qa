@@ -133,6 +133,16 @@ class ChromeDevTools(object):
         lines[line - 1].click()
         Log.info("Toggle breakpoint on line {0}".format(str(line)))
 
+    def continue_debug(self):
+        """
+        Click continue debug button when breakpoint is hit.
+        """
+        debug_holder = self.chrome.driver.find_element(By.CSS_SELECTOR, "*[class='scripts-debug-toolbar toolbar']")
+        debug_panel = self.__expand_shadow_element(debug_holder)
+        button = debug_panel.find_element(By.CSS_SELECTOR, "button[aria-label='Pause script execution']")
+        assert 'toolbar-state-on' in button.get_attribute("class"), "Continue button not enabled!"
+        button.click()
+
     def __find_span_by_text(self, text):
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='elements-content'] > div")
         shadow_root = self.__expand_shadow_element(shadow_dom_element)

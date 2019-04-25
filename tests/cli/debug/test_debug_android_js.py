@@ -66,10 +66,8 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.emu.wait_for_text(text=change.old_text)
 
     def test_010_debug_console_log(self):
-        # Run `tns debug` wait until debug url is in the console
+        # Run `tns debug` wait until debug url is in the console and app is loaded
         result = Tns.debug(app_name=self.app_name, platform=Platform.ANDROID, emulator=True)
-
-        # Wait until app is visible on device
         self.emu.wait_for_text(text='TAP')
 
         # Open Chrome Dev Tools -> Console
@@ -100,7 +98,6 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
 
     def test_020_debug_sources(self):
         # Start debug and wait until app is deployed
-        Tns.run_android(app_name=self.app_name, emulator=True, source_map=True, just_launch=True)
         Tns.debug(app_name=self.app_name, platform=Platform.ANDROID, emulator=True)
         self.emu.wait_for_text(text='TAP')
 
@@ -118,12 +115,13 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.emu.click(text="TAP", case_sensitive=True)
         pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
+        # Notes: When breakpoint is hit adb can not get page source and methods like click() fail!
 
-        # Add steps to verify https://github.com/NativeScript/nativescript-cli/issues/4227
+        # TODO: Add test for https://github.com/NativeScript/nativescript-cli/issues/4227
 
-        # Notes:
-        # - When breakpoint is hit adb can not get page source and methods like is_text_vibible() and click() fail!
-        # - TODO: Check how to interact with app when paused on breakpoint.
+        # Resume execution
+        self.dev_tools.continue_debug()
+        self.emu.wait_for_text(text='41 taps left')
 
     @unittest.skip('Not Implemented.')
     def test_030_debug_network(self):
