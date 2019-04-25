@@ -83,12 +83,8 @@ class AbiSplitTests(TnsTest):
 
         AbiSplitHelper.assert_apk(
             os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH, "app-x86-release.apk"),
-            self.emulator, self.app_id,
-            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images', 'Emulator-Api23-Default',
-                         "abi-split-emulator.png"))
+            self.emulator, self.app_id)
 
         AbiSplitHelper.assert_apk(
             os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH, "app-universal-release.apk"),
-            self.emulator, self.app_id,
-            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images', 'Emulator-Api23-Default',
-                         "abi-split-emulator.png"))
+            self.emulator, self.app_id)

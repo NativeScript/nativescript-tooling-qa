@@ -23,6 +23,7 @@ from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
+TAP_THE_BUTTON = 'Tap the button'
 
 
 class AndroidRuntimeTests(TnsTest):
@@ -158,10 +159,7 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'Native crash should not crash the app when discardUncaughtJsExceptions used fails!'
-        Device.screen_match(self.emulator,
-                            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                         'Emulator-Api23-Default',
-                                         "No-crash-image.png"), timeout=120, tolerance=1)
+        Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
 
     def test_318_generated_classes_not_be_deleted_on_rebuild(self):
         """
@@ -249,10 +247,7 @@ class AndroidRuntimeTests(TnsTest):
                                    file_name='app/{0}'.format(code_cache_file)), error_message
 
         # Verify app looks correct inside emulator
-        Device.screen_match(self.emulator,
-                            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                         'Emulator-Api23-Default',
-                                         "hello-world-js.png"), timeout=120, tolerance=1)
+        Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
 
     def test_430_verify_JSParser_in_SBG_is_failing_the_build_when_there_is_an_error(self):
         """
