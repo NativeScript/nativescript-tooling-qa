@@ -274,5 +274,6 @@ class ChromeDevTools(object):
         network = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[aria-label='network']")
         toolbar = network.find_element(By.CSS_SELECTOR, "div[class='toolbar']")
         root = self.__expand_shadow_element(toolbar)
-        button = root.find_element(By.CSS_SELECTOR, "div[aria-label='Clear']")
+        button = root.find_element(By.CSS_SELECTOR, "button[aria-label='Clear']")
         button.click()
+        Log.info("Clear Network tab.")
