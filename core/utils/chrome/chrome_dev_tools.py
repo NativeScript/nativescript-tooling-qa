@@ -17,6 +17,7 @@ class ChromeDevToolsTabs(IntEnum):
     ELEMENTS = 1, 'tab-elements'
     CONSOLE = 2, 'tab-console'
     SOURCES = 3, 'tab-sources'
+    NETWORK = 4, 'tab-network'
 
     def __str__(self):
         return self.string
@@ -100,7 +101,15 @@ class ChromeDevTools(object):
         if verify:
             if tab == ChromeDevToolsTabs.SOURCES:
                 webpack_element = self.wait_element_by_text(text='webpack')
-                assert webpack_element is not None, 'Failed to load app sources.'
+                assert webpack_element is not None, 'Failed to load sources tab.'
+            if tab == ChromeDevToolsTabs.ELEMENTS:
+                page_element = self.wait_element_by_text(text='Page')
+                assert page_element is not None, 'Failed to load elements tab.'
+            if tab == ChromeDevToolsTabs.NETWORK:
+                element = self.wait_element_by_text(text='Recording network activity')
+                assert element is not None, 'Failed to load network tab.'
+            if tab == ChromeDevToolsTabs.CONSOLE:
+                self.__clean_console()
 
     def load_source_file(self, file_name):
         """
@@ -152,11 +161,17 @@ class ChromeDevTools(object):
         assert 'toolbar-state-on' in button.get_attribute("class"), "Continue button not enabled!"
         button.click()
 
-    def __find_span_by_text(self, text):
+    def __find_line_by_text(self, text):
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='elements-content'] > div")
         shadow_root = self.__expand_shadow_element(shadow_dom_element)
 
         for line in shadow_root.find_elements(By.CSS_SELECTOR, "li"):
+            if text in line.text:
+                return line
+        return None
+
+    def __find_span_by_text(self, text):
+        for line in self.__find_line_by_text(text=text):
             if text in line.text:
                 spans = line.find_elements(By.CSS_SELECTOR, "span")
                 for span in spans:
@@ -179,6 +194,26 @@ class ChromeDevTools(object):
         actions.send_keys(Keys.ENTER).perform()
         Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))
 
+    def doubleclick_line(self, text):
+        """
+        Doubleclick on line text on element tab.
+        :param text: text.
+        """
+        line = self.__find_line_by_text(text=text)
+        assert line is not None, "Failed to find line with text " + text
+        actions = ActionChains(self.chrome.driver)
+        actions.double_click(line).perform()
+        Log.info('Double click line with text "{0}".'.format(text))
+
+    def __clean_console(self):
+        """
+        Clean console log.
+        """
+        root_holder = self.chrome.driver.find_element(By.CSS_SELECTOR, "*[class='console-main-toolbar toolbar']")
+        root_element = self.__expand_shadow_element(root_holder)
+        button = root_element.find_element(By.CSS_SELECTOR, "button[aria-label='Clear console']")
+        button.click()
+
     def type_on_console(self, text, clear_console=True):
         """
         Type in console in console tab.
@@ -186,10 +221,7 @@ class ChromeDevTools(object):
         :param clear_console: IF True clear the console before type.
         """
         if clear_console:
-            root_holder = self.chrome.driver.find_element(By.CSS_SELECTOR, "*[class='console-main-toolbar toolbar']")
-            root_element = self.__expand_shadow_element(root_holder)
-            button = root_element.find_element(By.CSS_SELECTOR, "button[aria-label='Clear console']")
-            button.click()
+            self.__clean_console()
         console = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='console-prompt']")
         actions = ActionChains(self.chrome.driver)
         actions.click(console).perform()
@@ -234,3 +266,13 @@ class ChromeDevTools(object):
             assert expected_result in result, \
                 'Watch expression not evaluated properly.\nExpected: {0}\nActual: {1}'.format(expected_result, result)
             Log.info('"{0}" found in watch eval.'.format(result))
+
+    def clean_network_tab(self):
+        """
+        Click clean button on network tab.
+        """
+        network = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[aria-label='network']")
+        toolbar = network.find_elements(By.CSS_SELECTOR, "div[class='toolbar']")
+        root = self.__expand_shadow_element(toolbar)
+        button = root.find_element(By.CSS_SELECTOR, "div[aria-label='Clear']")
+        button.click()

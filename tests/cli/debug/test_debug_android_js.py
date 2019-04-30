@@ -1,5 +1,4 @@
 import os
-import unittest
 from time import sleep
 
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
@@ -9,13 +8,13 @@ from core.utils.chrome.chrome import Chrome
 from core.utils.chrome.chrome_dev_tools import ChromeDevTools, ChromeDevToolsTabs
 from core.utils.file_utils import File
 from data.changes import Sync, Changes
-from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
 class DebugAndroidJSTests(TnsRunAndroidTest):
     app_name = Settings.AppName.DEFAULT
+    app_net = 'TestAppNet'
     xml_change = Changes.JSHelloWord.XML_ACTION_BAR
     js_change = Changes.JSHelloWord.JS
     chrome = None
@@ -24,7 +23,7 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
     @classmethod
     def setUpClass(cls):
         TnsRunAndroidTest.setUpClass()
-        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        # Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
 
         # Instrument the app so it console log events.
         source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'runtime', 'debug', 'files', "console_log",
@@ -32,7 +31,7 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         target_js = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app', 'main-view-model.js')
         File.copy(source=source_js, target=target_js)
 
-        Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        # Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
 
     def setUp(self):
         TnsRunAndroidTest.setUp(self)
@@ -186,10 +185,49 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.dev_tools.add_watch_expression(expression='console', expected_result='console: Object')
         self.dev_tools.add_watch_expression(expression='viewModel', expected_result='viewModel: Observable')
 
-    @unittest.skip('Not Implemented.')
     def test_030_debug_network(self):
-        # Ensure we verify https://github.com/NativeScript/nativescript-cli/issues/3187
-        pass
+        app_folder = os.path.join(Settings.TEST_RUN_HOME, self.app_net)
+        # Folder.clean(app_folder)
+        # Git.clone(repo_url='https://github.com/NativeScript/chrome-devtools-test-app', local_folder=app_folder)
+        # Tns.platform_add_android(app_name=self.app_net, framework_path=Settings.Android.FRAMEWORK_PATH)
+        # App.update(app_name=self.app_net)
+        Tns.debug(app_name=self.app_net, platform=Platform.ANDROID, emulator=True)
+        self.emu.wait_for_text(text='TAP - remove random view child', timeout=300)
+
+        # Check console log (just to check it also works in TS app)
+        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.CONSOLE)
+        self.emu.click(text='TAP - verify distinct console logs')
+        self.dev_tools.wait_element_by_text(text='main-view-model.ts:34')
+
+        # Check elements (just to check it also works in TS app)
+        self.dev_tools.open_tab(ChromeDevToolsTabs.ELEMENTS)
+        self.dev_tools.wait_element_by_text(text='Debugging')
+        self.emu.click(text='TAP - add view children')
+        self.dev_tools.doubleclick_line(text='StackLayout')
+        self.dev_tools.doubleclick_line(text='ScrollView')
+        self.dev_tools.doubleclick_line(text='FlexboxLayout')
+        assert self.dev_tools.wait_element_by_text(text='StackLayout id=') is not None
+        self.emu.click(text='TAP - remove random view child')
+        sleep(1)
+        assert self.dev_tools.find_element_by_text(text='StackLayout id=') is None
+
+        # Check network tab
+        self.dev_tools.open_tab(ChromeDevToolsTabs.NETWORK)
+        self.emu.click(text='TAP - navigate to Network requests page')
+
+        # Request without body
+        self.emu.click(text='TAP - simple GET request without body')
+        assert self.dev_tools.wait_element_by_text(text='get') is not None
+        assert self.dev_tools.wait_element_by_text(text='200') is not None
+        assert self.dev_tools.wait_element_by_text(text='0 B') is not None
+        self.dev_tools.clean_network_tab()
+
+        # Request with body
+        self.emu.click(text='TAP - GET request with body')
+        assert self.dev_tools.wait_element_by_text(text='get') is not None
+        assert self.dev_tools.wait_element_by_text(text='200') is not None
+        assert self.dev_tools.wait_element_by_text(text='246 B') is not None
+        self.dev_tools.clean_network_tab()
 
     def test_040_debug_brk(self):
         # Hack to workaround https://github.com/NativeScript/nativescript-cli/issues/4567
