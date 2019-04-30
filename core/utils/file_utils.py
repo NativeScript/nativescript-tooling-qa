@@ -136,9 +136,10 @@ class File(object):
                 text_file.write(text)
 
     @staticmethod
-    def replace(path, old_string, new_string):
+    def replace(path, old_string, new_string, fail_safe=False):
         content = File.read(path=path)
-        assert old_string in content, 'Can not find "{0}" in {1}'.format(old_string, path)
+        if not fail_safe:
+            assert old_string in content, 'Can not find "{0}" in {1}'.format(old_string, path)
         new_content = content.replace(old_string, new_string)
         File.write(path=path, text=new_content)
         Log.info("")

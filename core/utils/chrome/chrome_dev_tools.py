@@ -189,3 +189,39 @@ class ChromeDevTools(object):
         actions.send_keys(text).perform()
         actions.send_keys(Keys.ENTER).perform()
         Log.info('"{0}" typed in the console.'.format(text))
+
+    def add_watch_expression(self, expression, expected_result=None):
+        # Expand watch expressions
+        actions = ActionChains(self.chrome.driver)
+        if Settings.HOST_OS == OSType.OSX:
+            actions.send_keys(Keys.CONTROL, Keys.SHIFT, 'a').perform()
+        else:
+            actions.send_keys(Keys.CONTROL, Keys.SHIFT, 'a').perform()
+        sleep(1)
+
+        # Add expression
+        watch_bar_holder = self.chrome.driver \
+            .find_element(By.CSS_SELECTOR, "div[aria-label='sources']") \
+            .find_element(By.CSS_SELECTOR, "div[class='widget vbox'][slot='insertion-point-sidebar']") \
+            .find_elements(By.CSS_SELECTOR, "div[class='vbox flex-auto flex-none']")[0]
+        tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
+            .find_element(By.CSS_SELECTOR, "div[class='toolbar']")
+        tool_bar = self.__expand_shadow_element(tool_bar_holder)
+        add_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Add expression']")
+        add_button.click()
+        for _ in range(1, 25):
+            actions.send_keys(Keys.BACKSPACE).perform()
+        actions.send_keys(expression).perform()
+        Log.info('Add watch expression: {0}'.format(expression))
+
+        # Refresh
+        refresh_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Refresh']")
+        refresh_button.click()
+        sleep(1)
+
+        # Verify result
+        if expected_result is not None:
+            result = watch_bar_holder.text
+            assert expected_result in result, \
+                'Watch expression not evaluated properly.\nExpected: {0}\nActual: {1}'.format(expected_result, result)
+            Log.info('"{0}" found in watch eval.'.format(result))
