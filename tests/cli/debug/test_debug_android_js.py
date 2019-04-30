@@ -172,10 +172,8 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         Tns.debug(app_name=self.app_name, platform=Platform.ANDROID, emulator=True)
         self.emu.wait_for_text(text='TAP')
 
-        # Open sources tab and verify content is loaded
+        # Open sources tab and place breakpoint on line 17 of main-view-model.js
         self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
-
-        # Open JS file and place breakpoint on line 17
         self.dev_tools.load_source_file("main-view-model.js")
         self.dev_tools.breakpoint(17)
 
