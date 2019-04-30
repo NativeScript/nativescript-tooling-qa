@@ -39,7 +39,7 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
 
     def tearDown(self):
         # Try to rollback changes we do in tests
-        Sync.replace(app_name=self.app_name, change_set=self.change, fail_safe=True)
+        Sync.revert(app_name=self.app_name, change_set=self.change, fail_safe=True)
         self.chrome.kill()
         TnsRunAndroidTest.tearDown(self)
 

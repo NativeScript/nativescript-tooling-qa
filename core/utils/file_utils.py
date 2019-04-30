@@ -138,16 +138,20 @@ class File(object):
     @staticmethod
     def replace(path, old_string, new_string, fail_safe=False):
         content = File.read(path=path)
+        old_text_exists = old_string in content
         if not fail_safe:
-            assert old_string in content, 'Can not find "{0}" in {1}'.format(old_string, path)
-        new_content = content.replace(old_string, new_string)
-        File.write(path=path, text=new_content)
-        Log.info("")
-        Log.info("##### REPLACE FILE CONTENT #####")
-        Log.info("File: {0}".format(path))
-        Log.info("Old String: {0}".format(old_string))
-        Log.info("New String: {0}".format(new_string))
-        Log.info("")
+            assert old_text_exists, 'Can not find "{0}" in {1}'.format(old_string, path)
+        if old_text_exists:
+            new_content = content.replace(old_string, new_string)
+            File.write(path=path, text=new_content)
+            Log.info("")
+            Log.info("##### REPLACE FILE CONTENT #####")
+            Log.info("File: {0}".format(path))
+            Log.info("Old String: {0}".format(old_string))
+            Log.info("New String: {0}".format(new_string))
+            Log.info("")
+        else:
+            Log.debug('Skip replace. Text "{0}" do not exists in {1}.'.format(old_string, path))
 
     @staticmethod
     def exists(path):
