@@ -197,7 +197,8 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         self.emu.wait_for_text(text='TAP')
 
         Tns.debug(app_name=self.app_name, platform=Platform.ANDROID, emulator=True, debug_brk=True)
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools.open_tab(tab=ChromeDevToolsTabs.SOURCES, verify=False)
         pause_element = self.dev_tools.wait_element_by_text(text="Debugger paused", timeout=30)
         assert pause_element is not None, 'Failed to stop on first line of code.'
         assert self.dev_tools.find_element_by_text(text="function") is not None, 'Failed to stop on first line of code.'
