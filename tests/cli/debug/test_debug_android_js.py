@@ -35,11 +35,10 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
 
     def setUp(self):
         TnsRunAndroidTest.setUp(self)
+        Sync.revert(app_name=self.app_name, change_set=self.change, fail_safe=True)
         self.chrome = Chrome()
 
     def tearDown(self):
-        # Try to rollback changes we do in tests
-        Sync.revert(app_name=self.app_name, change_set=self.change, fail_safe=True)
         self.chrome.kill()
         TnsRunAndroidTest.tearDown(self)
 
@@ -133,20 +132,15 @@ class DebugAndroidJSTests(TnsRunAndroidTest):
         logs = File.read(result.log_file)
         assert 'Unable to apply changes' not in logs
         assert 'Stopping webpack watch' not in logs
-        self.dev_tools.open_tab(ChromeDevToolsTabs.ELEMENTS)  # Go to element tab and verify change is not applied
-        assert self.dev_tools.wait_element_by_text(text=self.change.old_text) is not None, \
-            'Changes applied while debug paused.'
+        assert 'closed' not in logs
+        assert 'detached' not in logs
+        assert "did not start in time" not in logs
 
         # Resume execution
         self.dev_tools.open_tab(ChromeDevToolsTabs.SOURCES)
         self.dev_tools.continue_debug()
-        self.emu.wait_for_text(text='41 taps left')
-        self.emu.wait_for_text(text=self.change.new_text)  # Verify change applied during debug in xml is applied
-
-        # Go back to elements tab again and verify change is synced
-        self.dev_tools.open_tab(ChromeDevToolsTabs.ELEMENTS)  # Go to element tab and verify change is not applied
-        assert self.dev_tools.wait_element_by_text(text=self.change.new_text) is not None, \
-            'Changes during paused debug are NOT applied after debug is resumed.'
+        self.emu.wait_for_text(text='41 taps left', timeout=30)
+        self.emu.wait_for_text(text=self.change.new_text, timeout=10)  # Verify change applied during debug
 
     def test_021_debug_watch_expressions(self):
         # Start debug and wait until app is deployed
