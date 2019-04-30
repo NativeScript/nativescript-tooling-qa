@@ -29,7 +29,7 @@ class ChromeDevTools(object):
     shadow_root_element_script = "return arguments[0].shadowRoot"
     shadow_inner_element_script = "return arguments[0].querySelector(arguments[1]).shadowRoot"
 
-    def __init__(self, chrome, port=40000):
+    def __init__(self, chrome, port=40000, tab=None):
         # Start Chrome and open debug url
         self.chrome = chrome
         debug_url = 'chrome-devtools://devtools/bundled/inspector.html'
@@ -41,6 +41,10 @@ class ChromeDevTools(object):
         self.__refresh_main_panel()
         self.__expand_main_panel()
         Log.info('Chrome dev tools loaded.')
+
+        # Navigate to tab
+        if tab is not None:
+            self.open_tab(tab)
 
     def __expand_shadow_element(self, element):
         return self.chrome.driver.execute_script(self.shadow_root_element_script, element)
@@ -80,18 +84,23 @@ class ChromeDevTools(object):
         result = Wait.until(lambda: self.find_element_by_text(text) is not None, timeout=timeout, period=1)
         self.chrome.driver.implicitly_wait(self.chrome.implicitly_wait)
         assert result, 'Failed to find element by "{0}" text.'.format(text)
-        Log.debug('Element with text "{0}" found.'.format(text))
+        Log.info('Element with text "{0}" found in CDT.'.format(text))
         return self.find_element_by_text(text)
 
-    def open_tab(self, tab):
+    def open_tab(self, tab, verify=True):
         """
         Opens chrome dev tools tab.
         :param tab: ChromeDevToolsTabs enum value.
+        :param verify: If True it will try to verify opened tab.
         """
         Log.info('Navigate to {0}.'.format(str(tab)))
         element = self.main_panel.find_element(By.ID, str(tab))
         element.click()
         self.__refresh_main_panel()
+        if verify:
+            if tab == ChromeDevToolsTabs.SOURCES:
+                webpack_element = self.wait_element_by_text(text='webpack')
+                assert webpack_element is not None, 'Failed to load app sources.'
 
     def load_source_file(self, file_name):
         """
