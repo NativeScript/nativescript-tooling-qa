@@ -171,12 +171,11 @@ class ChromeDevTools(object):
         return None
 
     def __find_span_by_text(self, text):
-        for line in self.__find_line_by_text(text=text):
-            if text in line.text:
-                spans = line.find_elements(By.CSS_SELECTOR, "span")
-                for span in spans:
-                    if span.text == text:
-                        return span
+        line = self.__find_line_by_text(text=text)
+        spans = line.find_elements(By.CSS_SELECTOR, "span")
+        for span in spans:
+            if span.text == text:
+                return span
         return None
 
     def edit_text(self, old_text, new_text):
