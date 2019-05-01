@@ -220,6 +220,7 @@ class Device(object):
             SimAuto.click(self, text=text)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
+        Log.info('Click on "{0}" text.'.format(text))
 
     def clear_log(self):
         """
