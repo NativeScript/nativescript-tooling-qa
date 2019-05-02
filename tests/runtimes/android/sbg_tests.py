@@ -29,6 +29,8 @@ class SBGTests(TnsTest):
     def test_300_fail_build_when_sbg_bindings_file_is_missing(self):
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
+        # add webpack.config.js where devtool: "eval"
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1286', 'webpack.config.js'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js'))
