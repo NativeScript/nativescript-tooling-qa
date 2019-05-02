@@ -68,7 +68,7 @@ class Tns(object):
                                                                Settings.Android.ANDROID_KEYSTORE_PASS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS)
-        if provision is not None and platform != Platform.ANDROID and Settings.HOST_OS == OSType.OSX:
+        if provision is not None and platform != Platform.ANDROID and Settings.HOST_OS == OSType.OSX and not emulator:
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
