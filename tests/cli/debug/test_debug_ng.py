@@ -7,6 +7,7 @@ from core.settings import Settings
 from core.utils.chrome.chrome import Chrome
 from core.utils.chrome.chrome_dev_tools import ChromeDevTools, ChromeDevToolsTabs
 from data.changes import Sync, Changes
+from data.templates import Template
 from products.nativescript.tns import Tns
 
 
@@ -20,8 +21,8 @@ class DebugAndroidNGTests(TnsRunTest):
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
-        # Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
-        # Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
+        Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS == OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
