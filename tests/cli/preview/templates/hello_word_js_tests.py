@@ -71,27 +71,27 @@ class PreviewJSTests(TnsPreviewJSTests):
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
                                        device=self.sim)
 
-    def test_200_preview_android_bundle(self):
+    def test_200_preview_android_no_bundle(self):
         """Preview project on emulator with --bundle. Make valid changes in JS, CSS and XML"""
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, instrumented=True, bundle=True)
+                                       device=self.emu, instrumented=True, bundle=False, hmr=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_preview_ios_bundle(self):
+    def test_200_preview_ios_no_bundle(self):
         """Preview project on simulator with --bundle. Make valid changes in JS, CSS and XML"""
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
-                                       device=self.sim, instrumented=True, bundle=True)
+                                       device=self.sim, instrumented=True, bundle=False, hmr=False)
 
-    def test_205_preview_android_hmr(self):
+    def test_205_preview_android_no_hmr(self):
         """Preview project on emulator with --hmr. Make valid changes in JS, CSS and XML"""
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, instrumented=True, hmr=True)
+                                       device=self.emu, instrumented=True, hmr=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_205_preview_ios_hmr(self):
+    def test_205_preview_ios_no_hmr(self):
         """Preview project on simulator with --hmr. Make valid changes in JS, CSS and XML"""
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
-                                       device=self.sim, instrumented=True, hmr=True)
+                                       device=self.sim, instrumented=True, hmr=False)
 
     def test_210_tns_preview_android_livesync_on_two_emulators(self):
         """

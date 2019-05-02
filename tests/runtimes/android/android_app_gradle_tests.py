@@ -15,6 +15,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
+TAP_THE_BUTTON = 'Tap the button'
 
 
 class AndroidRuntimeAppGradleTests(TnsTest):
@@ -223,10 +224,7 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         assert test_result, 'Application not build correctly!'
 
         # Verify app looks correct inside emulator
-        Device.screen_match(self.emulator,
-                            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                         'Emulator-Api23-Default',
-                                         "hello-world-js.png"), timeout=120, tolerance=1)
+        Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
 
     def test_450_support_external_buildscript_config_in_app_res_android_folder(self):
         """

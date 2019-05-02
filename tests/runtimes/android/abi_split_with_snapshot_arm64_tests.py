@@ -13,6 +13,7 @@ from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 from runtime_helpers.abi_split_helper import AbiSplitHelper
+
 APP_NAME = AppName.DEFAULT
 
 
@@ -40,7 +41,5 @@ class AbiSplitTestsForArm64Devices(TnsTest):
          https://github.com/NativeScript/android-runtime/issues/1234
         """
         AbiSplitHelper.assert_apk(
-            os.path.join(TEST_RUN_HOME, "Test_apks",
-                         "app-arm64-v8a-release.apk"),
-            self.device, self.app_id, os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                                   'ARM-64-Phone', "abi-split-64-phone.png"))
+            os.path.join(TEST_RUN_HOME, "Test_apks", "app-arm64-v8a-release.apk"),
+            self.device, self.app_id)
