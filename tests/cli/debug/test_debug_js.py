@@ -163,6 +163,8 @@ class DebugAndroidJSTests(TnsRunTest):
         self.dev_tools.type_on_console("1024+1024")
         self.dev_tools.wait_element_by_text(text='2048', timeout=10)
 
+        # TODO: Add tests for eval something {N} specific
+
     def __debug_sources(self, platform, device):
         # Start debug and wait until app is deployed
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
