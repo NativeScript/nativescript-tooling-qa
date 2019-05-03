@@ -97,10 +97,36 @@ class Changes(object):
                                         new_value='Android here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
                                         old_color=None, new_color=Colors.YELLOW)
 
-        SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.ios.scss'),
+        SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('app', 'cars', 'car-list.component.ios.scss'),
                                     old_value='iOS here',
                                     new_value='iOS here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
                                     old_color=None, new_color=Colors.YELLOW)
+
+    class JSTabNavigation(object):
+        JS = ChangeSet(file_path=os.path.join('src', 'app', 'home', 'home-items-view-model.js'),
+                       old_value='Item 1', new_value='First Element',
+                       old_text='Item 1', new_text='First Element')
+        XML = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-page.xml'),
+                         old_value='Home', new_value='Test',
+                         old_text='Home', new_text='Test')
+
+        # This change should make title of home red
+        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-variables.scss'),
+                                     old_value='$accent-dark;', new_value='red;',
+                                     old_color=Colors.ACCENT_DARK, new_color=Colors.RED)
+
+    class TSTabNavigation(object):
+        TS = ChangeSet(file_path=os.path.join('src', 'app', 'home', 'home-items-view-model.ts'),
+                       old_value='Item 1', new_value='First Element',
+                       old_text='Item 1', new_text='First Element')
+        XML = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-page.xml'),
+                         old_value='Home', new_value='Test',
+                         old_text='Home', new_text='Test')
+
+        # This change should make title of home red
+        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-variables.scss'),
+                                     old_value='$accent-dark;', new_value='red;',
+                                     old_color=Colors.ACCENT_DARK, new_color=Colors.RED)
 
     class SharedHelloWorld(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'item.service.ts'),
