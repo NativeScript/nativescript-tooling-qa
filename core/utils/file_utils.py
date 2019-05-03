@@ -15,6 +15,16 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.process import Process
 
+# noinspection PyBroadException
+# pylint: disable=no-member
+try:
+    # python3
+    import urllib.request
+# pylint: disable=broad-except
+except Exception:
+    # python2
+    import urllib
+
 
 class Folder(object):
     @staticmethod
@@ -260,3 +270,19 @@ class File(object):
         # pylint: disable=broad-except
         except Exception:
             Log.debug('Failed to unzip file {0}'.format(file_path))
+
+    @staticmethod
+    def download_file(file_name, file_url, destination_dir=Settings.TEST_RUN_HOME):
+        # noinspection PyBroadException
+        try:
+            # noinspection PyBroadException
+            try:
+                # python3
+                urllib.request.urlretrieve(file_url, os.path.join(destination_dir, file_name))
+            # pylint: disable=broad-except
+            except Exception:
+                # python2
+                urllib.urlretrieve(file_url, os.path.join(destination_dir, file_name))
+        # pylint: disable=broad-except
+        except Exception:
+            Log.debug('Failed to download file {2}{0} from {1}'.format(file_name, file_url, destination_dir))
