@@ -36,7 +36,7 @@ class AndroidErrorActivityTests(TnsTest):
         # Break the app to test error activity
         change = ChangeSet(file_path=os.path.join(Settings.TEST_RUN_HOME, APP_NAME, 'app', 'app.js'),
                            old_value='application.run({ moduleName: "app-root" });',
-                           new_value='throw new Error("Kill the app!");')
+                           new_value='for (var i = 0; i < 1000000000; i++) {var text = i;} throw new Error("Kill the app!");')
         Sync.replace(app_name=APP_NAME, change_set=change)
 
         # Verify logs and screen
