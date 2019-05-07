@@ -8,7 +8,7 @@ const application = require("tns-core-modules/application");
 (android.app.Service).extend("com.nativescript.location.BackgroundService", {
     onStartCommand: function (intent, flags, startId) {
         this.super.onStartCommand(intent, flags, startId);
-        return android.app.Service.START_NOT_STICK;
+        return android.app.Service.START_NOT_STICKY;
     },
     onCreate: function () {
         console.log("Create Foreground Service!");
