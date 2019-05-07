@@ -409,10 +409,6 @@ class AndroidRuntimeTests(TnsTest):
         """
          https://github.com/NativeScript/android-runtime/issues/1347
         """
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
@@ -429,6 +425,7 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
+        time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
                                  period=5)
         assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
@@ -448,10 +445,6 @@ class AndroidRuntimeTests(TnsTest):
         """
          https://github.com/NativeScript/android-runtime/issues/1347
         """
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
@@ -468,6 +461,7 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
+        time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
                                  period=5)
         assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
