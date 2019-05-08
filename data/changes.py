@@ -103,7 +103,7 @@ class Changes(object):
                                     old_color=None, new_color=Colors.YELLOW)
 
     class JSTabNavigation(object):
-        JS = ChangeSet(file_path=os.path.join('src', 'app', 'home', 'home-items-view-model.js'),
+        JS = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-view-model.js'),
                        old_value='Item 1', new_value='First Element',
                        old_text='Item 1', new_text='First Element')
         XML = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-page.xml'),

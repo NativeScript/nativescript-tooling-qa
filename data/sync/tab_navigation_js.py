@@ -1,8 +1,6 @@
 import os
 
 from core.enums.app_type import AppType
-from core.enums.platform_type import Platform
-from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.wait import Wait
@@ -14,7 +12,7 @@ from products.nativescript.tns_logs import TnsLogs
 
 
 def sync_tab_navigation_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
-                        snapshot=False, instrumented=True):
+                        snapshot=False, instrumented=False):
     __sync_tab_navigation_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
@@ -22,7 +20,7 @@ def sync_tab_navigation_js(app_name, platform, device, bundle=True, hmr=True, ug
 
 
 def sync_tab_navigation_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
-                        snapshot=False, instrumented=True):
+                        snapshot=False, instrumented=False):
     __sync_tab_navigation_js_ts(app_type=AppType.TS, app_name=app_name, platform=platform,
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
@@ -70,8 +68,8 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
     # Verify it looks properly
     device.wait_for_text(text=js_change.old_text)
     device.wait_for_text(text=xml_change.old_text)
-    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
-    assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
+    accent_count = device.get_pixels_by_color(color=Colors.ACCENT_DARK)
+    assert accent_count > 100, 'Failed to find ACCENT_DARK color on {0}'.format(device.name)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
 
@@ -92,12 +90,18 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
 
     # Edit SCSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=scss_change)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+    # red_count = device.get_pixels_by_color(color=Colors.RED)
+    # assert red_count > 100, 'Failed to find red color on {0}'.format(device.name)
+    assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.RED) > 100), \
+        'Platform specific SCSS not applied!'
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='_app-variables.scss', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    # assert Wait.until(lambda: device.get_pixels_by_color(color=change.new_color) > 100), \
+    #     'Platform specific nested SCSS not applied!'
+    # Log.info('Platform specific nested SCSS applied successfully!')
+    # strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
+    #                                hmr=hmr, file_name='_app-variables.scss', instrumented=instrumented, device=device)
+    # TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Revert all the changes
     Sync.revert(app_name=app_name, change_set=js_change)
@@ -115,7 +119,7 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=scss_change)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
+    # device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,

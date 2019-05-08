@@ -22,10 +22,10 @@ class TnsRunJSTabNavigation(TnsRunTest):
         TnsRunTest.setUpClass()
 
         # Create app
-        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'tab-navigation-js', 'app.js')
-        target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
-        File.copy(source=src, target=target)
+        Tns.create(app_name=cls.app_name, template=Template.TAB_NAVIGATION_JS.local_package, update=True)
+        # src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'tab-navigation-js', 'app.js')
+        # target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
+        # File.copy(source=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -37,8 +37,14 @@ class TnsRunJSTabNavigation(TnsRunTest):
         TnsRunTest.setUp(self)
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.
-        for change in [Changes.JSTabNavigation.SCSS_VARIABLES, Changes.JSTabNavigation.XML, Changes.JSTabNavigation.JS]:
+        for change in [Changes.JSTabNavigation.SCSS_VARIABLES]:
             source_src = os.path.join(self.target_project_dir, 'app', os.path.basename(change.file_path))
+            target_src = os.path.join(self.source_project_dir, change.file_path)
+            File.clean(path=target_src)
+            File.copy(source=source_src, target=target_src)
+
+        for change in [Changes.JSTabNavigation.XML, Changes.JSTabNavigation.JS]:
+            source_src = os.path.join(self.target_project_dir, 'app', 'home', os.path.basename(change.file_path))
             target_src = os.path.join(self.source_project_dir, change.file_path)
             File.clean(path=target_src)
             File.copy(source=source_src, target=target_src)
