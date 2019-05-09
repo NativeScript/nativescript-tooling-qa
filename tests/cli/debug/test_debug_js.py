@@ -15,7 +15,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
-class DebugAndroidJSTests(TnsRunTest):
+class DebugJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     xml_change = Changes.JSHelloWord.XML_ACTION_BAR
     js_change = Changes.JSHelloWord.JS

@@ -11,7 +11,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-class DebugAndroidNGTests(TnsRunTest):
+class DebugNGTests(TnsRunTest):
     ts_change = Changes.NGHelloWorld.TS
     xml_change = Changes.NGHelloWorld.XML_ACTION_BAR
     app_name = Settings.AppName.DEFAULT
