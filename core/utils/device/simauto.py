@@ -23,6 +23,7 @@ class SimAuto(object):
             for name in names:
                 if device_info.name in name:
                     window = simulator.findFirstR(AXTitle=name)
+                    window.activate()
                     elements = window.findAllR()
                     for element in elements:
                         if 'AXValue' in element.getAttributes():
