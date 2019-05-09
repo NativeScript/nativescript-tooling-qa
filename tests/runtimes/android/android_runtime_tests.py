@@ -483,10 +483,6 @@ class AndroidRuntimeTests(TnsTest):
         """
          https://github.com/NativeScript/android-runtime/issues/1368
         """
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
         strings = ['adding nativescript runtime package dependency: nativescript-optimized-with-inspector']
         test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
