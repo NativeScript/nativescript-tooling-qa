@@ -97,7 +97,7 @@ class Changes(object):
                                         new_value='Android here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
                                         old_color=None, new_color=Colors.YELLOW)
 
-        SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('app', 'cars', 'car-list.component.ios.scss'),
+        SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.ios.scss'),
                                     old_value='iOS here',
                                     new_value='iOS here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
                                     old_color=None, new_color=Colors.YELLOW)
