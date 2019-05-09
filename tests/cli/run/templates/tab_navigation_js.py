@@ -23,9 +23,6 @@ class TnsRunJSTabNavigation(TnsRunTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.TAB_NAVIGATION_JS.local_package, update=True)
-        # src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'tab-navigation-js', 'app.js')
-        # target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
-        # File.copy(source=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -69,20 +66,3 @@ class TnsRunJSTabNavigation(TnsRunTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_run_ios_bundle_aot(self):
         sync_tab_navigation_js(self.app_name, Platform.IOS, self.sim, aot=True)
-
-    def test_310_run_android_bundle_uglify(self):
-        sync_tab_navigation_js(self.app_name, Platform.ANDROID, self.emu, uglify=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_310_run_ios_bundle_uglify(self):
-        sync_tab_navigation_js(self.app_name, Platform.IOS, self.sim, uglify=True)
-
-    def test_320_run_android_bundle_aot_and_uglify(self):
-        sync_tab_navigation_js(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync_tab_navigation_js(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)
-
-    def test_390_run_android_bundle_aot_uglify_snapshot(self):
-        sync_tab_navigation_js(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True, snapshot=True)

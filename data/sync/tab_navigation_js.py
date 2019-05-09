@@ -1,5 +1,6 @@
 import os
 
+
 from core.enums.app_type import AppType
 from core.settings import Settings
 from core.utils.file_utils import File
@@ -12,19 +13,19 @@ from products.nativescript.tns_logs import TnsLogs
 
 
 def sync_tab_navigation_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
-                        snapshot=False, instrumented=False):
+                           snapshot=False, instrumented=False, release=False):
     __sync_tab_navigation_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
-                             device=device,
-                             bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
-                             instrumented=instrumented)
+                                device=device, release=release,
+                                bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
+                                instrumented=instrumented)
 
 
 def sync_tab_navigation_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
-                        snapshot=False, instrumented=False):
+                           snapshot=False, instrumented=True):
     __sync_tab_navigation_js_ts(app_type=AppType.TS, app_name=app_name, platform=platform,
-                             device=device,
-                             bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
-                             instrumented=instrumented)
+                                device=device,
+                                bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
+                                instrumented=instrumented)
 
 
 def __verify_snapshot_skipped(snapshot, result):
@@ -40,8 +41,8 @@ def __verify_snapshot_skipped(snapshot, result):
         assert msg in File.read(result.log_file), 'No message that snapshot is NOT available on Windows.'
 
 
-def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
-                             bundle=True, hmr=True, uglify=False, aot=False, snapshot=False, instrumented=False):
+def __sync_tab_navigation_js_ts(app_type, app_name, platform, device, release=False,
+                                bundle=True, hmr=True, uglify=False, aot=False, snapshot=False, instrumented=False):
     # Set changes
     js_file = os.path.basename(Changes.JSTabNavigation.JS.file_path)
     if app_type == AppType.JS:
@@ -58,7 +59,7 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
 
     # Execute `tns run` and wait until logs are OK
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False,
-                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot)
+                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot, release=release)
     __verify_snapshot_skipped(snapshot, result)
 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
@@ -90,18 +91,10 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
 
     # Edit SCSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=scss_change)
-    # red_count = device.get_pixels_by_color(color=Colors.RED)
-    # assert red_count > 100, 'Failed to find red color on {0}'.format(device.name)
     assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.RED) > 100), \
         'Platform specific SCSS not applied!'
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)
-    # assert Wait.until(lambda: device.get_pixels_by_color(color=change.new_color) > 100), \
-    #     'Platform specific nested SCSS not applied!'
-    # Log.info('Platform specific nested SCSS applied successfully!')
-    # strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-    #                                hmr=hmr, file_name='_app-variables.scss', instrumented=instrumented, device=device)
-    # TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Revert all the changes
     Sync.revert(app_name=app_name, change_set=js_change)
@@ -119,12 +112,10 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device,
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=scss_change)
-    # device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
+    assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.ACCENT_DARK) > 100), \
+        'Platform specific SCSS not applied!'
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='_app-variables.scss', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Assert final and initial states are same
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
