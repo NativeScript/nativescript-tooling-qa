@@ -116,7 +116,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Start debug session and verify elements tab
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.ELEMENTS)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.ELEMENTS)
         assert self.dev_tools.wait_element_by_text(text=self.xml_change.old_text) is not None, 'Elements tab is empty.'
 
         # Sync changes and verify elements tab is updated
@@ -137,7 +137,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Open Chrome Dev Tools -> Console
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.CONSOLE)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.CONSOLE)
 
         # TAP the button to trigger console log and ensure it is in device logs
         device.click(text='TAP', case_sensitive=True)
@@ -157,7 +157,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Open Chrome Dev Tools -> Console
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.CONSOLE)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.CONSOLE)
 
         # Evaluate on console
         self.dev_tools.type_on_console("1024+1024")
@@ -171,7 +171,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Open sources tab and verify content is loaded
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
 
         # Open JS file and place breakpoint on line 17
         self.dev_tools.load_source_file("main-view-model.js")
@@ -194,7 +194,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Open sources tab and verify content is loaded
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
 
         # Open JS file and place breakpoint on line 17
         self.dev_tools.load_source_file("main-view-model.js")
@@ -241,7 +241,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Open sources tab and place breakpoint on line 17 of main-view-model.js
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
         self.dev_tools.load_source_file("main-view-model.js")
         self.dev_tools.breakpoint(17)
 
@@ -260,7 +260,7 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True, debug_brk=True)
-        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform)
         self.dev_tools.open_tab(tab=ChromeDevToolsTabs.SOURCES, verify=False)
         pause_element = self.dev_tools.wait_element_by_text(text="Debugger paused", timeout=30)
         assert pause_element is not None, 'Failed to stop on first line of code.'
@@ -276,7 +276,7 @@ class DebugAndroidJSTests(TnsRunTest):
         result = Tns.debug(app_name=self.app_name, platform=platform, emulator=True, start=True)
 
         # Verify sources tab is loaded
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
         device.wait_for_text(text='TAP')
 
         # Verify console log is working (covers https://github.com/NativeScript/nativescript-cli/issues/3629)
@@ -299,12 +299,12 @@ class DebugAndroidJSTests(TnsRunTest):
         device.wait_for_text(text='TAP')
 
         # Open CDT with debug url twice
-        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform)
         sleep(1)
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
         device.wait_for_text(text='TAP')
 
         # Open another site and then back to CDT
         self.chrome.open(url='https://www.nativescript.org')
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
         device.wait_for_text(text='TAP')

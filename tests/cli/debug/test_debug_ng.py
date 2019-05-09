@@ -56,7 +56,7 @@ class DebugAndroidNGTests(TnsRunTest):
         device.wait_for_text(text=self.ts_change.old_text, timeout=240)
 
         # Start debug session and verify elements tab
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.ELEMENTS)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.ELEMENTS)
         assert self.dev_tools.wait_element_by_text(text=self.xml_change.old_text) is not None, 'Elements tab is empty.'
 
         # Sync changes and verify elements tab is updated
@@ -64,7 +64,7 @@ class DebugAndroidNGTests(TnsRunTest):
         device.wait_for_text(text=self.xml_change.new_text)
 
         # Elements tab do not auto-update for NG apps and need to be refreshed manually
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.ELEMENTS)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.ELEMENTS)
         assert self.dev_tools.wait_element_by_text(
             text=self.xml_change.new_text) is not None, 'Elements tab not updated.'
 
@@ -87,7 +87,7 @@ class DebugAndroidNGTests(TnsRunTest):
         device.wait_for_text(text=self.ts_change.old_text)
 
         # Open sources tab and verify content is loaded
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.SOURCES)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
 
         # Open TS file and place breakpoint on line 21
         self.dev_tools.load_source_file('item-detail.component.ts')

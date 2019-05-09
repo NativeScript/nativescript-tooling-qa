@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.wait import Wait
@@ -30,10 +31,15 @@ class ChromeDevTools(object):
     shadow_root_element_script = "return arguments[0].shadowRoot"
     shadow_inner_element_script = "return arguments[0].querySelector(arguments[1]).shadowRoot"
 
-    def __init__(self, chrome, port=40000, tab=None):
+    def __init__(self, chrome, platform, tab=None):
         # Start Chrome and open debug url
         self.chrome = chrome
         debug_url = 'chrome-devtools://devtools/bundled/inspector.html'
+        port = None
+        if platform == Platform.ANDROID:
+            port = Settings.Android.DEBUG_PORT
+        elif platform == Platform.IOS:
+            port = Settings.IOS.DEBUG_PORT
         if port is not None:
             debug_url = debug_url + '?experiments=true&ws=localhost:' + str(port)
         self.chrome.open(url=debug_url)

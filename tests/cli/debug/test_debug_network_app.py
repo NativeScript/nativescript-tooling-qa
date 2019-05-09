@@ -82,7 +82,7 @@ class DebugNetworkTests(TnsRunTest):
 
     def __debug_elements(self, platform, device):
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.ELEMENTS)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.ELEMENTS)
         self.dev_tools.wait_element_by_text(text=ACTION_BAR_TITLE)
         device.click(text=HOME_ADD_CHILD_BUTTON)
         self.dev_tools.doubleclick_line(text='StackLayout')
@@ -95,7 +95,7 @@ class DebugNetworkTests(TnsRunTest):
 
     def __debug_console(self, platform, device):
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.CONSOLE)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.CONSOLE)
         device.click(text=HOME_CONSOLE_BUTTON)
         self.dev_tools.wait_element_by_text(text='main-view-model.ts:34')
 
@@ -103,7 +103,7 @@ class DebugNetworkTests(TnsRunTest):
         # Run debug, to network page and open network tab in CDT
         result = Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
         device.click(text=HOME_NETWORK_BUTTON)
-        self.dev_tools = ChromeDevTools(self.chrome)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform)
         self.dev_tools.open_tab(tab=ChromeDevToolsTabs.SOURCES, verify=False)
 
         # Place breakpoint and verify it is hit
@@ -126,7 +126,7 @@ class DebugNetworkTests(TnsRunTest):
 
     def __debug_network(self, platform, device):
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
-        self.dev_tools = ChromeDevTools(self.chrome, tab=ChromeDevToolsTabs.NETWORK)
+        self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.NETWORK)
         device.click(text=HOME_NETWORK_BUTTON)
 
         # Request without body
