@@ -1,6 +1,8 @@
 # pylint: disable=import-error
 # pylint: disable=broad-except
 # pylint: disable=too-many-nested-blocks
+from time import sleep
+
 import atomac
 
 
@@ -24,6 +26,7 @@ class SimAuto(object):
                 if device_info.name in name:
                     window = simulator.findFirstR(AXTitle=name)
                     window.activate()
+                    sleep(1)
                     elements = window.findAllR()
                     for element in elements:
                         if 'AXValue' in element.getAttributes():

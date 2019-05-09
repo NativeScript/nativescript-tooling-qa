@@ -165,4 +165,5 @@ class Simctl(object):
     @staticmethod
     def get_log_file(device_id):
         command = 'spawn {0} log stream --level=debug'.format(device_id)
-        return Simctl.run_simctl_command(command=command.format(device_id), wait=False).log_file
+        log_file = Simctl.run_simctl_command(command=command.format(device_id), wait=False).log_file
+        return log_file
