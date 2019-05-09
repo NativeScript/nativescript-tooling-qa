@@ -31,9 +31,11 @@ class Device(object):
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
-            self.device_log_file = SimAuto.get_log_file(self.id)
         else:
             self.name = name
+            
+        if type is DeviceType.SIM:
+            self.device_log_file = Simctl.get_log_file(self.id)
 
     def are_texts_visible(self, texts):
         is_list = isinstance(texts, list)
@@ -229,7 +231,7 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.clear_logcat(self.id)
         elif self.type is DeviceType.SIM:
-            self.device_log_file = SimAuto.get_log_file(self.id)
+            self.device_log_file = Simctl.get_log_file(self.id)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 

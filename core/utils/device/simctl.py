@@ -161,3 +161,8 @@ class Simctl(object):
         if not is_running:
             Log.info('Process {0} is not running !'.format(app_id))
         return is_running
+
+    @staticmethod
+    def get_log_file(device_id):
+        command = 'spawn {0} log stream --level=debug'.format(device_id)
+        return Simctl.run_simctl_command(command=command.format(device_id), wait=False).log_file
