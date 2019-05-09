@@ -1,5 +1,5 @@
 """
-Test for specific needs of Android runtime.
+Test for specific needs of service tests.
 """
 # pylint: disable=invalid-name
 import os
@@ -25,6 +25,8 @@ class AndroidServiceTests(TnsTest):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -38,9 +40,6 @@ class AndroidServiceTests(TnsTest):
         """
          https://github.com/NativeScript/android-runtime/issues/1347
         """
-
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
@@ -56,19 +55,23 @@ class AndroidServiceTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
+
         Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
                                  period=5)
         assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
+
         service_name = "com.nativescript.location.BackgroundService"
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
+
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
         Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
         services = Adb.get_active_services(self.emulator.id)
         assert service_name in services, "{0} service not found! Logs: {1}".format(service_name, services)
+
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
         assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
@@ -92,6 +95,7 @@ class AndroidServiceTests(TnsTest):
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                  period=5)
+
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
         Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
@@ -99,13 +103,16 @@ class AndroidServiceTests(TnsTest):
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
                                  period=5)
         assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
+
         service_name = "com.nativescript.location.BackgroundService"
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
+
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
         Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
         services = Adb.get_active_services(self.emulator.id)
         assert service_name not in services, "{0} service found! Logs: {1}".format(service_name, services)
+
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
         assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
@@ -130,19 +137,23 @@ class AndroidServiceTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
+
         Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
                                  period=5)
         assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
+
         service_name = "com.nativescript.location.BackgroundService"
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
+
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
         Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
         services = Adb.get_active_services(self.emulator.id)
         assert service_name not in services, "{0} service found! Logs: {1}".format(service_name, services)
+
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
         assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
