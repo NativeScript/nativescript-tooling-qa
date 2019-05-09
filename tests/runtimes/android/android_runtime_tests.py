@@ -478,3 +478,21 @@ class AndroidRuntimeTests(TnsTest):
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
         assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
                                                                                           service_info)
+
+    def test_447_test_useV8Symbols_flag_in_package_json(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1368
+        """
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
+        strings = ['adding nativescript runtime package dependency: nativescript-optimized-with-inspector']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                               'android-runtime-1368', 'package.json'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json'))
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False)
+        strings = ['adding nativescript runtime package dependency: nativescript-regular']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
