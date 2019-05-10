@@ -1,9 +1,13 @@
 import os
+
+import psutil
 import pytest
 import datetime
 
 from appium import webdriver
 from selenium.common.exceptions import InvalidSessionIdException
+
+from core.settings import Settings
 
 
 def pytest_configure(config):
@@ -64,6 +68,8 @@ def __save_log_type(driver, device_logger, calling_request, type):
 
 class AppiumDriver(object):
     def __init__(self, capabilities):
+        psutil.Popen("appium --port 4723", cwd=Settings.TEST_RUN_HOME, shell=True, stdin=None, stdout=None,
+                     stderr=None, close_fds=True)
         self.capabilities = capabilities
         self.executor = 'http://127.0.0.1:4723/wd/hub'
         self.driver = webdriver.Remote(self.executor, capabilities)

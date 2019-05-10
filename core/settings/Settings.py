@@ -163,4 +163,4 @@ class AppName(object):
 
 class AppiumCaps(object):
     SIM_iOS12 = AppiumCapabilities(platform_name='iOS', platform_version='12.0', automation_name='XCUITest')
-    EMU_API_23 = AppiumCapabilities(platform_name='android', platform_version='6.0', automation_name='UIAutomator2')
+    EMU_API_23 = AppiumCapabilities(platform_name='Android', platform_version='6.0', automation_name='UIAutomator2')

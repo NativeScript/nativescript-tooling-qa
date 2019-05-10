@@ -24,11 +24,14 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
     # start appium driver
-    if platform == 'android':
+    if str(platform) == 'android':
         capabilities = AppiumCaps.EMU_API_23
+        capabilities.appPackage = TnsPaths.get_bundle_id(app_name)
+        capabilities.appActivity = 'com.tns.NativeScriptActivity'
     else:
         capabilities = AppiumCaps.SIM_iOS12
-    capabilities.bundleId = TnsPaths.get_bundle_id(app_name)
+        capabilities.bundleId = TnsPaths.get_bundle_id(app_name)
+
     capabilities.deviceName = device.name
     caps = capabilities.__dict__
     appium = AppiumDriver(caps)
