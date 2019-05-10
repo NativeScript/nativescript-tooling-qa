@@ -448,7 +448,7 @@ class AndroidRuntimeTests(TnsTest):
 
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
                                  timeout=30, period=5)
-        message = "Use ES6 language features Button is missing on the device! The is crashing!"
+        message = "Use ES6 language features Button is missing on the device! The app has crashed!"
         assert test_result, message
 
         Device.click(self.emulator, text=button_text, case_sensitive=True)
