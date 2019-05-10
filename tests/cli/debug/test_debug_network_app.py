@@ -1,6 +1,5 @@
 import os
 import unittest
-from time import sleep
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -10,6 +9,7 @@ from core.utils.chrome.chrome import Chrome
 from core.utils.chrome.chrome_dev_tools import ChromeDevTools, ChromeDevToolsTabs
 from core.utils.file_utils import Folder, File
 from core.utils.git import Git
+from core.utils.wait import Wait
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
@@ -98,11 +98,11 @@ class DebugNetworkTests(TnsRunTest):
 
         # Remove child and verify it is NOT visible in CDT
         device.click(text=HOME_REMOVE_CHILD_BUTTON)
-        sleep(1)
-        if platform == Platform.ANDROID:
-            assert self.dev_tools.wait_element_by_text(text='StackLayout id=') is None
-        else:
-            assert self.dev_tools.wait_element_by_text(text='StackLayout iosOverflowSafeArea="true" id=') is None
+        text = 'StackLayout id='
+        if platform == Platform.IOS:
+            text = 'StackLayout iosOverflowSafeArea="true" id='
+        found = Wait.until(lambda: self.dev_tools.find_element_by_text(text=text) is None, timeout=10)
+        assert found is True, 'Item not removed from elements tab after removed from app.'
 
     def __debug_console(self, platform, device):
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
