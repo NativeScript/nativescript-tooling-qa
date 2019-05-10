@@ -33,7 +33,7 @@ class Device(object):
             self.name = type
         else:
             self.name = name
-            
+
         if type is DeviceType.SIM:
             self.device_log_file = Simctl.get_log_file(self.id)
 
@@ -242,11 +242,12 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             return Adb.get_logcat(self.id)
         elif self.type is DeviceType.SIM:
+            Log.debug('Read log file: {0}'.format(self.device_log_file))
             return File.read(self.device_log_file)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
-    def wait_for_log(self, text, timeout=15):
+    def wait_for_log(self, text, timeout=30):
         """
         Wait until text is available in device logs.
         :param text: Text to be searched in logs.

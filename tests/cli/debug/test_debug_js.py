@@ -189,8 +189,6 @@ class DebugJSTests(TnsRunTest):
     def __debug_sync_changes(self, platform, device):
         # Start debug and wait until app is deployed
         result = Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
-        logs = ['Webpack build done!', 'Restarting application']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=logs)
         device.wait_for_text(text='TAP')
 
         # Open sources tab and verify content is loaded
@@ -247,7 +245,7 @@ class DebugJSTests(TnsRunTest):
 
         # Tap on TAP button in emulator and check it is hit
         device.click(text="TAP", case_sensitive=True)
-        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
+        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=30)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
 
         # Add watch expression
