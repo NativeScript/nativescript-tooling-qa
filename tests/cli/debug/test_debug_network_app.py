@@ -53,29 +53,25 @@ class DebugNetworkTests(TnsRunTest):
         TnsRunTest.tearDown(self)
 
     def test_010_debug_android_elements(self):
-        pass
-        # self.__debug_elements(platform=Platform.ANDROID, device=self.emu)
+        self.__debug_elements(platform=Platform.ANDROID, device=self.emu)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Can not debug iOS on non macOS hosts.')
     def test_010_debug_ios_elements(self):
         self.__debug_elements(platform=Platform.IOS, device=self.sim)
 
     def test_020_debug_android_console(self):
-        pass
-        # self.__debug_console(platform=Platform.ANDROID, device=self.emu)
+        self.__debug_console(platform=Platform.ANDROID, device=self.emu)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Can not debug iOS on non macOS hosts.')
     def test_020_debug_ios_console(self):
         self.__debug_console(platform=Platform.IOS, device=self.sim)
 
     def test_030_debug_android_sources(self):
-        pass
-        # self.__debug_sources(platform=Platform.ANDROID, device=self.emu)
+        self.__debug_sources(platform=Platform.ANDROID, device=self.emu)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Can not debug iOS on non macOS hosts.')
     def test_030_debug_ios_sources(self):
-        pass
-        # self.__debug_sources(platform=Platform.IOS, device=self.sim)
+        self.__debug_sources(platform=Platform.IOS, device=self.sim)
 
     def test_040_debug_android_network(self):
         self.__debug_network(platform=Platform.ANDROID, device=self.emu)
