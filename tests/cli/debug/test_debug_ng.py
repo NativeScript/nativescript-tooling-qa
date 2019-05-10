@@ -46,7 +46,7 @@ class DebugNGTests(TnsRunTest):
     def test_020_debug_android_sources(self):
         self.__debug_sources(platform=Platform.ANDROID, device=self.emu)
 
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Can not debug iOS on non macOS hosts.')
+    @unittest.skip('Do not work because we fail to click on "Ter Stegen". Wait until click is implemented via Appium.')
     def test_020_debug_ios_sources(self):
         self.__debug_sources(platform=Platform.IOS, device=self.sim)
 
@@ -78,7 +78,8 @@ class DebugNGTests(TnsRunTest):
         self.dev_tools.doubleclick_line(text='ProxyViewContainer')
         self.dev_tools.doubleclick_line(text='GridLayout')
         self.dev_tools.doubleclick_line(text='ListView')
-        self.dev_tools.doubleclick_line(text='StackLayout')
+        if platform == Platform.ANDROID:
+            self.dev_tools.doubleclick_line(text='StackLayout')
         self.dev_tools.wait_element_by_text(text='Label', timeout=10)
 
     def __debug_sources(self, platform, device):
