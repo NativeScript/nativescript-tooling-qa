@@ -429,3 +429,32 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=50,
                                  period=5)
         assert test_result, "TAP Button is missing on the device! V8 with debug symbols is making the app crash!"
+
+    def test_445_test_ES6_support(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1375
+        """
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template="https://github.com/NativeScript/es6-syntax-app.git", update=True)
+
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        strings = ['Successfully synced application', 'on device', self.emulator.id]
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=120,
+                                 period=5)
+        assert test_result, "App not build correctly after updating tns-core modules! Logs: " + File.read(log.log_file)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Use ES6 language features", True),
+                                 timeout=30, period=5)
+        message = "Use ES6 language features Button is missing on the device! The is crashing!"
+        assert test_result, message
+
+        Device.click(self.emulator, text="Use ES6 language features", case_sensitive=True)
+        test_result = Wait.until(lambda: "class com.js.NativeList" in File.read(log.log_file), timeout=25,
+                                 period=5)
+        assert test_result, "com.js.NativeList not found! Logs: " + File.read(log.log_file)
+
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Use ES6 language features", True),
+                                 timeout=30, period=5)
+        message = "Use ES6 language features Button is missing on the device! The is crashing!"
+        assert test_result, message
