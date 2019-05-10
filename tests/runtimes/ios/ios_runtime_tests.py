@@ -9,6 +9,7 @@ import os
 from nose.tools import timed
 
 from core.base_test.tns_test import TnsTest
+from core.enums.platform_type import Platform
 from core.utils.device.device import Device
 from core.utils.device.device_manager import DeviceManager
 from core.utils.wait import Wait
@@ -290,3 +291,25 @@ class IOSRuntimeTests(TnsTest):
         result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                             period=5)
         assert result, 'It seems that there\'s a problem with using swift files that are added in App_Resources'
+
+    def test_390_check_correct_name_of_internal_class_is_returned(self):
+        """
+        Test that NSStringFromClass function returns correct name of iOS internal class
+        https://github.com/NativeScript/ios-runtime/issues/1120
+        """
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1120',
+                               'main-page.js'),
+                  os.path.join(APP_PATH, 'app', 'main-page.js'))
+
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.IOS)
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
+
+        string = ['Internal class: UITableViewCellContentView']
+        result = Wait.until(lambda: all(st in File.read(log.log_file) for st in string), timeout=60,
+                            period=5)
+        assert result, 'NSStringFromClass function returns INCORRECT name of iOS internal class!'
