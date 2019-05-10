@@ -249,7 +249,10 @@ class DebugJSTests(TnsRunTest):
         assert pause_element is not None, 'Failed to pause on breakpoint.'
 
         # Add watch expression
-        self.dev_tools.add_watch_expression(expression='console', expected_result='console: Object')
+        if platform == Platform.ANDROID:
+            self.dev_tools.add_watch_expression(expression='console', expected_result='console: Object')
+        elif platform == Platform.IOS:
+            self.dev_tools.add_watch_expression(expression='console', expected_result='console: Console')
         self.dev_tools.add_watch_expression(expression='viewModel', expected_result='viewModel: Observable')
 
     def __debug_brk(self, platform, device):
