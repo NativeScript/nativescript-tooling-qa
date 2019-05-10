@@ -34,9 +34,12 @@ class AndroidErrorActivityTests(TnsTest):
         self.emu.wait_for_text('TAP', timeout=180, retry_delay=10)
 
         # Break the app to test error activity
+        # add workaround with for-cycle for https://github.com/NativeScript/nativescript-cli/issues/3812
+        wait_code = 'var e = new Date().getTime() + 3000; while (new Date().getTime() <= e) {} '
+        exception_code = 'throw new Error("Kill the app!");'
         change = ChangeSet(file_path=os.path.join(Settings.TEST_RUN_HOME, APP_NAME, 'app', 'app.js'),
                            old_value='application.run({ moduleName: "app-root" });',
-                           new_value='throw new Error("Kill the app!");')
+                           new_value=wait_code + exception_code)
         Sync.replace(app_name=APP_NAME, change_set=change)
 
         # Verify logs and screen

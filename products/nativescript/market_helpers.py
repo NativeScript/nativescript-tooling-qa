@@ -9,7 +9,7 @@ from core.settings import Settings
 class Market(object):
 
     @staticmethod
-    def get_data():
+    def get_data_github():
         url = "https://raw.githubusercontent.com/NativeScript/code-samples/master/data/all.json"
         response = urllib.urlopen(url)
         data = json.loads(response.read())
@@ -28,6 +28,30 @@ class Market(object):
                     record.append(sample_url)
                     record.append(control_string)
                     record.append(key)
+                    testing_data.append(record)
+
+        return testing_data
+
+    @staticmethod
+    def get_data_market():
+        url = "https://market.nativescript.org/api/samples?take=1000"
+        response = urllib.urlopen(url)
+        data = json.loads(response.read())
+        samples = data['data']
+        testing_data = []
+        for sample in samples:
+            control_string = ""
+            samplename = sample['name']
+            sample_name = samplename.replace(" ", "_")
+            flavors = sample['links']
+            for key in flavors:
+                record = []
+                sample_url = str(flavors[key]).strip()
+                if sample_url:
+                    record.append(sample_name.encode("utf8"))
+                    record.append(sample_url)
+                    record.append(control_string)
+                    record.append(key.encode("utf8"))
                     testing_data.append(record)
 
         return testing_data

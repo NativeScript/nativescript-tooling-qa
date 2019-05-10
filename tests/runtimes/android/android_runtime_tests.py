@@ -404,3 +404,28 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=90,
                                  period=5)
         assert test_result, "TAP Button is missing on the device! Update of tns-core-modules not successful!"
+
+    def test_444_test_useV8Symbols_flag_in_package_json(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1368
+        """
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        # check the default value for v8 symbols
+        strings = ['adding nativescript runtime package dependency: nativescript-optimized-with-inspector']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                               'android-runtime-1368', 'package.json'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json'))
+        # check useV8Symbols flag is working
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        strings = ['adding nativescript runtime package dependency: nativescript-regular']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
+        # check app is working
+        Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=50,
+                                 period=5)
+        assert test_result, "TAP Button is missing on the device! V8 with debug symbols is making the app crash!"

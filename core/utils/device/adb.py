@@ -321,6 +321,19 @@ class Adb(object):
         assert app_id not in result.output, 'Failed to stop ' + app_id
 
     @staticmethod
+    def is_application_installed(device_id, app_id):
+        """
+        Stop application
+        :param device_id: Device identifier
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        """
+        packages = Adb.run_adb_command(command=' shell pm list packages -f', device_id=device_id, wait=True).output
+        is_application_installed = False
+        if app_id in packages:
+            is_application_installed = True
+        return is_application_installed
+
+    @staticmethod
     def get_version(device_id):
         """
         Get device version
@@ -328,3 +341,41 @@ class Adb(object):
         """
         result = Adb.run_adb_command(command='shell getprop ro.build.version.release', wait=True, device_id=device_id)
         return Version.get(result.output)
+
+    @staticmethod
+    def get_active_services(device_id, service_name=""):
+        """
+        Get actice services
+        :param device_id: Device identifier as float.
+        :param service_name: Service name you want to find as string.
+        """
+        result = Adb.run_adb_command(command='shell dumpsys activity services {0}'.format(service_name), wait=True,
+                                     device_id=device_id)
+        return result.output
+
+    @staticmethod
+    def get_process_pid(device_id, process_name):
+        """
+        Get actice services
+        :param device_id: Device identifier as float.
+        :param process_name: process name as string.
+        """
+        result = Adb.run_adb_command(command='shell ps | grep {0} | awk \'{{print $2}}\''.format(process_name),
+                                     wait=True,
+                                     device_id=device_id)
+        pid = result.output.replace(process_name, "").strip()
+        return pid
+
+    @staticmethod
+    def kill_process(device_id, process_name):
+        """
+        Get actice services
+        :param device_id: Device identifier as float.
+        :param process_name: process name as string.
+        """
+        pid = Adb.get_process_pid(device_id, process_name)
+        result = Adb.run_adb_command(
+            command='shell kill {0}'.format(pid),
+            wait=True, device_id=device_id)
+        assert result.output == "", "Process {0} not killed! Logs:{1}".format(process_name, result.output)
+        time.sleep(5)
