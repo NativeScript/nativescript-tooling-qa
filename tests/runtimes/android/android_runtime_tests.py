@@ -444,6 +444,7 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=120,
                                  period=5)
         assert test_result, "App not build correctly after updating tns-core modules! Logs: " + File.read(log.log_file)
+
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Use ES6 language features", True),
                                  timeout=30, period=5)
         message = "Use ES6 language features Button is missing on the device! The is crashing!"
