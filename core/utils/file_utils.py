@@ -167,7 +167,7 @@ class File(object):
     def delete(path):
         if os.path.isfile(path):
             os.remove(path)
-            Log.info('Delete {0}'.format(path))
+            Log.debug('Delete {0}'.format(path))
         else:
             Log.debug('Error: %s file not found' % path)
 

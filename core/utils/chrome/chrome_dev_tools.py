@@ -237,19 +237,21 @@ class ChromeDevTools(object):
         Log.info('"{0}" typed in the console.'.format(text))
 
     def add_watch_expression(self, expression, expected_result=None):
-        # Expand watch expressions
-        actions = ActionChains(self.chrome.driver)
-        if Settings.HOST_OS == OSType.OSX:
-            actions.send_keys(Keys.CONTROL, Keys.SHIFT, 'a').perform()
-        else:
-            actions.send_keys(Keys.CONTROL, Keys.SHIFT, 'a').perform()
-        sleep(1)
-
-        # Add expression
+        # Detect watch bar holder
         watch_bar_holder = self.chrome.driver \
             .find_element(By.CSS_SELECTOR, "div[aria-label='sources']") \
             .find_element(By.CSS_SELECTOR, "div[class='widget vbox'][slot='insertion-point-sidebar']") \
             .find_elements(By.CSS_SELECTOR, "div[class='vbox flex-auto flex-none']")[0]
+
+        # Expand watch expressions
+        actions = ActionChains(self.chrome.driver)
+        watch_bar = self.__expand_shadow_element(watch_bar_holder)
+        expander = watch_bar.find_element(By.CSS_SELECTOR, "div[class='widget vbox'] > div")
+        if 'true' not in str(expander.get_attribute("aria-expanded")):
+            Log.info('Expand watch expression bar.')
+            expander.click()
+
+        # Add expression
         tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
             .find_element(By.CSS_SELECTOR, "div[class='toolbar']")
         tool_bar = self.__expand_shadow_element(tool_bar_holder)
