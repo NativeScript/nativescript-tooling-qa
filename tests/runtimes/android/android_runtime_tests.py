@@ -405,74 +405,27 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, "TAP Button is missing on the device! Update of tns-core-modules not successful!"
 
-    def test_445_test_foreground_sticky_services_are_working(self):
+    def test_444_test_useV8Symbols_flag_in_package_json(self):
         """
-         https://github.com/NativeScript/android-runtime/issues/1347
+         https://github.com/NativeScript/android-runtime/issues/1368
         """
-        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1347', 'AndroidManifest.xml'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
-        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1347', 'sticky', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
-        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
-        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
-        strings = ['Successfully synced application', 'on device', self.emulator.id]
-        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        # check the default value for v8 symbols
+        strings = ['adding nativescript runtime package dependency: nativescript-optimized-with-inspector']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
                                  period=5)
-        assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
-        Device.click(self.emulator, text="TAP", case_sensitive=True)
-        time.sleep(5)
-        test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
-                                 period=5)
-        assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
-        service_name = "com.nativescript.location.BackgroundService"
-        service_info = Adb.get_active_services(self.emulator.id, service_name)
-        assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
-        pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
-        Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
-        services = Adb.get_active_services(self.emulator.id)
-        assert service_name in services, "{0} service not found! Logs: {1}".format(service_name, services)
-        service_info = Adb.get_active_services(self.emulator.id, service_name)
-        assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
-        assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
-                                                                                          service_info)
-
-    def test_446_test_foreground_not_sticky_services_are_working(self):
-        """
-         https://github.com/NativeScript/android-runtime/issues/1347
-        """
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1347', 'AndroidManifest.xml'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
-        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1347', 'not_sticky', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
-        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
-        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
-        strings = ['Successfully synced application', 'on device', self.emulator.id]
-        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
+                               'android-runtime-1368', 'package.json'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json'))
+        # check useV8Symbols flag is working
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        strings = ['adding nativescript runtime package dependency: nativescript-regular']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
                                  period=5)
-        assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
-        Device.click(self.emulator, text="TAP", case_sensitive=True)
-        time.sleep(5)
-        test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
+        # check app is working
+        Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=50,
                                  period=5)
-        assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
-        service_name = "com.nativescript.location.BackgroundService"
-        service_info = Adb.get_active_services(self.emulator.id, service_name)
-        assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
-        pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
-        Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
-        services = Adb.get_active_services(self.emulator.id)
-        assert service_name not in services, "{0} service found! Logs: {1}".format(service_name, services)
-        service_info = Adb.get_active_services(self.emulator.id, service_name)
-        assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
-        assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
-                                                                                          service_info)
+        assert test_result, "TAP Button is missing on the device! V8 with debug symbols is making the app crash!"

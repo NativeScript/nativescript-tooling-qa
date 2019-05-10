@@ -42,7 +42,7 @@ def __get_templates():
     Git.clone(repo_url=Template.REPO, branch='master', local_folder=local_folder)
 
     apps = [Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS, Template.HELLO_WORLD_NG, Template.MASTER_DETAIL_NG,
-            Template.VUE_BLANK, Template.VUE_MASTER_DETAIL]
+            Template.VUE_BLANK, Template.VUE_MASTER_DETAIL, Template.TAB_NAVIGATION_JS]
     for app in apps:
         template_name = app.name
         template_folder = os.path.join(local_folder, 'packages', template_name)
