@@ -40,6 +40,9 @@ class Changes(object):
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
                         old_text='TAP', new_text='HIT')
+        CHANGE_XML_INVALID_SYNTAX = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                        old_value='<StackLayout class="p-20">', new_value='<StackLayout class="p-10"',
+                        old_text='"p-20">', new_text='"p-10"')
 
     class TSHelloWord(object):
         TS = ChangeSet(file_path=os.path.join('app', 'main-view-model.ts'),
