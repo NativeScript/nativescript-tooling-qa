@@ -36,7 +36,6 @@ class NGGenerateNGTests(TnsTest):
 
     def test_001_generate_component(self):
         result = NG.exec_command(command='g c component-test', cwd=self.app_path)
-        assert 'nsconfig.json not found. Assuming this is a {N} only project' in result.output
         assert 'CREATE app/component-test/component-test.component.html' in result.output
         assert 'CREATE app/component-test/component-test.component.ts' in result.output
         assert 'CREATE app/component-test/component-test.component.css' in result.output
@@ -44,16 +43,13 @@ class NGGenerateNGTests(TnsTest):
 
     def test_002_generate_module(self):
         result = NG.exec_command(command='g m module-test', cwd=self.app_path)
-        assert 'nsconfig.json not found. Assuming this is a {N} only project' in result.output
         assert 'CREATE app/module-test/module-test.module.ts' in result.output
 
     def test_003_generate_component_in_existing_modules(self):
         result = NG.exec_command(command='g m module-test2', cwd=self.app_path)
-        assert 'nsconfig.json not found. Assuming this is a {N} only project' in result.output
         assert 'CREATE app/module-test2/module-test2.module.ts' in result.output
 
         result = NG.exec_command(command='g c module-test2/component-name', cwd=self.app_path)
-        assert 'nsconfig.json not found. Assuming this is a {N} only project' in result.output
         assert 'CREATE app/module-test2/component-name/component-name.component.html' in result.output
         assert 'CREATE app/module-test2/component-name/component-name.component.ts' in result.output
         assert 'CREATE app/module-test2/component-name/component-name.component.css' in result.output
