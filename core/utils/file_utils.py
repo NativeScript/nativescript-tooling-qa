@@ -70,6 +70,20 @@ class Folder(object):
                 raise
 
     @staticmethod
+    def get_current_folder():
+        current_folder = os.getcwd()
+        print "Current dir: " + current_folder
+        return current_folder
+
+    @staticmethod
+    def navigate_to(folder, relative_from_current_folder=True):
+        new_folder = folder
+        if relative_from_current_folder:
+            new_folder = os.path.join(Folder.get_current_folder(), folder).replace("\"", "")
+        print "Navigate to: " + new_folder
+        os.chdir(new_folder)
+
+    @staticmethod
     def copy(source, target, clean_target=True, only_files=False):
         """
         Copy folders.

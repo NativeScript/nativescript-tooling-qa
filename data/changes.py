@@ -167,3 +167,8 @@ class Changes(object):
         VUE_DETAIL_PAGE_TEMPLATE = ChangeSet(file_path=os.path.join('app', 'components', 'CarDetails'),
                                              old_value='<Span text="/day" />', new_value='<Span text="/24h" />',
                                              old_text='/day', new_text='/24h')
+
+    class AppFileChanges(object):
+        CHANGE_XML_INVALID_SYNTAX = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                        old_value='<StackLayout class="p-20">', new_value='<StackLayout class="p-10"',
+                        old_text='"p-20">', new_text='"p-10"')
