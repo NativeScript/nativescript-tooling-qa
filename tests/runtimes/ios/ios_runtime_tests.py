@@ -48,7 +48,7 @@ class IOSRuntimeTests(TnsTest):
     def test_201_test_init_mocha_js_stacktrace(self):
         # https://github.com/NativeScript/ios-runtime/issues/565
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Npm.install(package='mocha', folder=APP_PATH)
+        Npm.install(package='mocha', option='--save-exact', folder=APP_PATH)
         Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
         Tns.exec_command("test init --framework", cwd=APP_PATH, platform='mocha')
 
