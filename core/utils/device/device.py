@@ -31,9 +31,11 @@ class Device(object):
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
-            self.device_log_file = SimAuto.get_log_file(self.id)
         else:
             self.name = name
+
+        if type is DeviceType.SIM:
+            self.device_log_file = Simctl.get_log_file(self.id)
 
     def are_texts_visible(self, texts):
         is_list = isinstance(texts, list)
@@ -213,10 +215,23 @@ class Device(object):
                        "Actual main color: " + str(self.get_main_color())
 
     def click(self, text, case_sensitive=False):
+        self.wait_for_text(text=text)
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.click_element_by_text(self.id, text, case_sensitive)
         elif self.type is DeviceType.SIM:
             SimAuto.click(self, text=text)
+        else:
+            raise NotImplementedError('Click not implemented for iOS devices.')
+        Log.info('Click on "{0}" text.'.format(text))
+
+    def clear_log(self):
+        """
+        Clean device log.
+        """
+        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
+            Adb.clear_logcat(self.id)
+        elif self.type is DeviceType.SIM:
+            self.device_log_file = Simctl.get_log_file(self.id)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
@@ -227,25 +242,16 @@ class Device(object):
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             return Adb.get_logcat(self.id)
         elif self.type is DeviceType.SIM:
+            Log.debug('Read log file: {0}'.format(self.device_log_file))
             return File.read(self.device_log_file)
         else:
             raise NotImplementedError('Click not implemented for iOS devices.')
 
-    def clear_log(self):
+    def wait_for_log(self, text, timeout=30):
         """
-        Get device log.
+        Wait until text is available in device logs.
+        :param text: Text to be searched in logs.
+        :param timeout: Timeout in seconds.
+        :return: True if text found in device logs.
         """
-        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            Adb.clear_logcat(self.id)
-        elif self.type is DeviceType.SIM:
-            self.device_log_file = SimAuto.get_log_file(self.id)
-        else:
-            raise NotImplementedError('Click not implemented for iOS devices.')
-
-    def is_text_in_log(self, text_to_check, timeout=15):
-        if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
-            return Wait.until(lambda: text_to_check in Adb.get_logcat(self.id), timeout=timeout, period=1)
-        elif self.type is DeviceType.SIM:
-            return Wait.until(lambda: text_to_check in File.read(self.device_log_file), timeout=timeout, period=1)
-        else:
-            raise NotImplementedError('Click not implemented for iOS devices.')
+        return Wait.until(lambda: text in self.get_log(), timeout=timeout, period=1)

@@ -15,6 +15,8 @@ import numpy
 import pytesseract
 from PIL import Image
 
+from core.settings import Settings
+
 
 class ImageUtils(object):
     @staticmethod
@@ -143,5 +145,7 @@ class ImageUtils(object):
                     temp_text = temp_text.encode(encoding='utf-8', errors='ignore')
                     if temp_text not in text:
                         text = text + os.linesep + temp_text
-
-        return text
+        if Settings.PYTHON_VERSION < 3:
+            return text
+        else:
+            return text.decode("utf-8")

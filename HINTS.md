@@ -50,11 +50,16 @@ See [this blog](https://hackernoon.com/gfxinfo-ui-automator-kotlin-automated-jan
 
 ## Chrome
 
+### Clean Start
 Chrome browser need to be in consistent state for debugger tests.
 You can achieve it by starting it with custom user profile:
 ```
 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir=c:\temp-user-data
 ```
+
+### Chrome Dev Tools Shortcuts
+- [Cheat Sheet](https://developers.google.com/web/tools/chrome-devtools/shortcuts)
+- [Add Watch Expression](https://stackoverflow.com/questions/27247350/how-to-add-watch-in-chrome-developer-tools)
 
 ## OCR and Image Recognition
 
