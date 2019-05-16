@@ -214,9 +214,11 @@ class Tns(object):
         return result
 
     @staticmethod
-    def prepare(app_name, platform, release=False, for_device=False, bundle=False, log_trace=False, verify=True):
+    def prepare(app_name, platform, release=False, provision=False, for_device=False, bundle=False,
+                log_trace=False, verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
-                                  for_device=for_device, bundle=bundle, wait=True, log_trace=log_trace)
+                                  provision=provision, for_device=for_device, bundle=bundle, wait=True,
+                                  log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'Prepare failed with non zero exit code.'
         return result
@@ -227,9 +229,9 @@ class Tns(object):
                            verify=verify)
 
     @staticmethod
-    def prepare_ios(app_name, release=False, for_device=False, log_trace=False, verify=True):
-        return Tns.prepare(app_name=app_name, platform=Platform.IOS, release=release, for_device=for_device,
-                           log_trace=log_trace, verify=verify)
+    def prepare_ios(app_name, release=False, for_device=False, log_trace=False, verify=True, provision=False):
+        return Tns.prepare(app_name=app_name, platform=Platform.IOS, release=release, provision=provision,
+                           for_device=for_device, log_trace=log_trace, verify=verify)
 
     @staticmethod
     def build(app_name, platform, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False, bundle=False,
