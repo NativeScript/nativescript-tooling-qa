@@ -22,3 +22,10 @@ class TnsDeviceTest(TnsTest):
     def setUp(self):
         TnsTest.setUp(self)
         Adb.open_home(device_id=self.android_device.id)
+
+    def tearDown(self):
+        TnsTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()

@@ -1,25 +1,13 @@
 # pylint: disable=import-error
 # pylint: disable=broad-except
 # pylint: disable=too-many-nested-blocks
+from time import sleep
+
 import atomac
 
 
 # noinspection PyBroadException
-import logging
-
-from core.utils.run import run
-
-
 class SimAuto(object):
-
-    @staticmethod
-    def run_simctl_command(command, parameters="", device_id=None, wait=True, timeout=60, fail_safe=False,
-                           log_level=logging.DEBUG):
-        if device_id is None:
-            command = '{0} {1} {2} {3}'.format("xcrun simctl", command, "booted", parameters)
-        else:
-            command = '{0} {1} {2} {3}'.format("xcrun simctl", command, device_id, parameters)
-        return run(cmd=command, wait=wait, timeout=timeout, fail_safe=fail_safe, log_level=log_level)
 
     @staticmethod
     def find(device_info, text):
@@ -37,6 +25,8 @@ class SimAuto(object):
             for name in names:
                 if device_info.name in name:
                     window = simulator.findFirstR(AXTitle=name)
+                    window.activate()
+                    sleep(1)
                     elements = window.findAllR()
                     for element in elements:
                         if 'AXValue' in element.getAttributes():
@@ -66,11 +56,3 @@ class SimAuto(object):
             element.clickMouseButtonLeft(click_point)
         else:
             raise Exception('Can not locate "{0}" in {1} simulator.'.format(text, device_info.name))
-
-    @staticmethod
-    def get_log_file(device_id):
-        command = "spawn"
-        parameters = "log stream --level=debug"
-        log_file = SimAuto.run_simctl_command(command=command, device_id=device_id, parameters=parameters,
-                                              wait=False).log_file
-        return log_file

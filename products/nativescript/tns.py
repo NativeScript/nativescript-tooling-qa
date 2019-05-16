@@ -9,7 +9,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
@@ -23,7 +23,8 @@ class Tns(object):
     @staticmethod
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=None, bundle=True,
-                     hmr=True, aot=False, uglify=False, snapshot=False, log_trace=False, just_launch=False,
+                     hmr=True, aot=False, uglify=False, source_map=False, snapshot=False, log_trace=False,
+                     just_launch=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -40,6 +41,7 @@ class Tns(object):
         :param hmr: If true pass `--hmr` to command.
         :param aot: If true pass `--env.aot` to command.
         :param uglify: If true pass `--env.uglify` to command.
+        :param source_map: If true pass `--env.sourceMap` to command.
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
         :param just_launch: If true pass `--justlaunch` to command.
@@ -66,7 +68,7 @@ class Tns(object):
                                                                Settings.Android.ANDROID_KEYSTORE_PASS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS,
                                                                Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS)
-        if provision is not None and platform != Platform.ANDROID and Settings.HOST_OS == OSType.OSX:
+        if provision is not None and platform != Platform.ANDROID and Settings.HOST_OS == OSType.OSX and not emulator:
             cmd = cmd + ' --provision ' + provision
         if for_device:
             cmd += ' --for-device'
@@ -80,6 +82,8 @@ class Tns(object):
             cmd += ' --env.uglify'
         if snapshot:
             cmd += ' --env.snapshot'
+        if source_map:
+            cmd += ' --env.sourceMap'
         if just_launch:
             cmd += ' --justlaunch'
         if log_trace:
@@ -271,11 +275,11 @@ class Tns(object):
 
     @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
-            for_device=False, bundle=True, hmr=True, aot=False, uglify=False, snapshot=False, wait=False,
-            log_trace=False, just_launch=False, verify=True):
+            for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, snapshot=False,
+            wait=False, log_trace=False, just_launch=False, verify=True):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
-                                  release=release, provision=provision, for_device=for_device,
-                                  bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
+                                  release=release, provision=provision, for_device=for_device, bundle=bundle,
+                                  hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
                                   wait=wait, log_trace=log_trace, just_launch=just_launch)
         if verify:
             if wait:
@@ -286,35 +290,53 @@ class Tns(object):
         return result
 
     @staticmethod
-    def run_android(app_name, emulator=False, device=None, release=False, bundle=False, hmr=False, aot=False,
-                    uglify=False, snapshot=False, wait=False, log_trace=False, just_launch=False, verify=True):
+    def run_android(app_name, emulator=False, device=None, release=False, bundle=True, hmr=True, aot=False,
+                    uglify=False, source_map=False, snapshot=False, wait=False, log_trace=False, just_launch=False,
+                    verify=True):
         return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
-                       bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
+                       bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
                        wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify)
 
     @staticmethod
     def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
-                for_device=False, bundle=False, hmr=False, aot=False, uglify=False, wait=False, log_trace=False,
-                just_launch=False, verify=True):
+                for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, wait=False,
+                log_trace=False, just_launch=False, verify=True):
         return Tns.run(app_name=app_name, platform=Platform.IOS, emulator=emulator, device=device, release=release,
-                       provision=provision, for_device=for_device,
-                       bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace,
-                       just_launch=just_launch, verify=verify)
+                       provision=provision, for_device=for_device, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify,
+                       source_map=source_map, wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify)
 
     @staticmethod
-    def debug(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.DEV_PROVISION,
-              for_device=False, bundle=False, hmr=False, aot=False, uglify=False, snapshot=False, wait=False,
-              log_trace=False, verify=True):
-        result = Tns.exec_command(command='debug', path=app_name, platform=platform, emulator=emulator, device=device,
+    def debug(app_name, platform, start=False, debug_brk=False, emulator=False, device=None, release=False,
+              provision=Settings.IOS.DEV_PROVISION, for_device=False, bundle=True, hmr=True, aot=False, uglify=False,
+              wait=False, log_trace=False, verify=True):
+        command = 'debug'
+        if start:
+            command += ' --start'
+        if debug_brk:
+            command += ' --debug-brk'
+        result = Tns.exec_command(command=command, path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device,
-                                  bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot,
-                                  wait=wait, log_trace=log_trace)
+                                  bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace)
         if verify:
-            pass
+            strings = ['To start debugging, open the following URL in Chrome:',
+                       'chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:']
+            if not start:
+                strings.append('Successfully synced application')
+            else:
+                if platform == Platform.ANDROID:
+                    strings.append('ActivityManager: Start proc')
+                if hmr and platform == Platform.ANDROID:
+                    strings.append('HMR: Hot Module Replacement Enabled.')
+
+            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
+            logs = File.read(result.log_file)
+            assert 'closed' not in logs
+            assert 'detached' not in logs
+            assert "did not start in time" not in logs
         return result
 
     @staticmethod
-    def preview(app_name, bundle=False, hmr=False, log_trace=True, verify=True, timeout=120):
+    def preview(app_name, bundle=True, hmr=True, log_trace=True, verify=True, timeout=120):
         """
         Execute `tns preview` command.
         :param app_name: Pass --path <app_name>.
