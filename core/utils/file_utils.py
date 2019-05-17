@@ -111,6 +111,20 @@ class Folder(object):
                 total_size += os.path.getsize(file_path)
         return total_size
 
+    @staticmethod
+    def get_current_folder():
+        current_folder = os.getcwd()
+        print "Current dir: " + current_folder
+        return current_folder
+
+    @staticmethod
+    def navigate_to(folder, relative_from_current_folder=True):
+        new_folder = folder
+        if relative_from_current_folder:
+            new_folder = os.path.join(Folder.get_current_folder(), folder).replace("\"", "")
+        print "Navigate to: " + new_folder
+        os.chdir(new_folder)
+
 
 # noinspection PyUnresolvedReferences
 class File(object):
