@@ -125,9 +125,9 @@ class IOS(object):
     FRAMEWORK_PATH = os.path.join(TEST_SUT_HOME, 'tns-ios.tgz')
 
     # Signing options
-    DEVELOPMENT_TEAM = os.environ.get('DEVELOPMENT_TEAM')
-    DEV_PROVISION = os.environ.get('DEV_PROVISION')
-    DISTRIBUTION_PROVISION = os.environ.get('DISTRIBUTION_PROVISION')
+    DEVELOPMENT_TEAM = os.environ.get("DEVELOPMENT_TEAM")
+    PROVISIONING = os.environ.get("PROVISIONING")
+    DISTRIBUTION_PROVISIONING = os.environ.get("DISTRIBUTION_PROVISIONING")
 
 
 class Emulators(object):
