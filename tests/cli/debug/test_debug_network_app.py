@@ -122,7 +122,7 @@ class DebugNetworkTests(TnsRunTest):
 
         # Place breakpoint and verify it is hit
         self.dev_tools.load_source_file('network-page.ts')
-        self.dev_tools.breakpoint(line=28)
+        self.dev_tools.breakpoint(line=12)
         device.click(text=NET_GET_WITHOUT_BODY)
         self.dev_tools.wait_element_by_text(text='Paused on breakpoint', timeout=10)
         assert 'httpbin.org' not in File.read(result.log_file)
@@ -131,7 +131,7 @@ class DebugNetworkTests(TnsRunTest):
 
         # Add one more breakpoint and hit it
         self.dev_tools.load_source_file('network-page.ts')
-        self.dev_tools.breakpoint(line=46)
+        self.dev_tools.breakpoint(line=30)
         device.click(text=NET_GET_WITH_BODY)
         self.dev_tools.wait_element_by_text(text='Paused on breakpoint', timeout=10)
         assert 'My custom Arbitrary Header value' not in File.read(result.log_file)
