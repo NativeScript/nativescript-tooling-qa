@@ -1,3 +1,5 @@
+# pylint: disable=anomalous-backslash-in-string
+# pylint: disable=invalid escape sequence
 import os
 import re
 import unittest
@@ -6,7 +8,6 @@ from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.run import run
 from data.apps import Apps
@@ -62,11 +63,9 @@ class PrepareTests(TnsTest):
     def test_210_platform_not_need_remove_after_bitcode_error(self):
         # https://github.com/NativeScript/nativescript-cli/issues/3741
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        Folder.navigate_to(self.app_name, '/app')
-        run("touch a")
+        run("touch a", cwd=os.path.join(self.app_name, 'app'))
         run("ln -s a b")
         run("rm a")
-        Folder.navigate_to(folder=TEST_RUN_HOME, relative_from_current_folder=False)
         result = Tns.prepare_android(self.app_name)
         assert "Project successfully prepared" in result.output
 

@@ -221,7 +221,8 @@ class Tns(object):
     def prepare(app_name, platform, release=False, provision=None, for_device=False, bundle=True, log_trace=False,
                 verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
-                                  for_device=for_device, bundle=bundle, wait=True, log_trace=log_trace)
+                                  provision=provision, for_device=for_device, bundle=bundle, wait=True,
+                                  log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'Prepare failed with non zero exit code.'
         return result
