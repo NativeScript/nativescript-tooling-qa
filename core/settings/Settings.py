@@ -119,6 +119,9 @@ class Android(object):
     ANDROID_KEYSTORE_ALIAS = os.environ.get('ANDROID_KEYSTORE_ALIAS')
     ANDROID_KEYSTORE_ALIAS_PASS = os.environ.get('ANDROID_KEYSTORE_ALIAS_PASS')
 
+    # Chrome Dev Tools debug port
+    DEBUG_PORT = 40000
+
 
 class IOS(object):
     # Local runtime package
@@ -128,6 +131,9 @@ class IOS(object):
     DEVELOPMENT_TEAM = os.environ.get("DEVELOPMENT_TEAM")
     PROVISIONING = os.environ.get("PROVISIONING")
     DISTRIBUTION_PROVISIONING = os.environ.get("DISTRIBUTION_PROVISIONING")
+
+    # Chrome Dev Tools debug port
+    DEBUG_PORT = 41000
 
 
 class Emulators(object):
@@ -153,7 +159,6 @@ class Simulators(object):
 
 class AppName(object):
     DEFAULT = 'TestApp'
-    DEFAULT_NG = 'TestApp'
     APP_NAME = 'app'
     WITH_DASH = 'tns-app'
     WITH_SPACE = 'Test App'

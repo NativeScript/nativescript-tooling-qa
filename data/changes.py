@@ -19,14 +19,14 @@ class ChangeSet(object):
 
 class Sync(object):
     @staticmethod
-    def replace(app_name, change_set):
+    def replace(app_name, change_set, fail_safe=False):
         path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file_path)
-        File.replace(path=path, old_string=change_set.old_value, new_string=change_set.new_value)
+        File.replace(path=path, old_string=change_set.old_value, new_string=change_set.new_value, fail_safe=fail_safe)
 
     @staticmethod
-    def revert(app_name, change_set):
+    def revert(app_name, change_set, fail_safe=False):
         path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file_path)
-        File.replace(path=path, old_string=change_set.new_value, new_string=change_set.old_value)
+        File.replace(path=path, old_string=change_set.new_value, new_string=change_set.old_value, fail_safe=fail_safe)
 
 
 class Changes(object):
@@ -40,6 +40,9 @@ class Changes(object):
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
                         old_text='TAP', new_text='HIT')
+        XML_ACTION_BAR = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                                   old_value='My App', new_value='TestApp',
+                                   old_text='My App', new_text='TestApp')
 
     class TSHelloWord(object):
         TS = ChangeSet(file_path=os.path.join('app', 'main-view-model.ts'),
@@ -62,6 +65,9 @@ class Changes(object):
         HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                          old_value='"item.name"', new_value='"item.id"',
                          old_text=None, new_text=None)
+        XML_ACTION_BAR = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
+                                   old_value='My App', new_value='TestApp',
+                                   old_text='My App', new_text='TestApp')
 
     class MasterDetailNG(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'shared', 'car.model.ts'),
