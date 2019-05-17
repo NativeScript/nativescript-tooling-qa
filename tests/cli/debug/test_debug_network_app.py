@@ -154,7 +154,7 @@ class DebugNetworkTests(TnsRunTest):
         device.click(text=NET_GET_WITH_BODY)
         assert self.dev_tools.wait_element_by_text(text='get') is not None
         assert self.dev_tools.wait_element_by_text(text='200') is not None
-        assert self.dev_tools.wait_element_by_text(text='246 B') is not None
+        assert self.dev_tools.wait_element_by_text(text=' B') is not None
         self.dev_tools.clean_network_tab()
 
         # TODO: Add tests for all requests
