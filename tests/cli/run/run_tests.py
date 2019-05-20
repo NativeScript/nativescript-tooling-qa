@@ -135,13 +135,14 @@ class TnsRunJSTests(TnsRunTest):
                                        run_type=RunType.UNKNOWN, device=self.emu)
         # Verify no build is triggered
         not_existing_strings = ['Xcode build', 'Gradle build']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_strings)
 
     def test_110_tns_run_android_release(self):
         # Run app and verify on device
         result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                           run_type=RunType.FIRST_TIME, device=self.emu)
+                                       run_type=RunType.FIRST_TIME, device=self.emu)
         strings.remove('Restarting application on device')
         strings.remove('Successfully synced application org.nativescript.TestApp on device')
         # Verify https://github.com/NativeScript/android-runtime/issues/1024
@@ -277,7 +278,8 @@ class TnsRunJSTests(TnsRunTest):
         assert green_count == 0, 'Found green color on {0}'.format(self.emu.name)
 
         # Change the image file
-        source_file = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'android', 'drawable-hdpi', 'background.png')
+        source_file = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'android',
+                                   'drawable-hdpi', 'background.png')
         dest_file = os.path.join(self.app_path, 'app', 'test.png')
         File.copy(source_file, dest_file)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
@@ -292,11 +294,11 @@ class TnsRunJSTests(TnsRunTest):
 
     def test_300_tns_run_android_clean(self):
         '''
-        If  set --clean rebuilds the native project 
+        If  set --clean rebuilds the native project
         '''
         # Run the project once so it is build for the first time
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
-        
+
         # Verify run --clean without changes skip prepare and rebuild of native project
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
         strings = ['Skipping prepare', 'Building project', 'Gradle clean']
@@ -304,7 +306,8 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
         # Verify if changes are applied and then run with clean it will apply changes on device
-        # Verify https://github.com/NativeScript/nativescript-cli/issues/2670 run --clean does clean build only the first time
+        # Verify https://github.com/NativeScript/nativescript-cli/issues/2670 run --clean does
+        # clean build only the first time
         Sync.replace(self.app_name, Changes.JSHelloWord.XML)
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
@@ -312,13 +315,14 @@ class TnsRunJSTests(TnsRunTest):
         strings.append('Gradle clean')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        
+
         # Make changes again and verify changes are synced and clean build is not triggered again
         Sync.revert(self.app_name, Changes.JSHelloWord.XML)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.INCREMENTAL, device=self.emu, file_name='main-page.xml')
         not_existing_strings = ['Gradle clean']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_strings)
 
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-dev-webpack/issues/899")
     def test_310_tns_run_sync_changes_in_node_modules(self):
@@ -345,7 +349,7 @@ class TnsRunJSTests(TnsRunTest):
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, sync_all_files=True)
 
         # Make  changes in nativescript-camera .aar file and  verify livesync is triggered
-        new_aar = os.path.join(Settings.TEST_RUN_HOME,'assets', 'issues', 'nativescript-cli-3932',
+        new_aar = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'issues', 'nativescript-cli-3932',
                                'nativescript-ui-listview', 'platforms', 'android', 'TNSListView-release.aar')
         target_aar = os.path.join(self.app_name, 'node_modules', 'nativescript-camera', 'platforms', 'android')
         File.copy(new_aar, target_aar)
@@ -358,12 +362,13 @@ class TnsRunJSTests(TnsRunTest):
         '''
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
         '''
-    
+
         # Change app id in app.gradle file
-        app_gradle = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'App_Resources', 'Android', 'app.gradle')
+        app_gradle = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'App_Resources',
+                                  'Android', 'app.gradle')
         File.replace(app_gradle, old_string='generatedDensities = []',
                      new_string='applicationId = "org.nativescript.MyApp"')
-    
+
         # Run the app on device and verify the warnings
         result = Tns.run_android(app_name=self.app_name, just_launch=False)
         strings = ["WARNING: The Application identifier is different from the one inside \"package.json\" file.",
@@ -371,7 +376,7 @@ class TnsRunJSTests(TnsRunTest):
                    "Project successfully built"
                   ]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-    
+
     def test_325_tns_run_android_should_start_emulator(self):
         """
         `tns run android` should start emulator if device is not connected.
@@ -400,13 +405,13 @@ class TnsRunJSTests(TnsRunTest):
         # Use all the disk space on emulator
         for index in range(1, 3000):
             command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
-            result = Adb.run_adb_command(device_id=self.emu.id , command=command)
+            result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:
                 break
-        
+
         # Create new app
-        Tns.create(app_name='TestApp2',template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name='TestApp2', template=Template.HELLO_WORLD_JS.local_package, update=False)
 
         # Run the app and verify there is appropriate error
         result = Tns.run_android('TestApp2', verify=True, device=self.emu.id, just_launch=True)
