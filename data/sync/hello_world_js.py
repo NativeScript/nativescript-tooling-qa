@@ -32,11 +32,11 @@ def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglif
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
                              instrumented=instrumented)
 
-def run_hello_world_js_ts(app_name, platform, device,
-                          bundle=True, hmr=True, uglify=False, aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False):
+def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False,
+                          aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False):
     # Execute `tns run` and wait until logs are OK
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False,
-                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files, just_launch=just_launch)
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr,
+                     uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files, just_launch=just_launch)
     __verify_snapshot_skipped(snapshot, result)
 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,

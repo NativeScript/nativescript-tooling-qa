@@ -97,7 +97,8 @@ class TnsLogs(object):
         else:
             if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
                 logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
-                                                           instrumented=instrumented, app_type=app_type, device=device, just_launch=just_launch))
+                                                           instrumented=instrumented, app_type=app_type,
+                                                           device=device, just_launch=just_launch))
             else:
                 logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type,
                                                            file_name=file_name, hmr=hmr))
