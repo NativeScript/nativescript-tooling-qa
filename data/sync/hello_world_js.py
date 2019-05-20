@@ -32,6 +32,25 @@ def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglif
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
                              instrumented=instrumented)
 
+def run_hello_world_js_ts(app_name, platform, device,
+                          bundle=True, hmr=True, uglify=False, aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False):
+    # Execute `tns run` and wait until logs are OK
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False,
+                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files, just_launch=just_launch)
+    __verify_snapshot_skipped(snapshot, result)
+
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
+                                   hmr=hmr, instrumented=instrumented, device=device)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
+
+    # Verify it looks properly
+    device.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
+    device.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
+    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+    assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
+    device.get_screen(path=initial_state)
+    return result
 
 def __verify_snapshot_skipped(snapshot, result):
     """
