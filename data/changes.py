@@ -180,3 +180,7 @@ class Changes(object):
                                               old_value='<StackLayout class="p-20">',
                                               new_value='<StackLayout class="p-10"', old_text='"p-20">',
                                               new_text='"p-10"')
+
+    class NodeModules(object):
+        TNS_MODULES = ChangeSet(file_path=os.path.join('node_modules', 'tns-core-modules', 'application', 'application-common.js'),
+                                old_value='(\"globals\");', new_value='(\"globals\"); // test')
