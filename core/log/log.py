@@ -104,6 +104,6 @@ class Log(object):
         Log.info('==================== iOS Options =====================')
         Log.info('FRAMEWORK_PATH: ' + str(Settings.IOS.FRAMEWORK_PATH))
         Log.info('DEVELOPMENT_TEAM: ' + str(Settings.IOS.DEVELOPMENT_TEAM))
-        Log.info('DEV_PROVISION: ' + str(Settings.IOS.DEV_PROVISION))
-        Log.info('DISTRIBUTION_PROVISION: ' + str(Settings.IOS.DISTRIBUTION_PROVISION))
+        Log.info('PROVISIONING: ' + str(Settings.IOS.PROVISIONING))
+        Log.info('DISTRIBUTION_PROVISIONING: ' + str(Settings.IOS.DISTRIBUTION_PROVISIONING))
         Log.info('======================================================')
