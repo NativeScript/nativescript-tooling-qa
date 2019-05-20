@@ -152,19 +152,19 @@ class Helpers(object):
                 raise Exception('Unknown platform: ' + str(platform))
 
             # Prepare
-            time = Tns.prepare(app_name=APP_NAME, platform=platform).duration
+            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_initial = prepare_initial + time
-            time = Tns.prepare(app_name=APP_NAME, platform=platform).duration
+            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_skip = prepare_skip + time
             Sync.replace(app_name=APP_NAME, change_set=change_set)
-            time = Tns.prepare(app_name=APP_NAME, platform=platform).duration
+            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_incremental = prepare_incremental + time
 
             # Build
-            time = Tns.build(app_name=APP_NAME, platform=platform).duration
+            time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
             build_initial = build_initial + time
             Sync.revert(app_name=APP_NAME, change_set=change_set)
-            time = Tns.build(app_name=APP_NAME, platform=platform).duration
+            time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
             build_incremental = build_incremental + time
 
         # Calculate averages
