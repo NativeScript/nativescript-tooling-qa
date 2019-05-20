@@ -93,8 +93,8 @@ class TnsRunJSTests(TnsRunTest):
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.UNKNOWN, device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        assert not self.emu.is_text_visible(text='Exception')
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
+        assert not self.emu.is_text_visible(text='Exception')
 
     def test_105_tns_run_android_changes_in_app_resounces(self):
         """
