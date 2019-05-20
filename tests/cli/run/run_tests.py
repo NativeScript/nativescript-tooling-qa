@@ -1,5 +1,6 @@
 import os
 import nose
+import time
 import unittest
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -166,6 +167,7 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
         self.emu.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
 
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_115_tns_run_android_add_remove_files_and_folders(self):
         """
         Add/delete files and folders should be synced properly
@@ -198,7 +200,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
 
-        File.replace(app_js_file, "require('./test_2.js');", '')
+        File.replace(app_js_file, "require('./test_2.js');", ' ')
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        device=self.emu, run_type=RunType.UNKNOWN)
         not_existing_strings = ['Error']
@@ -230,6 +232,8 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app with --justlaunch and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
+        # On some machines it takes time for thr process to die
+        time.sleep(5)
         assert not Process.is_running_by_name('node')
 
         # Execute run with --justlaunch again and verify no rebuild is triggered
@@ -292,6 +296,7 @@ class TnsRunJSTests(TnsRunTest):
         assert green_count > 0, 'Failed to find green color on {0}'.format(self.emu.name)
         assert yellow_count == 0, 'Found yellow color on {0}'.format(self.emu.name)
 
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_300_tns_run_android_clean(self):
         '''
         If  set --clean rebuilds the native project
