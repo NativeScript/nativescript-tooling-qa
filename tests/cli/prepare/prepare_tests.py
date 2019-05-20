@@ -1,5 +1,3 @@
-# pylint: disable=anomalous-backslash-in-string
-# pylint: disable=invalid escape sequence
 import os
 import re
 import unittest
@@ -64,8 +62,8 @@ class PrepareTests(TnsTest):
         # https://github.com/NativeScript/nativescript-cli/issues/3741
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
         run("touch a", cwd=os.path.join(self.app_name, 'app'))
-        run("ln -s a b")
-        run("rm a")
+        run("ln -s a b", cwd=os.path.join(self.app_name, 'app'))
+        run("rm a", cwd=os.path.join(self.app_name, 'app'))
         result = Tns.prepare_android(self.app_name)
         assert "Project successfully prepared" in result.output
 
@@ -82,9 +80,9 @@ class PrepareTests(TnsTest):
         result = run("xcodebuild -project " + os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name),
                                                            'TestApp.xcodeproj', ' -list'))
         assert "This project contains no schemes." not in result.output
-        result1 = re.search("Targets:\n\s*TestApp", result.output)
+        result1 = re.search(r"Targets:\n\s*TestApp", result.output)
         assert result1 is not None
-        result1 = re.search("Schemes:\n\s*TestApp", result.output)
+        result1 = re.search(r"Schemes:\n\s*TestApp", result.output)
         assert result1 is not None
 
         Tns.prepare_android(self.app_name)
