@@ -4,6 +4,7 @@ Sync changes on JS/TS project helper.
 import os
 
 from core.enums.app_type import AppType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import AppiumCaps
 from core.utils.appium_python import AppiumDriver
@@ -24,17 +25,13 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
     # start appium driver
-    if str(platform) == 'android':
-        capabilities = AppiumCaps.EMU_API_23
-        capabilities.appPackage = TnsPaths.get_bundle_id(app_name)
-        capabilities.appActivity = 'com.tns.NativeScriptActivity'
-    else:
+    appium = None
+    if platform == Platform.IOS:
         capabilities = AppiumCaps.SIM_iOS12
         capabilities.bundleId = TnsPaths.get_bundle_id(app_name)
-
-    capabilities.deviceName = device.name
-    caps = capabilities.__dict__
-    appium = AppiumDriver(caps)
+        capabilities.deviceName = device.name
+        caps = capabilities.__dict__
+        appium = AppiumDriver(caps)
 
     # Verify app home page looks properly
     device.wait_for_text(text="Ford KA")
@@ -67,8 +64,11 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
 
     # app_element = appium.driver.find_element_by_xpath('//XCUIElementTypeStaticText[@name="Ford KA"]')
     device.wait_for_text(text="Ford KA")
-    app_element = appium.driver.find_element_by_name("Ford KA")
-    app_element.click()
+    if platform == Platform.IOS:
+        app_element = appium.driver.find_element_by_name("Ford KA")
+        app_element.click()
+    else:
+        device.click(text="Ford KA")
     device.wait_for_text(text="Edit")
     device.wait_for_text(text="Price")
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE)
@@ -76,4 +76,5 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarDetails.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)
-    appium.driver.quit()
+    if appium is not None:
+        appium.driver.quit()
