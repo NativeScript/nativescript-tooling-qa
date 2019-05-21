@@ -29,6 +29,8 @@ class BuildTests(TnsTest):
         Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=False)
         Folder.clean(os.path.join(cls.app_name, 'hooks'))
         Folder.clean(os.path.join(cls.app_name, 'node_modules'))
+        Folder.clean(os.path.join(cls.app_name_with_space, 'hooks'))
+        Folder.clean(os.path.join(cls.app_name_with_space, 'node_modules'))
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
                                  framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
@@ -47,8 +49,8 @@ class BuildTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
-        Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
+        Folder.clean(cls.app_temp_path)
+        Folder.clean(cls.app_name_with_space)
 
     def test_001_build_android(self):
         Tns.build_android(self.app_name)
@@ -91,7 +93,7 @@ class BuildTests(TnsTest):
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
     def test_002_build_android_release(self):
-        Tns.build_android(self.app_name, bundle=True, release=True)
+        Tns.build_android(self.app_name, release=True)
 
         # Configs are respected
         assert File.exists(os.path.join(TnsPaths.get_apk_path(self.app_name), 'release', self.release_apk))
@@ -109,7 +111,7 @@ class BuildTests(TnsTest):
         cert_with_space_path = os.path.join("with space", file_name)
         File.copy(Settings.Android.ANDROID_KEYSTORE_PATH, cert_with_space_path)
 
-        Tns.build_android(app_name='"' + self.app_name_with_space + '"', bundle=True, release=True)
+        Tns.build_android(app_name='"' + self.app_name_with_space + '"', release=True)
         output = File.read(os.path.join(self.app_name_with_space, "package.json"))
         assert self.app_identifier in output.lower()
 
@@ -120,7 +122,7 @@ class BuildTests(TnsTest):
     def test_302_build_project_with_space_debug_with_plugin(self):
         Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
         Npm.install(package='nativescript-mapbox', option='--save', folder=self.app_name_with_space)
-        result = Tns.build_android(app_name='"' + self.app_name_with_space + '"', bundle=True)
+        result = Tns.build_android(app_name='"' + self.app_name_with_space + '"')
         assert "Project successfully built" in result.output
 
     def test_310_build_android_with_custom_compile_sdk_new(self):
@@ -142,8 +144,8 @@ class BuildTests(TnsTest):
         assert File.exists(os.path.join(self.app_name, 'android-declarations.d.ts'))
 
     def test_450_resources_update_android(self):
-        target_app = os.path.join(self.app_name)
-        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41')
+        target_app = os.path.join(self.app_name, 'app', 'App_Resources')
+        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41', 'app', 'App_Resources')
         Folder.clean(target_app)
         Folder.copy(source_app, target_app)
 
@@ -166,8 +168,8 @@ class BuildTests(TnsTest):
             os.path.join(TnsPaths.get_platforms_android_src_main_path(self.app_name), 'AndroidManifest.xml'))
 
     def test_451_resources_update(self):
-        target_app = os.path.join(self.app_name)
-        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41')
+        target_app = os.path.join(self.app_name, 'app', 'App_Resources')
+        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41', 'app', 'App_Resources')
         Folder.clean(target_app)
         Folder.copy(source_app, target_app)
 
