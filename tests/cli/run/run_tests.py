@@ -64,19 +64,19 @@ class TnsRunJSTests(TnsRunTest):
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
 
         # Make changes in xml that will break the app
-        Sync.replace(self.app_name, Changes.JSHelloWord.XML_Invalid)
+        Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
         strings = ['main-page.xml', 'Error: Parsing XML']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
 
         # Revert changes
-        Sync.revert(self.app_name, Changes.JSHelloWord.XML_Invalid)
+        Sync.revert(self.app_name, Changes.JSHelloWord.XML_INVALID)
 
         # Verify app is synced and recovered
         strings = ['Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        assert not self.emu.is_text_visible(text='Exception')
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
+        assert not self.emu.is_text_visible(text='Exception')
 
         # Delete app.js and verify app crash with error activity dialog
         app_js_origin_path = os.path.join(self.source_project_dir, 'app', 'app.js')
@@ -97,6 +97,7 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         assert not self.emu.is_text_visible(text='Exception')
 
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_105_tns_run_android_changes_in_app_resounces(self):
         """
             Make changes in AndroidManifest.xml in App_Resources and verify this triggers rebuild of the app.
