@@ -70,7 +70,7 @@ class Changes(object):
         XML_ACTION_BAR = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                                    old_value='My App', new_value='TestApp',
                                    old_text='My App', new_text='TestApp')
-        XML_Invalid = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+        XML_INVALID = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                                 old_value='</Page>', new_value='</Page')
 
     class MasterDetailNG(object):

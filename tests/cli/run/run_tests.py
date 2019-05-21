@@ -298,9 +298,9 @@ class TnsRunJSTests(TnsRunTest):
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_300_tns_run_android_clean(self):
-        '''
+        """
         If  set --clean rebuilds the native project
-        '''
+        """
         # Run the project once so it is build for the first time
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
@@ -331,9 +331,9 @@ class TnsRunJSTests(TnsRunTest):
 
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-dev-webpack/issues/899")
     def test_310_tns_run_sync_changes_in_node_modules(self):
-        '''
+        """
         Verify changes in node_modules are synced during run command
-        '''
+        """
         # Run the project
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, sync_all_files=True)
 
@@ -345,10 +345,10 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
     def test_315_tns_run_sync_changes_in_aar_files(self):
-        '''
+        """
         Livesync should sync aar file changes inside a plugin
         https://github.com/NativeScript/nativescript-cli/issues/3610
-        '''
+        """
         # Add plugin and run the project
         Tns.plugin_add('nativescript-camera', self.app_name)
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, sync_all_files=True)
@@ -364,9 +364,9 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
     def test_320_tns_run_android_should_warn_if_package_ids_dont_match(self):
-        '''
+        """
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
-        '''
+        """
 
         # Change app id in app.gradle file
         app_gradle = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'App_Resources',
@@ -399,10 +399,10 @@ class TnsRunJSTests(TnsRunTest):
 
     @unittest.skipIf(Settings.HOST_OS == OSType.LINUX, '`shell cp -r` fails for some reason on emulators on Linux.')
     def test_340_tns_run_android_should_respect_adb_errors(self):
-        '''
+        """
         If device memory is full and error is thrown during deploy cli should respect it
         https://github.com/NativeScript/nativescript-cli/issues/2170
-        '''
+        """
         # Deploy the app to make sure we have something at /data/data/org.nativescript.TestApp
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
