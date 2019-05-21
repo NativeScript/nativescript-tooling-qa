@@ -24,7 +24,7 @@ class Tns(object):
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=None, bundle=True,
                      hmr=True, aot=False, uglify=False, source_map=False, snapshot=False, log_trace=False,
-                     just_launch=False,
+                     just_launch=False, sync_all_files=False, clean=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -86,6 +86,10 @@ class Tns(object):
             cmd += ' --env.sourceMap'
         if just_launch:
             cmd += ' --justlaunch'
+        if clean:
+            cmd += ' --clean'
+        if sync_all_files:
+            cmd += ' --syncAllFiles'
         if log_trace:
             cmd += ' --log trace'
         if options:
@@ -279,11 +283,12 @@ class Tns(object):
     @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
             for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, snapshot=False,
-            wait=False, log_trace=False, just_launch=False, verify=True):
+            wait=False, log_trace=False, just_launch=False, sync_all_files=False, clean=False, verify=True):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device, bundle=bundle,
                                   hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
-                                  wait=wait, log_trace=log_trace, just_launch=just_launch)
+                                  clean=clean, wait=wait, log_trace=log_trace, just_launch=just_launch,
+                                  sync_all_files=sync_all_files)
         if verify:
             if wait:
                 assert result.exit_code == 0, 'tns run failed with non zero exit code.'
@@ -295,10 +300,10 @@ class Tns(object):
     @staticmethod
     def run_android(app_name, emulator=False, device=None, release=False, bundle=True, hmr=True, aot=False,
                     uglify=False, source_map=False, snapshot=False, wait=False, log_trace=False, just_launch=False,
-                    verify=True):
+                    verify=True, clean=False):
         return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
                        bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
-                       wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify)
+                       wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify, clean=clean)
 
     @staticmethod
     def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
