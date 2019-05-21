@@ -2,6 +2,7 @@ import logging
 import os
 
 from core.settings import Settings
+from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from core.utils.npm import Npm
 from core.utils.run import run
@@ -46,6 +47,8 @@ class App(object):
     @staticmethod
     def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, vue=True):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
+        Folder.clean(os.path.join(app_name, 'hooks'))
+        Folder.clean(os.path.join(app_name, 'node_modules'))
         modules_path = os.path.join(app_path, 'node_modules')
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):
             Npm.uninstall(package='tns-core-modules', option='--save', folder=app_path)
