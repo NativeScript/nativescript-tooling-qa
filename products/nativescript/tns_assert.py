@@ -88,7 +88,7 @@ class TnsAssert(object):
 
     # noinspection PyUnusedLocal
     @staticmethod
-    def build(app_name, platform=None, release=False, provision=Settings.IOS.DEV_PROVISION, for_device=False,
+    def build(app_name, platform=None, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
               bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False, output=None, app_data=None):
         # pylint: disable=unused-argument
         # TODO: Implement it!
