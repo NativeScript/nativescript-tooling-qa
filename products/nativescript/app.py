@@ -47,8 +47,6 @@ class App(object):
     @staticmethod
     def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, vue=True):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
-        Folder.clean(os.path.join(app_name, 'hooks'))
-        Folder.clean(os.path.join(app_name, 'node_modules'))
         modules_path = os.path.join(app_path, 'node_modules')
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):
             Npm.uninstall(package='tns-core-modules', option='--save', folder=app_path)
@@ -79,3 +77,5 @@ class App(object):
         if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
             Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
             Npm.install(package='nativescript-vue@latest', option='--save --save-exact', folder=app_path)
+        Folder.clean(os.path.join(app_name, 'hooks'))
+        Folder.clean(os.path.join(app_name, 'node_modules'))
