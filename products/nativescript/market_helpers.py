@@ -6,19 +6,23 @@ from datetime import date
 from core.log.log import Log
 from core.settings import Settings
 
+
 class FlavorStatus(object):
     def setAndroid(self, value):
         self.android = value
+
     def getAndroid(self):
         return self.android
 
     def setIOS(self, value):
         self.ios = value
+
     def getIOS(self):
         return self.ios
         
     def setSlow(self, value):
         self.slow = value
+
     def getSlow(self):
         return self.slow
 
@@ -81,7 +85,7 @@ class Market(object):
                 data = json.load(jsonFile)
         else:
             with open(file_path, "w") as newFile:
-                Log.info("Results.json file created")
+                Log.info("Results.json file created " + newFile)
 
         return data
 
@@ -102,19 +106,19 @@ class Market(object):
 
         if preserved_data:
             tempSampleStatus = next((x for x in preserved_data if x["name"] == recordName), None)
-            if tempSampleStatus != None:
+            if tempSampleStatus is not None:
                 originalIndex = preserved_data.index(tempSampleStatus)
         else:
             preserved_data = []
         
-        if tempSampleStatus == None:
+        if tempSampleStatus is None:
             tempSampleStatus = {
                 "name": recordName,
                 "core": None,
                 "angular": None,
                 "vue": None
             }
-        
+
         if record["flavor"] == "core":
             tempSampleStatus["core"] = Market.serialize(Market.get_flavor_status(record))
 
@@ -124,7 +128,7 @@ class Market(object):
         if record["flavor"] == "vue":
             tempSampleStatus["vue"] = Market.serialize(Market.get_flavor_status(record))
 
-        if originalIndex == None:
+        if originalIndex is None:
             preserved_data.append(tempSampleStatus)
         else:
             preserved_data[originalIndex] = tempSampleStatus
