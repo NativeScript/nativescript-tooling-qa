@@ -308,10 +308,10 @@ class Tns(object):
     @staticmethod
     def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
                 for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, wait=False,
-                log_trace=False, just_launch=False, verify=True):
+                log_trace=False, just_launch=False, verify=True, clean=False):
         return Tns.run(app_name=app_name, platform=Platform.IOS, emulator=emulator, device=device, release=release,
                        provision=provision, for_device=for_device, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify,
-                       source_map=source_map, wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify)
+                       source_map=source_map, wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify, clean=clean)
 
     @staticmethod
     def debug(app_name, platform, start=False, debug_brk=False, emulator=False, device=None, release=False,
