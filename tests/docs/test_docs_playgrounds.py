@@ -7,7 +7,7 @@ from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.chrome import Chrome
+from core.utils.chrome.chrome import Chrome
 from products.nativescript.preview_helpers import Preview
 
 

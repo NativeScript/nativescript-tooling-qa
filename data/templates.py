@@ -50,6 +50,7 @@ class Template(object):
     DRAWER_NAVIGATION_JS = gen_template_info(name='template-drawer-navigation', app_type=AppType.JS, texts=dr_str)
     DRAWER_NAVIGATION_TS = gen_template_info(name='template-drawer-navigation-ts', app_type=AppType.TS, texts=dr_str)
     DRAWER_NAVIGATION_NG = gen_template_info(name='template-drawer-navigation-ng', app_type=AppType.NG, texts=dr_str)
+    DRAWER_NAVIGATION_VUE = gen_template_info(name='template-drawer-navigation-vue', app_type=AppType.VUE, texts=dr_str)
 
     # Tab templates
     TAB_NAVIGATION_JS = gen_template_info(name='template-tab-navigation', app_type=AppType.JS, texts=tn_str)
@@ -62,7 +63,6 @@ class Template(object):
 
     # Vue templates
     VUE_BLANK = gen_template_info(name='template-blank-vue', app_type=AppType.VUE)
-    VUE_MASTER_DETAIL = gen_template_info(name='template-master-detail-vue', app_type=AppType.VUE, texts=md_str)
 
     # Enterprise templates
     ENTERPRISE_AUTH_JS = gen_template_info(name='template-enterprise-auth', app_type=AppType.JS, texts=['Log in'])

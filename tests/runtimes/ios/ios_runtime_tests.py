@@ -9,6 +9,7 @@ import os
 from nose.tools import timed
 
 from core.base_test.tns_test import TnsTest
+from core.enums.platform_type import Platform
 from core.utils.device.device import Device
 from core.utils.device.device_manager import DeviceManager
 from core.utils.wait import Wait
@@ -23,8 +24,7 @@ from data.templates import Template
 
 APP_NAME = AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
-IMAGE_PATH = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'images', 'iPhoneXR_12')
-ASSERT_TEXT = 'Tap the button'
+TAP_THE_BUTTON = 'Tap the button'
 
 
 class IOSRuntimeTests(TnsTest):
@@ -60,8 +60,7 @@ class IOSRuntimeTests(TnsTest):
         assert "Test" in result
         assert "Array" not in result
 
-        result = Tns.exec_command("test ios", cwd=APP_PATH, emulator=True,
-                                  log_trace=True, wait=False)
+        result = Tns.exec_command("test ios", cwd=APP_PATH, emulator=True, wait=False)
         # TODO: Bundle: Add path to stack trace assert, (e.g. @file:///app/tests/example.js:5:25')
         # https://github.com/NativeScript/nativescript-cli/issues/4524
         strings = ['JavaScript stack trace',
@@ -100,7 +99,7 @@ class IOSRuntimeTests(TnsTest):
 
         # `tns run ios` and wait until app is deployed
         result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False,
-                             verify=False, log_trace=True)
+                             verify=False)
 
         # Verify sync and initial state of the app
         strings = ['name: Ter Stegen', 'role: Goalkeeper', 'object dump end', self.sim.id]
@@ -131,7 +130,7 @@ class IOSRuntimeTests(TnsTest):
         assert Folder.exists(folder_path), "Cannot find folder: " + folder_path
 
         # Verify app is running on device
-        Device.wait_for_text(self.sim, text=ASSERT_TEXT)
+        Device.wait_for_text(self.sim, text=TAP_THE_BUTTON)
 
     def test_385_methods_with_same_name_and_different_parameters(self):
         """
@@ -156,7 +155,7 @@ class IOSRuntimeTests(TnsTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app is running on device
-        Device.wait_for_text(self.sim, text=ASSERT_TEXT)
+        Device.wait_for_text(self.sim, text=TAP_THE_BUTTON)
 
     def test_386_check_native_crash_will_not_crash_when_discardUncaughtJsExceptions_used(self):
         """
@@ -186,7 +185,7 @@ class IOSRuntimeTests(TnsTest):
                                  period=5)
 
         # Verify app is running on device
-        Device.wait_for_text(self.sim, text=ASSERT_TEXT)
+        Device.wait_for_text(self.sim, text=TAP_THE_BUTTON)
 
         assert test_result, 'Native crash should not crash the app when discardUncaughtJsExceptions is used!'
 
@@ -242,3 +241,75 @@ class IOSRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'toHexString and toDecimalString are not working correctly!'
+
+    def test_388_unicode_char_in_xml(self):
+        """
+        Test app does not crash when xml includes Unicode characters outside of the basic ASCII set
+        https://github.com/NativeScript/ios-runtime/issues/1130
+        """
+
+        Folder.clean(APP_NAME)
+        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1130',
+                               'main-page.xml'),
+                  os.path.join(APP_PATH, 'app', 'main-page.xml'))
+
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+        error = ['JS ERROR Error: Invalid autocapitalizationType value:undefined']
+        is_error_thrown = Wait.until(lambda: all(er in File.read(log.log_file) for er in error), timeout=30,
+                                     period=5)
+        assert is_error_thrown is False, 'App should not crash when xml includes Unicode characters outside of the ' \
+                                         'basic ASCII set'
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
+
+    def test_389_add_swift_files_to_xcode_project(self):
+        """
+        Test that users are be able to add swift files and use it
+        https://github.com/NativeScript/ios-runtime/issues/1131
+        """
+
+        Folder.clean(APP_NAME)
+        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        Folder.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1131', 'src'),
+                    os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'))
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1131',
+                               'main-page.js'),
+                  os.path.join(APP_PATH, 'app', 'main-page.js'))
+
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
+
+        strings = ['Swift class property: 123', 'Swift class method: GREAT!']
+        result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                            period=5)
+        assert result, 'It seems that there\'s a problem with using swift files that are added in App_Resources'
+
+    def test_390_check_correct_name_of_internal_class_is_returned(self):
+        """
+        Test that NSStringFromClass function returns correct name of iOS internal class
+        https://github.com/NativeScript/ios-runtime/issues/1120
+        """
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1120',
+                               'main-page.js'),
+                  os.path.join(APP_PATH, 'app', 'main-page.js'))
+
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.IOS)
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
+
+        string = ['Internal class: UITableViewCellContentView']
+        result = Wait.until(lambda: all(st in File.read(log.log_file) for st in string), timeout=60,
+                            period=5)
+        assert result, 'NSStringFromClass function returns INCORRECT name of iOS internal class!'

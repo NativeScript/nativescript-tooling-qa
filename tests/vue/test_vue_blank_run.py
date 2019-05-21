@@ -11,7 +11,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-class VueJSTests(TnsRunTest):
+class VueJSHelloWorldTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)

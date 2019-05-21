@@ -4,94 +4,52 @@
     "platform_add_android": 5.98946801821,
     "platform_add_ios": 7.66259102567,
     "android": {
-      "build_incremental": 15.266872008641561,
-      "build_initial": 113.7079525788625,
-      "prepare_incremental": 5.360537687937419,
-      "prepare_initial": 7.150091648101807,
-      "prepare_skip": 4.974192301432292
-    },
-    "android_bundle": {
-      "build_incremental": 18.261939366658527,
-      "build_initial": 91.37235903739929,
-      "prepare_incremental": 8.425043026606241,
-      "prepare_initial": 8.689378341039022,
-      "prepare_skip": 4.784721215565999
+      "build_incremental": 16.6792627175649,
+      "build_initial": 60.205957094828285,
+      "prepare_incremental": 8.703107674916586,
+      "prepare_initial": 8.861101309458414,
+      "prepare_skip": 4.9721763134002686
     },
     "ios": {
-      "build_incremental": 24.207729895909626,
-      "build_initial": 30.018869400024414,
-      "prepare_incremental": 7.94971505800883,
-      "prepare_initial": 9.471849997838339,
-      "prepare_skip": 7.6181996663411455
-    },
-    "ios_bundle": {
-      "build_incremental": 30.980090061823528,
-      "build_initial": 27.12698769569397,
-      "prepare_incremental": 11.501805702845255,
-      "prepare_initial": 11.440188964207968,
-      "prepare_skip": 7.661232948303223
+      "build_incremental": 26.30847676595052,
+      "build_initial": 39.76127537091573,
+      "prepare_incremental": 11.225091616312662,
+      "prepare_initial": 11.910478909810385,
+      "prepare_skip": 7.749523639678955
     }
   },
   "hello-world-ng": {
     "create": 25.8089292844,
     "android": {
-      "build_incremental": 26.710038661956787,
-      "build_initial": 122.92822297414143,
-      "prepare_incremental": 9.067025264104208,
-      "prepare_initial": 17.6259629726,
-      "prepare_skip": 8.58947936694
-    },
-    "android_bundle": {
-      "build_incremental": 31.89138634999593,
-      "build_initial": 97.56334964434306,
-      "prepare_incremental": 16.40334423383077,
-      "prepare_initial": 16.497665723164875,
-      "prepare_skip": 4.980512062708537
+      "build_incremental": 28.651108980178833,
+      "build_initial": 51.57921361923218,
+      "prepare_incremental": 15.15823761622111,
+      "prepare_initial": 15.43198267618815,
+      "prepare_skip": 5.2771579424540205
     },
     "ios": {
-      "build_incremental": 36.64054028193156,
-      "build_initial": 37.41368063290914,
-      "prepare_incremental": 12.144241015116373,
-      "prepare_initial": 19.7154362996,
-      "prepare_skip": 12.25572427113851
-    },
-    "ios_bundle": {
-      "build_incremental": 39.264984369277954,
-      "build_initial": 28.99217462539673,
-      "prepare_incremental": 19.23282742500305,
-      "prepare_initial": 19.68586603800456,
-      "prepare_skip": 7.837726990381877
+      "build_incremental": 38.707446336746216,
+      "build_initial": 47.89283800125122,
+      "prepare_incremental": 18.033500909805298,
+      "prepare_initial": 18.55203954378764,
+      "prepare_skip": 7.983452955881755
     }
   },
   "master-detail-ng": {
     "create": 32.040071249,
     "android": {
-      "build_incremental": 31.289361715316772,
-      "build_initial": 199.95084500312805,
-      "prepare_incremental": 11.534847259521484,
-      "prepare_initial": 23.3680578868,
-      "prepare_skip": 11.781965335210165
-    },
-    "android_bundle": {
-      "build_incremental": 35.199966748555504,
-      "build_initial": 162.25273402531943,
-      "prepare_incremental": 18.243085304896038,
-      "prepare_initial": 18.020648956298828,
-      "prepare_skip": 4.9937379360198975
+      "build_incremental": 32.67210833231608,
+      "build_initial": 68.10768667856853,
+      "prepare_incremental": 17.124879360198975,
+      "prepare_initial": 42.768352349599205,
+      "prepare_skip": 5.506573994954427
     },
     "ios": {
-      "build_incremental": 43.384615341822304,
-      "build_initial": 105.30692966779073,
-      "prepare_incremental": 13.998749335606893,
-      "prepare_initial": 36.681024392445885,
-      "prepare_skip": 14.048583269119263
-    },
-    "ios_bundle": {
-      "build_incremental": 46.28674499193827,
-      "build_initial": 90.99478205045064,
-      "prepare_incremental": 21.493242979049683,
-      "prepare_initial": 27.853859424591064,
-      "prepare_skip": 7.783515055974324
+      "build_incremental": 51.76869304974874,
+      "build_initial": 119.55501532554626,
+      "prepare_incremental": 22.827386379241943,
+      "prepare_initial": 30.69738570849101,
+      "prepare_skip": 14.731727282206217
     }
   }
 }

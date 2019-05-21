@@ -2,16 +2,16 @@ import os
 import time
 
 from parameterized import parameterized
+from selenium.common.exceptions import NoSuchElementException
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
-from core.utils.chrome import Chrome
-from products.nativescript.preview_helpers import Preview
+from core.utils.chrome.chrome import Chrome
 from products.nativescript.market_helpers import Market
-from selenium.common.exceptions import NoSuchElementException
+from products.nativescript.preview_helpers import Preview
 
 
 # noinspection PyUnusedLocal
@@ -19,9 +19,13 @@ class PlaygroundMarketSamples(TnsRunTest):
     chrome = None
     app_name = Settings.AppName.DEFAULT
     is_ios_fail = None
-    test_data = Market.get_data()
+    test_data = Market.get_data_market()
+
+    # test_data = [x for x in test_data1 if u'Getting_a_User\'s_Current_Location' in x]
+    # print test_data
     # test_data = [
-    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-ng&id=G78alI&v=2', 'Play', ""]
+    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-ng&id=2OkUP6', 'Play', 'ng'],
+    #     ['getting_started_ng', 'https://play.nativescript.org/?template=play-tsc&id=TcHeUQ&v=10', 'Play', 'ng']
     # ]
 
     @classmethod
@@ -36,7 +40,6 @@ class PlaygroundMarketSamples(TnsRunTest):
 
     def setUp(self):
         TnsRunTest.setUp(self)
-        self.chrome = Chrome()
         self.is_ios_fail = os.environ.get('is_ios_fail') == 'True'
 
     def tearDown(self):
@@ -49,44 +52,56 @@ class PlaygroundMarketSamples(TnsRunTest):
 
     @parameterized.expand(test_data)
     def test(self, name, url, text, flavor):
-        print text
-        link = PlaygroundMarketSamples.get_link(self.chrome, url)
-        original_name = str(name).replace("_", " ")
-        if link == "":
-            Log.info('No Playground URL found ...')
-            data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor)}
-            Market.preserve_data(data)
-        else:
-            image_name = '{0}_{1}.png'.format(name, str(Platform.ANDROID))
-            Preview.run_url(url=link, device=self.emu)
-            # emulator_result = PlaygroundMarketSamples.wait_for_text(self.emu, text)
-            emulator_result = PlaygroundMarketSamples.get_error(self.chrome)
-            # if not emulator_result:
-            is_android_fail = emulator_result > 0
-            if is_android_fail:
-                self.emu.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
-            if Settings.HOST_OS == OSType.OSX:
-                image_name = '{0}_{1}.png'.format(name, str(Platform.IOS))
-                if self.is_ios_fail:
-                    Log.info(' Installing Preview app on iOS ...')
-                    Preview.install_preview_app_no_unpack(self.sim, Platform.IOS)
-                Preview.run_url(url=link, device=self.sim)
-                Log.info(' Waiting iOS app to load...')
-                time.sleep(10)
-                Preview.dismiss_simulator_alert()
-                # simulator_result = PlaygroundMarketSamples.wait_for_text(self.sim, text)
-                simulator_result = PlaygroundMarketSamples.get_error(self.chrome, emulator_result)
-                is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
-                # if not simulator_result:
-                self.is_ios_fail = simulator_result > 0 or not is_app_active
-                os.environ["is_ios_fail"] = str(self.is_ios_fail)
-                if self.is_ios_fail:
-                    self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
+        retries = 1
+        while retries >= 0:
+            print text
+            self.chrome = Chrome()
+            link, is_slow = PlaygroundMarketSamples.get_link(self.chrome, url)
+            original_name = name.replace("_", " ").encode("utf8")
+            if link == "":
+                Log.info('No Playground URL found ...')
+                data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor),
+                        "timeout": "True"}
+                retries -= 1
+            else:
+                image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
+                Preview.run_url(url=link, device=self.emu)
+                # emulator_result = PlaygroundMarketSamples.wait_for_text(self.emu, text)
+                emulator_result = PlaygroundMarketSamples.get_error(self.chrome)
+                # if not emulator_result:
+                is_android_fail = emulator_result > 0
+                if is_android_fail:
+                    self.emu.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
+                if Settings.HOST_OS == OSType.OSX:
+                    image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.IOS))
 
-            ios = str(not self.is_ios_fail)
-            android = str(not is_android_fail)
-            data = {"name": original_name, "ios": ios, "android": android, "flavor": str(flavor)}
-            Market.preserve_data(data)
+                    if self.is_ios_fail:
+                        Log.info(' Installing Preview app on iOS ...')
+                        Preview.install_preview_app_no_unpack(self.sim, Platform.IOS)
+
+                    Preview.run_url(url=link, device=self.sim)
+                    Log.info(' Waiting iOS app to load...')
+                    time.sleep(10)
+                    Preview.dismiss_simulator_alert()
+                    # simulator_result = PlaygroundMarketSamples.wait_for_text(self.sim, text)
+                    simulator_result = PlaygroundMarketSamples.get_error(self.chrome, emulator_result)
+                    is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
+                    # if not simulator_result:
+                    self.is_ios_fail = simulator_result > 0 or not is_app_active
+                    os.environ["is_ios_fail"] = str(self.is_ios_fail)
+
+                    if self.is_ios_fail:
+                        self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
+
+                ios = str(not self.is_ios_fail)
+                android = str(not is_android_fail)
+                data = {"name": original_name, "ios": ios, "android": android, "flavor": str(flavor),
+                        "slow": str(is_slow)}
+                if self.is_ios_fail is False and is_android_fail is False:
+                    break
+                retries -= 1
+                self.tearDown()
+        Market.preserve_data(data)
 
     # noinspection PyBroadException
     @staticmethod
@@ -94,7 +109,8 @@ class PlaygroundMarketSamples(TnsRunTest):
         url = '{0}&debug=true'.format(url)
         chrome.open(url)
         link = ""
-        timeout = 25  # In seconds
+        timeout = 60  # In seconds
+        slow = False
         end_time = time.time() + timeout
         while end_time > time.time():
             try:
@@ -104,8 +120,10 @@ class PlaygroundMarketSamples(TnsRunTest):
                 Log.info('No Playground URL element found ...')
             if "nsplay" in link:
                 Log.info('Url link found ...')
+                if (end_time - time.time()) < 35:
+                    slow = True
                 break
-        return link
+        return link, slow
 
     @staticmethod
     def get_error(chrome, previous_errors=0):

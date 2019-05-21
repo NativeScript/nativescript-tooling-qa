@@ -23,6 +23,7 @@ from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
+TAP_THE_BUTTON = 'Tap the button'
 
 
 class AndroidRuntimeTests(TnsTest):
@@ -158,10 +159,7 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'Native crash should not crash the app when discardUncaughtJsExceptions used fails!'
-        Device.screen_match(self.emulator,
-                            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                         'Emulator-Api23-Default',
-                                         "No-crash-image.png"), timeout=120, tolerance=1)
+        Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
 
     def test_318_generated_classes_not_be_deleted_on_rebuild(self):
         """
@@ -249,10 +247,7 @@ class AndroidRuntimeTests(TnsTest):
                                    file_name='app/{0}'.format(code_cache_file)), error_message
 
         # Verify app looks correct inside emulator
-        Device.screen_match(self.emulator,
-                            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'images',
-                                         'Emulator-Api23-Default',
-                                         "hello-world-js.png"), timeout=120, tolerance=1)
+        Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
 
     def test_430_verify_JSParser_in_SBG_is_failing_the_build_when_there_is_an_error(self):
         """
@@ -409,3 +404,58 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=90,
                                  period=5)
         assert test_result, "TAP Button is missing on the device! Update of tns-core-modules not successful!"
+
+    def test_444_test_useV8Symbols_flag_in_package_json(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1368
+        """
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        # check the default value for v8 symbols
+        strings = ['adding nativescript runtime package dependency: nativescript-optimized-with-inspector']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                               'android-runtime-1368', 'package.json'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json'))
+        # check useV8Symbols flag is working
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        strings = ['adding nativescript runtime package dependency: nativescript-regular']
+        test_result = Wait.until(lambda: all(string in log.output for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
+        # check app is working
+        Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=50,
+                                 period=5)
+        assert test_result, "TAP Button is missing on the device! V8 with debug symbols is making the app crash!"
+
+    def test_445_test_ES6_support(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1375
+        """
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template="https://github.com/NativeScript/es6-syntax-app.git", update=True)
+
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        strings = ['Successfully synced application', 'on device', self.emulator.id]
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=120,
+                                 period=5)
+        assert test_result, "App not build correctly after updating tns-core modules! Logs: " + File.read(log.log_file)
+        button_text = "Use ES6 language features"
+
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
+                                 timeout=30, period=5)
+        message = "Use ES6 language features Button is missing on the device! The app has crashed!"
+        assert test_result, message
+
+        Device.click(self.emulator, text=button_text, case_sensitive=True)
+        test_result = Wait.until(lambda: "class com.js.NativeList" in File.read(log.log_file), timeout=25,
+                                 period=5)
+        assert test_result, "com.js.NativeList not found! Logs: " + File.read(log.log_file)
+
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
+                                 timeout=30, period=5)
+        assert test_result, message

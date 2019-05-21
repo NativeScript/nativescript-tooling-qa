@@ -19,14 +19,14 @@ class ChangeSet(object):
 
 class Sync(object):
     @staticmethod
-    def replace(app_name, change_set):
+    def replace(app_name, change_set, fail_safe=False):
         path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file_path)
-        File.replace(path=path, old_string=change_set.old_value, new_string=change_set.new_value)
+        File.replace(path=path, old_string=change_set.old_value, new_string=change_set.new_value, fail_safe=fail_safe)
 
     @staticmethod
-    def revert(app_name, change_set):
+    def revert(app_name, change_set, fail_safe=False):
         path = os.path.join(Settings.TEST_RUN_HOME, app_name, change_set.file_path)
-        File.replace(path=path, old_string=change_set.new_value, new_string=change_set.old_value)
+        File.replace(path=path, old_string=change_set.new_value, new_string=change_set.old_value, fail_safe=fail_safe)
 
 
 class Changes(object):
@@ -40,6 +40,11 @@ class Changes(object):
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
                         old_text='TAP', new_text='HIT')
+        XML_ACTION_BAR = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                                   old_value='My App', new_value='TestApp',
+                                   old_text='My App', new_text='TestApp')
+        XML_INVALID = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                                old_value='</Page>', new_value='</Page')
 
     class TSHelloWord(object):
         TS = ChangeSet(file_path=os.path.join('app', 'main-view-model.ts'),
@@ -62,6 +67,11 @@ class Changes(object):
         HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                          old_value='"item.name"', new_value='"item.id"',
                          old_text=None, new_text=None)
+        XML_ACTION_BAR = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
+                                   old_value='My App', new_value='TestApp',
+                                   old_text='My App', new_text='TestApp')
+        XML_INVALID = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                                old_value='</Page>', new_value='</Page')
 
     class MasterDetailNG(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'shared', 'car.model.ts'),
@@ -102,6 +112,32 @@ class Changes(object):
                                     new_value='iOS here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
                                     old_color=None, new_color=Colors.YELLOW)
 
+    class JSTabNavigation(object):
+        JS = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-view-model.js'),
+                       old_value='Item 1', new_value='First Element',
+                       old_text='Item 1', new_text='First Element')
+        XML = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-page.xml'),
+                        old_value='Home', new_value='Test',
+                        old_text='Home', new_text='Test')
+
+        # This change should make title of home red
+        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-variables.scss'),
+                                   old_value='$accent-dark;', new_value='red;',
+                                   old_color=Colors.ACCENT_DARK, new_color=Colors.RED)
+
+    class TSTabNavigation(object):
+        TS = ChangeSet(file_path=os.path.join('src', 'app', 'home', 'home-items-view-model.ts'),
+                       old_value='Item 1', new_value='First Element',
+                       old_text='Item 1', new_text='First Element')
+        XML = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-page.xml'),
+                        old_value='Home', new_value='Test',
+                        old_text='Home', new_text='Test')
+
+        # This change should make title of home red
+        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-variables.scss'),
+                                   old_value='$accent-dark;', new_value='red;',
+                                   old_color=Colors.ACCENT_DARK, new_color=Colors.RED)
+
     class SharedHelloWorld(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'item.service.ts'),
                        old_value='Ter Stegen', new_value='Unknown',
@@ -138,3 +174,14 @@ class Changes(object):
         VUE_DETAIL_PAGE_TEMPLATE = ChangeSet(file_path=os.path.join('app', 'components', 'CarDetails.vue'),
                                              old_value='<Span text="/day" />', new_value='<Span text="/24h" />',
                                              old_text='/day', new_text='/24h')
+
+    class AppFileChanges(object):
+        CHANGE_XML_INVALID_SYNTAX = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
+                                              old_value='<StackLayout class="p-20">',
+                                              new_value='<StackLayout class="p-10"', old_text='"p-20">',
+                                              new_text='"p-10"')
+
+    class NodeModules(object):
+        TNS_MODULES = ChangeSet(file_path=os.path.join('node_modules', 'tns-core-modules', 'application',
+                                                       'application-common.js'),
+                                old_value='(\"globals\");', new_value='(\"globals\"); // test')

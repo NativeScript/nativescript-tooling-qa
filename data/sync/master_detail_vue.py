@@ -36,7 +36,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     # Verify app home page looks properly
     device.wait_for_text(text="Ford KA")
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_TEMPLATE.old_text)
-    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name,  'initial_state.png')
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
 
     # Edit template in .vue file

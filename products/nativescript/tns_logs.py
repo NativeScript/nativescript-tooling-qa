@@ -51,7 +51,7 @@ class TnsLogs(object):
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=True, hmr=True, uglify=False, app_type=None,
-                     file_name=None, instrumented=False, plugins=None, aot=False, device=None):
+                     file_name=None, instrumented=False, plugins=None, aot=False, device=None, just_launch=False):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -97,7 +97,8 @@ class TnsLogs(object):
         else:
             if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
                 logs.extend(TnsLogs.__app_restart_messages(app_name=app_name, platform=platform,
-                                                           instrumented=instrumented, app_type=app_type, device=device))
+                                                           instrumented=instrumented, app_type=app_type,
+                                                           device=device, just_launch=just_launch))
             else:
                 logs.extend(TnsLogs.__app_refresh_messages(instrumented=instrumented, app_type=app_type,
                                                            file_name=file_name, hmr=hmr))
@@ -187,11 +188,11 @@ class TnsLogs(object):
         return should_restart
 
     @staticmethod
-    def __app_restart_messages(app_name, platform, instrumented, app_type, device):
+    def __app_restart_messages(app_name, platform, instrumented, app_type, device, just_launch=False):
         logs = ['Restarting application on device']
         if platform == Platform.ANDROID:
             app_id = TnsPaths.get_bundle_id(app_name)
-            if device is not None and device.version < 7.0:
+            if device is not None and device.version < 7.0 and just_launch is False:
                 logs.append('ActivityManager: Start proc')
                 logs.append('activity {0}/com.tns.NativeScriptActivity'.format(app_id))
         if instrumented:
