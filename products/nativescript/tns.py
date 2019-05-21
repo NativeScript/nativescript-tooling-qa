@@ -152,8 +152,6 @@ class Tns(object):
 
         # Update the app (if specified)
         if update:
-            Folder.clean(os.path.join(app_name, 'hooks'))
-            Folder.clean(os.path.join(app_name, 'node_modules'))
             App.update(app_name=app_name)
 
         # Let TestContext know app is created
