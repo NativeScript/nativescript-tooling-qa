@@ -32,6 +32,7 @@ def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglif
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
                              instrumented=instrumented)
 
+
 def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False,
                           aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False):
     # Execute `tns run` and wait until logs are OK
@@ -51,6 +52,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
     return result
+
 
 def __verify_snapshot_skipped(snapshot, result):
     """

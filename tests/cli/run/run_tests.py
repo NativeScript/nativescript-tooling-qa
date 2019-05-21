@@ -378,8 +378,7 @@ class TnsRunJSTests(TnsRunTest):
         result = Tns.run_android(app_name=self.app_name, just_launch=False)
         strings = ["WARNING: The Application identifier is different from the one inside \"package.json\" file.",
                    "NativeScript CLI might not work properly.",
-                   "Project successfully built"
-                  ]
+                   "Project successfully built"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     def test_325_tns_run_android_should_start_emulator(self):
