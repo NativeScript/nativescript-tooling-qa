@@ -19,12 +19,13 @@ class FlavorStatus(object):
 
     def getIOS(self):
         return self.ios
-        
+
     def setSlow(self, value):
         self.slow = value
 
     def getSlow(self):
         return self.slow
+
 
 class Market(object):
 
@@ -76,7 +77,6 @@ class Market(object):
 
         return testing_data
 
-
     def get_preserved_data():
         file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
         data = None
@@ -110,7 +110,7 @@ class Market(object):
                 originalIndex = preserved_data.index(tempSampleStatus)
         else:
             preserved_data = []
-        
+
         if tempSampleStatus is None:
             tempSampleStatus = {
                 "name": recordName,
