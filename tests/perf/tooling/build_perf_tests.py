@@ -30,12 +30,9 @@ EXPECTED_RESULTS = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
 class PrepareAndBuildPerfTests(TnsTest):
     TEST_DATA = [
-        ('hello-world-js', Template.HELLO_WORLD_JS.local_package, Changes.JSHelloWord.JS, False),
-        ('hello-world-ng', Template.HELLO_WORLD_NG.local_package, Changes.NGHelloWorld.TS, False),
-        ('master-detail-ng', Template.MASTER_DETAIL_NG.local_package, Changes.MasterDetailNG.TS, False),
-        ('hello-world-js', Template.HELLO_WORLD_JS.local_package, Changes.JSHelloWord.JS, True),
-        ('hello-world-ng', Template.HELLO_WORLD_NG.local_package, Changes.NGHelloWorld.TS, True),
-        ('master-detail-ng', Template.MASTER_DETAIL_NG.local_package, Changes.MasterDetailNG.TS, True),
+        ('hello-world-js', Template.HELLO_WORLD_JS.local_package, Changes.JSHelloWord.JS),
+        ('hello-world-ng', Template.HELLO_WORLD_NG.local_package, Changes.NGHelloWorld.TS),
+        ('master-detail-ng', Template.MASTER_DETAIL_NG.local_package, Changes.MasterDetailNG.TS),
     ]
 
     @classmethod
@@ -50,77 +47,77 @@ class PrepareAndBuildPerfTests(TnsTest):
         TnsTest.tearDownClass()
 
     @parameterized.expand(TEST_DATA)
-    def test_001_prepare_data(self, template, template_package, change_set, bundle):
-        android_result_file = Helpers.get_result_file_name(template, Platform.ANDROID, bundle)
-        ios_result_file = Helpers.get_result_file_name(template, Platform.IOS, bundle)
-        Helpers.prepare_and_build(template=template_package, platform=Platform.ANDROID, bundle=bundle,
+    def test_001_prepare_data(self, template, template_package, change_set):
+        android_result_file = Helpers.get_result_file_name(template, Platform.ANDROID)
+        ios_result_file = Helpers.get_result_file_name(template, Platform.IOS)
+        Helpers.prepare_and_build(template=template_package, platform=Platform.ANDROID,
                                   change_set=change_set, result_file=android_result_file)
-        Helpers.prepare_and_build(template=template_package, platform=Platform.IOS, bundle=bundle,
+        Helpers.prepare_and_build(template=template_package, platform=Platform.IOS,
                                   change_set=change_set, result_file=ios_result_file)
 
     @parameterized.expand(TEST_DATA)
-    def test_200_prepare_android_initial(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, bundle, 'prepare_initial')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, bundle, 'prepare_initial')
+    def test_200_prepare_android_initial(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'prepare_initial')
+        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'prepare_initial')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial android prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_201_prepare_ios_initial(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'prepare_initial')
-        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'prepare_initial')
+    def test_201_prepare_ios_initial(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.IOS, 'prepare_initial')
+        expected = Helpers.get_expected_result(template, Platform.IOS, 'prepare_initial')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    def test_210_prepare_android_skip(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, bundle, 'prepare_skip')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, bundle, 'prepare_skip')
+    def test_210_prepare_android_skip(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'prepare_skip')
+        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'prepare_skip')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Skip android prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_211_prepare_ios_skip(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'prepare_skip')
-        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'prepare_skip')
+    def test_211_prepare_ios_skip(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.IOS, 'prepare_skip')
+        expected = Helpers.get_expected_result(template, Platform.IOS, 'prepare_skip')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Skip ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    def test_220_prepare_android_incremental(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, bundle, 'prepare_incremental')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, bundle, 'prepare_incremental')
+    def test_220_prepare_android_incremental(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'prepare_incremental')
+        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'prepare_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental android prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_221_prepare_ios_incremental(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'prepare_incremental')
-        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'prepare_incremental')
+    def test_221_prepare_ios_incremental(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.IOS, 'prepare_incremental')
+        expected = Helpers.get_expected_result(template, Platform.IOS, 'prepare_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    def test_300_build_android_initial(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, bundle, 'build_initial')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, bundle, 'build_initial')
+    def test_300_build_android_initial(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'build_initial')
+        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'build_initial')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial android build time is not OK.'
 
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_301_build_ios_initial(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'build_initial')
-        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'build_initial')
+    def test_301_build_ios_initial(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.IOS, 'build_initial')
+        expected = Helpers.get_expected_result(template, Platform.IOS, 'build_initial')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial ios build time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    def test_310_build_android_incremental(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, bundle, 'build_incremental')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, bundle, 'build_incremental')
+    def test_310_build_android_incremental(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'build_incremental')
+        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'build_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental android build time is not OK.'
 
     @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_311_build_ios_incremental(self, template, template_package, change_set, bundle):
-        actual = Helpers.get_actual_result(template, Platform.IOS, bundle, 'build_incremental')
-        expected = Helpers.get_expected_result(template, Platform.IOS, bundle, 'build_incremental')
+    def test_311_build_ios_incremental(self, template, template_package, change_set):
+        actual = Helpers.get_actual_result(template, Platform.IOS, 'build_incremental')
+        expected = Helpers.get_expected_result(template, Platform.IOS, 'build_incremental')
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental ios build time is not OK.'
 
 
@@ -134,7 +131,7 @@ class PrepareBuildInfo(object):
 
 class Helpers(object):
     @staticmethod
-    def prepare_and_build(template, platform, bundle, change_set, result_file):
+    def prepare_and_build(template, platform, change_set, result_file):
         prepare_initial = 0
         prepare_skip = 0
         prepare_incremental = 0
@@ -155,19 +152,19 @@ class Helpers(object):
                 raise Exception('Unknown platform: ' + str(platform))
 
             # Prepare
-            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=bundle).duration
+            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_initial = prepare_initial + time
-            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=bundle).duration
+            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_skip = prepare_skip + time
             Sync.replace(app_name=APP_NAME, change_set=change_set)
-            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=bundle).duration
+            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_incremental = prepare_incremental + time
 
             # Build
-            time = Tns.build(app_name=APP_NAME, platform=platform, bundle=bundle).duration
+            time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
             build_initial = build_initial + time
             Sync.revert(app_name=APP_NAME, change_set=change_set)
-            time = Tns.build(app_name=APP_NAME, platform=platform, bundle=bundle).duration
+            time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
             build_incremental = build_incremental + time
 
         # Calculate averages
@@ -184,20 +181,16 @@ class Helpers(object):
         File.write(path=result_file, text=str(result_json))
 
     @staticmethod
-    def get_result_file_name(template, platform, bundle):
+    def get_result_file_name(template, platform):
         result_file = os.path.join(Settings.TEST_OUT_HOME, '{0}_{1}.json'.format(template, str(platform)))
-        if bundle:
-            result_file = result_file.replace('.json', '_bundle.json')
         return result_file
 
     @staticmethod
-    def get_actual_result(template, platform, bundle, entry):
-        result_file = Helpers.get_result_file_name(template, platform, bundle)
+    def get_actual_result(template, platform, entry):
+        result_file = Helpers.get_result_file_name(template, platform)
         return JsonUtils.read(result_file)[entry]
 
     @staticmethod
-    def get_expected_result(template, platform, bundle, entry):
+    def get_expected_result(template, platform, entry):
         platform = str(platform)
-        if bundle:
-            platform = platform + '_bundle'
         return EXPECTED_RESULTS[template][platform][entry]
