@@ -19,4 +19,3 @@ subprocess32>=3.5.3
 requests>=2.21.0
 pytz>=2018.9
 Appium-Python-Client>=0.28
-pytest

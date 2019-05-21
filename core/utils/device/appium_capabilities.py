@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 class AppiumCapabilities(object):
     def __init__(self, platform_name=None, platform_version=None, automation_name=None, device_name=None,
                  bundle_id=None, app_package=None, app_activity=None):
