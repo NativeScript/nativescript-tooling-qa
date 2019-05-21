@@ -50,7 +50,7 @@ class TnsAssert(object):
         if webpack:
             assert Folder.exists(os.path.join(node_path, 'nativescript-dev-webpack')), 'Webpack not installed in app.'
             assert File.exists(os.path.join(app_path, 'webpack.config.js')), 'Missing webpack config.'
-            assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
+            # assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
 
         # Assert app data
         if app_data is not None:
