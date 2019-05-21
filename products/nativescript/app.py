@@ -71,7 +71,7 @@ class App(object):
             update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
             result = run(cmd=update_script, log_level=logging.INFO)
             assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
-            assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
+            # assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
             Npm.install(folder=app_path)
         if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
             Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
