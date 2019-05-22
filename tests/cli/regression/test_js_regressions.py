@@ -35,4 +35,5 @@ class JSRegressionTests(TnsRunTest):
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_201_build_ios_release(self):
-        Tns.build_ios(app_name=self.js_app, release=True, for_device=True, bundle=True, aot=True, uglify=True)
+        Tns.build_ios(app_name=self.js_app, release=True, for_device=True, bundle=True, aot=True, uglify=True,
+                      provision=Settings.IOS.PROVISIONING)

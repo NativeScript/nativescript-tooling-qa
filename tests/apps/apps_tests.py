@@ -25,8 +25,6 @@ class SampleAppsTests(TnsTest):
         ('nativescript-sdk-examples-ng', 'NativeScript', 'NativeScript Code Samples'),
         ('nativescript-sdk-examples-js', 'NativeScript', 'Cookbook'),
         ('sample-Groceries', 'NativeScript', 'Login'),
-        # ('nativescript-marketplace-demo', 'NativeScript', 'GET STARTED'),
-        # Ignored because of https://github.com/NativeScript/nativescript-marketplace-demo/issues/301
     ]
 
     @classmethod
@@ -62,7 +60,8 @@ class SampleAppsTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'Skip iOS core_tests on non macOS machines.')
     @parameterized.expand(test_data)
     def test_002_build_ios(self, repo, org, text):
-        Tns.build_ios(app_name=repo, release=True, for_device=True, bundle=True, aot=True, uglify=True)
+        Tns.build_ios(app_name=repo, release=True, for_device=True, bundle=True, aot=True, uglify=True,
+                      provision=Settings.IOS.PROVISIONING)
 
     @parameterized.expand(test_data)
     def test_003_run_android(self, repo, org, text):
