@@ -222,8 +222,8 @@ class Tns(object):
         return result
 
     @staticmethod
-    def prepare(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True, log_trace=False,
-                verify=True):
+    def prepare(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
+                log_trace=False, verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
                                   provision=provision, for_device=for_device, bundle=bundle, wait=True,
                                   log_trace=log_trace)
