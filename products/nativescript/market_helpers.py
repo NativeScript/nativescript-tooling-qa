@@ -94,7 +94,8 @@ class Market(object):
 
         return data
 
-    def serialize(self, obj):
+    @staticmethod
+    def serialize(obj):
         return obj.__dict__
 
     @staticmethod
