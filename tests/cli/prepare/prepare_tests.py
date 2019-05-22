@@ -40,7 +40,7 @@ class PrepareTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
         Folder.clean(cls.app_temp_path)
-
+    #
     def test_100_prepare_android(self):
         Tns.prepare_android(self.app_name)
         result = Tns.prepare_android(self.app_name)
