@@ -108,8 +108,8 @@ class Packages(object):
     # Modules and Plugins
     MODULES = resolve_package(name='tns-core-modules', variable='tns_core_modules')
     ANGULAR = resolve_package(name='nativescript-angular', variable='nativescript_angular')
-    WEBPACK = resolve_package(name='nativescript-dev-webpack', variable='nativescript_dev_webpack')
-    # WEBPACK = 'nativescript-dev-webpack@webpack'
+    # WEBPACK = resolve_package(name='nativescript-dev-webpack', variable='nativescript_dev_webpack')
+    WEBPACK = 'nativescript-dev-webpack@webpack'
     TYPESCRIPT = resolve_package(name='nativescript-dev-typescript', variable='nativescript_dev_typescript')
     SASS = resolve_package(name='nativescript-dev-sass', variable='nativescript_dev_sass')
 
