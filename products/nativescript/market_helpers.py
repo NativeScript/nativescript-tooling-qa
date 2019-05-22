@@ -8,22 +8,22 @@ from core.settings import Settings
 
 
 class FlavorStatus(object):
-    def setAndroid(self, value):
+    def set_android(self, value):
         self.android = value
 
-    def getAndroid(self):
+    def get_android(self):
         return self.android
 
-    def setIOS(self, value):
+    def set_ios(self, value):
         self.ios = value
 
-    def getIOS(self):
+    def get_ios(self):
         return self.ios
 
-    def setSlow(self, value):
+    def set_slow(self, value):
         self.slow = value
 
-    def getSlow(self):
+    def get_slow(self):
         return self.slow
 
 
@@ -100,38 +100,38 @@ class Market(object):
     def preserve_data(record):
         file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
         preserved_data = Market.get_preserved_data()
-        tempSampleStatus = None
-        recordName = record["name"]
-        originalIndex = None
+        temp_sample_status = None
+        record_name = record["name"]
+        original_index = None
 
         if preserved_data:
-            tempSampleStatus = next((x for x in preserved_data if x["name"] == recordName), None)
-            if tempSampleStatus is not None:
-                originalIndex = preserved_data.index(tempSampleStatus)
+            temp_sample_status = next((x for x in preserved_data if x["name"] == record_name), None)
+            if temp_sample_status is not None:
+                original_index = preserved_data.index(temp_sample_status)
         else:
             preserved_data = []
 
-        if tempSampleStatus is None:
-            tempSampleStatus = {
-                "name": recordName,
+        if temp_sample_status is None:
+            temp_sample_status = {
+                "name": record_name,
                 "core": None,
                 "angular": None,
                 "vue": None
             }
 
         if record["flavor"] == "core":
-            tempSampleStatus["core"] = Market.serialize(Market.get_flavor_status(record))
+            temp_sample_status["core"] = Market.serialize(Market.get_flavor_status(record))
 
         if record["flavor"] == "angular":
-            tempSampleStatus["angular"] = Market.serialize(Market.get_flavor_status(record))
+            temp_sample_status["angular"] = Market.serialize(Market.get_flavor_status(record))
 
         if record["flavor"] == "vue":
-            tempSampleStatus["vue"] = Market.serialize(Market.get_flavor_status(record))
+            temp_sample_status["vue"] = Market.serialize(Market.get_flavor_status(record))
 
-        if originalIndex is None:
-            preserved_data.append(tempSampleStatus)
+        if original_index is None:
+            preserved_data.append(temp_sample_status)
         else:
-            preserved_data[originalIndex] = tempSampleStatus
+            preserved_data[original_index] = temp_sample_status
 
         with open(file_path, "w") as jsonFile:
             json.dump(preserved_data, jsonFile, indent=4)
@@ -142,14 +142,16 @@ class Market(object):
         Log.info("iOS Pass: " + record["ios"])
         Log.info("++++============END==============++++")
 
+    @staticmethod
     def get_flavor_status(record):
         tempFlavorStatus = FlavorStatus()
-        tempFlavorStatus.setAndroid(Market.convert_to_bool(record["android"]))
-        tempFlavorStatus.setIOS(Market.convert_to_bool(record["ios"]))
-        tempFlavorStatus.setSlow(Market.convert_to_bool(record["slow"]))
+        tempFlavorStatus.set_android(Market.convert_to_bool(record["android"]))
+        tempFlavorStatus.set_ios(Market.convert_to_bool(record["ios"]))
+        tempFlavorStatus.set_slow(Market.convert_to_bool(record["slow"]))
 
         return tempFlavorStatus
 
+    @staticmethod
     def convert_to_bool(value):
         return value.lower() in ("yes", "true", "t", "1")
 
