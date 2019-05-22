@@ -2,7 +2,6 @@ import json
 import os
 import urllib
 
-from datetime import date
 from core.log.log import Log
 from core.settings import Settings
 
