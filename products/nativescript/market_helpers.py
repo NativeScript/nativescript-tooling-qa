@@ -8,6 +8,11 @@ from core.settings import Settings
 
 
 class FlavorStatus(object):
+    def __init__(self):
+        self.android = None
+        self.ios = None
+        self.slow = None
+
     def set_android(self, value):
         self.android = value
 
@@ -77,23 +82,20 @@ class Market(object):
 
         return testing_data
 
+    @staticmethod
     def get_preserved_data():
         file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
         data = None
         if os.path.isfile(file_path):
-            with open(file_path, "r") as jsonFile:
-                data = json.load(jsonFile)
+            with open(file_path, "r") as json_file:
+                data = json.load(json_file)
         else:
-            with open(file_path, "w") as newFile:
-                Log.info("Results.json file created " + newFile)
+            with open(file_path, "w") as new_file:
+                Log.info("Results.json file created " + new_file)
 
         return data
 
-    def serialize(obj):
-        if isinstance(obj, date):
-            serial = obj.isoformat()
-            return serial
-
+    def serialize(self, obj):
         return obj.__dict__
 
     @staticmethod
@@ -133,8 +135,8 @@ class Market(object):
         else:
             preserved_data[original_index] = temp_sample_status
 
-        with open(file_path, "w") as jsonFile:
-            json.dump(preserved_data, jsonFile, indent=4)
+        with open(file_path, "w") as json_file:
+            json.dump(preserved_data, json_file, indent=4)
 
         Log.info("++++============DATA==============++++")
         Log.info(record["name"])
@@ -144,12 +146,12 @@ class Market(object):
 
     @staticmethod
     def get_flavor_status(record):
-        tempFlavorStatus = FlavorStatus()
-        tempFlavorStatus.set_android(Market.convert_to_bool(record["android"]))
-        tempFlavorStatus.set_ios(Market.convert_to_bool(record["ios"]))
-        tempFlavorStatus.set_slow(Market.convert_to_bool(record["slow"]))
+        temp_flavor_status = FlavorStatus()
+        temp_flavor_status.set_android(Market.convert_to_bool(record["android"]))
+        temp_flavor_status.set_ios(Market.convert_to_bool(record["ios"]))
+        temp_flavor_status.set_slow(Market.convert_to_bool(record["slow"]))
 
-        return tempFlavorStatus
+        return temp_flavor_status
 
     @staticmethod
     def convert_to_bool(value):
