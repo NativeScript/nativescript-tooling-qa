@@ -22,7 +22,7 @@ from products.nativescript.tns_paths import TnsPaths
 
 class TnsRunJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
-    app_name_space =Settings.AppName.WITH_SPACE
+    app_name_space = Settings.AppName.WITH_SPACE
     app_path = TnsPaths.get_app_path(app_name)
     app_resources_path = TnsPaths.get_path_app_resources(app_name)
     source_project_dir = TnsPaths.get_app_path(app_name)
@@ -661,7 +661,7 @@ class TnsRunJSTests(TnsRunTest):
             DeviceManager.Simulator.stop()
             result = Tns.run_ios(self.app_name)
             strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
-                                       run_type=RunType.FULL, device=self.sim)
+                                           run_type=RunType.FULL, device=self.sim)
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
             DeviceManager.Simulator.stop()
             DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
@@ -703,7 +703,8 @@ class TnsRunJSTests(TnsRunTest):
         Tns.plugin_add(plugin_path, path=self.app_name, verify=True)
 
         # Replace main-page.js to call method from the source code of the plugin
-        source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650', 'main-view-model.js')
+        source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650',
+                                 'main-view-model.js')
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
         File.copy(source_js, target_js)
 
@@ -725,9 +726,10 @@ class TnsRunJSTests(TnsRunTest):
         source_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'issues', 'nativescript-cli-4343', 'src')
         dest_path = os.path.join(self.app_resources_ios, 'src')
         Folder.copy(source_path, dest_path, clean_target=False)
-        
+
         # Replace main-view-model.js to call method from the source code in app resources
-        source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650', 'main-view-model.js')
+        source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650',
+                                 'main-view-model.js')
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
         File.copy(source_js, target_js)
 
@@ -747,7 +749,7 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run the project with --justLaunch
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
-        
+
         # Delete node_modules
         node_modules = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'node_modules')
         Folder.clean(node_modules)
