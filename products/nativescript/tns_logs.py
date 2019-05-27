@@ -25,9 +25,9 @@ class TnsLogs(object):
             plugins = []
         logs = ['Preparing project...']
         if platform == Platform.ANDROID:
-            logs.append('Project successfully prepared (Android)')
+            logs.append('Project successfully prepared (android)')
         if platform == Platform.IOS:
-            logs.append('Project successfully prepared (iOS)')
+            logs.append('Project successfully prepared (ios)')
         for plugin in plugins:
             logs.append('Successfully prepared plugin {0} for {1}'.format(plugin, str(platform)))
         return logs
@@ -124,10 +124,11 @@ class TnsLogs(object):
         logs = []
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL, RunType.UNKNOWN]:
-                logs.append('Skipping prepare.')
+                # logs.append('Skipping prepare.')
+                logs.append('Starting incremental webpack compilation...')
         else:
-            if not hmr:
-                logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
+            # if not hmr:
+            #     logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
             if bundle:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
