@@ -112,7 +112,7 @@ class TnsLogs(object):
                         'the production mode.')
             # If you are in NG with hmr project changes of app.css should not cause angular reload
             if file_name is not None:
-                if hmr and 'app.css' in file_name:
+                if 'app.css' in file_name:
                     logs.remove('Angular is running in the development mode. Call enableProdMode() to enable '
                                 'the production mode.')
 

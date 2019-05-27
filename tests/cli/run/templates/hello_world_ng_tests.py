@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 
@@ -6,6 +7,8 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
+from core.utils.npm import Npm
+from core.utils.run import run
 from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -22,6 +25,12 @@ class TnsRunNGTests(TnsRunTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
+        Npm.install(package='typescript', option='--save-dev', folder=cls.app_name)
+        Npm.install(package='nativescript-dev-typescript', option='--save-dev', folder=cls.app_name)
+        Npm.uninstall(package='nativescript-dev-typescript', option='--save-dev', folder=cls.app_name)
+        modules_path = os.path.join(cls.app_name, 'node_modules')
+        update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
+        run(cmd=update_script, log_level=logging.INFO)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ng', 'main.ts')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'src')
         File.copy(source=src, target=target)
@@ -50,13 +59,6 @@ class TnsRunNGTests(TnsRunTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_run_ios(self):
         sync_hello_world_ng(self.app_name, Platform.IOS, self.sim)
-
-    def test_200_run_android_no_bundle_no_hmr(self):
-        sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, bundle=False, hmr=False)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_run_ios_no_bundle_no_hmr(self):
-        sync_hello_world_ng(self.app_name, Platform.IOS, self.sim, bundle=False, hmr=False)
 
     def test_300_run_android_bundle_aot(self):
         sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, aot=True)

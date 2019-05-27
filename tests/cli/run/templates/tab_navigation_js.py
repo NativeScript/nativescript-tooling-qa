@@ -53,12 +53,12 @@ class TnsRunJSTabNavigation(TnsRunTest):
     def test_100_run_ios(self):
         sync_tab_navigation_js(self.app_name, Platform.IOS, self.sim)
 
-    def test_200_run_android_no_bundle_no_hmr(self):
-        sync_tab_navigation_js(self.app_name, Platform.ANDROID, self.emu, bundle=False, hmr=False)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_run_ios_no_bundle_no_hmr(self):
-        sync_tab_navigation_js(self.app_name, Platform.IOS, self.sim, bundle=False, hmr=False)
+    # def test_200_run_android_no_bundle_no_hmr(self):
+    #     sync_tab_navigation_js(self.app_name, Platform.ANDROID, self.emu, bundle=False)
+    #
+    # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    # def test_200_run_ios_no_bundle_no_hmr(self):
+    #     sync_tab_navigation_js(self.app_name, Platform.IOS, self.sim, bundle=False)
 
     def test_300_run_android_bundle_aot(self):
         sync_tab_navigation_js(self.app_name, Platform.ANDROID, self.emu, aot=True)
