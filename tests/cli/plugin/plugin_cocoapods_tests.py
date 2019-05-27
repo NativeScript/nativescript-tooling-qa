@@ -19,7 +19,7 @@ class PluginCocoapodsTests(TnsTest):
         @classmethod
         def setUpClass(cls):
             TnsTest.setUpClass()
-            Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
+            Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=True)
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
             Folder.copy(cls.app_name, cls.app_path)
 
@@ -57,8 +57,6 @@ class PluginCocoapodsTests(TnsTest):
 
             result = Tns.prepare_ios(self.app_name)
             assert "Installing pods..." in result.output
-            assert "Successfully prepared plugin carousel for ios." in result.output
-            assert "Successfully prepared plugin keychain for ios." in result.output
 
             output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Podfile'))
             assert "use_frameworks!" in output
@@ -81,7 +79,6 @@ class PluginCocoapodsTests(TnsTest):
             assert "googlesdk" in output
 
             result = Tns.build_ios(self.app_name)
-            assert "Successfully prepared plugin googlesdk for ios." in result.output
             assert "Installing pods..." in result.output
 
             output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Podfile'))
@@ -120,11 +117,6 @@ class PluginCocoapodsTests(TnsTest):
             assert "plugins/hello-plugin" in output
 
             Tns.prepare_ios(self.app_name)
-
-            assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp', 'app',
-                                            'tns_modules', 'hello', 'package.json'))
-            assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp', 'app',
-                                            'tns_modules', 'hello', 'hello-plugin.js'))
             result = run(
                 "cat " + os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp.xcodeproj',
                                       'project.pbxproj | grep \"HelloLib.a\"'))
