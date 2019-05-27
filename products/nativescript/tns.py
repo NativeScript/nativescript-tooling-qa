@@ -222,8 +222,8 @@ class Tns(object):
         return result
 
     @staticmethod
-    def prepare(app_name, platform, release=False, provision=None, for_device=False, bundle=True, log_trace=False,
-                verify=True):
+    def prepare(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
+                log_trace=False, verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
                                   provision=provision, for_device=for_device, bundle=bundle, wait=True,
                                   log_trace=log_trace)
@@ -238,19 +238,19 @@ class Tns(object):
 
     @staticmethod
     def prepare_ios(app_name, release=False, for_device=False, log_trace=False, verify=True,
-                    provision=None):
+                    provision=Settings.IOS.PROVISIONING):
         return Tns.prepare(app_name=app_name, platform=Platform.IOS, release=release, provision=provision,
                            for_device=for_device, log_trace=log_trace, verify=verify)
 
     @staticmethod
-    def build(app_name, platform, release=False, provision=None, for_device=False, bundle=False,
+    def build(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=False,
               aot=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None):
         result = Tns.exec_command(command='build', path=app_name, platform=platform, release=release,
                                   provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
                                   snapshot=snapshot, wait=True, log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'Build failed with non zero exit code.'
-            TnsAssert.build(app_name=app_name, platform=platform, release=False, provision=None,
+            TnsAssert.build(app_name=app_name, platform=platform, release=False, provision=Settings.IOS.PROVISIONING,
                             for_device=False, bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False,
                             output=result.output, app_data=app_data)
         return result
@@ -262,14 +262,14 @@ class Tns(object):
                          uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify, app_data=app_data)
 
     @staticmethod
-    def build_ios(app_name, release=False, provision=None, for_device=False,
+    def build_ios(app_name, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
                   bundle=False, aot=False, uglify=False, log_trace=False, verify=True, app_data=None):
         return Tns.build(app_name=app_name, platform=Platform.IOS, release=release, for_device=for_device,
                          provision=provision, bundle=bundle, aot=aot, uglify=uglify, log_trace=log_trace, verify=verify,
                          app_data=app_data)
 
     @staticmethod
-    def deploy(app_name, platform, device=None, release=False, provision=None, for_device=False,
+    def deploy(app_name, platform, device=None, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
                wait=False, just_launch=False, log_trace=False, verify=True):
         result = Tns.exec_command(command='deploy', path=app_name, platform=platform, device=device, release=release,
                                   provision=provision, for_device=for_device, wait=wait, just_launch=just_launch,
