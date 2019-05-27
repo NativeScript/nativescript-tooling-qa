@@ -93,7 +93,7 @@ class PluginTests(TnsTest):
     def test_210_plugin_with_promise_in_hooks_android(self):
         Tns.plugin_add(plugin_name='nativescript-fabric@1.0.6', path=self.app_name)
         result = Tns.prepare_android(app_name=self.app_name, verify=False)
-        # assert 'Failed to execute hook' in result.output
+        assert 'Failed to execute hook' in result.output
         assert 'nativescript-fabric.js' in result.output
         assert 'TypeError' not in result.output
         assert 'Cannot read property' not in result.output
@@ -104,7 +104,7 @@ class PluginTests(TnsTest):
         assert 'ERR!' not in output
         assert 'nativescript-appversion@' in output
 
-        Tns.build_android(app_name=self.app_name, bundle=False)
+        Tns.build_android(app_name=self.app_name, verify=False)
 
     def test_410_plugin_remove_should_not_fail_if_plugin_name_has_dot_android(self):
         """
