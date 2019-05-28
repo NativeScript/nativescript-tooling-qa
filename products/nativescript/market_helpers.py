@@ -90,7 +90,7 @@ class Market(object):
                 data = json.load(json_file)
         else:
             with open(file_path, "w") as new_file:
-                Log.info("Results.json file created " + new_file)
+                Log.info("Results.json file created " + new_file.name)
 
         return data
 
@@ -159,6 +159,6 @@ class Market(object):
 
     @staticmethod
     def remove_results_file():
-        file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.txt')
+        file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
         if os.path.exists(file_path):
             os.remove(file_path)
