@@ -192,24 +192,25 @@ class BuildTests(TnsTest):
 
     def test_001_build_ios(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        Tns.build_ios(self.app_name)
-        Tns.build_ios(self.app_name, release=True)
-        Tns.build_ios(self.app_name, for_device=True)
-        Tns.build_ios(self.app_name, for_device=True, release=True)
+        Tns.build_ios(self.app_name, bundle=True)
+        Tns.build_ios(self.app_name, release=True, bundle=True)
+        Tns.build_ios(self.app_name, for_device=True, bundle=True)
+        Tns.build_ios(self.app_name, for_device=True, release=True, bundle=True)
         assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), '*.aar'))
         assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), '*.framework'))
-        # TODO Verify ipa has both armv7 and arm64 archs
-        # # Verify ipa has both armv7 and arm64 archs
-        # ipa_path = os.path.join(self.app_name, "platforms", "ios", "build", "Release-iphoneos", "TestApp.ipa")
-        # run("mv " + ipa_path + " TestApp-ipa.tgz")
-        # run("unzip -o TestApp-ipa.tgz")
-        # output = run("lipo -info Payload/TestApp.app/TestApp")
-        # Folder.cleanup("Payload")
-        # assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in output
+
+        # Verify ipa has both armv7 and arm64 archs
+        ipa_path = os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'build', 'Release-iphoneos',
+                                'TestApp.ipa')
+        run("mv " + ipa_path + " TestApp-ipa.tgz")
+        run("unzip -o TestApp-ipa.tgz")
+        result = run("lipo -info Payload/TestApp.app/TestApp")
+        Folder.clean("Payload")
+        assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in result.output
 
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        result = Tns.build_ios(self.app_name, provision=True)
+        result = Tns.build_ios(self.app_name, provision=True, bundle=True)
         assert "Provision Name" in result.output
         assert "Provision UUID" in result.output
         assert "App Id" in result.output
@@ -232,10 +233,11 @@ class BuildTests(TnsTest):
         Tns.platform_remove(self.app_name, platform=Platform.IOS)
         Tns.exec_command(command='build --copy-to ./', path=self.app_name,
                          platform=Platform.IOS, bundle=True)
-        assert File.exists("TestApp.app")
+        appPath = os.path.join(TEST_RUN_HOME, 'TestApp.app')
+        assert File.exists(appPath)
         Tns.exec_command(command='build --copy-to ./', path=self.app_name,
                          platform=Platform.IOS, bundle=True, for_device=True, release=True)
-        assert File.exists("TestApp.ipa")
+        assert File.exists(os.path.join(TEST_RUN_HOME, 'TestApp.ipa'))
 
     def test_320_build_ios_with_custom_entitlements(self):
         # Add entitlements in app/App_Resources/iOS/app.entitlements
@@ -244,9 +246,9 @@ class BuildTests(TnsTest):
         File.copy(source, target)
 
         # Build again and verify entitlements are merged
-        Tns.build_ios(self.app_name)
+        Tns.build_ios(self.app_name, bundle=True)
         entitlements_path = os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), self.app_name,
-                                         '.entitlements')
+                                         'TestApp.entitlements')
         assert File.exists(entitlements_path), "Entitlements file is missing!"
         entitlements_content = File.read(entitlements_path)
         assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
@@ -256,7 +258,7 @@ class BuildTests(TnsTest):
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'plugins', 'nativescript-test-entitlements-1.0.0.tgz')
         Npm.install(package=plugin_path, option='--save', folder=self.app_name)
 
-        Tns.build_ios(self.app_name)
+        Tns.build_ios(self.app_name, bundle=True)
         entitlements_content = File.read(entitlements_path)
         assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
         assert '<string>development</string>' in entitlements_content, "Entitlements file content is wrong!"
@@ -264,6 +266,6 @@ class BuildTests(TnsTest):
         assert '<true/>' in entitlements_content, "Entitlements file content is wrong!"
 
         # Build in release, for device (provision without entitlements)
-        result= Tns.build_ios(self.app_name, for_device=True, release=True)
+        result= Tns.build_ios(self.app_name, for_device=True, release=True, bundle=True)
         assert "Provisioning profile " in result.output
         assert "doesn't include the aps-environment and inter-app-audio entitlements" in result.output
