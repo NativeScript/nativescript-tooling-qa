@@ -438,7 +438,6 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
-
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/4607")
     def test_290_tns_run_android_should_refresh_images(self):
         """
@@ -622,8 +621,8 @@ class TnsRunJSTests(TnsRunTest):
         # Change app id in app.gradle file
         old_string = "<string>${EXECUTABLE_NAME}</string>"
         new_string = "<string>${EXECUTABLE_NAME}</string>" \
-               "<key>CFBundleIdentifier</key>" \
-               "<string>org.nativescript.myapp</string>"
+                     "<key>CFBundleIdentifier</key>" \
+                     "<string>org.nativescript.myapp</string>"
         info_plist = os.path.join(Settings.TEST_RUN_HOME, self.app_resources_ios, 'Info.plist')
 
         File.replace(info_plist, old_string, new_string)
