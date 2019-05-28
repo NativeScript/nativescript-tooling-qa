@@ -668,31 +668,6 @@ class TnsRunJSTests(TnsRunTest):
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
 
-    @unittest.skipIf(Settings.HOST_OS == OSType.LINUX, '`shell cp -r` fails for some reason on emulators on Linux.')
-    def test_340_tns_run_android_should_respect_adb_errors(self):
-        """
-        If device memory is full and error is thrown during deploy cli should respect it
-        https://github.com/NativeScript/nativescript-cli/issues/2170
-        """
-        # Deploy the app to make sure we have something at /data/data/org.nativescript.TestApp
-        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
-
-        # Use all the disk space on emulator
-        for index in range(1, 3000):
-            command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
-            result = Adb.run_adb_command(device_id=self.emu.id, command=command)
-            Log.info(result.output)
-            if "No space left on device" in result.output:
-                break
-
-        # Create new app
-        Tns.create(app_name='TestApp2', template=Template.HELLO_WORLD_JS.local_package, update=False)
-
-        # Run the app and verify there is appropriate error
-        result = Tns.run_android('TestApp2', verify=True, device=self.emu.id, just_launch=True)
-        strings = ['No space left on device']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_345_tns_run_ios_source_code_in_ios_part_plugin(self):
         """
@@ -759,9 +734,34 @@ class TnsRunJSTests(TnsRunTest):
         assert Folder.exists(node_modules)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_60_tns_run_ios_on_folder_with_spaces(self):
+    def test_360_tns_run_ios_on_folder_with_spaces(self):
         """
         `tns run ios` for apps with spaces
         """
         Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=False)
         run_hello_world_js_ts(self.app_name_space, Platform.ANDROID, self.emu, just_launch=True)
+
+    @unittest.skipIf(Settings.HOST_OS == OSType.LINUX, '`shell cp -r` fails for some reason on emulators on Linux.')
+    def test_365_tns_run_android_should_respect_adb_errors(self):
+        """
+        If device memory is full and error is thrown during deploy cli should respect it
+        https://github.com/NativeScript/nativescript-cli/issues/2170
+        """
+        # Deploy the app to make sure we have something at /data/data/org.nativescript.TestApp
+        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
+
+        # Use all the disk space on emulator
+        for index in range(1, 3000):
+            command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
+            result = Adb.run_adb_command(device_id=self.emu.id, command=command)
+            Log.info(result.output)
+            if "No space left on device" in result.output:
+                break
+
+        # Create new app
+        Tns.create(app_name='TestApp2', template=Template.HELLO_WORLD_JS.local_package, update=False)
+
+        # Run the app and verify there is appropriate error
+        result = Tns.run_android('TestApp2', verify=True, device=self.emu.id, just_launch=True)
+        strings = ['No space left on device']
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
