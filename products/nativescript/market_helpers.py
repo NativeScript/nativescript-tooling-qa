@@ -6,6 +6,31 @@ from core.log.log import Log
 from core.settings import Settings
 
 
+class FlavorStatus(object):
+    def __init__(self):
+        self.android = None
+        self.ios = None
+        self.slow = None
+
+    def set_android(self, value):
+        self.android = value
+
+    def get_android(self):
+        return self.android
+
+    def set_ios(self, value):
+        self.ios = value
+
+    def get_ios(self):
+        return self.ios
+
+    def set_slow(self, value):
+        self.slow = value
+
+    def get_slow(self):
+        return self.slow
+
+
 class Market(object):
 
     @staticmethod
@@ -57,11 +82,62 @@ class Market(object):
         return testing_data
 
     @staticmethod
+    def get_preserved_data():
+        file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
+        data = None
+        if os.path.isfile(file_path):
+            with open(file_path, "r") as json_file:
+                data = json.load(json_file)
+        else:
+            with open(file_path, "w") as new_file:
+                Log.info("Results.json file created " + new_file.name)
+
+        return data
+
+    @staticmethod
+    def serialize(obj):
+        return obj.__dict__
+
+    @staticmethod
     def preserve_data(record):
-        # from string to dict - some = ast.literal_eval(test1)
-        file_path = os.path.join(Settings.TEST_OUT_HOME, 'results.txt')
-        with open(file_path, "a") as myfile:
-            myfile.write(str(record)+"\n")
+        file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
+        preserved_data = Market.get_preserved_data()
+        temp_sample_status = None
+        record_name = record["name"]
+        original_index = None
+
+        if preserved_data:
+            temp_sample_status = next((x for x in preserved_data if x["name"] == record_name), None)
+            if temp_sample_status is not None:
+                original_index = preserved_data.index(temp_sample_status)
+        else:
+            preserved_data = []
+
+        if temp_sample_status is None:
+            temp_sample_status = {
+                "name": record_name,
+                "core": None,
+                "angular": None,
+                "vue": None
+            }
+
+        if record["flavor"] == "core":
+            temp_sample_status["core"] = Market.serialize(Market.get_flavor_status(record))
+
+        if record["flavor"] == "angular":
+            temp_sample_status["angular"] = Market.serialize(Market.get_flavor_status(record))
+
+        if record["flavor"] == "vue":
+            temp_sample_status["vue"] = Market.serialize(Market.get_flavor_status(record))
+
+        if original_index is None:
+            preserved_data.append(temp_sample_status)
+        else:
+            preserved_data[original_index] = temp_sample_status
+
+        with open(file_path, "w") as json_file:
+            json.dump(preserved_data, json_file, indent=4)
+
         Log.info("++++============DATA==============++++")
         Log.info(record["name"])
         Log.info("Android Pass: " + record["android"])
@@ -69,7 +145,20 @@ class Market(object):
         Log.info("++++============END==============++++")
 
     @staticmethod
+    def get_flavor_status(record):
+        temp_flavor_status = FlavorStatus()
+        temp_flavor_status.set_android(Market.convert_to_bool(record["android"]))
+        temp_flavor_status.set_ios(Market.convert_to_bool(record["ios"]))
+        temp_flavor_status.set_slow(Market.convert_to_bool(record["slow"]))
+
+        return temp_flavor_status
+
+    @staticmethod
+    def convert_to_bool(value):
+        return value.lower() in ("yes", "true", "t", "1")
+
+    @staticmethod
     def remove_results_file():
-        file_path = os.path.join(Settings.TEST_OUT_HOME, 'results.txt')
+        file_path = os.path.join(Settings.TEST_RUN_HOME, 'results.json')
         if os.path.exists(file_path):
             os.remove(file_path)
