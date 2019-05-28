@@ -2,7 +2,8 @@ import { Component } from "@angular/core";
 
 @Component({
     selector: "ns-app",
-    templateUrl: "app/app.component.html",
+    moduleId: module.id,
+    templateUrl: "./app.component.html"
 })
 export class AppComponent {
     constructor() {
@@ -13,3 +14,4 @@ export class AppComponent {
         }, 1000);
     }
  }
+

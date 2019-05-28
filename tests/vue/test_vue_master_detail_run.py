@@ -5,7 +5,8 @@ from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
+from core.utils.npm import Npm
 from data.sync.master_detail_vue import sync_master_detail_vue
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -19,6 +20,12 @@ class VueJSMasterDetailTests(TnsRunTest):
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
+
+        # Ensure template package
+        template_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates', 'packages', Template.MASTER_DETAIL_VUE.name)
+        out_file = os.path.join(Settings.TEST_SUT_HOME, Template.MASTER_DETAIL_VUE.name + '.tgz')
+        Npm.pack(folder=template_folder, output_file=out_file)
+        assert File.exists(out_file), "Failed to pack template: " + Template.MASTER_DETAIL_VUE.name
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.MASTER_DETAIL_VUE.local_package, update=True)

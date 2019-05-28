@@ -10,6 +10,7 @@ from nose.tools import timed
 
 from core.base_test.tns_test import TnsTest
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.utils.device.device import Device
 from core.utils.device.device_manager import DeviceManager
 from core.utils.wait import Wait
@@ -125,12 +126,16 @@ class IOSRuntimeTests(TnsTest):
         strings = ['Project successfully built', 'Successfully installed on device with identifier', self.sim.id]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
 
-        folder_path = os.path.join(APP_PATH, 'platforms', 'ios', APP_NAME, 'app',
-                                   'tns_modules', 'nativescript-ui-core')
-        assert Folder.exists(folder_path), "Cannot find folder: " + folder_path
-
         # Verify app is running on device
         Device.wait_for_text(self.sim, text=TAP_THE_BUTTON)
+
+        tns_core_framework = 'TNSCore.framework'
+        path_to_file = os.path.join(APP_PATH, 'platforms', 'ios', 'TestApp.xcodeproj', 'project.pbxproj')
+        if tns_core_framework in File.read(path_to_file):
+            Log.info("{0} found in {1}".format(tns_core_framework, path_to_file))
+            assert True
+        else:
+            assert False, "Cannot find {0} in {1}".format(tns_core_framework, path_to_file)
 
     def test_385_methods_with_same_name_and_different_parameters(self):
         """
@@ -178,8 +183,8 @@ class IOSRuntimeTests(TnsTest):
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
-        strings = ['CONSOLE LOG file:///app/app.js:4:16: The folder “not-existing-path” doesn’t exist.',
-                   'JS: 1   contentsOfDirectoryAtPathError@file:///app/main-view-model.js:6:47']
+        strings = ['CONSOLE LOG file:///app/bundle.js:142:16: The folder “not-existing-path” doesn’t exist.',
+                   'JS: 1   contentsOfDirectoryAtPathError@file:///app/bundle.js:235:47']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
