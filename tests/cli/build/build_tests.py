@@ -25,6 +25,7 @@ class BuildTests(TnsTest):
     DEVELOPMENT_TEAM = Settings.IOS.DEVELOPMENT_TEAM
     DISTRIBUTION_PROVISIONING = Settings.IOS.DISTRIBUTION_PROVISIONING
     FAKE = os.environ.get("FAKE")
+    EmptyProvision = os.environ.get(" ")
 
     @classmethod
     def setUpClass(cls):
@@ -210,7 +211,7 @@ class BuildTests(TnsTest):
 
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        result = Tns.build_ios(self.app_name, provision=True, bundle=True)
+        result = Tns.exec_command(command='build ios --provision', path=self.app_name, bundle=True)
         assert "Provision Name" in result.output
         assert "Provision UUID" in result.output
         assert "App Id" in result.output
