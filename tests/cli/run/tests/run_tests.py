@@ -2,12 +2,13 @@ import os
 import nose
 import time
 import unittest
-from core.base_test.tns_run_test import TnsRunTest
+from core.base_test.tns_run_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File, Process
 from core.utils.device.adb import Adb
+from core.utils.device.simctl import Simctl
 from core.utils.device.device_manager import DeviceManager
 from core.log.log import Log
 from data.changes import Changes, Sync
@@ -20,7 +21,7 @@ from products.nativescript.run_type import RunType
 from products.nativescript.tns_paths import TnsPaths
 
 
-class TnsRunJSTests(TnsRunTest):
+class TnsRunJSTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
     app_name_space = Settings.AppName.WITH_SPACE
     app_path = TnsPaths.get_app_path(app_name)
@@ -32,10 +33,14 @@ class TnsRunJSTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
-        TnsRunTest.setUpClass()
+        TnsTest.setUpClass()
+        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_28)
+        if Settings.HOST_OS is OSType.OSX:
+            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+            Simctl.uninstall_all(cls.sim)
 
         # Create app
-        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
         target = os.path.join(cls.app_path, 'app')
         File.copy(source=src, target=target)
@@ -47,7 +52,11 @@ class TnsRunJSTests(TnsRunTest):
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):
-        TnsRunTest.setUp(self)
+        TnsTest.setUp(self)
+        Adb.open_home(self.emu.id)
+        Adb.clear_logcat(self.emu.id)
+        if Settings.HOST_OS is OSType.OSX:
+            Simctl.stop_all(self.sim)
 
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.
@@ -415,7 +424,7 @@ class TnsRunJSTests(TnsRunTest):
         # Run app with --justlaunch and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
         # On some machines it takes time for thr process to die
-        time.sleep(5)
+        time.sleep(7)
         assert not Process.is_running_by_name('node')
     
         # Execute run with --justlaunch again and verify no rebuild is triggered
