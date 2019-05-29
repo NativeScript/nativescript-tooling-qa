@@ -8,6 +8,7 @@ from core.enums.app_type import AppType
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File
+from core.utils.npm import Npm
 from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -31,7 +32,6 @@ def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglif
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
                              instrumented=instrumented)
-
 
 def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False,
                           aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False):
