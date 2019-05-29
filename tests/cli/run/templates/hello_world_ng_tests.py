@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 
@@ -6,6 +7,8 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
+from core.utils.npm import Npm
+from core.utils.run import run
 from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -22,6 +25,12 @@ class TnsRunNGTests(TnsRunTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
+        Npm.install(package='typescript', option='--save-dev', folder=cls.app_name)
+        Npm.install(package='nativescript-dev-typescript', option='--save-dev', folder=cls.app_name)
+        Npm.uninstall(package='nativescript-dev-typescript', option='--save-dev', folder=cls.app_name)
+        modules_path = os.path.join(cls.app_name, 'node_modules')
+        update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
+        run(cmd=update_script, log_level=logging.INFO)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ng', 'main.ts')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'src')
         File.copy(source=src, target=target)
