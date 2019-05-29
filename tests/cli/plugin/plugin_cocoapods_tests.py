@@ -126,11 +126,11 @@ class PluginCocoapodsTests(TnsTest):
 
             Tns.prepare_ios(self.app_name)
 
-            bundle_js =  File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'bundle.js'))
-            vendor_js =  File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'vendor.js'))
+            bundle_js = File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'bundle.js'))
+            vendor_js = File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'vendor.js'))
             assert '__webpack_require__("../node_modules/hello/hello-plugin.js")' in bundle_js
             assert 'hello = Hello.alloc().init();' in vendor_js
-            
+
             result = run(
                 "cat " + os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp.xcodeproj',
                                       'project.pbxproj | grep \"HelloLib.a\"'))
