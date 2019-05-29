@@ -75,5 +75,5 @@ class TnsPaths(object):
         if ' ' in app_name:
             app_name = app_name.replace(' ', '')
         if '"' in app_name:
-            app_name = app_name.replace('"', '') 
+            app_name = app_name.replace('"', '')
         return 'org.nativescript.' + app_name
