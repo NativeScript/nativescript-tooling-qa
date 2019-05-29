@@ -390,7 +390,7 @@ class TnsRunJSTests(TnsTest):
         # Run app with --justlaunch and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
         # On some machines it takes time for thr process to die
-        time.sleep(5)
+        time.sleep(10)
         assert not Process.is_running_by_name('node')
 
         # Execute run with --justlaunch again and verify no rebuild is triggered
@@ -424,7 +424,7 @@ class TnsRunJSTests(TnsTest):
         # Run app with --justlaunch and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
         # On some machines it takes time for thr process to die
-        time.sleep(7)
+        time.sleep(10)
         assert not Process.is_running_by_name('node')
 
         # Execute run with --justlaunch again and verify no rebuild is triggered
