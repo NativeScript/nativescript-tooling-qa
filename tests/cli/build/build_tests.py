@@ -225,7 +225,7 @@ class BuildTests(TnsTest):
                       bundle=True)
 
         # Verify that passing wrong provision shows user friendly error
-        result = Tns.build_ios(self.app_name, provision=self.FAKE, verify=False)
+        result = Tns.build_ios(self.app_name, provision=self.FAKE, verify=False, bundle=True)
         assert "Failed to find mobile provision with UUID or Name: fake" in result.output
 
     def test_310_build_ios_with_copy_to(self):
