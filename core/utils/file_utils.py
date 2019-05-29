@@ -147,7 +147,9 @@ class File(object):
                 text_file.write(text)
 
     @staticmethod
-    def replace(path, old_string, new_string, fail_safe=False):
+    def replace(path, old_string, new_string, fail_safe=False, files_to_restore=None):
+        if files_to_restore is not None:
+            File.__back_up_files(path, files_to_restore)
         content = File.read(path=path)
         old_text_exists = old_string in content
         if not fail_safe:
@@ -169,13 +171,28 @@ class File(object):
         return os.path.isfile(path)
 
     @staticmethod
-    def copy(source, target):
+    def __back_up_files(backup_file, files_to_restore):
+        temp_folder = os.path.join(Settings.TEST_RUN_HOME, "backup_folder")
+        # create temp folder if missing
+        if not Folder.exists(temp_folder):
+            Folder.create(temp_folder)
+        files_to_restore[backup_file.split("/")[-1:][0]] = backup_file
+        # backup file if from the template
+        if File.exists(backup_file):
+            shutil.copy(backup_file, temp_folder)
+
+    @staticmethod
+    def copy(source, target, files_to_restore=None):
+        if files_to_restore is not None:
+            File.__back_up_files(target, files_to_restore)
         shutil.copy(source, target)
         Log.info('Copy {0} to {1}'.format(os.path.abspath(source), os.path.abspath(target)))
 
     @staticmethod
-    def delete(path):
+    def delete(path, files_to_restore=None):
         if os.path.isfile(path):
+            if files_to_restore is not None:
+                File.__back_up_files(path, files_to_restore)
             os.remove(path)
             Log.debug('Delete {0}'.format(path))
         else:

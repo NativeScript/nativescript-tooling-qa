@@ -16,6 +16,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
+RESTORE_FILES = {}
 
 
 class AndroidServiceTests(TnsTest):
@@ -30,6 +31,7 @@ class AndroidServiceTests(TnsTest):
 
     def tearDown(self):
         TnsTest.tearDown(self)
+        TnsTest.restore_files(RESTORE_FILES)
 
     @classmethod
     def tearDownClass(cls):
@@ -43,13 +45,13 @@ class AndroidServiceTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), RESTORE_FILES)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'sticky', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), RESTORE_FILES)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), RESTORE_FILES)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
@@ -84,13 +86,13 @@ class AndroidServiceTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), RESTORE_FILES)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'not_sticky', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), RESTORE_FILES)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), RESTORE_FILES)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
@@ -125,13 +127,13 @@ class AndroidServiceTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), RESTORE_FILES)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'without_oncreate_method', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), RESTORE_FILES)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), RESTORE_FILES)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,

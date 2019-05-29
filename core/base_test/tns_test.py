@@ -9,7 +9,7 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.gradle import Gradle
 from core.utils.process import Process
 from core.utils.xcode import Xcode
@@ -111,6 +111,24 @@ class TnsTest(unittest.TestCase):
                 archive_path = os.path.join(Settings.TEST_OUT_HOME, TestContext.CLASS_NAME, TestContext.TEST_NAME,
                                             TestContext.TEST_APP_NAME)
                 Log.info('Archive app under test at: {0}'.format(archive_path))
+
+    @staticmethod
+    def restore_files(files_to_restore):
+        if files_to_restore:
+            temp_folder = os.path.join(Settings.TEST_RUN_HOME, "backup_folder")
+            for file_name in files_to_restore:
+                file_temp_path = os.path.join(temp_folder, file_name)
+                file_path = str(files_to_restore[file_name])
+                # delete file not from the original template
+                if not File.exists(file_temp_path):
+                    File.delete(file_path)
+                else:
+                    File.copy(file_temp_path, file_path)
+                    File.delete(file_temp_path)
+            files_to_restore.clear()
+            Folder.clean(temp_folder)
+        else:
+            Log.info('No files to restore!')
 
 
 if __name__ == '__main__':
