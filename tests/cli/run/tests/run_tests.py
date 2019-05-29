@@ -63,33 +63,33 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
-
+    
         # Make changes in xml that will break the app
         Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
         strings = ['main-page.xml', 'Error: Parsing XML']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
-
+    
         # Revert changes
         Sync.revert(self.app_name, Changes.JSHelloWord.XML_INVALID)
-
+    
         # Verify app is synced and recovered
         strings = ['Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         assert not self.emu.is_text_visible(text='Exception')
-
+    
         # Delete app.js and verify app crash with error activity dialog
         app_js_origin_path = os.path.join(self.source_project_dir, 'app', 'app.js')
         app_js_backup_path = os.path.join(self.target_project_dir, 'app', 'app.js')
         File.delete(app_js_origin_path)
-
+    
         # Verify app is synced
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        device=self.emu, run_type=RunType.UNKNOWN)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
-
+    
         # Restore app.js and verify app is synced and recovered
         File.copy(app_js_backup_path, app_js_origin_path)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
@@ -97,7 +97,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         assert not self.emu.is_text_visible(text='Exception')
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_run_ios_break_and_fix_app(self):
         """
@@ -106,20 +106,20 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
-
+    
         # Make changes in xml that will break the app
         Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
         strings = ['main-page.xml', 'Error: Parsing XML']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Revert changes
         Sync.revert(self.app_name, Changes.JSHelloWord.XML_INVALID)
-
+    
         # Verify app is synced and recovered
         strings = ['Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-
+    
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_105_tns_run_android_changes_in_app_resounces(self):
         """
@@ -128,18 +128,18 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
-
+    
         # Make changes in AndroidManifest.xml
         manifest_path = os.path.join(self.app_resources_android, 'src', 'main', 'AndroidManifest.xml')
         File.replace(manifest_path, 'largeScreens="true"', 'largeScreens="false"')
-
+    
         # Verify rebuild is triggered and app is synced
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-
+    
         # Make changes in AppResources/Android
         File.copy(os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'android', 'drawable-hdpi', 'icon.png'),
                   os.path.join(self.app_resources_android, 'src', 'main', 'res', 'drawable-hdpi', 'icon.png'))
@@ -149,7 +149,7 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Xcode build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
         # https://github.com/NativeScript/nativescript-cli/issues/3658
         Tns.kill()
         # Make changes in AppResources/iOS
@@ -162,7 +162,7 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Xcode build', 'Gradle build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_105_tns_run_ios_changes_in_app_resounces(self):
         """
@@ -171,18 +171,18 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
-
+    
         # Make changes in app resources, add aditional icon
         File.copy(os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'ios', 'Default.png'),
                   os.path.join(self.app_resources_ios, 'Assets.xcassets', 'icon.png'))
-
+    
         # Verify rebuild is triggered and app is synced
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
                                        run_type=RunType.FULL, device=self.sim)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-
+    
         # Make changes in AppResources/IOS
         File.copy(os.path.join(os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'ios', 'Default.png')),
                   os.path.join(self.app_resources_ios, 'Assets.xcassets', 'AppIcon.appiconset', 'icon-20.png'))
@@ -192,7 +192,7 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Gradle build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
         # https://github.com/NativeScript/nativescript-cli/issues/3658
         Tns.kill()
         # Make changes in AppResources/Android
@@ -205,7 +205,7 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Xcode build', 'Gradle build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
     def test_110_tns_run_android_release(self):
         # Run app and verify on device
         result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
@@ -221,19 +221,19 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         blue_count = self.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
         assert blue_count > 100, 'Failed to find blue color on {0}'.format(self.emu.name)
-
+    
         Tns.kill()
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.CSS)
-
+    
         # Run with --release again and verify changes are deployed on device
         result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
         self.emu.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_110_tns_run_ios_release(self):
         # Run app and verify on device
@@ -247,19 +247,19 @@ class TnsRunJSTests(TnsRunTest):
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         blue_count = self.sim.get_pixels_by_color(color=Colors.LIGHT_BLUE)
         assert blue_count > 100, 'Failed to find blue color on {0}'.format(self.sim.name)
-
+    
         Tns.kill()
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.CSS)
-
+    
         # Run with --release again and verify changes are deployed on device
         result = Tns.run_ios(app_name=self.app_name, release=True, verify=True, emulator=True)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
         self.sim.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
-
+    
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_115_tns_run_android_add_remove_files_and_folders(self):
         """
@@ -267,7 +267,7 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
-
+    
         # Add new file
         # To verify that file is synced on device we have to refer some function
         # from it and verify it is executed. We will use console.log
@@ -279,20 +279,20 @@ class TnsRunJSTests(TnsRunTest):
         File.append(app_js_file, "require('./test.js');")
         strings = ["JS: test.js synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Rename file
         os.rename(new_file, renamed_file)
         File.replace(renamed_file, 'test.js', 'renamed file')
         File.replace(app_js_file, 'test.js', 'test_2.js')
         strings = ["JS: renamed file synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Delete file
         File.delete(renamed_file)
         strings = ["Module build failed: Error: ENOENT", 'Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
-
+    
         File.replace(app_js_file, "require('./test_2.js');", ' ')
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        device=self.emu, run_type=RunType.UNKNOWN)
@@ -300,7 +300,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
         # Add folder
         folder_name = os.path.join(app_folder, 'test_folder')
         new_file = os.path.join(folder_name, 'test_in_folder.js')
@@ -309,13 +309,13 @@ class TnsRunJSTests(TnsRunTest):
         File.append(app_js_file, "require('./test_folder/test_in_folder.js');")
         strings = ["JS: test_in_folder.js synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Delete folder
         Folder.clean(folder_name)
         strings = ["Module build failed: Error: ENOENT"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_115_tns_run_ios_add_remove_files_and_folders(self):
         """
@@ -323,7 +323,7 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run app and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
-
+    
         # Add new file
         # To verify that file is synced on device we have to refer some function
         # from it and verify it is executed. We will use console.log
@@ -335,19 +335,19 @@ class TnsRunJSTests(TnsRunTest):
         File.append(app_js_file, "require('./test.js');")
         strings = ["test.js synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Rename file
         os.rename(new_file, renamed_file)
         File.replace(renamed_file, 'test.js', 'renamed file')
         File.replace(app_js_file, 'test.js', 'test_2.js')
         strings = ["renamed file synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Delete file
         File.delete(renamed_file)
         strings = ["Module build failed: Error: ENOENT", "NativeScript debugger detached"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         File.replace(app_js_file, "require('./test_2.js');", ' ')
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
                                        device=self.sim, run_type=RunType.UNKNOWN)
@@ -355,7 +355,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
         # Add folder
         folder_name = os.path.join(app_folder, 'test_folder')
         new_file = os.path.join(folder_name, 'test_in_folder.js')
@@ -365,12 +365,12 @@ class TnsRunJSTests(TnsRunTest):
         strings = ["test_in_folder.js synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
         # Delete folder
         Folder.clean(folder_name)
         strings = ["Module build failed: Error: ENOENT"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
     def test_120_tns_run_android_just_launch(self):
         """
         This test verify following things:
@@ -383,7 +383,7 @@ class TnsRunJSTests(TnsRunTest):
         # On some machines it takes time for thr process to die
         time.sleep(5)
         assert not Process.is_running_by_name('node')
-
+    
         # Execute run with --justlaunch again and verify no rebuild is triggered
         result = Tns.run_android(app_name=self.app_name, emulator=True, just_launch=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
@@ -392,18 +392,18 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Preparing project...', 'Webpack compilation complete.']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.CSS)
-
+    
         # Execute run with --justlaunch again and verify prepare is triggered
         result = Tns.run_android(app_name=self.app_name, emulator=True, just_launch=True)
         strings = ['Project successfully prepared', 'Webpack compilation complete']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_120_tns_run_ios_just_launch(self):
         """
@@ -417,7 +417,7 @@ class TnsRunJSTests(TnsRunTest):
         # On some machines it takes time for thr process to die
         time.sleep(5)
         assert not Process.is_running_by_name('node')
-
+    
         # Execute run with --justlaunch again and verify no rebuild is triggered
         result = Tns.run_ios(app_name=self.app_name, emulator=True, just_launch=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
@@ -426,18 +426,18 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Preparing project...', 'Webpack compilation complete.']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.CSS)
-
+    
         # Execute run with --justlaunch again and verify prepare is triggered
         result = Tns.run_ios(app_name=self.app_name, emulator=True, just_launch=True)
         strings = ['Project successfully prepared', 'Webpack compilation complete']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-
+    
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/4607")
     def test_290_tns_run_android_should_refresh_images(self):
         """
@@ -447,7 +447,7 @@ class TnsRunJSTests(TnsRunTest):
         source_file = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'issues', 'nativescript-cli-2981', 'main-page.xml')
         dest_file = os.path.join(self.app_path, 'app', 'main-page.xml')
         File.copy(source_file, dest_file)
-
+    
         # Copy image file to app folder
         source_file = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'star.png')
         dest_file = os.path.join(self.app_path, 'app', 'test.png')
@@ -458,11 +458,11 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         yellow_count = self.emu.get_pixels_by_color(color=Colors.YELLOW_ICON)
         green_count = self.emu.get_pixels_by_color(color=Colors.GREEN_ICON)
-
+    
         # Verify the referenced image file is displayed on device screen
         assert yellow_count > 0, 'Failed to find yellow color on {0}'.format(self.emu.name)
         assert green_count == 0, 'Found green color on {0}'.format(self.emu.name)
-
+    
         # Change the image file
         source_file = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'android',
                                    'drawable-hdpi', 'background.png')
@@ -471,13 +471,13 @@ class TnsRunJSTests(TnsRunTest):
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.UNKNOWN, device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Verify the new image is synced and displayed on device screen
         yellow_count = self.emu.get_pixels_by_color(color=Colors.YELLOW_ICON)
         green_count = self.emu.get_pixels_by_color(color=Colors.GREEN_ICON)
         assert green_count > 0, 'Failed to find green color on {0}'.format(self.emu.name)
         assert yellow_count == 0, 'Found yellow color on {0}'.format(self.emu.name)
-
+    
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_300_tns_run_android_clean(self):
         """
@@ -485,13 +485,13 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run the project once so it is build for the first time
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
-
+    
         # Verify run --clean without changes skip prepare and rebuild of native project
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
         strings = ['Skipping prepare', 'Building project', 'Gradle clean']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-
+    
         # Verify if changes are applied and then run with clean it will apply changes on device
         # Verify https://github.com/NativeScript/nativescript-cli/issues/2670 run --clean does
         # clean build only the first time
@@ -502,7 +502,7 @@ class TnsRunJSTests(TnsRunTest):
         strings.append('Gradle clean')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-
+    
         # Make changes again and verify changes are synced and clean build is not triggered again
         Sync.revert(self.app_name, Changes.JSHelloWord.XML)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
@@ -510,7 +510,7 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Gradle clean']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_tns_run_ios_clean(self):
         """
@@ -518,13 +518,13 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run the project once so it is build for the first time
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
-
+    
         # Verify run --clean without changes rebuilds native project
         result = Tns.run_ios(app_name=self.app_name, verify=True, device=self.sim.id, clean=True, just_launch=True)
         strings = ['Building project', 'Xcode build...']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-
+    
         # Verify if changes are applied and then run with clean it will apply changes on device
         # Verify https://github.com/NativeScript/nativescript-cli/issues/2670 run --clean does
         # clean build only the first time
@@ -535,7 +535,7 @@ class TnsRunJSTests(TnsRunTest):
         strings.append('Xcode build...')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-
+    
         # Make changes again and verify changes are synced and clean build is not triggered again
         Sync.revert(self.app_name, Changes.JSHelloWord.XML)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
@@ -543,7 +543,7 @@ class TnsRunJSTests(TnsRunTest):
         not_existing_strings = ['Xcode build...']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
-
+    
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-dev-webpack/issues/899")
     def test_310_tns_run_android_sync_changes_in_node_modules(self):
         """
@@ -551,14 +551,14 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run the project
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, sync_all_files=True)
-
+    
         # Make code changes in tns-core-modules verify livesync is triggered
         Sync.replace(self.app_name, Changes.NodeModules.TNS_MODULES)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.INCREMENTAL, device=self.emu, file_name='application-common.js')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
     @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-dev-webpack/issues/899")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_310_tns_run_ios_sync_changes_in_node_modules(self):
@@ -567,14 +567,14 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run the project
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, sync_all_files=True)
-
+    
         # Make code changes in tns-core-modules verify livesync is triggered
         Sync.replace(self.app_name, Changes.NodeModules.TNS_MODULES)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.INCREMENTAL, device=self.emu, file_name='application-common.js')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
     def test_315_tns_run_android_sync_changes_in_aar_files(self):
         """
         Livesync should sync aar file changes inside a plugin
@@ -583,7 +583,7 @@ class TnsRunJSTests(TnsRunTest):
         # Add plugin and run the project
         Tns.plugin_add('nativescript-camera', self.app_name)
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, sync_all_files=True)
-
+    
         # Make  changes in nativescript-camera .aar file and  verify livesync is triggered
         new_aar = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'issues', 'nativescript-cli-3932',
                                'nativescript-ui-listview', 'platforms', 'android', 'TNSListView-release.aar')
@@ -593,46 +593,46 @@ class TnsRunJSTests(TnsRunTest):
                                        run_type=RunType.FULL, device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
     def test_320_tns_run_android_should_warn_if_package_ids_dont_match(self):
         """
         If bundle identifiers in package.json and app.gradle do not match CLI should warn the user.
         """
-
+    
         # Change app id in app.gradle file
         app_gradle = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'App_Resources',
                                   'Android', 'app.gradle')
         File.replace(app_gradle, old_string='generatedDensities = []',
                      new_string='applicationId = "org.nativescript.MyApp"')
-
+    
         # Run the app on device and verify the warnings
         result = Tns.run_android(app_name=self.app_name, just_launch=False)
         strings = ["WARNING: The Application identifier is different from the one inside \"package.json\" file.",
                    "NativeScript CLI might not work properly.",
                    "Project successfully built"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_320_tns_run_ios_should_warn_if_package_ids_dont_match(self):
         """
         If bundle identifiers in package.json and Info.plist do not match CLI should warn the user.
         """
-
+    
         # Change app id in app.gradle file
         old_string = "<string>${EXECUTABLE_NAME}</string>"
         new_string = "<string>${EXECUTABLE_NAME}</string>" \
                      "<key>CFBundleIdentifier</key>" \
                      "<string>org.nativescript.myapp</string>"
         info_plist = os.path.join(Settings.TEST_RUN_HOME, self.app_resources_ios, 'Info.plist')
-
+    
         File.replace(info_plist, old_string, new_string)
-
+    
         # Run the app on device and verify the warnings
         result = Tns.run_ios(app_name=self.app_name, just_launch=False)
         strings = ["[WARNING]: The CFBundleIdentifier key inside the 'Info.plist' will be overriden",
                    "Project successfully built"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
     def test_325_tns_run_android_should_start_emulator(self):
         """
         `tns run android` should start emulator if device is not connected.
@@ -648,7 +648,7 @@ class TnsRunJSTests(TnsRunTest):
             DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_325_tns_run_ios_should_start_simulator(self):
         """
@@ -666,7 +666,7 @@ class TnsRunJSTests(TnsRunTest):
             DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
         else:
             raise nose.SkipTest('This test is not valid when devices are connected.')
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_345_tns_run_ios_source_code_in_ios_part_plugin(self):
         """
@@ -675,22 +675,22 @@ class TnsRunJSTests(TnsRunTest):
         # Add plugin with source code in iOS part of the plugin
         plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'sample-plugin', 'src')
         Tns.plugin_add(plugin_path, path=self.app_name, verify=True)
-
+    
         # Replace main-page.js to call method from the source code of the plugin
         source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650',
                                  'main-view-model.js')
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
         File.copy(source_js, target_js)
-
+    
         result = Tns.run_ios(self.app_name, emulator=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
                                        run_type=RunType.FIRST_TIME, device=self.sim)
         strings.append('Hey!')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Verify app looks correct inside simulator
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_350_tns_run_ios_source_code_in_app_resources(self):
         """
@@ -700,19 +700,19 @@ class TnsRunJSTests(TnsRunTest):
         source_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'issues', 'nativescript-cli-4343', 'src')
         dest_path = os.path.join(self.app_resources_ios, 'src')
         Folder.copy(source_path, dest_path, clean_target=False)
-
+    
         # Replace main-view-model.js to call method from the source code in app resources
         source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650',
                                  'main-view-model.js')
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
         File.copy(source_js, target_js)
-
+    
         result = Tns.run_ios(self.app_name, emulator=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
                                        run_type=RunType.FIRST_TIME, device=self.sim)
         strings.append('Hey Native!')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
+    
         # Verify app looks correct inside simulator
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -723,11 +723,11 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Run the project with --justLaunch
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
-
+    
         # Delete node_modules
         node_modules = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'node_modules')
         Folder.clean(node_modules)
-
+    
         # Run the project again, verify it is build and node_modules folder exists
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
         assert Folder.exists(node_modules)
@@ -738,7 +738,8 @@ class TnsRunJSTests(TnsRunTest):
         `tns run ios` for apps with spaces
         """
         Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=False)
-        run_hello_world_js_ts(self.app_name_space, Platform.ANDROID, self.emu, just_launch=True)
+        app_name = '"' + self.app_name_space + '"'
+        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
 
     @unittest.skipIf(Settings.HOST_OS == OSType.LINUX, '`shell cp -r` fails for some reason on emulators on Linux.')
     def test_365_tns_run_android_should_respect_adb_errors(self):
@@ -748,7 +749,7 @@ class TnsRunJSTests(TnsRunTest):
         """
         # Deploy the app to make sure we have something at /data/data/org.nativescript.TestApp
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
-
+    
         # Use all the disk space on emulator
         for index in range(1, 3000):
             command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
@@ -756,10 +757,10 @@ class TnsRunJSTests(TnsRunTest):
             Log.info(result.output)
             if "No space left on device" in result.output:
                 break
-
+    
         # Create new app
         Tns.create(app_name='TestApp2', template=Template.HELLO_WORLD_JS.local_package, update=False)
-
+    
         # Run the app and verify there is appropriate error
         result = Tns.run_android('TestApp2', verify=True, device=self.emu.id, just_launch=True)
         strings = ['No space left on device']
