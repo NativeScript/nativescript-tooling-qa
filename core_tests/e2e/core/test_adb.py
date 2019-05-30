@@ -28,7 +28,7 @@ class AdbTests(TnsTest):
 
     def tearDown(self):
         TnsTest.tearDown(self)
-        Process.kill("adb")
+        Process.kill(proc_name="adb")
 
     @classmethod
     def tearDownClass(cls):
