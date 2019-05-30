@@ -44,7 +44,7 @@ class PluginCocoapodsTests(TnsTest):
                                             'package.json'))
             assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'carousel', 'platforms',
                                             'ios', 'Podfile'))
-            assert "carousel" in File.read(os.path.join(self.app_name, 'package.json'))
+            assert "carousel" in File.read(os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'package.json'))
 
             plugin_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'plugins', 'CocoaPods', 'keychain.tgz')
             result = Tns.plugin_add(plugin_path, path=Settings.AppName.DEFAULT)
@@ -53,12 +53,13 @@ class PluginCocoapodsTests(TnsTest):
                                             'package.json'))
             assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'keychain', 'platforms',
                                             'ios', 'Podfile'))
-            assert "keychain" in File.read(os.path.join(self.app_name, 'package.json'))
+            assert "keychain" in File.read(os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'package.json'))
 
             result = Tns.prepare_ios(self.app_name)
             assert "Installing pods..." in result.output
-            assert "Successfully prepared plugin carousel for ios." in result.output
-            assert "Successfully prepared plugin keychain for ios." in result.output
+            # These asserts will be available again after we merge the webpack only branch for 6.0.0 release
+            # assert "Successfully prepared plugin carousel for ios." in result.output
+            # assert "Successfully prepared plugin keychain for ios." in result.output
 
             output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Podfile'))
             assert "use_frameworks!" in output
@@ -119,12 +120,17 @@ class PluginCocoapodsTests(TnsTest):
             output = File.read(os.path.join(self.app_name, 'package.json'))
             assert "plugins/hello-plugin" in output
 
+            # Require the plugin so webpack can pick it up
+            main_js_file = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-page.js')
+            File.append(main_js_file, 'const hello = require("hello");')
+
             Tns.prepare_ios(self.app_name)
 
-            assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp', 'app',
-                                            'tns_modules', 'hello', 'package.json'))
-            assert File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp', 'app',
-                                            'tns_modules', 'hello', 'hello-plugin.js'))
+            bundle_js = File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'bundle.js'))
+            vendor_js = File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'vendor.js'))
+            assert '__webpack_require__("../node_modules/hello/hello-plugin.js")' in bundle_js
+            assert 'hello = Hello.alloc().init();' in vendor_js
+
             result = run(
                 "cat " + os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp.xcodeproj',
                                       'project.pbxproj | grep \"HelloLib.a\"'))
