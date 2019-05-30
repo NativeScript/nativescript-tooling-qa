@@ -6,9 +6,10 @@ from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File
-
-
 # noinspection PyMethodMayBeStatic
+from core.utils.process import Process
+
+
 class AdbTests(TnsTest):
     emu = None
     apk_path = None
@@ -27,6 +28,7 @@ class AdbTests(TnsTest):
 
     def tearDown(self):
         TnsTest.tearDown(self)
+        Process.kill("adb")
 
     @classmethod
     def tearDownClass(cls):
@@ -43,7 +45,6 @@ class AdbTests(TnsTest):
 
     def test_03_get_active_services(self):
         services = Adb.get_active_services(self.emu.id)
-        assert services != ""
         assert "ACTIVITY MANAGER SERVICES" in services
 
     def test_03_get_process_pid(self):
