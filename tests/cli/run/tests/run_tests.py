@@ -21,6 +21,8 @@ from products.nativescript.tns_paths import TnsPaths
 
 
 Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
+
+
 class TnsRunJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_name_space = Settings.AppName.WITH_SPACE
