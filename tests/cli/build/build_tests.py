@@ -21,7 +21,6 @@ class BuildTests(TnsTest):
     debug_apk = "app-debug.apk"
     release_apk = "app-release.apk"
     app_identifier = "org.nativescript.testapp"
-    FAKE = os.environ.get("FAKE")
     EmptyProvision = os.environ.get(" ")
 
     @classmethod
@@ -205,7 +204,7 @@ class BuildTests(TnsTest):
         result = run("lipo -info Payload/TestApp.app/TestApp")
         Folder.clean("Payload")
         assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in result.output
-    #
+
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
         result = Tns.exec_command(command='build ios --provision', path=self.app_name, bundle=True)
@@ -225,7 +224,7 @@ class BuildTests(TnsTest):
                       bundle=True)
 
         # Verify that passing wrong provision shows user friendly error
-        result = Tns.build_ios(self.app_name, provision=self.FAKE, verify=False, bundle=True)
+        result = Tns.build_ios(self.app_name, provision="fake", verify=False, bundle=True)
         assert "Failed to find mobile provision with UUID or Name: fake" in result.output
 
     def test_310_build_ios_with_copy_to(self):
