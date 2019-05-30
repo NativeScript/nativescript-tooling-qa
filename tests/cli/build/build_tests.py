@@ -231,12 +231,10 @@ class BuildTests(TnsTest):
         Tns.platform_remove(self.app_name, platform=Platform.IOS)
         Tns.exec_command(command='build --copy-to ' + TEST_RUN_HOME, path=self.app_name,
                          platform=Platform.IOS, bundle=True)
-        appPath = os.path.join(TEST_RUN_HOME, 'TestApp.app')
-        assert Folder.exists(appPath)
+        assert Folder.exists(os.path.join(TEST_RUN_HOME, 'TestApp.app'))
         Tns.exec_command(command='build --copy-to ' + TEST_RUN_HOME, path=self.app_name, platform=Platform.IOS,
                          bundle=True, for_device=True, release=True, provision=Settings.IOS.PROVISIONING)
-        ipaPath = os.path.join(TEST_RUN_HOME, 'TestApp.ipa')
-        assert File.exists(ipaPath)
+        assert File.exists(os.path.join(TEST_RUN_HOME, 'TestApp.ipa'))
 
     def test_320_build_ios_with_custom_entitlements(self):
         # Add entitlements in app/App_Resources/iOS/app.entitlements
@@ -265,6 +263,6 @@ class BuildTests(TnsTest):
         assert '<true/>' in entitlements_content, "Entitlements file content is wrong!"
 
         # Build in release, for device (provision without entitlements)
-        result= Tns.build_ios(self.app_name, for_device=True, release=True, bundle=True, verify=False)
-        assert "Provisioning profile " in result.output
+        result = Tns.build_ios(self.app_name, for_device=True, release=True, bundle=True, verify=False)
+        assert "Provisioning profile" in result.output
         assert "doesn't include the aps-environment and inter-app-audio entitlements" in result.output
