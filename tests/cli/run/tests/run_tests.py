@@ -703,11 +703,11 @@ class TnsRunJSTests(TnsRunTest):
         dest_path = os.path.join(self.app_resources_ios, 'src')
         Folder.copy(source_path, dest_path, clean_target=False)
 
-        # Replace main-view-model.js to call method from the source code in app resources
-        source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650',
-                                 'main-view-model.js')
+        # Call method from the source code of the plugin in main-view-model.js
+        old_value = 'viewModel.counter = 42;'
+        new_value = 'viewModel.counter = 42;\n var objTC = new TestClass();\n console.log(objTC.sayHey());'
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
-        File.copy(source_js, target_js)
+        File.replace(target_js, old_value, new_value)
 
         result = Tns.run_ios(self.app_name, emulator=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
