@@ -19,7 +19,7 @@ class PluginCocoapodsTests(TnsTest):
         @classmethod
         def setUpClass(cls):
             TnsTest.setUpClass()
-            Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
+            Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=True)
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
             Folder.copy(cls.app_name, cls.app_path)
 
@@ -57,6 +57,7 @@ class PluginCocoapodsTests(TnsTest):
 
             result = Tns.prepare_ios(self.app_name)
             assert "Installing pods..." in result.output
+
             # These asserts will be available again after we merge the webpack only branch for 6.0.0 release
             # assert "Successfully prepared plugin carousel for ios." in result.output
             # assert "Successfully prepared plugin keychain for ios." in result.output
@@ -82,7 +83,6 @@ class PluginCocoapodsTests(TnsTest):
             assert "googlesdk" in output
 
             result = Tns.build_ios(self.app_name)
-            assert "Successfully prepared plugin googlesdk for ios." in result.output
             assert "Installing pods..." in result.output
 
             output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Podfile'))
@@ -125,12 +125,15 @@ class PluginCocoapodsTests(TnsTest):
             File.append(main_js_file, 'const hello = require("hello");')
 
             Tns.prepare_ios(self.app_name)
+<<<<<<< HEAD
 
             bundle_js = File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'bundle.js'))
             vendor_js = File.read(os.path.join(TnsPaths.get_platforms_ios_app_path(self.app_name), 'vendor.js'))
             assert '__webpack_require__("../node_modules/hello/hello-plugin.js")' in bundle_js
             assert 'hello = Hello.alloc().init();' in vendor_js
 
+=======
+>>>>>>> cocoapods tests with webpack
             result = run(
                 "cat " + os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'TestApp.xcodeproj',
                                       'project.pbxproj | grep \"HelloLib.a\"'))
