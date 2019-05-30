@@ -90,7 +90,7 @@ class NGNewTests(TnsRunTest):
 
         # Update the app
         if Settings.ENV != EnvironmentType.LIVE:
-            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=False, web_pack=False)
+            App.update(app_name=NGNewTests.app_name, modules=True, angular=True, typescript=True, web_pack=True)
 
         # Run the app
         NGNewTests.run_bundle(app_data=app_data, webpack=webpack, shared=shared, theme=theme,
