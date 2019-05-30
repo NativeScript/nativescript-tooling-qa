@@ -175,8 +175,7 @@ class Tns(object):
         command = 'platform remove ' + str(platform) + ' --path ' + app_name
         result = Tns.exec_command(command=command, log_trace=log_trace)
         if verify:
-            # TODO: Implement it!
-            pass
+            TnsAssert.platform_removed(app_name=app_name, platform=platform)
         return result
 
     @staticmethod
@@ -190,7 +189,7 @@ class Tns(object):
             command = command + ' --frameworkPath ' + framework_path
         result = Tns.exec_command(command=command, log_trace=log_trace)
         if verify:
-            TnsAssert.platform_added(app_name=app_name, platform=platform, output=result.output)
+            TnsAssert.platform_added(app_name=app_name, platform=platform, output=result.output, version=version)
         return result
 
     @staticmethod
@@ -204,6 +203,37 @@ class Tns(object):
                          log_trace=False):
         return Tns.platform_add(app_name=app_name, platform=Platform.IOS, framework_path=framework_path,
                                 version=version, verify=verify, log_trace=log_trace)
+
+    @staticmethod
+    def platform_update(app_name=Settings.AppName.DEFAULT, platform=Platform.NONE, version=None):
+        platform_add_string = str(platform)
+        if version is not None:
+            platform_add_string = platform_add_string + '@' + version
+        command = 'platform update ' + platform_add_string + ' --path ' + app_name
+        result = Tns.exec_command(command=command)
+        TnsAssert.platform_added(app_name=app_name, platform=platform, version=version)
+        if version is not None:
+            assert 'Successfully updated to version {0}'.format(version) in result.output
+        else:
+            assert 'Successfully updated to version'.format(platform_string) in result.output
+
+    @staticmethod
+    def platform_clean(app_name, platform=Platform.NONE, verify=True):
+        platform_string = str(platform)
+        command = 'platform clean ' + platform_add_string
+        result = Tns.exec_command(command=command, path=app_name)
+        if verify:
+            assert "Platform {0} successfully removed".format(platform_string) in output
+            assert "error" not in output
+            if platform is Platform.ANDROID:
+                assert  Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
+            if platform is Platform.IOS:
+                assert  Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
+            assert "Platform {0} successfully added".format(platform_string) in output
+
+    @staticmethod
+    def platform_list(app_name):
+        return Tns.exec_command(command="platform list", path=app_name)
 
     @staticmethod
     def plugin_add(plugin_name, path=None, log_trace=False, verify=True):
