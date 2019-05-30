@@ -37,7 +37,7 @@ class TnsTest(unittest.TestCase):
         Tns.kill()
         Gradle.kill()
         TnsTest.kill_emulators()
-
+        TnsTest.__clean_backup_folder_and_dictionary()
         # Ensure log folders are create
         Folder.create(Settings.TEST_OUT_HOME)
         Folder.create(Settings.TEST_OUT_LOGS)
@@ -55,6 +55,7 @@ class TnsTest(unittest.TestCase):
         Log.test_start(test_name=TestContext.TEST_NAME)
         Tns.kill()
         Gradle.kill()
+        TnsTest.__clean_backup_folder_and_dictionary()
 
     def tearDown(self):
         # pylint: disable=no-member
@@ -63,7 +64,7 @@ class TnsTest(unittest.TestCase):
         Tns.kill()
         Gradle.kill()
         Process.kill_all_in_context()
-
+        TnsTest.restore_files()
         # Analise test result
         if Settings.PYTHON_VERSION < 3:
             # noinspection PyUnresolvedReferences
@@ -113,20 +114,23 @@ class TnsTest(unittest.TestCase):
                 Log.info('Archive app under test at: {0}'.format(archive_path))
 
     @staticmethod
-    def restore_files(files_to_restore):
-        if files_to_restore:
-            temp_folder = os.path.join(Settings.TEST_RUN_HOME, "backup_folder")
-            for file_name in files_to_restore:
-                file_temp_path = os.path.join(temp_folder, file_name)
-                file_path = str(files_to_restore[file_name])
+    def __clean_backup_folder_and_dictionary():
+        TestContext.BACKUP_FILES.clear()
+        Folder.clean(Settings.BACKUP_FOLDER)
+
+    @staticmethod
+    def restore_files():
+        if TestContext.BACKUP_FILES:
+            for file_path in TestContext.BACKUP_FILES:
+                file_name = TestContext.BACKUP_FILES[file_path]
+                file_temp_path = os.path.join(Settings.BACKUP_FOLDER, file_name)
                 # delete file not from the original template
                 if not File.exists(file_temp_path):
                     File.delete(file_path)
                 else:
                     File.copy(file_temp_path, file_path)
                     File.delete(file_temp_path)
-            files_to_restore.clear()
-            Folder.clean(temp_folder)
+            TnsTest.__clean_backup_folder_and_dictionary()
         else:
             Log.info('No files to restore!')
 

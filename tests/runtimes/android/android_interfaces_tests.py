@@ -13,7 +13,6 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 APP_NAME = AppName.DEFAULT
-RESTORE_FILES = {}
 
 
 class AndroidRuntimeInterfaceTests(TnsTest):
@@ -28,7 +27,6 @@ class AndroidRuntimeInterfaceTests(TnsTest):
 
     def tearDown(self):
         TnsTest.tearDown(self)
-        TnsTest.restore_files(RESTORE_FILES)
 
     @classmethod
     def tearDownClass(cls):
@@ -44,7 +42,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-739',
                                  'javascript', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js, files_to_restore=RESTORE_FILES)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
@@ -67,7 +65,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-739', 'java',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js, files_to_restore=RESTORE_FILES)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
@@ -88,7 +86,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1157',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js, files_to_restore=RESTORE_FILES)
+        File.copy(source=source_js, target=target_js, backup_files=True)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1157',
                                    'API23', 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -113,7 +111,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1157',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js, files_to_restore=RESTORE_FILES)
+        File.copy(source=source_js, target=target_js, backup_files=True)
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1157',
                                    'API25', 'src')
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
@@ -141,7 +139,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1181', 'js',
                                  'app.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
-        File.copy(source=source_js, target=target_js, files_to_restore=RESTORE_FILES)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False, bundle=True)
 
@@ -156,7 +154,7 @@ class AndroidRuntimeInterfaceTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1181', 'ts',
                                  'app.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
-        File.copy(source=source_js, target=target_js, files_to_restore=RESTORE_FILES)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         test_result = Wait.until(
             lambda: "'NativeScript-Vue has \"Vue.config.silent\" set to true, to see output logs set it to false.'"

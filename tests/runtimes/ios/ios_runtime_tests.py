@@ -25,7 +25,6 @@ from data.templates import Template
 APP_NAME = AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
 TAP_THE_BUTTON = 'Tap the button'
-RESTORE_FILES = {}
 
 
 class IOSRuntimeTests(TnsTest):
@@ -41,7 +40,6 @@ class IOSRuntimeTests(TnsTest):
 
     def tearDown(self):
         TnsTest.tearDown(self)
-        TnsTest.restore_files(RESTORE_FILES)
 
     @classmethod
     def tearDownClass(cls):
@@ -55,7 +53,7 @@ class IOSRuntimeTests(TnsTest):
         Tns.exec_command("test init --framework", cwd=APP_PATH, platform='mocha')
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-565', 'example.js'),
-                  os.path.join(APP_PATH, 'app', 'tests'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'tests'), True)
 
         result = File.read(os.path.join(APP_PATH, 'app', 'tests', 'example.js'))
         assert "Mocha test" in result
@@ -102,7 +100,7 @@ class IOSRuntimeTests(TnsTest):
         """
         # Replace main-page.js to call methods with the same name but different parameters count
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-877', 'main-page.js'),
-                  os.path.join(APP_PATH, 'app', 'main-page.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
 
         result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False, verify=False)
         strings = ['Successfully synced application',
@@ -118,13 +116,13 @@ class IOSRuntimeTests(TnsTest):
             https://github.com/NativeScript/ios-runtime/issues/1051
         """
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'app.js'),
-                  os.path.join(APP_PATH, 'app', 'app.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'app.js'), True)
         File.copy(
             os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'main-view-model.js'),
-            os.path.join(APP_PATH, 'app', 'main-view-model.js'), RESTORE_FILES)
+            os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
         # Change app package.json so it contains the options for discardUncaughtJsExceptions
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'package.json'),
-                  os.path.join(APP_PATH, 'app', 'package.json'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'package.json'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
@@ -148,7 +146,7 @@ class IOSRuntimeTests(TnsTest):
         """
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921', 'special-value',
                                'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
@@ -162,7 +160,7 @@ class IOSRuntimeTests(TnsTest):
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921', 'wrapped-value',
                                'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
 
         strings = ["wrapped: <Pointer: 0xfffffffffffffffe>",
                    "wrapped: <Pointer: 0xffffffffffffffff>",
@@ -175,7 +173,7 @@ class IOSRuntimeTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921',
                                'toHexString-and-toDecimalString',
                                'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
 
         strings = ["Hex: 0xfffffffffffffffe",
                    "Decimal: -2",
@@ -195,7 +193,7 @@ class IOSRuntimeTests(TnsTest):
         """
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1130',
                                'main-page.xml'),
-                  os.path.join(APP_PATH, 'app', 'main-page.xml'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-page.xml'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
         error = ['JS ERROR Error: Invalid autocapitalizationType value:undefined']
@@ -214,11 +212,11 @@ class IOSRuntimeTests(TnsTest):
         """
 
         Folder.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1131', 'src'),
-                    os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'), RESTORE_FILES)
+                    os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'), True)
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1131',
                                'main-page.js'),
-                  os.path.join(APP_PATH, 'app', 'main-page.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
         # Verify app is running on device
@@ -237,7 +235,7 @@ class IOSRuntimeTests(TnsTest):
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1120',
                                'main-page.js'),
-                  os.path.join(APP_PATH, 'app', 'main-page.js'), RESTORE_FILES)
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
@@ -257,7 +255,7 @@ class IOSRuntimeTests(TnsTest):
 
         File.copy(
             os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-843', 'app.component.ts'),
-            os.path.join(APP_PATH, 'src', 'app', 'app.component.ts'), RESTORE_FILES)
+            os.path.join(APP_PATH, 'src', 'app', 'app.component.ts'), True)
 
         # `tns run ios` and wait until app is deployed
         result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False, verify=False)
@@ -281,7 +279,7 @@ class IOSRuntimeTests(TnsTest):
 
         File.copy(
             os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-875', 'items.component.ts'),
-            os.path.join(APP_PATH, 'src', 'app', 'item', 'items.component.ts'), RESTORE_FILES)
+            os.path.join(APP_PATH, 'src', 'app', 'item', 'items.component.ts'), True)
 
         # `tns run ios` and wait until app is deployed
         result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False,
