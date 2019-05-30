@@ -68,7 +68,7 @@ class FileUtilsTests(unittest.TestCase):
         assert 'red;' not in content, 'Failed to replace string.'
         assert len(content.splitlines()) == 14, 'Unexpected lines count.'
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
 
         File.delete(path=new_scss)
 
@@ -94,7 +94,7 @@ class FileUtilsTests(unittest.TestCase):
         content = File.read(path=new_scss)
         assert len(content.splitlines()) == 14, 'Unexpected lines count.'
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
 
         File.delete(path=new_scss)
 
@@ -119,7 +119,7 @@ class FileUtilsTests(unittest.TestCase):
         TnsTest.restore_files()
         assert not File.exists(new_scss)
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
 
     def test_06_copy_to_not_existing_file_with_restore(self):
         TestContext.BACKUP_FILES.clear()
@@ -143,7 +143,7 @@ class FileUtilsTests(unittest.TestCase):
         TnsTest.restore_files()
         assert not File.exists(new_scss)
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
 
     def test_07_copy_to_existing_file_with_restore(self):
         TestContext.BACKUP_FILES.clear()
@@ -184,7 +184,7 @@ class FileUtilsTests(unittest.TestCase):
         assert 'red;' in content, 'Failed to replace string.'
         assert len(content.splitlines()) == 15, 'Unexpected lines count.'
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
 
         File.delete(path=new_scss)
 
@@ -261,13 +261,13 @@ class FileUtilsTests(unittest.TestCase):
         assert 'red;' not in content, 'Failed to replace string.'
         assert len(content.splitlines()) == 14, 'Unexpected lines count.'
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
         assert File.exists(new_scss_new4)
         content = File.read(path=new_scss_new4)
         assert 'pink;' not in content, 'Failed to replace string.'
         assert len(content.splitlines()) == 14, 'Unexpected lines count.'
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not deleted!"
-        assert len(TestContext.BACKUP_FILES) == 0, "File object not deleted!"
+        assert not TestContext.BACKUP_FILES, "File object not deleted!"
 
         Folder.clean(folder_name_new1)
         Folder.clean(folder_name_new2)

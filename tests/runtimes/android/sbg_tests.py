@@ -8,7 +8,6 @@ Test for android runtime static binding generator
 import os
 
 from core.base_test.tns_test import TnsTest
-from core.enums.platform_type import Platform
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
