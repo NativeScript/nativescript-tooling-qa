@@ -8,7 +8,6 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File, Process
 from core.utils.device.adb import Adb
-from core.utils.device.simctl import Simctl
 from core.utils.device.device_manager import DeviceManager
 from core.log.log import Log
 from data.changes import Changes, Sync
@@ -19,6 +18,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.run_type import RunType
 from products.nativescript.tns_paths import TnsPaths
+
 
 Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
 class TnsRunJSTests(TnsRunTest):
