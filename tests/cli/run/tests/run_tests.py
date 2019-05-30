@@ -416,8 +416,8 @@ class TnsRunJSTests(TnsRunTest):
         # Run app with --justlaunch and verify on device
         result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
         # On some machines it takes time for thr process to die
-        time.sleep(10)
-        assert not Process.is_running_by_name('node')
+        time.sleep(5)
+        assert not Process.is_running_by_commandline(Settings.Executables.TNS)
 
         # Execute run with --justlaunch again and verify no rebuild is triggered
         result = Tns.run_ios(app_name=self.app_name, emulator=True, just_launch=True)
