@@ -44,7 +44,7 @@ class Changes(object):
                                    old_value='My App', new_value='TestApp',
                                    old_text='My App', new_text='TestApp')
         XML_INVALID = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
-                                old_value='</Page>', new_value='</Page')
+                                old_value='</Page>', new_value='</Page ')
 
     class TSHelloWord(object):
         TS = ChangeSet(file_path=os.path.join('app', 'main-view-model.ts'),
