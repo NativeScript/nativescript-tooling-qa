@@ -21,7 +21,6 @@ class BuildTests(TnsTest):
     debug_apk = "app-debug.apk"
     release_apk = "app-release.apk"
     app_identifier = "org.nativescript.testapp"
-    EmptyProvision = os.environ.get(" ")
 
     @classmethod
     def setUpClass(cls):
