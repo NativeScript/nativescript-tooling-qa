@@ -85,7 +85,7 @@ class InitAndInstallTests(TnsTest):
                     target=os.path.join(APP_PATH, 'app'))
 
         # Prepare project
-        Tns.prepare_android(app_name=APP_NAME)
+        Tns.prepare_android(app_name=APP_NAME, bundle=True)
         if Settings.HOST_OS == OSType.OSX:
             Tns.prepare_ios(app_name=APP_NAME)
 
