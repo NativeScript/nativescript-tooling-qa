@@ -743,7 +743,7 @@ class TnsRunJSTests(TnsRunTest):
         app_name = '"' + self.app_name_space + '"'
         run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
 
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, '`shell cp -r` fails for some reason on emulators on Linux and Win.')
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, '`shell cp -r` fails on emulators on Linux and Win.')
     def test_365_tns_run_android_should_respect_adb_errors(self):
         """
         If device memory is full and error is thrown during deploy cli should respect it
