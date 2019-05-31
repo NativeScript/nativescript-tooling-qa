@@ -1,6 +1,6 @@
 from appium import webdriver
-
 from appium.webdriver.appium_service import AppiumService
+
 
 class AppiumDriver(object):
     def __init__(self, capabilities):
