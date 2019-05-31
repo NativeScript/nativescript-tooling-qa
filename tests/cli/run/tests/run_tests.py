@@ -34,7 +34,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsRunTest.setUpClass()
 
         # Create app
-        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
         target = os.path.join(cls.app_path, 'app')
         File.copy(source=src, target=target)
