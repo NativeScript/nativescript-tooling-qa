@@ -9,7 +9,7 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.gradle import Gradle
 from core.utils.process import Process
 from core.utils.xcode import Xcode
@@ -101,6 +101,8 @@ class TnsTest(unittest.TestCase):
     def get_screenshots():
         for device in TestContext.STARTED_DEVICES:
             base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
+            png_path = os.path.join(base_path, device.name + '.png')
+            File.delete(png_path)
             device.get_screen(path=os.path.join(base_path, device.name + '.png'))
 
     @staticmethod

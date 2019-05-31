@@ -1,5 +1,3 @@
-import os
-
 from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType
 from core.settings import Settings
@@ -57,19 +55,6 @@ class DeviceTests(TnsTest):
 
         is_running = DeviceManager.Emulator.is_running(wrong_version_emu)
         assert is_running is False, 'Emulator.is_running() should return false if os_version is different.'
-
-    def test_02_multiple_emulators(self):
-        # Verify multiple emulators can be started properly
-        emu1 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_23)
-        emu2 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_26)
-        assert emu1.id == Settings.Emulators.EMU_API_23.emu_id
-        assert emu2.id == Settings.Emulators.EMU_API_26.emu_id
-
-        # Verify screen_match() method
-        image_path = os.path.join(Settings.TEST_OUT_IMAGES, 'temp.png')
-        emu1.get_screen(path=image_path)
-        emu1.screen_match(expected_image=image_path, tolerance=1.0, timeout=10)
-        emu2.screen_match(expected_image=image_path, tolerance=1.0, timeout=10)
 
     def test_100_detect_available_emulators(self):
         # Verify Emulator.is_available() return correct result
