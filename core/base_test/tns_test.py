@@ -102,6 +102,8 @@ class TnsTest(unittest.TestCase):
     def get_screenshots():
         for device in TestContext.STARTED_DEVICES:
             base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
+            png_path = os.path.join(base_path, device.name + '.png')
+            File.delete(png_path)
             device.get_screen(path=os.path.join(base_path, device.name + '.png'))
 
     @staticmethod

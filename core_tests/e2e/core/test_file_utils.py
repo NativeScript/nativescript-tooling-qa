@@ -6,7 +6,7 @@ from core.utils.file_utils import File, Folder
 
 
 # noinspection PyMethodMayBeStatic
-class AdbTests(TnsTest):
+class FileUtilsTests(TnsTest):
 
     def test_01_file_dowload(self):
         file_name = "test.apk"
