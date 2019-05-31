@@ -21,6 +21,7 @@ class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
+        println("")
         TestContext.STARTED_PROCESSES = []
         TestContext.STARTED_DEVICES = []
         TestContext.TEST_APP_NAME = None
