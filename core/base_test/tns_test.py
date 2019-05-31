@@ -21,11 +21,11 @@ class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Get class name and log
-        println("")
         TestContext.STARTED_PROCESSES = []
         TestContext.STARTED_DEVICES = []
         TestContext.TEST_APP_NAME = None
         TestContext.CLASS_NAME = cls.__name__
+        println("")
         try:
             for item in inspect.stack():
                 TestContext.CLASS_NAME = item[0].f_locals['cls'].__name__
