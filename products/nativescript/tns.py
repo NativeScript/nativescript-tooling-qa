@@ -222,6 +222,31 @@ class Tns(object):
         return result
 
     @staticmethod
+    def plugin_create(plugin_name, path=None, log_trace=False, verify=True):
+        # Execute plugin create command
+        output = Tns.exec_command(command="plugin create --includeTypeScriptDemo=y " + plugin_name, path=path,
+                                  log_trace=log_trace)
+
+        if assert_success:
+            # Verify command output
+            assert "Will now rename some files" in output, "Post clone script not executed."
+            assert "Screenshots removed" in output, "Post clone script not executed."
+            assert "Solution for {0}".format(name) + " was successfully created" in output, 'Missing message in output.'
+            assert "https://docs.nativescript.org/plugins/building-plugins" in output, 'Link to docs is missing.'
+
+            # Verify created files and folders
+            plugin_root = os.path.join(TEST_RUN_HOME, folder)
+            readme = os.path.join(plugin_root, "README.md")
+            src = os.path.join(plugin_root, "src")
+            demo = os.path.join(plugin_root, "demo")
+            post_clone_script = os.path.join(src, "scripts", "postclone.js")
+            assert File.exists(readme), 'README.md do not exists.'
+            assert not Folder.is_empty(src), 'src folder should exists and should not be empty.'
+            assert not Folder.is_empty(demo), 'demo folder should exists and should not be empty.'
+            assert not File.exists(post_clone_script), 'Post clone script should not exists in plugin src folder.'
+        return output
+
+    @staticmethod
     def prepare(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
                 log_trace=False, verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
