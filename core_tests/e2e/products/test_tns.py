@@ -16,12 +16,22 @@ class TnsSmokeTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
-        TnsRunTest.setUpClass()
         run_common.prepare(clone_templates=True, install_ng_cli=False)
+        TnsRunTest.setUpClass()
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH)
+
+    def setUp(self):
+        TnsRunTest.setUp(self)
+
+    def tearDown(self):
+        TnsRunTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsRunTest.tearDownClass()
 
     def test_001_run_android_js(self):
         sync_hello_world_js(app_name=APP_NAME, platform=Platform.ANDROID, device=self.emu, instrumented=False)
