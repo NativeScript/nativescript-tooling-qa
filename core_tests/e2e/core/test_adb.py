@@ -60,7 +60,6 @@ class AdbTests(TnsRunAndroidTest):
         if not Adb.is_application_installed(self.emu.id, "com.wdiodemoapp"):
             Adb.install(self.apk_path, self.emu.id)
         Adb.start_application(self.emu.id, "com.wdiodemoapp")
-        Adb.uninstall("com.wdiodemoapp", self.emu.id)
 
     def test_06_kill_process(self):
         if not Adb.is_application_installed(self.emu.id, "com.wdiodemoapp"):
@@ -68,9 +67,9 @@ class AdbTests(TnsRunAndroidTest):
         Adb.start_application(self.emu.id, "com.wdiodemoapp")
         time.sleep(5)
         Adb.kill_process(self.emu.id, "com.wdiodemoapp")
+        time.sleep(5)
         service_info = Adb.get_active_services(self.emu.id, "com.wdiodemoapp").replace("\r", "").replace("\n", "")
         pid = Adb.get_process_pid(self.emu.id, "com.wdiodemoapp")
         assert pid == "", "Application not killed! PID " + pid
         error_message = "Service is not killed. Log: " + service_info
         assert service_info == "ACTIVITY MANAGER SERVICES (dumpsys activity services)  (nothing)", error_message
-        Adb.uninstall("com.wdiodemoapp", self.emu.id)
