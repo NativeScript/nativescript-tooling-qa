@@ -22,7 +22,7 @@ class AdbTests(TnsRunAndroidTest):
         url = "https://github.com/webdriverio/native-demo-app/releases/download/0.2.1/Android-NativeDemoApp-0.2.1.apk"
         cls.apk_path = os.path.join(Settings.TEST_RUN_HOME, "test.apk")
         File.delete(path=cls.apk_path)
-        File.download("test.apk", url, destination_dir=Settings.TEST_RUN_HOME)
+        File.download(file_name='test.apk', url=url, destination_dir=Settings.TEST_RUN_HOME)
 
     def setUp(self):
         TnsRunAndroidTest.setUp(self)

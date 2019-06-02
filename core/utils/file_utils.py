@@ -264,14 +264,13 @@ class File(object):
 
     @staticmethod
     def download(file_name, url, destination_dir=Settings.TEST_RUN_HOME):
-        try:
-            try:
-                # python3
-                import urllib.request
-                urllib.request.urlretrieve(url, os.path.join(destination_dir, file_name))
-            except Exception:
-                # python2
-                import urllib
-                urllib.urlretrieve(url, os.path.join(destination_dir, file_name))
-        except Exception:
-            Log.error('Failed to download file {2}{0} from {1}'.format(file_name, url, destination_dir))
+        file_path = os.path.join(destination_dir, file_name)
+        if Settings.PYTHON_VERSION < 3:
+            import urllib
+            urllib.urlretrieve(url, file_path)
+        else:
+            import urllib.request
+            urllib.request.urlretrieve(url, file_path)
+        file_path = os.path.join(destination_dir, file_name)
+        assert File.exists(file_path, 'Failed to download {0} at {1}.'.format(url, file_path))
+        Log.info('Downloaded {0} at {1}'.format(url, file_path))
