@@ -272,5 +272,5 @@ class File(object):
             import urllib.request
             urllib.request.urlretrieve(url, file_path)
         file_path = os.path.join(destination_dir, file_name)
-        assert File.exists(file_path, 'Failed to download {0} at {1}.'.format(url, file_path))
+        assert File.exists(file_path), 'Failed to download {0} at {1}.'.format(url, file_path)
         Log.info('Downloaded {0} at {1}'.format(url, file_path))
