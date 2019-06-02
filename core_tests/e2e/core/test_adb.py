@@ -4,7 +4,7 @@ import time
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.settings import Settings
 from core.utils.device.adb import Adb
-from core.utils.file_utils import File
+from core.utils.file_utils import File, Folder
 from core.utils.process import Process
 
 
@@ -14,11 +14,14 @@ class AdbTests(TnsRunAndroidTest):
 
     @classmethod
     def setUpClass(cls):
+        Folder.clean(Settings.TEST_OUT_HOME)
+        Folder.create(Settings.TEST_OUT_LOGS)
+        Folder.create(Settings.TEST_OUT_IMAGES)
         TnsRunAndroidTest.setUpClass()
         url = "https://github.com/webdriverio/native-demo-app/releases/download/0.2.1/Android-NativeDemoApp-0.2.1.apk"
         cls.apk_path = os.path.join(Settings.TEST_RUN_HOME, "test.apk")
         File.delete(path=cls.apk_path)
-        File.download_file("test.apk", url)
+        File.download("test.apk", url, destination_dir=Settings.TEST_RUN_HOME)
 
     def setUp(self):
         TnsRunAndroidTest.setUp(self)

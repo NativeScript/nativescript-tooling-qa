@@ -2,6 +2,8 @@
 File and Folder utils.
 """
 # pylint: disable=unused-variable
+# pylint: disable=no-member
+# pylint: disable=broad-except
 import errno
 import fnmatch
 import os
@@ -15,27 +17,16 @@ from core.log.log import Log
 from core.settings import Settings
 from core.utils.process import Process
 
+
 # noinspection PyBroadException
-# pylint: disable=no-member
-try:
-    # python3
-    import urllib.request
-# pylint: disable=broad-except
-except Exception:
-    # python2
-    import urllib
-
-
 class Folder(object):
     @staticmethod
     def clean(folder):
-        # pylint: disable=broad-except
         if Folder.exists(folder=folder):
             Log.debug("Clean folder: " + folder)
             try:
                 shutil.rmtree(folder)
             except OSError as error:
-                # noinspection PyBroadException
                 try:
                     for root, dirs, files in os.walk(folder, topdown=False):
                         for name in files:
@@ -103,7 +94,6 @@ class Folder(object):
         :param folder: Folder path.
         :return: Size in bytes.
         """
-        # pylint: disable=unused-variable
         total_size = 0
         for dirpath, dirnames, filenames in os.walk(folder):
             for file_name in filenames:
@@ -112,7 +102,7 @@ class Folder(object):
         return total_size
 
 
-# noinspection PyUnresolvedReferences
+# noinspection PyBroadException,PyArgumentList, PyUnresolvedReferences
 class File(object):
     @staticmethod
     def read(path):
@@ -235,7 +225,6 @@ class File(object):
         :param extension: File extension.
         :return: List of found files.
         """
-        # pylint: disable=unused-variable
         matches = []
         if '.' not in extension:
             extension = '.' + extension
@@ -258,37 +247,31 @@ class File(object):
 
     @staticmethod
     def unpack_tar(file_path, dest_dir):
-        # noinspection PyBroadException
         try:
             tar_file = tarfile.open(file_path, 'r:gz')
             tar_file.extractall(dest_dir)
-        # pylint: disable=broad-except
         except Exception:
             Log.debug('Failed to unpack .tar file {0}'.format(file_path))
 
     @staticmethod
     def unzip(file_path, dest_dir):
-        # noinspection PyBroadException
         try:
             zfile = zipfile.ZipFile(file_path, 'r')
             zfile.extractall(dest_dir)
             zfile.close()
-        # pylint: disable=broad-except
         except Exception:
             Log.debug('Failed to unzip file {0}'.format(file_path))
 
     @staticmethod
-    def download_file(file_name, file_url, destination_dir=Settings.TEST_RUN_HOME):
-        # noinspection PyBroadException
+    def download(file_name, url, destination_dir=Settings.TEST_RUN_HOME):
         try:
-            # noinspection PyBroadException
             try:
                 # python3
-                urllib.request.urlretrieve(file_url, os.path.join(destination_dir, file_name))
-            # pylint: disable=broad-except
+                import urllib.request
+                urllib.request.urlretrieve(url, os.path.join(destination_dir, file_name))
             except Exception:
                 # python2
-                urllib.urlretrieve(file_url, os.path.join(destination_dir, file_name))
-        # pylint: disable=broad-except
+                import urllib
+                urllib.urlretrieve(url, os.path.join(destination_dir, file_name))
         except Exception:
-            Log.debug('Failed to download file {2}{0} from {1}'.format(file_name, file_url, destination_dir))
+            Log.error('Failed to download file {2}{0} from {1}'.format(file_name, url, destination_dir))
