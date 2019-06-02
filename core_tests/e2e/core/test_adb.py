@@ -10,7 +10,6 @@ from core.utils.process import Process
 
 # noinspection PyMethodMayBeStatic
 class AdbTests(TnsRunAndroidTest):
-    emu = None
     apk_path = None
 
     @classmethod
