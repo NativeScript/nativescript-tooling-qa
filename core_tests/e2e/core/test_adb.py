@@ -17,6 +17,7 @@ class AdbTests(TnsRunAndroidTest):
         Folder.clean(Settings.TEST_OUT_HOME)
         Folder.create(Settings.TEST_OUT_LOGS)
         Folder.create(Settings.TEST_OUT_IMAGES)
+        Process.kill(proc_name="adb")
         TnsRunAndroidTest.setUpClass()
         url = "https://github.com/webdriverio/native-demo-app/releases/download/0.2.1/Android-NativeDemoApp-0.2.1.apk"
         cls.apk_path = os.path.join(Settings.TEST_RUN_HOME, "test.apk")
@@ -28,10 +29,10 @@ class AdbTests(TnsRunAndroidTest):
 
     def tearDown(self):
         TnsRunAndroidTest.tearDown(self)
-        Process.kill(proc_name="adb")
 
     @classmethod
     def tearDownClass(cls):
+        Process.kill(proc_name="adb")
         TnsRunAndroidTest.tearDownClass()
 
     def test_01_adb_get_source(self):
