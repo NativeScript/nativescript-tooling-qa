@@ -4,6 +4,8 @@ File and Folder utils.
 # pylint: disable=unused-variable
 # pylint: disable=no-member
 # pylint: disable=broad-except
+# pylint: disable=no-name-in-module
+# pylint: disable=import-error
 import errno
 import fnmatch
 import os
