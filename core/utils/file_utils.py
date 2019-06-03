@@ -51,6 +51,20 @@ class Folder(object):
         return os.path.isdir(folder)
 
     @staticmethod
+    def get_current_folder():
+        current_folder = os.getcwd()
+        Log.info("Current dir: " + current_folder)
+        return current_folder
+
+    @staticmethod
+    def navigate_to(folder, relative_from_current_folder=True):
+        new_folder = folder
+        if relative_from_current_folder:
+            new_folder = os.path.join(Folder.get_current_folder(), folder)
+        Log.info("Navigate to: " + new_folder)
+        os.chdir(new_folder)
+
+    @staticmethod
     def is_empty(folder):
         return not os.listdir(folder)
 
