@@ -47,16 +47,13 @@ class PluginTests(TnsTest):
                                         'package.json'))
 
         # Verify files of the plugin
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin', 'index.js'))
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
-                                        'package.json'))
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
-                                        'test.android.js'))
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin', 'test.ios.js'))
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
-                                        'test2.android.xml'))
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
-                                        'test2.ios.xml'))
+        plugin_path = os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin')
+        assert File.exists(os.path.join(plugin_path, 'index.js'))
+        assert File.exists(os.path.join(plugin_path, 'package.json'))
+        assert File.exists(os.path.join(plugin_path, 'test.android.js'))
+        assert File.exists(os.path.join(plugin_path, 'test.ios.js'))
+        assert File.exists(os.path.join(plugin_path, 'test2.android.xml'))
+        assert File.exists(os.path.join(plugin_path, 'test2.ios.xml'))
 
         # Verify plugin list show installed plugins
         result = Tns.exec_command(command='plugin', path=self.app_name)
