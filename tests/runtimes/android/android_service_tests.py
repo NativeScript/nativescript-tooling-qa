@@ -43,13 +43,13 @@ class AndroidServiceTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'sticky', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), True)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
@@ -84,13 +84,13 @@ class AndroidServiceTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'not_sticky', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), True)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
@@ -125,13 +125,13 @@ class AndroidServiceTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'without_oncreate_method', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'main-view-model.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), True)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'on device', self.emulator.id]
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,

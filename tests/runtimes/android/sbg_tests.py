@@ -8,7 +8,6 @@ Test for android runtime static binding generator
 import os
 
 from core.base_test.tns_test import TnsTest
-from core.enums.platform_type import Platform
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
@@ -25,15 +24,17 @@ class SBGTests(TnsTest):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-
-    def test_300_fail_build_when_sbg_bindings_file_is_missing(self):
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
+    def tearDown(self):
+        TnsTest.tearDown(self)
+
+    def test_300_fail_build_when_sbg_bindings_file_is_missing(self):
         # add webpack.config.js where devtool: "eval"
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1286', 'webpack.config.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js'), True)
         result = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False, bundle=True)
 
         sbg_bindings_path = os.path.join(TEST_RUN_HOME, APP_NAME, 'platforms', 'android', 'build-tools',
@@ -52,8 +53,5 @@ class SBGTests(TnsTest):
         https://github.com/NativeScript/android-runtime/issues/1329
         """
         Tns.plugin_add("nativescript-purchase", path=APP_NAME, verify=False)
-
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
