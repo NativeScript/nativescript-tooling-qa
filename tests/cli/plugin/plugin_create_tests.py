@@ -28,15 +28,15 @@ class PluginCreateTests(TnsTest):
         Folder.clean(cls.plugin_name)
 
     def test_100_plugin_create(self):
-        Tns.plugin_create(plugin_name=self.plugin_name)
+        Tns.plugin_create(plugin_name=self.plugin_name, type_script=True)
 
     def test_200_plugin_create_with_path(self):
-        Tns.plugin_create(plugin_name=self.plugin_name, path="plugin-folder", verify=False)
+        Tns.plugin_create(plugin_name=self.plugin_name, type_script=True, path="plugin-folder", verify=False)
 
     def test_201_plugin_create_custom_template(self):
-        result = Tns.exec_command(command="plugin create --includeTypeScriptDemo=y nativescript-test-plugin "
-                                 "--template https://github.com/NativeScript/nativescript-plugin-seed/tarball/master")
-        assert "Make sure your custom template is compatible with the Plugin Seed" in result.output
+        template_url = "https://github.com/NativeScript/nativescript-plugin-seed/tarball/master"
+        output = Tns.plugin_create(plugin_name=self.plugin_name, type_script=True, template=template_url, verify=True)
+        assert "Make sure your custom template is compatible with the Plugin Seed" in output
 
     def test_202_plugin_create_custom_user_and_plugin_name(self):
         Tns.exec_command(command="plugin create --includeTypeScriptDemo=y nativescript-test-plugin "
@@ -45,7 +45,7 @@ class PluginCreateTests(TnsTest):
 
     def test_300_build_demo(self):
         # TODO: Run npm scripts from plugin seed (build plugin, link plugin and then build the app).
-        Tns.plugin_create(self.plugin_name)
+        Tns.plugin_create(self.plugin_name, type_script=True)
         demo_path = os.path.join(self.plugin_name, 'demo')
         Tns.build_android(demo_path, bundle=True)
         if Settings.HOST_OS is OSType.OSX:
