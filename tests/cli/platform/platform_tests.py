@@ -7,6 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
+from core.utils.json_utils import JsonUtils
 from core.utils.npm import Npm
 from core.utils.run import run
 from data.apps import Apps
@@ -52,9 +53,10 @@ class BuildTests(TnsTest):
 
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
+        project_path = os.path.join(Settings.TEST_RUN_HOME, self.app_name)
         Folder.navigate_to(self.app_name)
         command = 'platform add android'
-        result = Tns.exec_command(command=command)
+        result = Tns.exec_command(command=command, cwd=project_path)
         TnsAssert.platform_added(app_name=self.app_name, platform=Platform.ANDROID, output=result.output)
         Folder.navigate_to(Settings.TEST_RUN_HOME)
 
@@ -86,11 +88,11 @@ class BuildTests(TnsTest):
 
         # Clean platform and verify platform is 5.0.0
         Tns.platform_clean(self.app_name, platform=Platform.ANDROID)
-        package_json = os.path.join(app_path, 'package.json')
+        package_json = os.path.join(self.app_name, 'package.json')
         json = JsonUtils.read(package_json)
         assert json['nativescript']['tns-android']['version'] == '5.0.0'
 
-    @unittest.skip("Write htat tets when we merge webpack only feature")
+    @unittest.skip("TODO:Write that test when we merge webpack only feature")
     def test_170_tns_update(self):
         """ Default `tns update` command"""
 

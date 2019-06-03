@@ -213,23 +213,23 @@ class Tns(object):
         result = Tns.exec_command(command=command, path=app_name)
         TnsAssert.platform_added(app_name=app_name, platform=platform, version=version, output=result.output)
         if version is not None:
-            assert 'Successfully updated to version {0}'.format(version) in result.output
+            assert 'Successfully updated to version  {0}'.format(version) in result.output
         else:
-            assert 'Successfully updated to version'.format(platform_string) in result.output
+            assert 'Successfully updated to version' in result.output
 
     @staticmethod
     def platform_clean(app_name, platform=Platform.NONE, verify=True):
         platform_string = str(platform)
-        command = 'platform clean ' + platform_add_string
+        command = 'platform clean ' + platform_string
         result = Tns.exec_command(command=command, path=app_name)
         if verify:
-            assert "Platform {0} successfully removed".format(platform_string) in output
-            assert "error" not in output
+            assert "Platform {0} successfully removed".format(platform_string) in result.output
+            assert "error" not in result.output
             if platform is Platform.ANDROID:
                 assert  Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
             if platform is Platform.IOS:
                 assert  Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
-            assert "Platform {0} successfully added".format(platform_string) in output
+            assert "Platform {0} successfully added".format(platform_string) in result.output
 
     @staticmethod
     def platform_list(app_name):
