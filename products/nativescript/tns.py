@@ -45,6 +45,8 @@ class Tns(object):
         :param snapshot: If true pass `--env.snapshot` to command.
         :param log_trace: If not None pass `--log <level>` to command.
         :param just_launch: If true pass `--justlaunch` to command.
+        :param sync_all_files:  If true pass `--syncAllFiles` to command.
+        :param clean:  If true pass `--clean` to command.
         :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
         :param timeout: Timeout for CLI command (respected only if wait=True).
@@ -207,11 +209,15 @@ class Tns(object):
     def plugin_add(plugin_name, path=None, log_trace=False, verify=True):
         result = Tns.exec_command(command="plugin add " + plugin_name, path=path, log_trace=log_trace)
         if verify:
+            # Verify output
             if "/src" in plugin_name:
                 short_name = plugin_name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
             else:
                 short_name = plugin_name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
             assert "Successfully installed plugin {0}".format(short_name) in result.output
+
+            # Verify package.json
+            App.is_dependency(app_name=path, dependency=short_name)
         return result
 
     @staticmethod
@@ -249,10 +255,20 @@ class Tns(object):
                                   provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
                                   snapshot=snapshot, wait=True, log_trace=log_trace)
         if verify:
+            # Verify output
             assert result.exit_code == 0, 'Build failed with non zero exit code.'
-            TnsAssert.build(app_name=app_name, platform=platform, release=False, provision=Settings.IOS.PROVISIONING,
-                            for_device=False, bundle=True, aot=False, uglify=False, snapshot=False, log_trace=False,
-                            output=result.output, app_data=app_data)
+            assert 'Project successfully built.' in result.output
+
+            # Verify apk, app or ipa produced
+            if platform == Platform.ANDROID:
+                assert File.exists(TnsPaths.get_apk_path(app_name=app_name, release=release))
+            if platform == Platform.IOS:
+                assert File.exists(TnsPaths.get_ipa_path(app_name=app_name, release=release, for_device=for_device))
+
+            # Verify based on app_data
+            if app_data is not None:
+                pass
+
         return result
 
     @staticmethod

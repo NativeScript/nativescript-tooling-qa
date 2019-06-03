@@ -20,7 +20,6 @@ class BuildTests(TnsTest):
     app_path = TnsPaths.get_app_path(app_name=app_name)
     app_temp_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
     debug_apk = "app-debug.apk"
-    release_apk = "app-release.apk"
     app_identifier = "org.nativescript.testapp"
 
     @classmethod
@@ -46,8 +45,8 @@ class BuildTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(cls.app_temp_path)
-        Folder.clean(cls.app_name_with_space)
+        Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
+        Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
 
     def test_001_build_android(self):
         Tns.build_android(self.app_name, bundle=True)
@@ -55,13 +54,13 @@ class BuildTests(TnsTest):
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
 
-        src = os.path.join(self.app_name, 'app', 'app.js')
-        dest_1 = os.path.join(self.app_name, 'app', 'new.android.js')
-        dest_2 = os.path.join(self.app_name, 'app', 'new.ios.js')
+        src = os.path.join(self.app_path, 'app', 'app.js')
+        dest_1 = os.path.join(self.app_path, 'app', 'new.android.js')
+        dest_2 = os.path.join(self.app_path, 'app', 'new.ios.js')
         File.copy(src, dest_1)
         File.copy(src, dest_2)
 
-        result = Tns.build_android(self.app_name, bundle=True)
+        result = Tns.build_android(self.app_path, bundle=True)
         assert "Gradle build..." in result.output, "Gradle build not called."
         assert result.output.count("Gradle build...") == 1, "Only one gradle build is triggered."
 
@@ -70,12 +69,12 @@ class BuildTests(TnsTest):
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
 
         # Verify apk does not contain aar files
-        archive = os.path.join(TnsPaths.get_apk_path(self.app_name), self.debug_apk)
-        File.unzip(archive, 'temp')
+        apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
+        File.unzip(apk_path, 'temp')
         # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
         # https://github.com/NativeScript/nativescript-cli/pull/3923
-        Folder.clean(os.path.join(self.app_name, 'temp', 'META-INF'))
-        temp_folder = os.path.join(self.app_name, 'temp')
+        Folder.clean(os.path.join(self.app_path, 'temp', 'META-INF'))
+        temp_folder = os.path.join(self.app_path, 'temp')
         assert not File.pattern_exists(temp_folder, '*.aar')
         assert not File.pattern_exists(temp_folder, '*.plist')
         assert not File.pattern_exists(temp_folder, '*.android.*')
@@ -92,16 +91,12 @@ class BuildTests(TnsTest):
     def test_002_build_android_release(self):
         Tns.build_android(self.app_name, bundle=True, release=True)
 
-        # Configs are respected
-        assert File.exists(os.path.join(TnsPaths.get_apk_path(self.app_name), 'release', self.release_apk))
-
         # Create zip
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
         run(command, wait=True)
         assert File.exists(os.path.join(self.app_name, 'app', 'app.tar.gz'))
 
     def test_301_build_project_with_space_release(self):
-
         # Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
         Folder.create("with space")
         file_name = os.path.basename(Settings.Android.ANDROID_KEYSTORE_PATH)

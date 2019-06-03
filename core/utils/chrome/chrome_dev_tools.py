@@ -73,7 +73,7 @@ class ChromeDevTools(object):
             Log.info('Expand dev tools main pannel.')
             button.click()
         else:
-            Log.info("Deb tools main panel already expanded.")
+            Log.info('Dev tools main panel already expanded.')
 
     def find_element_by_text(self, text, control='*', exact_match=False):
         self.__refresh_main_panel()
