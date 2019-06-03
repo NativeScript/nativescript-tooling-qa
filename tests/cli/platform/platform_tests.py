@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
@@ -11,6 +12,7 @@ from core.utils.run import run
 from data.apps import Apps
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
+from products.nativescript.tns_assert import TnsAssert
 
 
 class BuildTests(TnsTest):
@@ -26,8 +28,8 @@ class BuildTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
-        Folder.clean(self.app_path)
-        Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
+        Folder.clean(self.app_name)
+        Folder.copy(source=self.target_project_dir, target=self.source_project_dir)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -53,14 +55,15 @@ class BuildTests(TnsTest):
         Folder.navigate_to(self.app_name)
         command = 'platform add android'
         result = Tns.exec_command(command=command)
-        TnsAssert.platform_added(app_name=app_name, platform=platform, output=result.output)
+        TnsAssert.platform_added(app_name=self.app_name, platform=Platform.ANDROID, output=result.output)
         Folder.navigate_to(Settings.TEST_RUN_HOME)
 
     def test_130_platform_remove_and_platform_add_android_custom_version(self):
         """Verify platform add supports custom versions"""
+        Folder.navigate_to(Settings.TEST_RUN_HOME)
         Tns.platform_add_android(self.app_name, version='5.0.0')
         Tns.platform_add_android(self.app_name, version='rc')
-        Tns.platform_remove(self.app_name, Platform.Android)
+        Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
 
     def test_140_platform_update_android(self):
         """Update platform"""
@@ -69,11 +72,11 @@ class BuildTests(TnsTest):
         Tns.platform_add_android(self.app_name, version='4.0.0')
 
         # Update platform to 5
-        Tns.platform_update(self.app_name, version='5.0.0')
+        Tns.platform_update(self.app_name, platform=Platform.ANDROID, version='5.0.0')
     
     def test_150_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
-        Tns.platform_update(self.app_name, version='5.3.1')
+        Tns.platform_update(self.app_name, platform=Platform.ANDROID, version='5.3.1')
 
     def test_160_platform_clean_android(self):
         """Prepare after `platform clean` should add the same version that was before clean"""
@@ -82,7 +85,7 @@ class BuildTests(TnsTest):
         Tns.platform_add_android(self.app_name, version='5.0.0')
 
         # Clean platform and verify platform is 5.0.0
-        Tns.platform_clean(self.app_name, platform=Platform.Android)
+        Tns.platform_clean(self.app_name, platform=Platform.ANDROID)
         package_json = os.path.join(app_path, 'package.json')
         json = JsonUtils.read(package_json)
         assert json['nativescript']['tns-android']['version'] == '5.0.0'
@@ -98,15 +101,15 @@ class BuildTests(TnsTest):
 
         # `tns platform list` on brand new project
         result = Tns.platform_list(self.app_name)
-        TnsAsserts.platform_list_status(output=result.output, prepared=Platform.NONE, added=Platform.NONE)
+        TnsAssert.platform_list_status(output=result.output, prepared=Platform.NONE, added=Platform.NONE)
 
         # `tns platform list` when android is added
         Tns.platform_add_android(self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         result = Tns.platform_list(self.app_name)
-        TnsAsserts.platform_list_status(output=result.output, prepared=Platform.NONE, added=Platform.ANDROID)
+        TnsAssert.platform_list_status(output=result.output, prepared=Platform.NONE, added=Platform.ANDROID)
 
         # `tns platform list` when android is prepared
         Tns.prepare_android(self.app_name)
         result = Tns.platform_list(self.app_name)
-        TnsAsserts.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.ANDROID)
+        TnsAssert.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.ANDROID)
         

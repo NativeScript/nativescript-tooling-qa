@@ -2,6 +2,7 @@ import os
 
 from core.enums.app_type import AppType
 from core.enums.framework_type import FrameworkType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.file_utils import Folder

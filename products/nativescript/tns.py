@@ -175,7 +175,7 @@ class Tns(object):
         command = 'platform remove ' + str(platform) + ' --path ' + app_name
         result = Tns.exec_command(command=command, log_trace=log_trace)
         if verify:
-            TnsAssert.platform_removed(app_name=app_name, platform=platform)
+            TnsAssert.platform_removed(app_name=app_name, platform=platform, output= result.output)
         return result
 
     @staticmethod
@@ -209,9 +209,9 @@ class Tns(object):
         platform_add_string = str(platform)
         if version is not None:
             platform_add_string = platform_add_string + '@' + version
-        command = 'platform update ' + platform_add_string + ' --path ' + app_name
-        result = Tns.exec_command(command=command)
-        TnsAssert.platform_added(app_name=app_name, platform=platform, version=version)
+        command = 'platform update ' + platform_add_string
+        result = Tns.exec_command(command=command, path=app_name)
+        TnsAssert.platform_added(app_name=app_name, platform=platform, version=version, output=result.output)
         if version is not None:
             assert 'Successfully updated to version {0}'.format(version) in result.output
         else:
