@@ -222,6 +222,40 @@ class Tns(object):
         return result
 
     @staticmethod
+    def plugin_create(plugin_name, path=None, type_script=None, angular=None, log_trace=False, verify=True,
+                      template=None):
+        command = "plugin create " + plugin_name
+
+        if template is not None:
+            command = command + ' --template ' + template
+        if type_script is not None:
+            command = command + ' --includeTypeScriptDemo=y '
+        if angular is not None:
+            command = command + ' --includeAngularDemo=y '
+
+        result = Tns.exec_command(command=command, path=path, log_trace=log_trace)
+
+        if verify:
+            # Verify command output
+            assert "Will now rename some files" in result.output, "Post clone script not executed."
+            assert "Screenshots removed" in result.output, "Post clone script not executed."
+            assert "Solution for {0}".format(plugin_name) + " was successfully created" in result.output, \
+                'Missing message in output.'
+            assert "https://docs.nativescript.org/plugins/building-plugins" in result.output, 'Link to docs is missing.'
+
+            # Verify created files and folders
+            plugin_root = os.path.join(Settings.TEST_RUN_HOME, plugin_name)
+            readme = os.path.join(plugin_root, "README.md")
+            src = os.path.join(plugin_root, "src")
+            demo = os.path.join(plugin_root, "demo")
+            post_clone_script = os.path.join(src, "scripts", "postclone.js")
+            assert File.exists(readme), 'README.md do not exists.'
+            assert not Folder.is_empty(src), 'src folder should exists and should not be empty.'
+            assert not Folder.is_empty(demo), 'demo folder should exists and should not be empty.'
+            assert not File.exists(post_clone_script), 'Post clone script should not exists in plugin src folder.'
+        return result.output
+
+    @staticmethod
     def prepare(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
                 log_trace=False, verify=True):
         result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
