@@ -17,7 +17,6 @@ from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.utils.wait import Wait
 from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
-from core.enums.platform_type import Platform
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
@@ -33,6 +32,8 @@ class AndroidRuntimeTests(TnsTest):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -43,19 +44,23 @@ class AndroidRuntimeTests(TnsTest):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
     def test_200_calling_custom_generated_classes_declared_in_manifest(self):
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'calling_custom_generated_classes_declared_in_manifest', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
-                               'AndroidManifest.xml'))
+                               'AndroidManifest.xml'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'calling_custom_generated_classes_declared_in_manifest', 'my-custom-class.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'my-custom-class.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'my-custom-class.js'), True)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'calling_custom_generated_classes_declared_in_manifest',
                                'custom-activity.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'custom-activity.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'custom-activity.js'), True)
+        webpack_config = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
+        old_string = '"tns-core-modules/ui/frame/activity",'
+        my_custom_class = ',resolve(__dirname, "app/my-custom-class.js")'
+        custom_activity = ',resolve(__dirname, "app/custom-activity.js"),'
+        new_string = old_string + my_custom_class + custom_activity
+        File.replace(path=webpack_config, old_string=old_string, new_string=new_string, backup_files=True)
         Adb.clear_logcat(device_id=self.emulator.id)
         Tns.run_android(APP_NAME, device=self.emulator.id, just_launch=True, wait=True)
         assert_result = Wait.until(lambda: 'we got called from onCreate of custom-activity.js' in Adb.get_logcat(
@@ -73,12 +78,8 @@ class AndroidRuntimeTests(TnsTest):
         assert assert_result, "Expected output not found! Logs: " + Adb.get_logcat(device_id=self.emulator.id)
 
     def test_300_verbose_log_android(self):
-        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'verbose_log', 'app.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), True)
         output = File.read(os.path.join(TEST_RUN_HOME, APP_NAME, "app", "app.js"))
         assert "__enableVerboseLogging()" in output, "Verbose logging not enabled in app.js"
 
@@ -102,7 +103,7 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1060',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', '###TEST PASSED###']
@@ -119,36 +120,32 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'app.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'main-view-model.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         # Change app package.json so it contains the options for discardUncaughtJsExceptions
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'package.json')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', self.emulator.id,
-                   'Successfully synced application']
+        strings = ['Successfully synced application']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
-        assert test_result, 'Application is not build successfully!'
+        assert test_result, 'Application is not build successfully! Logs: ' + File.read(log.log_file)
         Device.wait_for_text(self.emulator, "TAP")
         Adb.is_text_visible(self.emulator.id, "TAP", True)
         Device.click(self.emulator, "TAP", True)
@@ -165,12 +162,10 @@ class AndroidRuntimeTests(TnsTest):
         """
             https://github.com/NativeScript/nativescript-cli/issues/3560
         """
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app')
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-904',
                               'MyActivity.js')
-        File.copy(source, target)
+        File.copy(source, target, True)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
 
@@ -192,13 +187,10 @@ class AndroidRuntimeTests(TnsTest):
         Static Binding Generator fails if class has static properties that are used within the class
         https://github.com/NativeScript/android-runtime/issues/1160
         """
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
-
         source = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1160',
                               'testActivity.android.js')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app')
-        File.copy(source=source, target=target)
+        File.copy(source=source, target=target, backup_files=True)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
         activity_class_path = os.path.join(TEST_RUN_HOME, APP_NAME, "platforms", "android", "app", "src", "main",
@@ -216,27 +208,21 @@ class AndroidRuntimeTests(TnsTest):
 
         https://github.com/NativeScript/android-runtime/issues/1235
         """
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1235',
                                  'package.json')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json')
-        File.copy(source=source_js, target=target_js)
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         # `tns run android` and wait until app is deployed
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', self.emulator.id,
-                   'Successfully synced application']
+        strings = ['Successfully synced application']
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
 
         assert test_result, 'Application not build successfully!'
 
-        code_cache_files = ['app.js.cache', 'main-page.js.cache', 'main-view-model.js.cache']
+        code_cache_files = ['bundle.js.cache', 'vendor.js.cache']
         json = App.get_package_json(app_name=APP_NAME)
         app_id = json['nativescript']['id']
 
@@ -259,9 +245,7 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1152',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js)
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        File.copy(source=source_js, target=target_js, backup_files=True)
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False).output
 
         assert "FAILURE: Build failed with an exception" in log
@@ -288,24 +272,22 @@ class AndroidRuntimeTests(TnsTest):
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
                                  'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
         # Change main-view-model.js so it contains the new date logging functionality
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
                                  'main-view-model.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
         # Change app package.json so it contains the options for remove V8 date cache
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
                                  'package.json')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json')
 
-        File.copy(source=source_js, target=target_js)
+        File.copy(source=source_js, target=target_js, backup_files=True)
 
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
-        strings = ['Project successfully built',
-                   'Successfully installed on device with identifier', self.emulator.id,
-                   'Successfully synced application', '### TEST END ###']
+        strings = ['Successfully synced application', '### TEST END ###']
         assert_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                    period=5)
         assert assert_result, "Application not build correct! Logs: " + File.read(log.log_file)
@@ -359,7 +341,7 @@ class AndroidRuntimeTests(TnsTest):
         assert_result = Wait.until(lambda: re.search(date_to_find_los_angeles, File.read(log.log_file)), timeout=20,
                                    period=5)
         assert assert_result, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_los_angeles,
-                                                                              file.read(file(log)))
+                                                                              File.read(log.log_file))
 
     def test_442_assert_arm64_is_enabled_by_default(self):
         """
@@ -417,7 +399,7 @@ class AndroidRuntimeTests(TnsTest):
         assert test_result, "Missing nativescript runtime package dependency! Logs: " + log.output
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1368', 'package.json'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json'))
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'package.json'), True)
         # check useV8Symbols flag is working
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
         strings = ['adding nativescript runtime package dependency: nativescript-regular']

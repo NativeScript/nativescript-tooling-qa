@@ -9,7 +9,6 @@ import os
 from nose.tools import timed
 
 from core.base_test.tns_test import TnsTest
-from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.utils.device.device import Device
 from core.utils.device.device_manager import DeviceManager
@@ -36,6 +35,8 @@ class IOSRuntimeTests(TnsTest):
         TnsTest.setUpClass()
         cls.sim = DeviceManager.Simulator.ensure_available(Simulators.DEFAULT)
         Simctl.uninstall_all(cls.sim)
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -48,13 +49,11 @@ class IOSRuntimeTests(TnsTest):
     @timed(360)
     def test_201_test_init_mocha_js_stacktrace(self):
         # https://github.com/NativeScript/ios-runtime/issues/565
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Npm.install(package='mocha', folder=APP_PATH)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
         Tns.exec_command("test init --framework", cwd=APP_PATH, platform='mocha')
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-565', 'example.js'),
-                  os.path.join(APP_PATH, 'app', 'tests'))
+                  os.path.join(APP_PATH, 'app', 'tests'), True)
 
         result = File.read(os.path.join(APP_PATH, 'app', 'tests', 'example.js'))
         assert "Mocha test" in result
@@ -68,44 +67,6 @@ class IOSRuntimeTests(TnsTest):
                    'JS ERROR AssertionError: expected -1 to equal 1']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
 
-    def test_280_tns_run_ios_console_time(self):
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_NG.local_package, update=True)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-        # Replace app.component.ts to use console.time() and console.timeEnd()
-
-        File.copy(
-            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-843', 'app.component.ts'),
-            os.path.join(APP_PATH, 'src', 'app', 'app.component.ts'))
-
-        # `tns run ios` and wait until app is deployed
-        result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False, verify=False)
-
-        # Verify initial state of the app
-        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.sim.id]
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180, check_interval=10)
-
-        Device.wait_for_text(self.sim, text="Ter Stegen", timeout=30)
-
-        # Verify console.time() works - issue https://github.com/NativeScript/ios-runtime/issues/843
-        console_time = ['CONSOLE INFO startup:']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=console_time)
-
-    def test_290_tns_run_ios_console_dir(self):
-        # NOTE: This test depends on creation of app in test_280_tns_run_ios_console_time
-        # Replace app.component.ts to use console.time() and console.timeEnd()
-
-        File.copy(
-            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-875', 'items.component.ts'),
-            os.path.join(APP_PATH, 'src', 'app', 'item', 'items.component.ts'))
-
-        # `tns run ios` and wait until app is deployed
-        result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False,
-                             verify=False)
-
-        # Verify sync and initial state of the app
-        strings = ['name: Ter Stegen', 'role: Goalkeeper', 'object dump end', self.sim.id]
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90, check_interval=10)
-
     def test_380_tns_run_ios_plugin_dependencies(self):
         """
         issue https://github.com/NativeScript/ios-runtime/issues/890
@@ -113,11 +74,6 @@ class IOSRuntimeTests(TnsTest):
         Plugin A has dependency only to plugin B.
         Old behavior (version < 4.0.0) was in plugin A to reference plugin B and C.
         """
-
-        Folder.clean(APP_NAME)
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-
         # Add plugin with specific dependencies
         Tns.plugin_add(self.plugin_path, path=APP_NAME)
 
@@ -142,20 +98,12 @@ class IOSRuntimeTests(TnsTest):
         https://github.com/NativeScript/ios-runtime/issues/877
         PR https://github.com/NativeScript/ios-runtime/pull/1013
         """
-
-        Folder.clean(APP_NAME)
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-
-        # Add plugin with specific dependencies
-        Tns.plugin_add(self.plugin_path, path=APP_NAME)
-
         # Replace main-page.js to call methods with the same name but different parameters count
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-877', 'main-page.js'),
-                  os.path.join(APP_PATH, 'app', 'main-page.js'))
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
 
         result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False, verify=False)
-        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.sim.id,
+        strings = ['Successfully synced application',
                    'SayName no param!', 'SayName with 1 param!', 'SayName with 2 params!']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
 
@@ -167,19 +115,14 @@ class IOSRuntimeTests(TnsTest):
             Test native crash will not crash the app when discardUncaughtJsExceptions used
             https://github.com/NativeScript/ios-runtime/issues/1051
         """
-
-        Folder.clean(APP_NAME)
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'app.js'),
-                  os.path.join(APP_PATH, 'app', 'app.js'))
+                  os.path.join(APP_PATH, 'app', 'app.js'), True)
         File.copy(
             os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'main-view-model.js'),
-            os.path.join(APP_PATH, 'app', 'main-view-model.js'))
+            os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
         # Change app package.json so it contains the options for discardUncaughtJsExceptions
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'package.json'),
-                  os.path.join(APP_PATH, 'app', 'package.json'))
+                  os.path.join(APP_PATH, 'app', 'package.json'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
@@ -192,7 +135,8 @@ class IOSRuntimeTests(TnsTest):
         # Verify app is running on device
         Device.wait_for_text(self.sim, text=TAP_THE_BUTTON)
 
-        assert test_result, 'Native crash should not crash the app when discardUncaughtJsExceptions is used!'
+        message = 'Native crash should not crash the app when discardUncaughtJsExceptions is used! Logs'
+        assert test_result, message + File.read(log.log_file)
 
     def test_387_test_pointers_and_conversions_to_string(self):
         """
@@ -200,14 +144,9 @@ class IOSRuntimeTests(TnsTest):
             https://github.com/NativeScript/ios-runtime/pull/1069
             https://github.com/NativeScript/ios-runtime/issues/921
         """
-
-        Folder.clean(APP_NAME)
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921', 'special-value',
                                'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'))
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
@@ -221,7 +160,7 @@ class IOSRuntimeTests(TnsTest):
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921', 'wrapped-value',
                                'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'))
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
 
         strings = ["wrapped: <Pointer: 0xfffffffffffffffe>",
                    "wrapped: <Pointer: 0xffffffffffffffff>",
@@ -234,7 +173,7 @@ class IOSRuntimeTests(TnsTest):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921',
                                'toHexString-and-toDecimalString',
                                'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'))
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
 
         strings = ["Hex: 0xfffffffffffffffe",
                    "Decimal: -2",
@@ -252,14 +191,9 @@ class IOSRuntimeTests(TnsTest):
         Test app does not crash when xml includes Unicode characters outside of the basic ASCII set
         https://github.com/NativeScript/ios-runtime/issues/1130
         """
-
-        Folder.clean(APP_NAME)
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
-
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1130',
                                'main-page.xml'),
-                  os.path.join(APP_PATH, 'app', 'main-page.xml'))
+                  os.path.join(APP_PATH, 'app', 'main-page.xml'), True)
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
         error = ['JS ERROR Error: Invalid autocapitalizationType value:undefined']
@@ -277,16 +211,12 @@ class IOSRuntimeTests(TnsTest):
         https://github.com/NativeScript/ios-runtime/issues/1131
         """
 
-        Folder.clean(APP_NAME)
-        Tns.create(APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
         Folder.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1131', 'src'),
-                    os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'))
+                    os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'), True)
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1131',
                                'main-page.js'),
-                  os.path.join(APP_PATH, 'app', 'main-page.js'))
-
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
         # Verify app is running on device
@@ -305,10 +235,8 @@ class IOSRuntimeTests(TnsTest):
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1120',
                                'main-page.js'),
-                  os.path.join(APP_PATH, 'app', 'main-page.js'))
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
 
-        Tns.platform_remove(app_name=APP_NAME, platform=Platform.IOS)
-        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
         # Verify app is running on device
@@ -318,3 +246,45 @@ class IOSRuntimeTests(TnsTest):
         result = Wait.until(lambda: all(st in File.read(log.log_file) for st in string), timeout=60,
                             period=5)
         assert result, 'NSStringFromClass function returns INCORRECT name of iOS internal class!'
+
+    def test_391_tns_run_ios_console_time(self):
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_NG.local_package, update=True)
+        Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
+        # Replace app.component.ts to use console.time() and console.timeEnd()
+
+        File.copy(
+            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-843', 'app.component.ts'),
+            os.path.join(APP_PATH, 'src', 'app', 'app.component.ts'), True)
+
+        # `tns run ios` and wait until app is deployed
+        result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False, verify=False)
+
+        # Verify initial state of the app
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.sim.id]
+        assert_result = Wait.until(lambda: all(st in File.read(result.log_file) for st in strings), timeout=60,
+                                   period=5)
+
+        assert assert_result, 'App not build correctly! Logs: ' + File.read(result.log_file)
+
+        Device.wait_for_text(self.sim, text="Ter Stegen", timeout=30)
+
+        # Verify console.time() works - issue https://github.com/NativeScript/ios-runtime/issues/843
+        console_time = ['CONSOLE INFO startup:']
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=console_time)
+
+    def test_392_tns_run_ios_console_dir(self):
+        # NOTE: This test depends on creation of app in test_280_tns_run_ios_console_time
+        # Replace app.component.ts to use console.time() and console.timeEnd()
+
+        File.copy(
+            os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-875', 'items.component.ts'),
+            os.path.join(APP_PATH, 'src', 'app', 'item', 'items.component.ts'), True)
+
+        # `tns run ios` and wait until app is deployed
+        result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False,
+                             verify=False)
+
+        # Verify sync and initial state of the app
+        strings = ['name: Ter Stegen', 'role: Goalkeeper', 'object dump end', self.sim.id]
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90, check_interval=10)
