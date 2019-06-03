@@ -43,6 +43,7 @@ class FileUtilsTests(unittest.TestCase):
     def test_03_replace_with_restore(self):
         TestContext.BACKUP_FILES.clear()
         Folder.clean(Settings.BACKUP_FOLDER)
+
         # Path to files
         file_name = "app.android.add_style.scss"
         old_scss = os.path.join(self.current_folder, 'resources', 'app.android.scss')
@@ -62,6 +63,7 @@ class FileUtilsTests(unittest.TestCase):
         assert File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not backup!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(0) == new_scss, "File path is not correct!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(1) == file_name, "File name not correct!"
+
         # Revert
         TnsTest.restore_files()
         content = File.read(path=new_scss)
@@ -75,6 +77,7 @@ class FileUtilsTests(unittest.TestCase):
     def test_04_delete_with_restore(self):
         TestContext.BACKUP_FILES.clear()
         Folder.clean(Settings.BACKUP_FOLDER)
+
         # Path to files
         file_name = "app.android.add_style.scss"
         old_scss = os.path.join(self.current_folder, 'resources', 'app.android.scss')
@@ -89,6 +92,7 @@ class FileUtilsTests(unittest.TestCase):
         assert File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not backup!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(0) == new_scss, "File path is not correct!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(1) == file_name, "File name not correct!"
+
         # Revert
         TnsTest.restore_files()
         content = File.read(path=new_scss)
@@ -101,6 +105,7 @@ class FileUtilsTests(unittest.TestCase):
     def test_05_copy_to_folder_with_restore(self):
         TestContext.BACKUP_FILES.clear()
         Folder.clean(Settings.BACKUP_FOLDER)
+
         # Path to files
         file_name = "app.android.scss"
         folder_name = os.path.join(self.current_folder, 'resources', 'new')
@@ -115,6 +120,7 @@ class FileUtilsTests(unittest.TestCase):
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File should not be backup!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(0) == new_scss, "File path is not correct!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(1) == file_name, "File name not correct!"
+
         # Revert
         TnsTest.restore_files()
         assert not File.exists(new_scss)
@@ -139,6 +145,7 @@ class FileUtilsTests(unittest.TestCase):
         assert not File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not backup!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(0) == new_scss, "File path is not correct!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(1) == file_name, "File name not correct!"
+
         # Revert
         TnsTest.restore_files()
         assert not File.exists(new_scss)
@@ -148,6 +155,7 @@ class FileUtilsTests(unittest.TestCase):
     def test_07_copy_to_existing_file_with_restore(self):
         TestContext.BACKUP_FILES.clear()
         Folder.clean(Settings.BACKUP_FOLDER)
+
         # Path to files
         file_name = "app.android.add_style.scss"
         folder_name = os.path.join(self.current_folder, 'resources', 'new')
@@ -177,6 +185,7 @@ class FileUtilsTests(unittest.TestCase):
         assert File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not backup!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(0) == new_scss, "File path is not correct!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(1) == file_name, "File name not correct!"
+
         # Revert
         TnsTest.restore_files()
         assert File.exists(new_scss)
@@ -191,6 +200,7 @@ class FileUtilsTests(unittest.TestCase):
     def test_08_copy_to_two_files_same_name_with_restore(self):
         TestContext.BACKUP_FILES.clear()
         Folder.clean(Settings.BACKUP_FOLDER)
+
         # Path to files
         file_name = "app.android.add_style.scss"
         folder_name_new1 = os.path.join(self.current_folder, 'resources', 'new1')
@@ -254,6 +264,7 @@ class FileUtilsTests(unittest.TestCase):
         assert File.exists(os.path.join(Settings.BACKUP_FOLDER, file_name)), "File not backup!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(0) == new_scss_new4, "File path is not correct!"
         assert TestContext.BACKUP_FILES.items()[0].__getitem__(1) == (file_name + "1"), "File name not correct!"
+
         # Revert
         TnsTest.restore_files()
         assert File.exists(new_scss_new3)
