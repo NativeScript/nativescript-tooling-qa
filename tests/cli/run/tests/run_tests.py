@@ -755,7 +755,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Use all the disk space on emulator
         for index in range(1, 3000):
-            command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
+            command = "shell run-as org.nativescript.TestApp cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
             result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:
