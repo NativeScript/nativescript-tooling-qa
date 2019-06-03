@@ -13,8 +13,8 @@ class FileUtilsTests(TnsTest):
         file_path_default = TEST_RUN_HOME
         file_path = os.path.join(TEST_RUN_HOME, "test")
         url = "https://github.com/webdriverio/native-demo-app/releases/download/0.2.1/Android-NativeDemoApp-0.2.1.apk"
-        File.download_file(file_name, url)
+        File.download(file_name, url)
         Folder.create(file_path)
         assert File.exists(os.path.join(file_path_default, file_name))
-        File.download_file(file_name, url, file_path)
+        File.download(file_name, url, file_path)
         assert File.exists(os.path.join(file_path, file_name))
