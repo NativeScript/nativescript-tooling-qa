@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
@@ -186,6 +187,7 @@ class BuildTests(TnsTest):
         assert File.exists(
             os.path.join(TnsPaths.get_platforms_android_src_main_path(self.app_name), 'AndroidManifest.xml'))
 
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_001_build_ios(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
         Tns.build_ios(self.app_name, bundle=True)
@@ -204,6 +206,7 @@ class BuildTests(TnsTest):
         Folder.clean("Payload")
         assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in result.output
 
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
         result = Tns.exec_command(command='build ios --provision', path=self.app_name, bundle=True)
@@ -226,6 +229,7 @@ class BuildTests(TnsTest):
         result = Tns.build_ios(self.app_name, provision="fake", verify=False, bundle=True)
         assert "Failed to find mobile provision with UUID or Name: fake" in result.output
 
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_310_build_ios_with_copy_to(self):
         Tns.platform_remove(self.app_name, platform=Platform.IOS)
         Tns.exec_command(command='build --copy-to ' + TEST_RUN_HOME, path=self.app_name,
@@ -235,6 +239,7 @@ class BuildTests(TnsTest):
                          bundle=True, for_device=True, release=True, provision=Settings.IOS.PROVISIONING)
         assert File.exists(os.path.join(TEST_RUN_HOME, 'TestApp.ipa'))
 
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_320_build_ios_with_custom_entitlements(self):
         # Add entitlements in app/App_Resources/iOS/app.entitlements
         source = os.path.join(TEST_RUN_HOME, 'assets', 'entitlements', 'app.entitlements')
