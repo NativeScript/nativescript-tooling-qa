@@ -5,6 +5,7 @@ import unittest
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.enums.device_type import DeviceType
 from core.settings import Settings
 from core.utils.file_utils import Folder, File, Process
 from core.utils.device.adb import Adb
@@ -658,7 +659,7 @@ class TnsRunJSTests(TnsRunTest):
         `tns run android` should start emulator if device is not connected.
         """
         # Run the test only if there are no connected devices
-        conected_devices = DeviceManager.get_devices(device_type=Platform.IOS)
+        conected_devices = DeviceManager.get_devices(device_type=DeviceType.IOS)
         if conected_devices.__len__() == 0:
             DeviceManager.Simulator.stop()
             result = Tns.run_ios(self.app_name)
