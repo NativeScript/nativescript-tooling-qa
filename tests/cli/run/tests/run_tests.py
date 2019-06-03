@@ -55,47 +55,47 @@ class TnsRunJSTests(TnsRunTest):
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
 
-    def test_100_run_android_break_and_fix_app(self):
-        """
-            Make changes in xml that break the app and then changes thet fix the app.
-            Add/remove js files thst break the app and then fix it. Verify recovery.
-        """
-        # Run app and verify on device
-        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
-
-        # Make changes in xml that will break the app
-        Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
-        strings = ['main-page.xml', 'Error: Parsing XML']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text='Exception')
-
-        # Revert changes
-        Sync.revert(self.app_name, Changes.JSHelloWord.XML_INVALID)
-
-        # Verify app is synced and recovered
-        strings = ['Successfully synced application']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-        assert not self.emu.is_text_visible(text='Exception')
-
-        # Delete app.js and verify app crash with error activity dialog
-        app_js_origin_path = os.path.join(self.source_project_dir, 'app', 'app.js')
-        app_js_backup_path = os.path.join(self.target_project_dir, 'app', 'app.js')
-        File.delete(app_js_origin_path)
-
-        # Verify app is synced
-        strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, run_type=RunType.UNKNOWN)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text='Exception')
-
-        # Restore app.js and verify app is synced and recovered
-        File.copy(app_js_backup_path, app_js_origin_path)
-        strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       run_type=RunType.UNKNOWN, device=self.emu)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-        assert not self.emu.is_text_visible(text='Exception')
+    # def test_100_run_android_break_and_fix_app(self):
+    #     """
+    #         Make changes in xml that break the app and then changes thet fix the app.
+    #         Add/remove js files thst break the app and then fix it. Verify recovery.
+    #     """
+    #     # Run app and verify on device
+    #     result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+    #
+    #     # Make changes in xml that will break the app
+    #     Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
+    #     strings = ['main-page.xml', 'Error: Parsing XML']
+    #     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    #     self.emu.wait_for_text(text='Exception')
+    #
+    #     # Revert changes
+    #     Sync.revert(self.app_name, Changes.JSHelloWord.XML_INVALID)
+    #
+    #     # Verify app is synced and recovered
+    #     strings = ['Successfully synced application']
+    #     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    #     self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
+    #     # assert not self.emu.is_text_visible(text='Exception')
+    #
+    #     # Delete app.js and verify app crash with error activity dialog
+    #     app_js_origin_path = os.path.join(self.source_project_dir, 'app', 'app.js')
+    #     app_js_backup_path = os.path.join(self.target_project_dir, 'app', 'app.js')
+    #     File.delete(app_js_origin_path)
+    #
+    #     # Verify app is synced
+    #     strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
+    #                                    device=self.emu, run_type=RunType.UNKNOWN)
+    #     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    #     self.emu.wait_for_text(text='Exception')
+    #
+    #     # Restore app.js and verify app is synced and recovered
+    #     File.copy(app_js_backup_path, app_js_origin_path)
+    #     strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
+    #                                    run_type=RunType.UNKNOWN, device=self.emu)
+    #     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    #     self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
+    #     assert not self.emu.is_text_visible(text='Exception')
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_105_tns_run_android_changes_in_app_resounces(self):
