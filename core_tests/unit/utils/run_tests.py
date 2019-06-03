@@ -20,7 +20,7 @@ class RunTests(unittest.TestCase):
         Process.kill_all_in_context()
 
     def test_01_run_simple_command(self):
-        result = run(cmd='ls ' + self.current_folder, wait=True, timeout=1)
+        result = run(cmd='ls ' + self.current_folder, wait=True, timeout=5)
         assert result.exit_code == 0, 'Wrong exit code of successful command.'
         assert result.log_file is None, 'No log file should be generated if wait=True.'
         assert result.complete is True, 'Complete should be true when process execution is complete.'
