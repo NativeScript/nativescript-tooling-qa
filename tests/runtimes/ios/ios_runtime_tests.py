@@ -262,7 +262,7 @@ class IOSRuntimeTests(TnsTest):
 
         # Verify initial state of the app
         strings = ['Project successfully built', 'Successfully installed on device with identifier', self.sim.id]
-        assert_result = Wait.until(lambda: all(st in File.read(result.log_file) for st in strings), timeout=60,
+        assert_result = Wait.until(lambda: all(st in File.read(result.log_file) for st in strings), timeout=200,
                                    period=5)
 
         assert assert_result, 'App not build correctly! Logs: ' + File.read(result.log_file)
