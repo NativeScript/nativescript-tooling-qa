@@ -140,7 +140,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify rebuild is triggered and app is synced
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
@@ -152,7 +152,7 @@ class TnsRunJSTests(TnsRunTest):
                                        run_type=RunType.FULL, device=self.emu)
         not_existing_strings = ['Xcode build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                             not_existing_string_list=not_existing_strings, timeout=120)
 
         # https://github.com/NativeScript/nativescript-cli/issues/3658
         Tns.kill()
@@ -220,7 +220,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify https://github.com/NativeScript/android-runtime/issues/1024
         not_existing_strings = ['JS:']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                             not_existing_string_list=not_existing_strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         blue_count = self.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
@@ -493,7 +493,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify run --clean without changes skip prepare and rebuild of native project
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
         strings = ['Skipping prepare', 'Building project', 'Gradle clean']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
         # Verify if changes are applied and then run with clean it will apply changes on device
@@ -504,7 +504,7 @@ class TnsRunJSTests(TnsRunTest):
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
         strings.append('Gradle clean')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
         # Make changes again and verify changes are synced and clean build is not triggered again
@@ -755,7 +755,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Use all the disk space on emulator
         for index in range(1, 3000):
-            command = "shell run-as org.nativescript.TestApp cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
+            command = "shell run-as org.nativescript.TestApp cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp/{0}" .format(str(index))
             result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:
