@@ -6,13 +6,11 @@ from core.settings import Settings
 
 
 # noinspection PyUnusedLocal
-
-
 class TnsPaths(object):
 
     @staticmethod
     def get_app_path(app_name, path=Settings.TEST_RUN_HOME):
-        return os.path.join(path, app_name)
+        return os.path.join(path, app_name.replace('"', ''))
 
     @staticmethod
     def get_app_node_modules_path(app_name, path=Settings.TEST_RUN_HOME):
