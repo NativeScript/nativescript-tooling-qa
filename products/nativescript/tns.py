@@ -297,7 +297,11 @@ class Tns(object):
             if platform == Platform.ANDROID:
                 assert File.exists(TnsPaths.get_apk_path(app_name=app_name, release=release))
             if platform == Platform.IOS:
-                assert File.exists(TnsPaths.get_ipa_path(app_name=app_name, release=release, for_device=for_device))
+                app_path = TnsPaths.get_ipa_path(app_name=app_name, release=release, for_device=for_device)
+                if for_device:
+                    assert File.exists(app_path)
+                else:
+                    assert Folder.exists(app_path)
 
             # Verify based on app_data
             if app_data is not None:
