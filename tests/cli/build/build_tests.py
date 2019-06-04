@@ -93,8 +93,8 @@ class BuildTests(TnsTest):
 
         # Create zip
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
-        run(command, wait=True)
-        assert File.exists(os.path.join(self.app_name, 'app', 'app.tar.gz'))
+        run(cmd=command, cwd=Settings.TEST_RUN_HOME, wait=True)
+        assert File.exists(os.path.join(self.app_path, 'app', 'app.tar.gz'))
 
     def test_301_build_project_with_space_release(self):
         # Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
@@ -112,10 +112,10 @@ class BuildTests(TnsTest):
         assert self.app_identifier in output.lower()
 
     def test_302_build_project_with_space_debug_with_plugin(self):
+        app_space_path = TnsPaths.get_app_path(app_name=self.app_name_with_space)
         Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
-        Npm.install(package='nativescript-mapbox', option='--save', folder=self.app_name_with_space)
-        result = Tns.build_android(app_name='"' + self.app_name_with_space + '"', bundle=True)
-        assert "Project successfully built" in result.output
+        Npm.install(package='nativescript-mapbox', option='--save', folder=app_space_path)
+        Tns.build_android(app_name='"' + self.app_name_with_space + '"', bundle=True)
 
     def test_310_build_android_with_custom_compile_sdk_new(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
