@@ -18,6 +18,7 @@ from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.process import Process
+from core.base_test.test_context import TestContext
 
 
 # noinspection PyBroadException
@@ -139,7 +140,9 @@ class File(object):
                 text_file.write(text)
 
     @staticmethod
-    def replace(path, old_string, new_string, fail_safe=False):
+    def replace(path, old_string, new_string, fail_safe=False, backup_files=False):
+        if backup_files:
+            File.__back_up_files(path)
         content = File.read(path=path)
         old_text_exists = old_string in content
         if not fail_safe:
@@ -161,13 +164,42 @@ class File(object):
         return os.path.isfile(path)
 
     @staticmethod
-    def copy(source, target):
+    def __back_up_files(backup_file, source_file=None):
+        # create temp folder if missing
+        if not Folder.exists(Settings.BACKUP_FOLDER):
+            Folder.create(Settings.BACKUP_FOLDER)
+        # if delete or replace method is used
+        if source_file is None:
+            source_file = backup_file
+        source_name = source_file.split("/")[-1:][0]
+        # backup file if from the template
+        if File.exists(backup_file):
+            source_name = backup_file.split("/")[-1:][0]
+            # change file name if exists in backup_folder
+            if File.exists(os.path.join(Settings.BACKUP_FOLDER, source_name)):
+                source_name = source_name + "1"
+            shutil.copy(backup_file, os.path.join(Settings.BACKUP_FOLDER, source_name))
+        else:
+            if Folder.exists(backup_file):
+                # if copy to folder is used add file name
+                backup_file = (os.path.join(backup_file, source_name))
+            else:
+                # if file name is used for new file
+                source_name = backup_file.split("/")[-1:][0]
+        TestContext.BACKUP_FILES[backup_file] = source_name
+
+    @staticmethod
+    def copy(source, target, backup_files=False):
+        if backup_files:
+            File.__back_up_files(target, source)
         shutil.copy(source, target)
         Log.info('Copy {0} to {1}'.format(os.path.abspath(source), os.path.abspath(target)))
 
     @staticmethod
-    def delete(path):
+    def delete(path, backup_files=False):
         if os.path.isfile(path):
+            if backup_files:
+                File.__back_up_files(path)
             os.remove(path)
             Log.debug('Delete {0}'.format(path))
         else:

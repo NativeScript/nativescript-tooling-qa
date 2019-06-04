@@ -7,6 +7,6 @@ android {
     additionalParameters "--no-version-vectors"
   }
     defaultConfig {
-    minSdkVersion 17
+    minSdkVersion 18
   }
 } 

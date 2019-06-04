@@ -61,6 +61,8 @@ ASSETS_HOME = os.path.join(TEST_RUN_HOME, 'assets')
 
 SSH_CLONE = os.environ.get('SSH_CLONE', False)
 
+BACKUP_FOLDER = os.path.join(TEST_RUN_HOME, "backup_folder")
+
 
 def resolve_package(name, variable, default=str(ENV)):
     tag = os.environ.get(variable, default)

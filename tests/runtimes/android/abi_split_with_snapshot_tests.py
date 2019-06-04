@@ -38,14 +38,13 @@ class AbiSplitTests(TnsTest):
             cls.device = Device(id=device_id, name=device_id, type=DeviceType.ANDROID,
                                 version=Adb.get_version(device_id))
         Adb.uninstall(cls.app_id, device_id, assert_success=False)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
     def test_100_build_app_with_abi_split_and_snapshot(self):
         """
          Test build with abi split and snapshot. Also check if the apk for emulator is working
          https://github.com/NativeScript/android-runtime/issues/1234
         """
-
-        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         Adb.clear_logcat(device_id=self.emulator.id)
         old_string = "webpackConfig: config,"
         new_string = ""
