@@ -754,8 +754,9 @@ class TnsRunJSTests(TnsRunTest):
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
         # Use all the disk space on emulator
+        dest_file = '/data/data/' + TnsPaths.get_bundle_id(self.app_name)
         for index in range(1, 3000):
-            command = "shell run-as org.nativescript.TestApp cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp/{0}" .format(str(index))
+            command = "shell run-as org.nativescript.TestApp cp -r {0} {0}/{1}" .format(dest_file, str(index))
             result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:
