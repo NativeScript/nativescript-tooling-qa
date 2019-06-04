@@ -139,8 +139,9 @@ class TnsRunJSTests(TnsRunTest):
 
         # Verify rebuild is triggered and app is synced
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       run_type=RunType.FULL, device=self.emu)
+                                       run_type=RunType.UNKNOWN, device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
+
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
@@ -149,7 +150,7 @@ class TnsRunJSTests(TnsRunTest):
                   os.path.join(self.app_resources_android, 'src', 'main', 'res', 'drawable-hdpi', 'icon.png'))
         # Verify only build for android is triggered
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       run_type=RunType.FULL, device=self.emu)
+                                       run_type=RunType.UNKNOWN, device=self.emu)
         not_existing_strings = ['Xcode build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings, timeout=120)
