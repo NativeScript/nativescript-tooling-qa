@@ -161,7 +161,6 @@ class TnsLogs(object):
                 if (bundle or hmr) and app_type != AppType.VUE:
                     logs.append('Successfully transferred bundle.js on device')
                     logs.append('Successfully transferred package.json on device')
-                    logs.append('Successfully transferred starter.js on device')
                     logs.append('Successfully transferred vendor.js on device')
                 else:
                     logs.append('Successfully transferred all files on device')

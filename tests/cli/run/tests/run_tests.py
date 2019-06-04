@@ -5,6 +5,7 @@ import unittest
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.enums.device_type import DeviceType
 from core.settings import Settings
 from core.utils.file_utils import Folder, File, Process
 from core.utils.device.adb import Adb
@@ -139,7 +140,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify rebuild is triggered and app is synced
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
@@ -151,7 +152,7 @@ class TnsRunJSTests(TnsRunTest):
                                        run_type=RunType.FULL, device=self.emu)
         not_existing_strings = ['Xcode build']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                             not_existing_string_list=not_existing_strings, timeout=120)
 
         # https://github.com/NativeScript/nativescript-cli/issues/3658
         Tns.kill()
@@ -219,7 +220,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify https://github.com/NativeScript/android-runtime/issues/1024
         not_existing_strings = ['JS:']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                             not_existing_string_list=not_existing_strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         blue_count = self.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
@@ -492,7 +493,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify run --clean without changes skip prepare and rebuild of native project
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
         strings = ['Skipping prepare', 'Building project', 'Gradle clean']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
         # Verify if changes are applied and then run with clean it will apply changes on device
@@ -503,7 +504,7 @@ class TnsRunJSTests(TnsRunTest):
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
         strings.append('Gradle clean')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
         # Make changes again and verify changes are synced and clean build is not triggered again
@@ -658,7 +659,7 @@ class TnsRunJSTests(TnsRunTest):
         `tns run android` should start emulator if device is not connected.
         """
         # Run the test only if there are no connected devices
-        conected_devices = DeviceManager.get_devices(device_type=Platform.IOS)
+        conected_devices = DeviceManager.get_devices(device_type=DeviceType.IOS)
         if conected_devices.__len__() == 0:
             DeviceManager.Simulator.stop()
             result = Tns.run_ios(self.app_name)
@@ -703,11 +704,11 @@ class TnsRunJSTests(TnsRunTest):
         dest_path = os.path.join(self.app_resources_ios, 'src')
         Folder.copy(source_path, dest_path, clean_target=False)
 
-        # Replace main-view-model.js to call method from the source code in app resources
-        source_js = os.path.join(Settings.TEST_RUN_HOME, 'assets', "issues", 'nativescript-cli-3650',
-                                 'main-view-model.js')
+        # Call method from the source code of the plugin in main-view-model.js
+        old_value = 'viewModel.counter = 42;'
+        new_value = 'viewModel.counter = 42;\n var objTC = new TestClass();\n console.log(objTC.sayHey());'
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
-        File.copy(source_js, target_js)
+        File.replace(target_js, old_value, new_value)
 
         result = Tns.run_ios(self.app_name, emulator=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
@@ -753,8 +754,9 @@ class TnsRunJSTests(TnsRunTest):
         result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
         # Use all the disk space on emulator
+        dest_file = '/data/data/' + TnsPaths.get_bundle_id(self.app_name)
         for index in range(1, 3000):
-            command = "shell cp -r /data/data/org.nativescript.TestApp /data/data/org.nativescript.TestApp" + str(index)
+            command = "shell run-as org.nativescript.TestApp cp -r {0} {0}/{1}" .format(dest_file, str(index))
             result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:
