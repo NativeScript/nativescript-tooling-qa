@@ -141,7 +141,7 @@ class Adb(object):
 
     @staticmethod
     def get_page_source(device_id):
-        temp_file = os.path.join(Settings.TEST_OUT_HOME, 'window_dump.xml')
+        temp_file = os.path.join(Settings.TEST_OUT_TEMP, 'window_dump.xml')
         File.delete(temp_file)
         Adb.run_adb_command(command='shell rm /sdcard/window_dump.xml', device_id=device_id)
         result = Adb.run_adb_command(command='shell uiautomator dump', device_id=device_id)

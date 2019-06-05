@@ -14,11 +14,11 @@ import stat
 import tarfile
 import zipfile
 
+from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.process import Process
-from core.base_test.test_context import TestContext
 
 
 # noinspection PyBroadException
@@ -288,7 +288,10 @@ class File(object):
             Log.debug('Failed to unpack .tar file {0}'.format(file_path))
 
     @staticmethod
-    def unzip(file_path, dest_dir):
+    def unzip(file_path, dest_dir, clean_dest_dir=True):
+        if clean_dest_dir:
+            Folder.clean(dest_dir)
+            Folder.create(dest_dir)
         try:
             zfile = zipfile.ZipFile(file_path, 'r')
             zfile.extractall(dest_dir)
@@ -308,3 +311,7 @@ class File(object):
         file_path = os.path.join(destination_dir, file_name)
         assert File.exists(file_path), 'Failed to download {0} at {1}.'.format(url, file_path)
         Log.info('Downloaded {0} at {1}'.format(url, file_path))
+
+    @staticmethod
+    def get_size(file_path):
+        return os.path.getsize(file_path)

@@ -20,7 +20,7 @@ class Chrome(object):
             self.kill()
         path = ChromeDriverManager().install()
         Log.info('Starting Google Chrome ...')
-        profile_path = os.path.join(Settings.TEST_OUT_HOME, 'chrome_profile')
+        profile_path = os.path.join(Settings.TEST_OUT_TEMP, 'chrome_profile')
         Folder.clean(profile_path)
         options = webdriver.ChromeOptions()
         options.add_argument('user-data-dir={0}'.format(profile_path))
