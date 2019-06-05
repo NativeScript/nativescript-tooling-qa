@@ -43,10 +43,6 @@ class AppSizeTests(TnsTest):
             Tns.build_ios(cls.js_app, release=True, bundle=True, aot=True, uglify=True, for_device=True)
             Tns.build_ios(cls.ng_app, release=True, bundle=True, aot=True, uglify=True, for_device=True)
 
-    @classmethod
-    def tearDownClass(cls):
-        TnsTest.tearDownClass()
-
     def test_001_js_app_app_resources(self):
         folder = os.path.join(TnsPaths.get_app_path(app_name=self.js_app), 'app')
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(folder), expected=2991521, tolerance=0.1)
