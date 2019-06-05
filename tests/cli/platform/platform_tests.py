@@ -78,7 +78,11 @@ class BuildTests(TnsTest):
     
     def test_150_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
-        Tns.platform_update(self.app_name, platform=Platform.ANDROID, version='5.3.1')
+        runtime_version = '5.3.1'
+        command = 'platform update android@{0}'.format(runtime_version)
+        result = Tns.exec_command(command=command, path=self.app_name)
+        TnsAssert.platform_added(app_name=self.app_name, platform=Platform.ANDROID,
+                                 version=runtime_version, output=result.output)
 
     def test_160_platform_clean_android(self):
         """Prepare after `platform clean` should add the same version that was before clean"""

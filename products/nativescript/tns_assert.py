@@ -2,6 +2,7 @@ import os
 
 from core.enums.app_type import AppType
 from core.enums.framework_type import FrameworkType
+from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
@@ -119,7 +120,7 @@ class TnsAssert(object):
             # Assert platform added status
             if added is Platform.NONE:
                 assert 'No installed platforms found. Use $ tns platform add' in output
-                if CURRENT_OS is OSType.OSX:
+                if Settings.HOST_OS is OSType.OSX:
                     assert 'Available platforms for this OS:  ios and android' in output
                 else:
                     assert 'Available platforms for this OS:  android' in output
