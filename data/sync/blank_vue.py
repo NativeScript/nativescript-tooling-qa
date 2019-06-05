@@ -4,8 +4,10 @@ Sync changes on JS/TS project helper.
 import os
 
 from core.enums.app_type import AppType
+from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.file_utils import File
 from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -38,6 +40,13 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
                                        hmr=hmr, app_type=AppType.VUE)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
+        if platform == Platform.IOS:
+            sync_messages = ['Successfully transferred bundle.js on device',
+                             'Successfully transferred package.json on device',
+                             'Successfully transferred vendor.js on device']
+            content = File.read(path=result.log_file)
+            for message in sync_messages:
+                assert message in content
 
     # Verify it looks properly
     device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text)
