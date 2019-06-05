@@ -1,6 +1,6 @@
-#import "TestClass.h"
+#import "TestClass2.h"
 
-@implementation TestClass
+@implementation TestClass2
 
 - (NSString *)sayHey{
       return @"Hey Native!";
