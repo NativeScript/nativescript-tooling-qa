@@ -66,24 +66,24 @@ class AppSizeTests(TnsTest):
         # Verify content of APK
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=36968864, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=796563, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=639791, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=5795968, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=641606, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=5811260, tolerance=0.05)
 
         # Verify final apk size
-        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=18213523, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=18216351, tolerance=0.05)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_js_app_ipa(self):
         ipa = TnsPaths.get_ipa_path(app_name=self.js_app, release=True, for_device=True)
-        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=16000288, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=16001936, tolerance=0.05)
 
     def test_100_ng_app_app_resources(self):
         app_folder = os.path.join(TnsPaths.get_app_path(app_name=self.ng_app), 'App_Resources')
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(app_folder), expected=2991521, tolerance=0.1)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(app_folder), expected=2986244, tolerance=0.1)
 
     def test_101_ng_app_node_modules(self):
         app_folder = os.path.join(TnsPaths.get_app_path(app_name=self.ng_app), 'node_modules')
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(app_folder), expected=200232878, tolerance=0.2)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(app_folder), expected=200248003, tolerance=0.2)
 
     def test_102_ng_app_apk(self):
         # Extract APK
@@ -100,13 +100,13 @@ class AppSizeTests(TnsTest):
 
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=36968864, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=796563, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=1340636, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=13140964, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=1342382, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=13157964, tolerance=0.05)
 
         # Verify final apk size
-        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=20083898, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=20087522, tolerance=0.05)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_ng_app_ipa(self):
         ipa = TnsPaths.get_ipa_path(app_name=self.ng_app, release=True, for_device=True)
-        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=16183587, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=16185128, tolerance=0.05)
