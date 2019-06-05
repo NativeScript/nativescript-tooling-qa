@@ -487,6 +487,7 @@ class TnsRunJSTests(TnsRunTest):
         assert green_count > 0, 'Failed to find green color on {0}'.format(self.emu.name)
         assert yellow_count == 0, 'Found yellow color on {0}'.format(self.emu.name)
 
+    @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_300_tns_run_android_clean(self):
         """
@@ -507,7 +508,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify https://github.com/NativeScript/nativescript-cli/issues/2670 run --clean does
         # clean build only the first time
         Sync.replace(self.app_name, Changes.JSHelloWord.XML)
-        result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True)
+        result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
         strings.append('Gradle clean')
@@ -522,16 +523,17 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
 
+    @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_tns_run_ios_clean(self):
         """
         If  set --clean rebuilds the native project
         """
         # Run the project once so it is build for the first time
-        result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim)
+        result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
 
         # Verify run --clean without changes rebuilds native project
-        result = Tns.run_ios(app_name=self.app_name, verify=True, device=self.sim.id, clean=True)
+        result = Tns.run_ios(app_name=self.app_name, verify=True, device=self.sim.id, clean=True, just_launch=True)
         strings = ['Building project', 'Xcode build...']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
@@ -726,22 +728,24 @@ class TnsRunJSTests(TnsRunTest):
         # Verify app looks correct inside simulator
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
+    @unittest.skip("Webpack only")
     def test_355_tns_run_android_delete_node_modules(self):
         """
         Run should not fail if node_modules folder is deleted
         https://github.com/NativeScript/nativescript-cli/issues/3944
         """
         # Run the project with --justLaunch
-        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
         # Delete node_modules
         node_modules = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'node_modules')
         Folder.clean(node_modules)
 
         # Run the project again, verify it is build and node_modules folder exists
-        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
         assert Folder.exists(node_modules)
 
+    @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_360_tns_run_ios_on_folder_with_spaces(self):
         """
@@ -749,7 +753,7 @@ class TnsRunJSTests(TnsRunTest):
         """
         Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
         app_name = '"' + self.app_name_space + '"'
-        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu)
+        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, '`shell cp -r` fails on emulators on Linux and Win.')
     def test_365_tns_run_android_should_respect_adb_errors(self):
@@ -758,7 +762,7 @@ class TnsRunJSTests(TnsRunTest):
         https://github.com/NativeScript/nativescript-cli/issues/2170
         """
         # Deploy the app to make sure we have something at /data/data/org.nativescript.TestApp
-        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
         # Use all the disk space on emulator
         dest_file = '/data/data/' + TnsPaths.get_bundle_id(self.app_name)
@@ -773,6 +777,6 @@ class TnsRunJSTests(TnsRunTest):
         Tns.create(app_name='TestApp2', template=Template.HELLO_WORLD_JS.local_package, update=True)
 
         # Run the app and verify there is appropriate error
-        result = Tns.run_android('TestApp2', verify=True, device=self.emu.id)
+        result = Tns.run_android('TestApp2', verify=True, device=self.emu.id, just_launch=True)
         strings = ['No space left on device']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
