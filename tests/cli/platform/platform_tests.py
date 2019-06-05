@@ -87,6 +87,7 @@ class BuildTests(TnsTest):
         # Update platform to 5
         Tns.platform_update(self.app_name, platform=Platform.ANDROID, version='5.0.0')
 
+    @unittest.skip("Skip because of https://github.com/NativeScript/nativescript-cli/issues/4681")
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_140_platform_update_ios(self):
         """Update platform"""
