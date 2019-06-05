@@ -755,9 +755,8 @@ class TnsRunJSTests(TnsRunTest):
 
         # Use all the disk space on emulator
         dest_file = '/data/data/' + TnsPaths.get_bundle_id(self.app_name)
-        bundle_id = TnsPaths.get_bundle_id(self.app_name)
         for index in range(1, 3000):
-            command = "shell 'su 0 cp -r {0} {0}{1}'".format(dest_file, str(index), bundle_id)
+            command = "shell 'su 0 cp -r {0} {0}{1}'".format(dest_file, str(index))
             result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:
