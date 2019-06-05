@@ -1,5 +1,5 @@
 module NativeScriptTests {
-    umbrella header "TestClass.h"
+    umbrella header "TestClass2.h"
     export *
     module * { export * }
 }
