@@ -194,8 +194,7 @@ class BuildTests(TnsTest):
         assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), '*.framework'))
 
         # Verify ipa has both armv7 and arm64 archs
-        ipa_path = os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'build', 'Release-iphoneos',
-                                'TestApp.ipa')
+        ipa_path = TnsPaths.get_ipa_path(app_name=self.app_name, release=True, for_device=True)
         run("mv " + ipa_path + " TestApp-ipa.tgz")
         run("unzip -o TestApp-ipa.tgz")
         result = run("lipo -info Payload/TestApp.app/TestApp")
