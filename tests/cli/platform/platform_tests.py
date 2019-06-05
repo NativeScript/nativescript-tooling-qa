@@ -51,6 +51,10 @@ class BuildTests(TnsTest):
     def test_110_platform_add_android_framework_path(self):
         Tns.platform_add_android(self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_110_platform_add_ios_framework_path(self):
+        Tns.platform_add_ios(self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
+
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
         project_path = os.path.join(Settings.TEST_RUN_HOME, self.app_name)
@@ -67,6 +71,13 @@ class BuildTests(TnsTest):
         Tns.platform_add_android(self.app_name, version='rc')
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
 
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_130_platform_remove_and_platform_add_ios_custom_version(self):
+        """Verify platform add supports custom versions"""
+        Tns.platform_add_ios(self.app_name, version='4.2.0')
+        Tns.platform_add_ios(self.app_name, version='rc')
+        Tns.platform_remove(self.app_name, platform=Platform.IOS)
+
     def test_140_platform_update_android(self):
         """Update platform"""
 
@@ -75,6 +86,16 @@ class BuildTests(TnsTest):
 
         # Update platform to 5
         Tns.platform_update(self.app_name, platform=Platform.ANDROID, version='5.0.0')
+
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_140_platform_update_ios(self):
+        """Update platform"""
+
+        # Create project with tns-ios@4
+        Tns.platform_add_ios(self.app_name, version='4.0.1')
+
+        # Update platform to 5
+        Tns.platform_update(self.app_name, platform=Platform.IOS, version='5.0.0')
     
     def test_150_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
@@ -82,6 +103,15 @@ class BuildTests(TnsTest):
         command = 'platform update android@{0}'.format(runtime_version)
         result = Tns.exec_command(command=command, path=self.app_name)
         TnsAssert.platform_added(app_name=self.app_name, platform=Platform.ANDROID,
+                                 version=runtime_version, output=result.output)
+
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_150_platform_update_ios_when_platform_not_added(self):
+        """`platform update` should work even if platform is not added"""
+        runtime_version = '5.3.1'
+        command = 'platform update ios@{0}'.format(runtime_version)
+        result = Tns.exec_command(command=command, path=self.app_name)
+        TnsAssert.platform_added(app_name=self.app_name, platform=Platform.IOS,
                                  version=runtime_version, output=result.output)
 
     def test_160_platform_clean_android(self):
@@ -96,14 +126,8 @@ class BuildTests(TnsTest):
         json = JsonUtils.read(package_json)
         assert json['nativescript']['tns-android']['version'] == '5.0.0'
 
-    @unittest.skip("TODO:Write that test when we merge webpack only feature")
-    def test_170_tns_update(self):
-        """ Default `tns update` command"""
-
     def test_180_platform_list(self):
         """Platform list command should list installed platforms and if app is prepared for those platforms"""
-        # issue with v2 of templates - workaround with remove ios platform
-        # Tns.platform_remove(platform=Platform.IOS, attributes={"--path": self.app_name}, assert_success=False)
 
         # `tns platform list` on brand new project
         result = Tns.platform_list(self.app_name)
@@ -118,4 +142,14 @@ class BuildTests(TnsTest):
         Tns.prepare_android(self.app_name)
         result = Tns.platform_list(self.app_name)
         TnsAssert.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.ANDROID)
+
+        # `tns platform list` when ios is added
+        Tns.platform_add_ios(self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
+        result = Tns.platform_list(self.app_name)
+        TnsAssert.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.BOTH)
+
+        # `tns platform list` when ios prepared android is already prepared
+        Tns.prepare_ios(self.app_name)
+        result = Tns.platform_list(self.app_name)
+        TnsAssert.platform_list_status(output=result.output, prepared=Platform.BOTH, added=Platform.BOTH)
         
