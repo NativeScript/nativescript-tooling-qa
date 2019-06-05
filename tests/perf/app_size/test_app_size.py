@@ -25,13 +25,13 @@ class AppSizeTests(TnsTest):
         TnsTest.setUpClass()
 
         # Create JS app and copy to temp data folder
-        Tns.create(app_name=cls.js_app, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name=cls.js_app, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(app_name=cls.js_app, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.js_app, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
         # Create NG app and copy to temp data folder
-        Tns.create(app_name=cls.ng_app, template=Template.HELLO_WORLD_NG.local_package, update=False)
+        Tns.create(app_name=cls.ng_app, template=Template.HELLO_WORLD_NG.local_package, update=True)
         Tns.platform_add_android(app_name=cls.ng_app, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.ng_app, framework_path=Settings.IOS.FRAMEWORK_PATH)

@@ -71,10 +71,11 @@ class BuildTests(TnsTest):
         # Verify apk does not contain aar files
         apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
         File.unzip(apk_path, 'temp')
+
         # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
         # https://github.com/NativeScript/nativescript-cli/pull/3923
-        Folder.clean(os.path.join(self.app_path, 'temp', 'META-INF'))
         temp_folder = os.path.join(self.app_path, 'temp')
+        Folder.clean(os.path.join(temp_folder, 'META-INF'))
         assert not File.pattern_exists(temp_folder, '*.aar')
         assert not File.pattern_exists(temp_folder, '*.plist')
         assert not File.pattern_exists(temp_folder, '*.android.*')

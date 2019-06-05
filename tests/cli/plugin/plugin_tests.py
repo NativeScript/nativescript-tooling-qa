@@ -42,9 +42,6 @@ class PluginTests(TnsTest):
 
     def test_100_plugin_add(self):
         Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin', 'index.js'))
-        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
-                                        'package.json'))
 
         # Verify files of the plugin
         plugin_path = os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin')
