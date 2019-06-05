@@ -131,8 +131,8 @@ class TnsLogs(object):
                 # logs.append('Skipping prepare.')
                 logs.append('Starting incremental webpack compilation...')
         else:
-            # if not hmr:
-            #     logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
+            if not hmr:
+                logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
             if bundle:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
@@ -229,7 +229,7 @@ class TnsLogs(object):
                 'Webpack build done!']
 
     @staticmethod
-    def preview_initial_messages(platform, bundle=False, hmr=False, instrumented=False):
+    def preview_initial_messages(platform, bundle=True, hmr=False, instrumented=False):
         logs = ['Start sending initial files for platform {0}'.format(str(platform)),
                 'Successfully sent initial files for platform {0}'.format(str(platform))]
         if bundle or hmr:
@@ -240,7 +240,7 @@ class TnsLogs(object):
 
     @staticmethod
     def preview_file_changed_messages(platform, file_name, run_type=RunType.INCREMENTAL,
-                                      bundle=False, hmr=False, instrumented=False):
+                                      bundle=True, hmr=True, instrumented=False):
         logs = ['Start syncing changes for platform {0}'.format(str(platform))]
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
