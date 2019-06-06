@@ -18,7 +18,7 @@ from products.nativescript.tns_assert import TnsAssert
 APP_NAME = Settings.AppName.DEFAULT
 
 TEST_DATA = [
-    ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    # ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
     ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
     ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
     ('mocha-ng-android', FrameworkType.MOCHA, Template.HELLO_WORLD_NG, Platform.ANDROID),
@@ -26,8 +26,8 @@ TEST_DATA = [
 ]
 
 TEST_DATA_OSX = [
-    ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
-    ('jasmine-js-ios', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.IOS),
+    # ('jasmine-js-android', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.ANDROID),
+    # ('jasmine-js-ios', FrameworkType.JASMINE, Template.HELLO_WORLD_JS, Platform.IOS),
     ('jasmine-ng-android', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.ANDROID),
     ('jasmine-ng-ios', FrameworkType.JASMINE, Template.HELLO_WORLD_NG, Platform.IOS),
     ('mocha-js-android', FrameworkType.MOCHA, Template.HELLO_WORLD_JS, Platform.ANDROID),
