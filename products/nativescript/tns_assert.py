@@ -82,35 +82,8 @@ class TnsAssert(object):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         package_json = os.path.join(app_path, 'package.json')
         json = JsonUtils.read(package_json)
-        # noinspection SpellCheckingInspection
         assert json['nativescript']['tns-' + platform_string]['version'] is not None, \
             'tns-' + platform_string + ' not available in package.json of the app.'
-
-    # noinspection PyUnusedLocal
-    @staticmethod
-    def build(app_name, platform=None, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
-              bundle=False, aot=False, uglify=False, snapshot=False, log_trace=False, output=None, app_data=None):
-        # pylint: disable=unused-argument
-        # TODO: Implement it!
-
-        # Verify output and exit code
-        assert 'Project successfully built.' in output
-
-        # Assert app data
-        if app_data is not None:
-            # Assert app type
-            if app_data.app_type is AppType.JS:
-                pass
-            elif app_data.app_type is AppType.TS:
-                pass
-            elif app_data.app_type is AppType.NG:
-                pass
-            elif app_data.app_type is AppType.SHARED_NG:
-                pass
-
-            # Assert size
-            if app_data.size is not None:
-                pass
 
     @staticmethod
     def test_initialized(app_name, framework, output):

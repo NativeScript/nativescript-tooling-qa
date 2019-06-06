@@ -22,6 +22,7 @@ def __cleanup():
     Folder.clean(Settings.TEST_OUT_HOME)
     Folder.create(Settings.TEST_OUT_LOGS)
     Folder.create(Settings.TEST_OUT_IMAGES)
+    Folder.create(Settings.TEST_OUT_TEMP)
 
     DeviceManager.Emulator.stop()
     if Settings.HOST_OS == OSType.OSX:

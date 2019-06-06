@@ -56,6 +56,7 @@ TEST_SUT_HOME = os.path.join(TEST_RUN_HOME, 'sut')
 TEST_OUT_HOME = os.path.join(TEST_RUN_HOME, 'out')
 TEST_OUT_LOGS = os.path.join(TEST_OUT_HOME, 'logs')
 TEST_OUT_IMAGES = os.path.join(TEST_OUT_HOME, 'images')
+TEST_OUT_TEMP = os.path.join(TEST_OUT_HOME, 'temp')
 
 ASSETS_HOME = os.path.join(TEST_RUN_HOME, 'assets')
 
