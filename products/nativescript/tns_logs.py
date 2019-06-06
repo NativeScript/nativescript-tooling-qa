@@ -159,15 +159,15 @@ class TnsLogs(object):
                 # If bundle is not used then TS files are transpiled and synced as JS
                 logs.append('Successfully transferred {0}'.format(file_name.replace('.ts', '.js')))
 
-            # Migrated
-            if run_type in [RunType.FIRST_TIME, RunType.FULL]:
-                if platform == Platform.IOS:
-                    if (bundle or hmr) and transfer_all is True:
-                        logs.append('Successfully transferred all files on device')
-                    else:
-                        logs.append('Successfully transferred bundle.js on device')
-                        logs.append('Successfully transferred package.json on device')
-                        logs.append('Successfully transferred vendor.js on device')
+        # Migrated
+        if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+            if platform == Platform.IOS:
+                if (bundle or hmr) and transfer_all is True:
+                    logs.append('Successfully transferred all files on device')
+                else:
+                    logs.append('Successfully transferred bundle.js on device')
+                    logs.append('Successfully transferred package.json on device')
+                    logs.append('Successfully transferred vendor.js on device')
 
         return logs
 
