@@ -162,12 +162,15 @@ class TnsLogs(object):
         # Migrated
         if run_type in [RunType.FIRST_TIME, RunType.FULL]:
             if platform == Platform.IOS:
-                if (bundle or hmr) and transfer_all is True:
-                    logs.append('Successfully transferred all files on device')
+                if bundle or hmr:
+                    if transfer_all is True:
+                        logs.append('Successfully transferred all files on device')
+                    else:
+                        logs.append('Successfully transferred bundle.js on device')
+                        logs.append('Successfully transferred package.json on device')
+                        logs.append('Successfully transferred vendor.js on device')
                 else:
-                    logs.append('Successfully transferred bundle.js on device')
-                    logs.append('Successfully transferred package.json on device')
-                    logs.append('Successfully transferred vendor.js on device')
+                    logs.append('Successfully transferred all files on device')
 
         return logs
 
