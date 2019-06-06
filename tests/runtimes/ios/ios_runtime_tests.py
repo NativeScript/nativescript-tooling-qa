@@ -93,6 +93,26 @@ class IOSRuntimeTests(TnsTest):
         else:
             assert False, "Cannot find {0} in {1}".format(tns_core_framework, path_to_file)
 
+    def test_384_check_for_native_and_js_callstacks(self):
+        """
+        https://github.com/NativeScript/ios-runtime/pull/1144
+        """
+        # Replace main-page.js so there is an error
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-pr-1144', 'main-page.js'),
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
+
+        result = Tns.run_ios(app_name=APP_NAME, emulator=True, wait=False, verify=False)
+        strings = ['Native Stack:',
+                   'sig_handler(int)',
+                   'JS Stack:',
+                   '1   @[native code]',
+                   '2   onNavigatingTo@file:///app/bundle.js:197:20']
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
+
+        # Verify app is NOT running on device
+        app_is_running = Simctl.is_process_running(self.sim, 'org.nativescript.' + APP_NAME)
+        assert not app_is_running, "It seems that " + APP_NAME + " is still running when it should not!"
+
     def test_385_methods_with_same_name_and_different_parameters(self):
         """
         https://github.com/NativeScript/ios-runtime/issues/877
@@ -274,7 +294,7 @@ class IOSRuntimeTests(TnsTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=console_time)
 
     def test_392_tns_run_ios_console_dir(self):
-        # NOTE: This test depends on creation of app in test_280_tns_run_ios_console_time
+        # NOTE: This test depends on creation of app in test_391_tns_run_ios_console_time
         # Replace app.component.ts to use console.time() and console.timeEnd()
 
         File.copy(
