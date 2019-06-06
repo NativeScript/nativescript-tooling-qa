@@ -42,6 +42,7 @@ class TnsTest(unittest.TestCase):
         Folder.create(Settings.TEST_OUT_HOME)
         Folder.create(Settings.TEST_OUT_LOGS)
         Folder.create(Settings.TEST_OUT_IMAGES)
+        Folder.create(Settings.TEST_OUT_TEMP)
 
         # Set default simulator based on Xcode version
         if Settings.HOST_OS == OSType.OSX:
@@ -89,6 +90,7 @@ class TnsTest(unittest.TestCase):
         Tns.kill()
         TnsTest.kill_emulators()
         Process.kill_all_in_context()
+        Folder.clean(Settings.TEST_OUT_TEMP)
         Log.test_class_end(TestContext.CLASS_NAME)
 
     @staticmethod

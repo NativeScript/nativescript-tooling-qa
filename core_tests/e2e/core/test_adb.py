@@ -17,6 +17,7 @@ class AdbTests(TnsRunAndroidTest):
         Folder.clean(Settings.TEST_OUT_HOME)
         Folder.create(Settings.TEST_OUT_LOGS)
         Folder.create(Settings.TEST_OUT_IMAGES)
+        Folder.create(Settings.TEST_OUT_TEMP)
         Process.kill(proc_name="adb")
         TnsRunAndroidTest.setUpClass()
         url = "https://github.com/webdriverio/native-demo-app/releases/download/0.2.1/Android-NativeDemoApp-0.2.1.apk"
@@ -40,7 +41,7 @@ class AdbTests(TnsRunAndroidTest):
         assert '</hierarchy>' in page_source
 
     def test_02_adb_get_screen(self):
-        path = os.path.join(Settings.TEST_OUT_HOME, 'temp.png')
+        path = os.path.join(Settings.TEST_OUT_TEMP, 'temp.png')
         File.delete(path)
         Adb.get_screen(device_id=self.emu.id, file_path=path)
 
