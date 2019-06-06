@@ -13,6 +13,7 @@ from core.utils.file_utils import Folder, File
 from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
+from core.utils.json_utils import JsonUtils
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_logs import TnsLogs
@@ -230,6 +231,9 @@ class Tns(object):
             if platform is Platform.IOS:
                 assert  Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
             assert "Platform {0} successfully added".format(platform_string) in result.output
+            package_json = os.path.join(TnsPaths.get_app_path(app_name), 'package.json')
+            json = JsonUtils.read(package_json)
+            assert json['nativescript']['tns-' + platform_string]['version'] is not None
 
     @staticmethod
     def platform_list(app_name):
