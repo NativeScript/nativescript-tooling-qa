@@ -25,7 +25,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
                                    hmr=hmr, app_type=AppType.VUE)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
     if platform == Platform.IOS:
-        sync_message = 'Successfully transferred all files on device';
+        sync_message = 'Successfully transferred all files on device'
         content = File.read(path=result.log_file)
         assert sync_message in content
 
