@@ -706,7 +706,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Call method from the source code of the plugin in main-view-model.js
         old_value = 'viewModel.counter = 42;'
-        new_value = 'viewModel.counter = 42;\n var objTC = new TestClass();\n console.log(objTC.sayHey());'
+        new_value = 'viewModel.counter = 42;\n var objTC = new TestClass2();\n console.log(objTC.sayHey());'
         target_js = os.path.join(Settings.TEST_RUN_HOME, self.app_name, 'app', 'main-view-model.js')
         File.replace(target_js, old_value, new_value)
 
@@ -756,7 +756,7 @@ class TnsRunJSTests(TnsRunTest):
         # Use all the disk space on emulator
         dest_file = '/data/data/' + TnsPaths.get_bundle_id(self.app_name)
         for index in range(1, 3000):
-            command = "shell run-as org.nativescript.TestApp cp -r {0} {0}/{1}" .format(dest_file, str(index))
+            command = "shell 'su 0 cp -r {0} {0}{1}'".format(dest_file, str(index))
             result = Adb.run_adb_command(device_id=self.emu.id, command=command)
             Log.info(result.output)
             if "No space left on device" in result.output:

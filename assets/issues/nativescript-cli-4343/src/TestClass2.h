@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface TestClass : NSObject
+@interface TestClass2 : NSObject
 
 - (NSString *)sayHey;
 - (NSString *)sayName;
