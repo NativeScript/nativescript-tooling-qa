@@ -82,9 +82,9 @@ class TnsAssert(object):
         assert 'Platform {0} successfully added'.format(platform_string) in output
         # Verify platform folder
         if platform == Platform.ANDROID:
-            assert File.exists(os.path.join(TnsPaths.get_platforms_android_folder(app_name), 'build.gradle'))
+            assert Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
         else:
-            assert File.exists(TnsPaths.get_platforms_ios_folder(app_name), '{0}.xcodeproj'.format(app_name))
+            assert Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
         # Verify package.json
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         package_json = os.path.join(app_path, 'package.json')
