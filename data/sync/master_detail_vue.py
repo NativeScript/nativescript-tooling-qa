@@ -8,7 +8,6 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.settings.Settings import AppiumCaps
 from core.utils.appium_python import AppiumDriver
-from core.utils.file_utils import File
 from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -22,12 +21,8 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     # Execute tns command
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
-                                   hmr=hmr, app_type=AppType.VUE)
+                                   hmr=hmr, app_type=AppType.VUE, transfer_all=True)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
-    if platform == Platform.IOS:
-        sync_message = 'Successfully transferred all files on device'
-        content = File.read(path=result.log_file)
-        assert sync_message in content
 
     # start appium driver
     appium = None

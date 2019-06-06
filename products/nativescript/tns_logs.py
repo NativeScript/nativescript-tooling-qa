@@ -51,7 +51,8 @@ class TnsLogs(object):
 
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=True, hmr=True, uglify=False, app_type=None,
-                     file_name=None, instrumented=False, plugins=None, aot=False, device=None, just_launch=False):
+                     file_name=None, instrumented=False, plugins=None, aot=False, device=None, just_launch=False,
+                     transfer_all=False):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -66,6 +67,7 @@ class TnsLogs(object):
         :param plugins: List of plugins.
         :param aot: True if `--env.aot is specified.`
         :param device: Device object.
+        :param transfer_all: different strings for transfer of files depends on their count - 10 or more
         :return: Array of strings.
         """
         if plugins is None:
@@ -89,7 +91,8 @@ class TnsLogs(object):
 
         # File transfer messages
         logs.extend(TnsLogs.__file_changed_messages(run_type=run_type, file_name=file_name, platform=platform,
-                                                    bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, app_type=app_type))
+                                                    bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, app_type=app_type,
+                                                    transfer_all=transfer_all))
 
         # App restart messages:
         if run_type == RunType.UNKNOWN:
@@ -120,7 +123,8 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, aot=False, app_type=None):
+    def __file_changed_messages(run_type, file_name, platform, bundle, hmr, uglify, aot=False, app_type=None,
+                                transfer_all=False):
         logs = []
         if file_name is None:
             if run_type not in [RunType.FIRST_TIME, RunType.FULL, RunType.UNKNOWN]:
@@ -154,6 +158,16 @@ class TnsLogs(object):
             else:
                 # If bundle is not used then TS files are transpiled and synced as JS
                 logs.append('Successfully transferred {0}'.format(file_name.replace('.ts', '.js')))
+
+            # Migrated
+            if run_type in [RunType.FIRST_TIME, RunType.FULL]:
+                if platform == Platform.IOS:
+                    if (bundle or hmr) and transfer_all is True:
+                        logs.append('Successfully transferred all files on device')
+                    else:
+                        logs.append('Successfully transferred bundle.js on device')
+                        logs.append('Successfully transferred package.json on device')
+                        logs.append('Successfully transferred vendor.js on device')
 
         return logs
 
