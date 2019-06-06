@@ -5,14 +5,10 @@ from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.settings.Settings import TEST_RUN_HOME
-from core.utils.file_utils import File, Folder
+from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
-from core.utils.npm import Npm
-from core.utils.run import run
 from data.apps import Apps
 from products.nativescript.tns import Tns
-from products.nativescript.tns_paths import TnsPaths
 from products.nativescript.tns_assert import TnsAssert
 
 
@@ -42,7 +38,7 @@ class BuildTests(TnsTest):
     def test_100_platform_add_android(self):
         """ Default `tns platform add` command"""
         Tns.platform_add_android(self.app_name)
-    
+
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_platform_add_ios(self):
         """ Add platform from local package"""
@@ -97,7 +93,7 @@ class BuildTests(TnsTest):
 
         # Update platform to 5
         Tns.platform_update(self.app_name, platform=Platform.IOS, version='5.0.0')
-    
+
     def test_150_platform_update_android_when_platform_not_added(self):
         """`platform update` should work even if platform is not added"""
         runtime_version = '5.3.1'
@@ -153,4 +149,3 @@ class BuildTests(TnsTest):
         Tns.prepare_ios(self.app_name)
         result = Tns.platform_list(self.app_name)
         TnsAssert.platform_list_status(output=result.output, prepared=Platform.BOTH, added=Platform.BOTH)
-        

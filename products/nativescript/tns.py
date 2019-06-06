@@ -176,7 +176,7 @@ class Tns(object):
         command = 'platform remove ' + str(platform) + ' --path ' + app_name
         result = Tns.exec_command(command=command, log_trace=log_trace)
         if verify:
-            TnsAssert.platform_removed(app_name=app_name, platform=platform, output= result.output)
+            TnsAssert.platform_removed(app_name=app_name, platform=platform, output=result.output)
         return result
 
     @staticmethod
@@ -227,9 +227,9 @@ class Tns(object):
             assert "Platform {0} successfully removed".format(platform_string) in result.output
             assert "error" not in result.output
             if platform is Platform.ANDROID:
-                assert  Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
+                assert Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
             if platform is Platform.IOS:
-                assert  Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
+                assert Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
             assert "Platform {0} successfully added".format(platform_string) in result.output
             package_json = os.path.join(TnsPaths.get_app_path(app_name), 'package.json')
             json = JsonUtils.read(package_json)

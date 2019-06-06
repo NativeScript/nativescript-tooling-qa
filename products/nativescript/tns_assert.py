@@ -96,7 +96,7 @@ class TnsAssert(object):
                 assert 'rc' in json['nativescript']['tns-' + platform_string]['version']
             else:
                 assert json['nativescript']['tns-' + platform_string]['version'] == version
-        else:    
+        else:
             assert json['nativescript']['tns-' + platform_string]['version'] is not None, \
                 'tns-' + platform_string + ' not available in package.json of the app.'
 
@@ -145,6 +145,7 @@ class TnsAssert(object):
         app_path = TnsPaths.get_app_path(app_name)
         package_json = os.path.join(app_path, 'package.json')
         json = JsonUtils.read(package_json)
+        assert not json['nativescript']['tns-' + platform_string]
         assert not Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
 
     @staticmethod
