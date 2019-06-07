@@ -82,3 +82,6 @@ target/
 .venv/
 venv/
 ENV/
+
+# marketplace
+results.json
