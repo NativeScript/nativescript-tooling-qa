@@ -54,15 +54,12 @@ class BuildTests(TnsTest):
     def test_120_platform_add_android_inside_project(self):
         """ Add platform inside project folder (not using --path)"""
         project_path = os.path.join(Settings.TEST_RUN_HOME, self.app_name)
-        Folder.navigate_to(self.app_name)
         command = 'platform add android'
         result = Tns.exec_command(command=command, cwd=project_path)
         TnsAssert.platform_added(app_name=self.app_name, platform=Platform.ANDROID, output=result.output)
-        Folder.navigate_to(Settings.TEST_RUN_HOME)
 
     def test_130_platform_remove_and_platform_add_android_custom_version(self):
         """Verify platform add supports custom versions"""
-        Folder.navigate_to(Settings.TEST_RUN_HOME)
         Tns.platform_add_android(self.app_name, version='5.0.0')
         Tns.platform_add_android(self.app_name, version='rc')
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
