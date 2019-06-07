@@ -67,10 +67,10 @@ class MigrateWebToMobileTests(TnsRunTest):
     @parameterized.expand([
         ('android', Platform.ANDROID, True, False, False),
         ('ios', Platform.IOS, True, False, False),
-        ('android_aot', Platform.ANDROID, True, True, False),
-        ('ios_aot', Platform.IOS, True, True, False),
-        ('android_aot_uglify', Platform.ANDROID, True, True, True),
-        ('ios_aot_uglify', Platform.IOS, True, True, True),
+        # ('android_aot', Platform.ANDROID, True, True, False),
+        # ('ios_aot', Platform.IOS, True, True, False),
+        # ('android_aot_uglify', Platform.ANDROID, True, True, True),
+        # ('ios_aot_uglify', Platform.IOS, True, True, True),
     ])
     def test_10_run(self, name, platform, bundle, aot, uglify):
         if (platform == Platform.IOS) and (Settings.HOST_OS == OSType.WINDOWS or Settings.HOST_OS == OSType.LINUX):

@@ -59,9 +59,9 @@ class PlaygroundMarketSamples(TnsRunTest):
             link, is_slow = PlaygroundMarketSamples.get_link(self.chrome, url)
             original_name = name.replace("_", " ").encode("utf8")
             if link == "":
-                Log.info('No Playground URL found ...')
+                Log.info('No Playground URL found !!!')
                 data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor),
-                        "timeout": "True"}
+                        "timeout": "True", "slow": "True"}
                 retries -= 1
             else:
                 image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
