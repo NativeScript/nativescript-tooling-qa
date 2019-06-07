@@ -131,8 +131,8 @@ class Preview(object):
         Preview.run_url(url=url, device=device)
         # When you run preview on ios simulator on first run confirmation dialog is shown.
         if device.type == DeviceType.SIM:
-            time.sleep(2)
-            Preview.dismiss_simulator_alert()
+            time.sleep(5)
+            device.click("Open")
 
         # Verify logs
         strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
