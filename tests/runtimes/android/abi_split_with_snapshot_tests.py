@@ -11,6 +11,7 @@ from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
 from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
+from core.utils.wait import Wait
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
@@ -66,7 +67,11 @@ class AbiSplitTests(TnsTest):
                                  'app.gradle')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'App_Resources', 'Android', 'app.gradle')
         File.copy(source=source_js, target=target_js)
-        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True, bundle=True, release=True, snapshot=True)
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False, bundle=True, release=True,
+                                snapshot=True)
+
+        test_result = Wait.until(lambda: "Project successfully built" in log.output, timeout=100, period=5)
+        assert test_result, 'Build with abi split is not successful! Logs:' + log.output
 
         assert File.exists(
             os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
