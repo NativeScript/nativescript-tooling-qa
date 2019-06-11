@@ -10,6 +10,7 @@ class Platform(IntEnum):
     ANDROID = 1, 'android'
     IOS = 2, 'ios'
     NONE = 3, ''
+    BOTH = 4, 'ios and android'
 
     def __str__(self):
         return self.string
