@@ -57,4 +57,3 @@ class Apps(object):
     HELLO_WORLD_JS = AppInfo(app_type=AppType.JS, app_id=None, size=None, texts=['Tap the button'])
     HELLO_WORLD_TS = AppInfo(app_type=AppType.TS, app_id=None, size=None, texts=['Tap the button'])
     HELLO_WORLD_NG = AppInfo(app_type=AppType.NG, app_id=None, size=None, texts=None)
-    MIN_JS = AppInfo(app_type=AppType.JS, app_id=None, size=None, texts=None)

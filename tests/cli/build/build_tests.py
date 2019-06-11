@@ -9,7 +9,7 @@ from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
 from core.utils.run import run
-from data.apps import Apps
+from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
 
@@ -25,8 +25,8 @@ class BuildTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
-        Tns.create(cls.app_name_with_space, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=False)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
                                  framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
