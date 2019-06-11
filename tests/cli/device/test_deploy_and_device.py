@@ -37,7 +37,8 @@ class TnsDeviceTests(TnsRunTest):
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
-        result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True, verify=False)
+        result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
+                            update=True, verify=False)
         TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False, theme=False)
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS == OSType.OSX:

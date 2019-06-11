@@ -68,4 +68,3 @@ class Template(object):
     ENTERPRISE_AUTH_JS = gen_template_info(name='template-enterprise-auth', app_type=AppType.JS, texts=['Log in'])
     ENTERPRISE_AUTH_TS = gen_template_info(name='template-enterprise-auth-ts', app_type=AppType.TS, texts=['Log in'])
     ENTERPRISE_AUTH_NG = gen_template_info(name='template-enterprise-auth-ng', app_type=AppType.NG, texts=['Log in'])
-

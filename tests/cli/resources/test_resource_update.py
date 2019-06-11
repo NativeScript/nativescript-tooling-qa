@@ -25,7 +25,8 @@ class ResourcesUpdateTests(TnsTest):
         assert "The previous version of your Android application resources has been renamed to '/Android-Pre-v4'" in out
 
     def test_301_tns_resources_update_on_updated_project(self):
-        result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, verify=False, update=False)
+        result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
+                            verify=False, update=False)
         TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False, theme=False)
         result = Tns.exec_command(command='resources update', path=APP_NAME)
         assert 'The App_Resources have already been updated for the Android platform.' in result.output
