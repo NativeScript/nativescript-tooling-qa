@@ -8,7 +8,7 @@ from core.settings import Settings
 from core.utils.device.adb import Adb
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
-from data.apps import Apps
+from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
 
