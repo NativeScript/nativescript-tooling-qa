@@ -7,7 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
-from data.apps import Apps
+from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
 
