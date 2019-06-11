@@ -2,6 +2,8 @@ import os
 
 from core.enums.app_type import AppType
 from core.enums.framework_type import FrameworkType
+from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.file_utils import Folder
@@ -74,16 +76,77 @@ class TnsAssert(object):
                                                    tolerance=0.25), 'Actual project size is not expected!'
 
     @staticmethod
-    def platform_added(app_name, platform, output):
+    def platform_added(app_name, platform, output, version=None):
         platform_string = str(platform)
         # Verify output
         assert 'Platform {0} successfully added'.format(platform_string) in output
+        # Verify platform folder
+        if platform == Platform.ANDROID:
+            assert Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
+        else:
+            assert Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
         # Verify package.json
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         package_json = os.path.join(app_path, 'package.json')
         json = JsonUtils.read(package_json)
-        assert json['nativescript']['tns-' + platform_string]['version'] is not None, \
-            'tns-' + platform_string + ' not available in package.json of the app.'
+        if version is not None:
+            if 'next' in version:
+                assert json['nativescript']['tns-' + platform_string]['version'] is not None
+            if 'rc' in version:
+                assert 'rc' in json['nativescript']['tns-' + platform_string]['version']
+            else:
+                assert json['nativescript']['tns-' + platform_string]['version'] == version
+        else:
+            assert json['nativescript']['tns-' + platform_string]['version'] is not None, \
+                'tns-' + platform_string + ' not available in package.json of the app.'
+
+    @staticmethod
+    def platform_list_status(output=None, prepared=Platform.NONE, added=Platform.NONE):
+        """
+        Assert platform list status
+        :param output: Outout of `tns platform list` command
+        :param prepared: Prepared platform.
+        :param added: Added platform.
+        """
+        if output is not None:
+            # Assert prepare status
+            if prepared is Platform.NONE:
+                if added is Platform.NONE:
+                    assert 'The project is not prepared for' not in output
+                else:
+                    assert 'The project is not prepared for any platform' in output
+            if prepared is Platform.ANDROID:
+                assert 'The project is prepared for:  android' in output
+            if prepared is Platform.IOS:
+                assert 'The project is prepared for:  ios' in output
+            if prepared is Platform.BOTH:
+                assert 'The project is prepared for:  ios and android' in output
+
+            # Assert platform added status
+            if added is Platform.NONE:
+                assert 'No installed platforms found. Use $ tns platform add' in output
+                if Settings.HOST_OS is OSType.OSX:
+                    assert 'Available platforms for this OS:  ios and android' in output
+                else:
+                    assert 'Available platforms for this OS:  android' in output
+            if added is Platform.ANDROID:
+                assert 'Installed platforms:  android' in output
+            if added is Platform.IOS:
+                assert 'Installed platforms:  ios' in output
+            if added is Platform.BOTH:
+                assert 'Installed platforms:  android and ios' in output
+
+    @staticmethod
+    def platform_removed(app_name, platform, output):
+        platform_string = str(platform)
+        # Verify output
+        assert 'Platform {0} successfully removed'.format(platform_string) in output
+        # Verify package.json
+        app_path = TnsPaths.get_app_path(app_name)
+        package_json = os.path.join(app_path, 'package.json')
+        json = JsonUtils.read(package_json)
+        assert not 'tns-' + platform_string in json
+        assert not Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
 
     @staticmethod
     def test_initialized(app_name, framework, output):
