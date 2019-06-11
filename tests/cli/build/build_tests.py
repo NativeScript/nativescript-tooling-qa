@@ -25,7 +25,7 @@ class BuildTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.create(cls.app_name_with_space, update=False)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',

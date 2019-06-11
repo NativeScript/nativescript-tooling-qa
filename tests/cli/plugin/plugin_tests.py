@@ -21,7 +21,7 @@ class PluginTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
