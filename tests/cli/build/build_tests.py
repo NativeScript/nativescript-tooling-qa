@@ -9,7 +9,7 @@ from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
 from core.utils.run import run
-from data.templates import Templates
+from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
 
