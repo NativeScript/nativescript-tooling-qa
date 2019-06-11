@@ -69,5 +69,3 @@ class Template(object):
     ENTERPRISE_AUTH_TS = gen_template_info(name='template-enterprise-auth-ts', app_type=AppType.TS, texts=['Log in'])
     ENTERPRISE_AUTH_NG = gen_template_info(name='template-enterprise-auth-ng', app_type=AppType.NG, texts=['Log in'])
 
-    # Minimal templates (not shipped for users, we bring them in assets folder)
-    MIN_JS = gen_template_info(name='template-min', app_type=AppType.JS)
