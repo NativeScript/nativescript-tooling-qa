@@ -95,7 +95,7 @@ class TnsAssert(object):
             if 'rc' in version:
                 assert 'rc' in json['nativescript']['tns-' + platform_string]['version']
             else:
-                assert json['nativescript']['tns-' + platform_string]['version'] == version
+                assert version in json['nativescript']['tns-' + platform_string]['version']
         else:
             assert json['nativescript']['tns-' + platform_string]['version'] is not None, \
                 'tns-' + platform_string + ' not available in package.json of the app.'
