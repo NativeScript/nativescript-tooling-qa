@@ -7,7 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
-from data.apps import Apps
+from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
 
@@ -20,7 +20,8 @@ class BuildTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        Tns.create(cls.app_name, app_data=Apps.MIN_JS, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package,
+                   update=False)
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):
