@@ -91,6 +91,8 @@ class PluginTests(TnsTest):
             assert not File.exists(os.path.join(plugin_ios_path, 'test.android.js'))
             assert not File.exists(os.path.join(plugin_ios_path, 'test2.android.xml'))
 
+    @unittest.skip('skip because we use custom package.json and modules not compatible with androidx.')
+    # TODO: update modules version in package.json when android x is published
     def test_200_plugin_platforms_should_not_exist_in_tns_modules_android(self):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/3932
