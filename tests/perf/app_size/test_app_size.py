@@ -64,8 +64,8 @@ class AppSizeTests(TnsTest):
         run(cmd='du -hs *', cwd=lib, wait=True, log_level=logging.INFO)
 
         # Verify content of APK
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=36968864, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=796563, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=38724352, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=843827, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=641606, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=5811260, tolerance=0.05)
 
@@ -98,8 +98,8 @@ class AppSizeTests(TnsTest):
 
         run(cmd='du -hs *', cwd=lib, wait=True, log_level=logging.INFO)
 
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=36968864, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=796563, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=38724352, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=843827, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=1342382, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=13157964, tolerance=0.05)
 

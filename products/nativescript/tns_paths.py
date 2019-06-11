@@ -66,18 +66,18 @@ class TnsPaths(object):
 
     @staticmethod
     def get_ipa_path(app_name, for_device=False, release=False, path=Settings.TEST_RUN_HOME):
-        app_name = TnsPaths.__get_trimmed_app_name(app_name=app_name)
+        native_app_name = TnsPaths.__get_trimmed_app_name(app_name=app_name)
         base_path = os.path.join(TnsPaths.get_platforms_ios_folder(app_name=app_name, path=path), 'build')
         if for_device:
             if release:
-                return os.path.join(base_path, 'Release-iphoneos', '{0}.ipa'.format(app_name))
+                return os.path.join(base_path, 'Release-iphoneos', '{0}.ipa'.format(native_app_name))
             else:
-                return os.path.join(base_path, 'Debug-iphoneos', '{0}.ipa'.format(app_name))
+                return os.path.join(base_path, 'Debug-iphoneos', '{0}.ipa'.format(native_app_name))
         else:
             if release:
-                return os.path.join(base_path, 'Release-iphonesimulator', '{0}.app'.format(app_name))
+                return os.path.join(base_path, 'Release-iphonesimulator', '{0}.app'.format(native_app_name))
             else:
-                return os.path.join(base_path, 'Debug-iphonesimulator', '{0}.app'.format(app_name))
+                return os.path.join(base_path, 'Debug-iphonesimulator', '{0}.app'.format(native_app_name))
 
     @staticmethod
     def get_app_ios_path(app_name, path=Settings.TEST_RUN_HOME):
@@ -100,4 +100,4 @@ class TnsPaths(object):
             app_name = app_name.replace(' ', '')
         if '"' in app_name:
             app_name = app_name.replace('"', '')
-        return app_name
+        return app_name.split(str(os.sep))[-1]

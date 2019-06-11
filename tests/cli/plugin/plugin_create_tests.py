@@ -7,8 +7,10 @@ from core.utils.file_utils import Folder
 from products.nativescript.tns import Tns
 
 
+# noinspection PyMethodMayBeStatic
 class PluginCreateTests(TnsTest):
     plugin_name = "nativescript-test-plugin"
+    plugin_path = os.path.join(Settings.TEST_RUN_HOME, plugin_name)
 
     @classmethod
     def setUpClass(cls):
@@ -16,11 +18,12 @@ class PluginCreateTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
+        Folder.clean(self.plugin_path)
 
     def tearDown(self):
         TnsTest.tearDown(self)
-        Folder.clean(self.plugin_name)
-        Folder.clean("plugin-folder")
+        Folder.clean(self.plugin_path)
+        Folder.clean(os.path.join(Settings.TEST_RUN_HOME, "plugin-folder"))
 
     @classmethod
     def tearDownClass(cls):
