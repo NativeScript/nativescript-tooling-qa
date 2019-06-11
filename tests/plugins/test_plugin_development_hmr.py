@@ -25,14 +25,18 @@ class DateTimePickerHmrTests(TnsRunTest):
         plugin_folder = os.path.join(Settings.TEST_SUT_HOME, plugin_name)
 
         # Clone the plugin
-        Git.clone(repo_url=plugin_repo, local_folder=plugin_folder, branch="*/master")
+        Git.clone(repo_url=plugin_repo, local_folder=plugin_folder, branch="master")
+
+        # Build the plugin
+        cmd = 'run build'
+        Npm.run_command(cmd, os.path.join(plugin_folder, 'src'))
 
     def setUp(self):
         TnsRunTest.setUp(self)
 
     def test_100_run_android_bundle(self):
         print("PASS")
-        # sync_master_detail_vue(self.app_name, Platform.ANDROID, self.emu)
+        # sync_plugin_verify_demo_ng(self.plugin_name, Platform.ANDROID, self.sim)
 
     # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     # def test_100_run_ios_bundle(self):

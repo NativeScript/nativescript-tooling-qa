@@ -65,3 +65,12 @@ class Npm(object):
     @staticmethod
     def get_version(package):
         return Npm.__run_npm_command('show {0} version'.format(package))
+
+    @staticmethod
+    def run_command(cmd, folder=Settings.TEST_RUN_HOME, verify=True):
+        command = 'npm {0}'.format(cmd).strip()
+        Log.info(command + " (at " + folder + ").")
+        result = run(cmd=command, cwd=folder, wait=True, timeout=300)
+        if verify:
+            assert result.exit_code == 0, '" + command + " exited with non zero exit code!: \n' + result.output
+        return result.output.strip()
