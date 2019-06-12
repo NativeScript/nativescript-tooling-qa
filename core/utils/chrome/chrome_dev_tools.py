@@ -191,6 +191,7 @@ class ChromeDevTools(object):
         :param old_text: Old text.
         :param new_text: New text.
         """
+        self.chrome.driver.switch_to_window(self.chrome.driver.current_window_handle)
         span = self.find_span_by_text(text=old_text)
         assert span is not None, "Failed to find element with text " + old_text
         x, y = self.chrome.get_absolute_center(span)
