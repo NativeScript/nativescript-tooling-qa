@@ -50,3 +50,11 @@ class Chrome(object):
                 Process.kill(proc_name="chrome", proc_cmdline=None)
             Process.kill(proc_name='chromedriver')
         Log.info('Kill Chrome browser!')
+
+    def get_absolute_center(self, element):
+        rel_x = element.location['x']
+        rel_y = element.location['y']
+        nav_panel_height = self.driver.execute_script('return window.outerHeight - window.innerHeight;')
+        x = rel_x + element.size['width'] * 0.5
+        y = rel_y + nav_panel_height + element.size['height'] * 0.5
+        return x, y

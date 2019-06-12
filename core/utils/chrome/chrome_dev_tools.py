@@ -1,5 +1,6 @@
 from time import sleep
 
+import pyautogui
 from aenum import IntEnum
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -176,9 +177,9 @@ class ChromeDevTools(object):
                 return line
         return None
 
-    def __find_span_by_text(self, text):
+    def find_span_by_text(self, text):
         line = self.__find_line_by_text(text=text)
-        spans = line.find_elements(By.CSS_SELECTOR, "span")
+        spans = line.find_elements(By.CSS_SELECTOR, "span[class='webkit-html-attribute-value']")
         for span in spans:
             if span.text == text:
                 return span
@@ -190,13 +191,15 @@ class ChromeDevTools(object):
         :param old_text: Old text.
         :param new_text: New text.
         """
-        span = self.__find_span_by_text(text=old_text)
+        span = self.find_span_by_text(text=old_text)
         assert span is not None, "Failed to find element with text " + old_text
-        actions = ActionChains(self.chrome.driver)
-        actions.double_click(span).perform()
-        self.chrome.driver.execute_script('arguments[0].innerHTML = "{0}";'.format(new_text), span)
-        actions.double_click(span).perform()
-        actions.send_keys(Keys.ENTER).perform()
+        x, y = self.chrome.get_absolute_center(span)
+        pyautogui.doubleClick(x, y)
+        sleep(0.5)
+        pyautogui.typewrite(new_text, interval=0.25)
+        sleep(0.5)
+        pyautogui.press('enter')
+        sleep(0.5)
         Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))
 
     def doubleclick_line(self, text):
