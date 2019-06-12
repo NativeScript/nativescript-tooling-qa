@@ -2,6 +2,7 @@
 Test for `tns --version` command
 """
 import re
+import os
 
 from core.base_test.tns_test import TnsTest
 from products.nativescript.tns import Tns
