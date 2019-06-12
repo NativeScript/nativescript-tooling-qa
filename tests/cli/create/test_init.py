@@ -5,6 +5,7 @@ from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from core.utils.npm import Npm
+from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
