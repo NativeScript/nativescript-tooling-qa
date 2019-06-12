@@ -10,15 +10,18 @@ from products.nativescript.tns import Tns
 
 APP_NAME = Settings.AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
+TEMP_APP_PATH = os.path.join(Settings.TEST_RUN_HOME, Settings.AppName.APP_NAME)
 
-
-# noinspection PyMethodMayBeStatic
 class InitAndInstallTests(TnsTest):
+
+    @classmethod
+    def setUpClass(cls):
+        Tns.create(app_name=Settings.AppName.APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
 
     def setUp(self):
         TnsTest.setUp(self)
         Folder.clean(APP_PATH)
-
+        
     def test_201_init_defaults(self):
         Folder.create(APP_PATH)
         result = Tns.exec_command(command='init --force', cwd=APP_PATH)
@@ -81,7 +84,7 @@ class InitAndInstallTests(TnsTest):
         assert Folder.exists(os.path.join(APP_PATH, 'node_modules', 'gulp'))
 
         # Copy app folder and app resources
-        Folder.copy(source=os.path.join(Settings.TEST_RUN_HOME, 'assets', 'template-min', 'app'),
+        Folder.copy(source=os.path.join(cls.TEMP_APP_PATH, 'app'),
                     target=os.path.join(APP_PATH, 'app'))
 
         # Prepare project
