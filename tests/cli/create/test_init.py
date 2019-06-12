@@ -11,13 +11,13 @@ from products.nativescript.tns import Tns
 
 APP_NAME = Settings.AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
-TEMP_APP_PATH = os.path.join(Settings.TEST_RUN_HOME, Settings.AppName.APP_NAME)
+TEMP_APP_PATH = os.path.join(Settings.TEST_RUN_HOME, Settings.AppName.WITH_DASH)
 
 class InitAndInstallTests(TnsTest):
 
     @classmethod
     def setUpClass(cls):
-        Tns.create(app_name=Settings.AppName.APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name=Settings.AppName.WITH_DASH, template=Template.HELLO_WORLD_JS.local_package, update=False)
 
     def setUp(self):
         TnsTest.setUp(self)
