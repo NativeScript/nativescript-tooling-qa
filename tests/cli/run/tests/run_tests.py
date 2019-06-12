@@ -604,7 +604,7 @@ class TnsRunJSTests(TnsRunTest):
         File.copy(new_aar, target_aar)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.UNKNOWN, device=self.emu)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
     def test_320_tns_run_android_should_warn_if_package_ids_dont_match(self):
