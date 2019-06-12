@@ -5,19 +5,19 @@ from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from core.utils.npm import Npm
-from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
 APP_NAME = Settings.AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
 
+
 class InitAndInstallTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
         Folder.clean(APP_PATH)
-        
+
     def test_201_init_defaults(self):
         Folder.create(APP_PATH)
         result = Tns.exec_command(command='init --force', cwd=APP_PATH)
