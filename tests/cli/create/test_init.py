@@ -14,8 +14,6 @@ APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
 
 class InitAndInstallTests(TnsTest):
 
-    @classmethod
-
     def setUp(self):
         TnsTest.setUp(self)
         Folder.clean(APP_PATH)
