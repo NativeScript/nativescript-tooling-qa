@@ -9,7 +9,7 @@ const application = require("tns-core-modules/application");
     onStartCommand: function (intent, flags, startId) {
         this.super.onStartCommand(intent, flags, startId);
                 console.log("Create Foreground Service!");
-    const b=new android.support.v4.app.NotificationCompat.Builder(app.android.context)
+    const b = new androidx.core.app.NotificationCompat.Builder(app.android.context)
       .setOngoing(true)
       .setContentTitle("test")
       .setContentText("test")
