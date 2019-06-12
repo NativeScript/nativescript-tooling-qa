@@ -12,7 +12,6 @@ APP_NAME = Settings.AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
 
 
-# noinspection PyMethodMayBeStatic
 class InitAndInstallTests(TnsTest):
 
     def setUp(self):
@@ -81,7 +80,7 @@ class InitAndInstallTests(TnsTest):
         assert Folder.exists(os.path.join(APP_PATH, 'node_modules', 'gulp'))
 
         # Copy app folder and app resources
-        Folder.copy(source=os.path.join(Settings.TEST_RUN_HOME, 'assets', 'template-min', 'app'),
+        Folder.copy(source=os.path.join(Settings.TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41', 'app'),
                     target=os.path.join(APP_PATH, 'app'))
 
         # Prepare project
