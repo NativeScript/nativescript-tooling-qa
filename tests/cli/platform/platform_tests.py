@@ -138,12 +138,13 @@ class BuildTests(TnsTest):
         result = Tns.platform_list(self.app_name)
         TnsAssert.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.ANDROID)
 
-        # `tns platform list` when ios is added
-        Tns.platform_add_ios(self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
-        result = Tns.platform_list(self.app_name)
-        TnsAssert.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.BOTH)
+        if Settings.HOST_OS == OSType.OSX:
+            # `tns platform list` when ios is added
+            Tns.platform_add_ios(self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
+            result = Tns.platform_list(self.app_name)
+            TnsAssert.platform_list_status(output=result.output, prepared=Platform.ANDROID, added=Platform.BOTH)
 
-        # `tns platform list` when ios prepared android is already prepared
-        Tns.prepare_ios(self.app_name)
-        result = Tns.platform_list(self.app_name)
-        TnsAssert.platform_list_status(output=result.output, prepared=Platform.BOTH, added=Platform.BOTH)
+            # `tns platform list` when ios prepared android is already prepared
+            Tns.prepare_ios(self.app_name)
+            result = Tns.platform_list(self.app_name)
+            TnsAssert.platform_list_status(output=result.output, prepared=Platform.BOTH, added=Platform.BOTH)
