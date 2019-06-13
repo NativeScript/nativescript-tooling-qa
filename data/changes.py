@@ -175,6 +175,11 @@ class Changes(object):
                                              old_value='<Span text="/day" />', new_value='<Span text="/24h" />',
                                              old_text='/day', new_text='/24h')
 
+    class DateTimePicker(object):
+        COMMON_TS = ChangeSet(file_path=os.path.join(
+            Settings.TEST_SUT_HOME, 'nativescript-datetimepicker', 'src', 'ui', 'date-picker-field.common.ts'),
+                              old_value='name: "date",', new_value='name: "date", defaultValue: new Date(),')
+
     class AppFileChanges(object):
         CHANGE_XML_INVALID_SYNTAX = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                                               old_value='<StackLayout class="p-20">',

@@ -76,8 +76,12 @@ class Tns(object):
             cmd += ' --for-device'
         if not bundle:
             cmd += ' --no-bundle'
+        if bundle:
+            cmd += ' --bundle'
         if not hmr:
             cmd += ' --no-hmr'
+        if hmr:
+            cmd += ' --hmr'
         if aot:
             cmd += ' --env.aot'
         if uglify:
