@@ -66,9 +66,7 @@ class PlaygroundMarketSamples(TnsRunTest):
             else:
                 image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
                 Preview.run_url(url=link, device=self.emu)
-                # emulator_result = PlaygroundMarketSamples.wait_for_text(self.emu, text)
                 emulator_result = PlaygroundMarketSamples.get_error(self.chrome)
-                # if not emulator_result:
                 is_android_fail = emulator_result > 0
                 if is_android_fail:
                     self.emu.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
@@ -81,12 +79,16 @@ class PlaygroundMarketSamples(TnsRunTest):
 
                     Preview.run_url(url=link, device=self.sim)
                     Log.info(' Waiting iOS app to load...')
-                    time.sleep(10)
+                    time.sleep(12)
                     Preview.dismiss_simulator_alert()
-                    # simulator_result = PlaygroundMarketSamples.wait_for_text(self.sim, text)
+                    if name == 'Instagram_Clone_with_Image_Filters':
+                        is_ok_button_visible = PlaygroundMarketSamples.wait_for_text(self.sim, "OK", 10)
+                        while is_ok_button_visible:
+                            Preview.dismiss_simulator_alert()
+                            time.sleep(1)
+                            is_ok_button_visible = PlaygroundMarketSamples.wait_for_text(self.sim, "OK", 5)
                     simulator_result = PlaygroundMarketSamples.get_error(self.chrome, emulator_result)
                     is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
-                    # if not simulator_result:
                     self.is_ios_fail = simulator_result > 0 or not is_app_active
                     os.environ["is_ios_fail"] = str(self.is_ios_fail)
 

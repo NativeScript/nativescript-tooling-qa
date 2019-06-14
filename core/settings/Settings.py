@@ -6,9 +6,9 @@ import sys
 
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
+from core.utils.device.appium_capabilities import AppiumCapabilities
 from core.utils.device.emulator_info import EmulatorInfo
 from core.utils.device.simulator_info import SimulatorInfo
-from core.utils.device.appium_capabilities import AppiumCapabilities
 
 
 def get_os():
@@ -101,8 +101,8 @@ class Packages(object):
     PLAYGROUND_APP_ANDROID = os.path.join(PLAYGROUND_PATH, "app-release.apk")
 
     # Runtimes
-    ANDROID = resolve_package(name='tns-android', variable='tns_android')
-    IOS = resolve_package(name='tns-ios', variable='tns_ios')
+    ANDROID = resolve_package(name='tns-android', variable='android')
+    IOS = resolve_package(name='tns-ios', variable='ios')
 
     # Modules and Plugins
     MODULES = resolve_package(name='tns-core-modules', variable='tns_core_modules')

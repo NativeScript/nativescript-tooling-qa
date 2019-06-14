@@ -76,7 +76,8 @@ class TestsForTnsTest(TnsRunTest):
         Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, just_launch=True)
 
     def test_400_invalid_framework_name(self):
-        result = Tns.create(app_name=APP_NAME, template=Template.MIN_JS.local_package, update=False, verify=False)
+        result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
+                            update=False, verify=False)
         TnsAssert.created(app_name=APP_NAME, output=result.output, theme=False, webpack=False)
         result = Tns.test_init(app_name=APP_NAME, framework='jasmin', verify=False)
         assert 'Unknown or unsupported unit testing framework: jasmin' in result.output

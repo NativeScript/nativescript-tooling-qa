@@ -54,12 +54,6 @@ def __get_templates(branch='master'):
         else:
             raise IOError("Failed to clone and pack template: " + template_name)
 
-    # Tar local templates in assets folder
-    template_name = 'template-min'
-    template_folder = os.path.join(Settings.ASSETS_HOME, template_name)
-    out_file = os.path.join(Settings.TEST_SUT_HOME, template_name + '.tgz')
-    Npm.pack(folder=template_folder, output_file=out_file)
-
 
 def __get_runtimes():
     """
