@@ -55,7 +55,7 @@ class PluginTests(TnsTest):
     def test_101_plugin_add_prepare_verify_apk_android(self):
         Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
         Tns.build_android(app_name=self.app_name)
-        assert File.exists(os.path.join(TnsPaths.get_apk_path(self.app_name), 'debug', 'app-debug.apk'))
+        assert File.exists(os.path.join(TnsPaths.get_apk_path(self.app_name)))
         # assert File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name), 'tns-plugin',
         #                                 'index.js'))
 
@@ -124,7 +124,7 @@ class PluginTests(TnsTest):
     def test_101_plugin_add_prepare_verify_app_ios(self):
         Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
         Tns.build_ios(app_name=self.app_name)
-        path_app = os.path.join(TnsPaths.get_ipa_path(self.app_name), 'TestApp.app')
+        path_app = os.path.join(TnsPaths.get_ipa_path(self.app_name))
         assert Folder.exists(path_app)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
@@ -146,7 +146,7 @@ class PluginTests(TnsTest):
         Tns.build_ios(app_name=self.app_name)
         Tns.build_android(app_name=self.app_name)
 
-        apk_path = os.path.join(TnsPaths.get_apk_path(self.app_name), 'debug', 'app-debug.apk')
+        apk_path = os.path.join(TnsPaths.get_apk_path(self.app_name))
         output = Adb.get_package_permission(apk_path)
         assert 'android.permission.READ_EXTERNAL_STORAGE' in output
         assert 'android.permission.WRITE_EXTERNAL_STORAGE' in output

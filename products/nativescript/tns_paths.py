@@ -62,7 +62,7 @@ class TnsPaths(object):
         if release:
             return os.path.join(build_path, 'outputs', 'apk', 'release', 'app-release.apk')
         else:
-            return os.path.join(build_path, 'outputs', 'apk', 'debug', 'app-debug.apk')
+            return os.path.join(build_path, 'outputs', 'apk', 'debug',  'app-debug.apk')
 
     @staticmethod
     def get_ipa_path(app_name, for_device=False, release=False, path=Settings.TEST_RUN_HOME):
