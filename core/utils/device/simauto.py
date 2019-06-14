@@ -55,4 +55,4 @@ class SimAuto(object):
             click_point = ((element_position[0] + element_size[0] / 2), (element_position[1] + element_size[1] / 2))
             element.clickMouseButtonLeft(click_point)
         else:
-            Exception('Can not locate "{0}" in {1} simulator.'.format(text, device_info.name))
+            raise Exception('Can not locate "{0}" in {1} simulator.'.format(text, device_info.name))
