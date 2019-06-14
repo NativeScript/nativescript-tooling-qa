@@ -148,7 +148,7 @@ class TnsDeviceTests(TnsRunTest):
 
     def test_402_deploy_invalid_platform(self):
         result = Tns.exec_command(command='deploy platform', path=APP_NAME)
-        assert "Invalid platform platform. Valid platforms are ios or android." in result.output
+        assert "Invalid platform platform. Valid platforms are iOS or Android." in result.output
 
     def test_403_deploy_command_with_invalid_device_id(self):
         invalid_device_id = 'fakeDevice'
