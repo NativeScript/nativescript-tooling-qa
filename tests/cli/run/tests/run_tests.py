@@ -211,7 +211,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     def test_110_tns_run_android_release(self):
         # Run app and verify on device
         result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
@@ -240,7 +240,7 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
         self.emu.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_110_tns_run_ios_release(self):
         # Run app and verify on device
@@ -387,7 +387,7 @@ class TnsRunJSTests(TnsRunTest):
         3. Incremental prepare is triggered if js, xml and css files are changed.
         """
         # Run app with --justlaunch and verify on device
-        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
         # On some machines it takes time for thr process to die
         time.sleep(5)
         assert not Process.is_running_by_commandline(Settings.Executables.TNS)
@@ -395,11 +395,8 @@ class TnsRunJSTests(TnsRunTest):
         # Execute run with --justlaunch again and verify no rebuild is triggered
         result = Tns.run_android(app_name=self.app_name, emulator=True, just_launch=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       run_type=RunType.INCREMENTAL, device=self.emu, just_launch=True)
-        strings.remove('Refreshing application on device')
-        not_existing_strings = ['Preparing project...', 'Webpack compilation complete.']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                                       run_type=RunType.JUST_LAUNCH, device=self.emu, just_launch=True)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
@@ -412,7 +409,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_120_tns_run_ios_just_launch(self):
         """
@@ -430,11 +427,8 @@ class TnsRunJSTests(TnsRunTest):
         # Execute run with --justlaunch again and verify no rebuild is triggered
         result = Tns.run_ios(app_name=self.app_name, emulator=True, just_launch=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
-                                       run_type=RunType.INCREMENTAL, device=self.sim, just_launch=True)
-        strings.remove('Refreshing application on device')
-        not_existing_strings = ['Preparing project...', 'Webpack compilation complete.']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                                       run_type=RunType.JUST_LAUNCH, device=self.sim, just_launch=True)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
@@ -487,14 +481,14 @@ class TnsRunJSTests(TnsRunTest):
         assert green_count > 0, 'Failed to find green color on {0}'.format(self.emu.name)
         assert yellow_count == 0, 'Found yellow color on {0}'.format(self.emu.name)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_300_tns_run_android_clean(self):
         """
         If  set --clean rebuilds the native project
         """
         # Run the project once so it is build for the first time
-        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu)
 
         # Verify run --clean without changes skip prepare and rebuild of native project
 
@@ -508,7 +502,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify https://github.com/NativeScript/nativescript-cli/issues/2670 run --clean does
         # clean build only the first time
         Sync.replace(self.app_name, Changes.JSHelloWord.XML)
-        result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
+        result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.FULL, device=self.emu)
         strings.append('Gradle clean')
@@ -523,7 +517,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_tns_run_ios_clean(self):
         """
@@ -728,7 +722,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify app looks correct inside simulator
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     def test_355_tns_run_android_delete_node_modules(self):
         """
         Run should not fail if node_modules folder is deleted
@@ -745,7 +739,7 @@ class TnsRunJSTests(TnsRunTest):
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
         assert Folder.exists(node_modules)
 
-    @unittest.skip("Webpack only")
+    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_360_tns_run_ios_on_folder_with_spaces(self):
         """

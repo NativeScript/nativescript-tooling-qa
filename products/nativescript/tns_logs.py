@@ -94,8 +94,14 @@ class TnsLogs(object):
                                                     bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, app_type=app_type,
                                                     transfer_all=transfer_all))
 
+        if run_type == RunType.JUST_LAUNCH:
+            logs.append('Preparing project...')
+            logs.append('Webpack compilation complete.')
+            logs.append('Project successfully prepared')
+            logs.append('Restarting application on device')
+
         # App restart messages:
-        if run_type == RunType.UNKNOWN:
+        if run_type in [RunType.UNKNOWN, RunType.JUST_LAUNCH]:
             Log.info('Can not define if app should be restarted or not.')
         else:
             if TnsLogs.__should_restart(run_type=run_type, bundle=bundle, hmr=hmr, file_name=file_name):
@@ -127,7 +133,7 @@ class TnsLogs(object):
                                 transfer_all=False):
         logs = []
         if file_name is None:
-            if run_type not in [RunType.FIRST_TIME, RunType.FULL, RunType.UNKNOWN]:
+            if run_type not in [RunType.FIRST_TIME, RunType.FULL, RunType.UNKNOWN, RunType.JUST_LAUNCH]:
                 # logs.append('Skipping prepare.')
                 logs.append('Starting incremental webpack compilation...')
         else:
