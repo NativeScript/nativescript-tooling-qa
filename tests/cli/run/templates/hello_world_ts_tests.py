@@ -27,12 +27,6 @@ class TnsRunTSTests(TnsRunTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_TS.local_package, update=True)
-        Npm.install(package='typescript', option='--save-dev', folder=cls.app_name)
-        Npm.install(package='nativescript-dev-typescript', option='--save-dev', folder=cls.app_name)
-        Npm.uninstall(package='nativescript-dev-typescript', option='--save-dev', folder=cls.app_name)
-        modules_path = os.path.join(cls.app_name, 'node_modules')
-        update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
-        run(cmd=update_script, log_level=logging.INFO)
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-ts', 'app.ts')
         target = os.path.join(Settings.TEST_RUN_HOME, cls.app_name, 'app')
         File.copy(source=src, target=target)

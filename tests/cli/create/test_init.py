@@ -17,27 +17,7 @@ class InitAndInstallTests(TnsTest):
 
     def setUp(self):
         TnsTest.setUp(self)
-        # Folder.clean(APP_PATH)
-
-    # def test_201_init_defaults(self):
-    #     Folder.create(APP_PATH)
-    #     result = Tns.exec_command(command='init --force', cwd=APP_PATH)
-    #     self.verify_initialized(output=result.output)
-    #
-    # def test_202_init_path(self):
-    #     result = Tns.exec_command(command='init --force', path=APP_NAME)
-    #     self.verify_initialized(output=result.output)
-    #
-    # def test_203_init_update_existing_file(self):
-    #     self.test_202_init_path()
-    #
-    #     # Modify existing file
-    #     package_json = os.path.join(Settings.TEST_RUN_HOME, APP_NAME, 'package.json')
-    #     File.replace(path=package_json, old_string=APP_NAME, new_string='QApp')
-    #     assert 'QApp' in File.read(package_json)
-    #
-    #     # Overwrite changes
-    #     self.test_202_init_path()
+        Folder.clean(self.APP_PATH)
 
     def test_204_install_defaults(self):
         # self.test_202_init_path()
@@ -90,33 +70,9 @@ class InitAndInstallTests(TnsTest):
         if Settings.HOST_OS == OSType.OSX:
             Tns.prepare_ios(app_name=self.app_name)
 
-        # Verify prepare
-        base_path = os.path.join(self.APP_PATH, 'platforms', 'android', 'app', 'src', 'main', 'assets', 'app', 'tns_modules')
-        assert Folder.exists(os.path.join(base_path, 'lodash')), 'Dependency not available in platforms.'
-        assert not Folder.exists(os.path.join(base_path, 'gulp')), 'DevDependency available in platforms.'
-        # TODO: Verify prepare for iOS
-
     def test_400_install_in_not_existing_folder(self):
         result = Tns.exec_command(command='install', path=self.app_name)
         assert "No project found" in result.output
-
-    # def verify_initialized(self, output):
-    #     # Verify output
-    #     assert 'Project successfully initialized.' in output
-    #
-    #     # Verify app folder do not exists
-    #     assert not Folder.exists(os.path.join(self.APP_PATH, 'app'))
-    #     assert not Folder.exists(os.path.join(self.APP_PATH, 'src'))
-    #     assert not Folder.exists(os.path.join(self.APP_PATH, 'node_modules'))
-    #     assert not Folder.exists(os.path.join(self.APP_PATH, 'platforms'))
-    #
-    #     # Verify package.json
-    #     json = App.get_package_json(app_name=self.APP_NAME)
-    #     assert json['nativescript']['id'] == 'org.nativescript.{0}'.format(self.APP_NAME)
-    #     assert json['nativescript']['tns-android']['version'] is not None
-    #     if Settings.HOST_OS == OSType.OSX:
-    #         assert json['nativescript']['tns-ios']['version'] is not None
-    #     assert json['dependencies']['tns-core-modules'] is not None
 
     def verify_installed(self, output):
         # Verify output
