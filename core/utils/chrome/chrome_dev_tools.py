@@ -35,6 +35,7 @@ class ChromeDevTools(object):
     def __init__(self, chrome, platform, tab=None):
         # Start Chrome and open debug url
         self.chrome = chrome
+        self.chrome.focus()
         debug_url = 'chrome-devtools://devtools/bundled/inspector.html'
         port = None
         if platform == Platform.ANDROID:
@@ -123,11 +124,17 @@ class ChromeDevTools(object):
         Open file on Sources tab of Chrome Dev Tools.
         :param file_name: Name of file.
         """
-        actions = ActionChains(self.chrome.driver)
+        self.chrome.focus()
+
+        # Double click to set focus
+        panel = self.chrome.driver.find_element(By.ID, "sources-panel-sources-view")
+        x, y = self.chrome.get_absolute_center(panel)
+        pyautogui.doubleClick(x, y)
+        sleep(1)
         if Settings.HOST_OS == OSType.OSX:
-            actions.send_keys(Keys.COMMAND, 'p').perform()
+            pyautogui.hotkey('command', 'p')
         else:
-            actions.send_keys(Keys.CONTROL, 'p').perform()
+            pyautogui.hotkey('ctrl', 'p')
         sleep(1)
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR,
                                                              "div[style='z-index: 3000;'][class='vbox flex-auto']")
@@ -177,7 +184,7 @@ class ChromeDevTools(object):
                 return line
         return None
 
-    def find_span_by_text(self, text):
+    def __find_span_by_text(self, text):
         line = self.__find_line_by_text(text=text)
         spans = line.find_elements(By.CSS_SELECTOR, "span[class='webkit-html-attribute-value']")
         for span in spans:
@@ -191,8 +198,7 @@ class ChromeDevTools(object):
         :param old_text: Old text.
         :param new_text: New text.
         """
-        self.chrome.driver.switch_to_window(self.chrome.driver.current_window_handle)
-        span = self.find_span_by_text(text=old_text)
+        span = self.__find_span_by_text(text=old_text)
         assert span is not None, "Failed to find element with text " + old_text
         x, y = self.chrome.get_absolute_center(span)
         pyautogui.doubleClick(x, y)
@@ -210,8 +216,8 @@ class ChromeDevTools(object):
         """
         line = self.__find_line_by_text(text=text)
         assert line is not None, "Failed to find line with text " + text
-        actions = ActionChains(self.chrome.driver)
-        actions.double_click(line).perform()
+        x, y = self.chrome.get_absolute_center(line)
+        pyautogui.doubleClick(x, y)
         Log.info('Double click line with text "{0}".'.format(text))
 
     def __clean_console(self):
