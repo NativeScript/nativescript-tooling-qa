@@ -96,7 +96,7 @@ class BuildTests(TnsTest):
         Tns.build_android(self.app_name, release=True)
 
         # Configs are respected
-        assert File.exists(os.path.join(TnsPaths.get_apk_path(self.app_name)))
+        assert File.exists(TnsPaths.get_apk_path(self.app_name, release=True))
 
         # Create zip
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
@@ -120,7 +120,8 @@ class BuildTests(TnsTest):
         assert self.app_identifier in output.lower()
 
     def test_302_build_project_with_space_debug_with_plugin(self):
-        Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
+        # skip remove platform because androidx is not released official
+        # Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
         Npm.install(package='nativescript-mapbox', option='--save', folder=self.app_name_with_space)
         result = Tns.build_android(app_name='"' + self.app_name_with_space + '"')
         assert "Project successfully built" in result.output
