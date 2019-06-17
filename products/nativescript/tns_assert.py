@@ -59,9 +59,9 @@ class TnsAssert(object):
             # Verify typescript in TS and NG apps:
             if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
                 assert not Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
-                assert not File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
+                assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
                 if webpack:
-                    assert not File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'
+                    assert File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'
                 assert not File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
                     'Hooks not installed.'
 
@@ -126,9 +126,9 @@ class TnsAssert(object):
             if added is Platform.NONE:
                 assert 'No installed platforms found. Use $ tns platform add' in output
                 if Settings.HOST_OS is OSType.OSX:
-                    assert 'Available platforms for this OS:  ios and android' in output
+                    assert 'Available platforms for this OS:  iOS and Android' in output
                 else:
-                    assert 'Available platforms for this OS:  android' in output
+                    assert 'Available platforms for this OS:  Android' in output
             if added is Platform.ANDROID:
                 assert 'Installed platforms:  android' in output
             if added is Platform.IOS:
