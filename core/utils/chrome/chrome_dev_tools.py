@@ -125,14 +125,16 @@ class ChromeDevTools(object):
         :param file_name: Name of file.
         """
         self.chrome.focus()
+        sleep(1)
 
         # Double click to set focus
         panel = self.chrome.driver.find_element(By.ID, "sources-panel-sources-view")
         x, y = self.chrome.get_absolute_center(panel)
-        pyautogui.doubleClick(x, y)
+        pyautogui.click(x, y, 2, 0.05)
         sleep(1)
         if Settings.HOST_OS == OSType.OSX:
             pyautogui.hotkey('command', 'p')
+            # ActionChains(self.chrome.driver).send_keys(Keys.COMMAND, "p").perform()
         else:
             pyautogui.hotkey('ctrl', 'p')
         sleep(1)
@@ -201,6 +203,8 @@ class ChromeDevTools(object):
         span = self.__find_span_by_text(text=old_text)
         assert span is not None, "Failed to find element with text " + old_text
         x, y = self.chrome.get_absolute_center(span)
+        pyautogui.click(x, y, clicks=3, interval=0.1)
+        sleep(0.5)
         pyautogui.doubleClick(x, y)
         sleep(0.5)
         pyautogui.typewrite(new_text, interval=0.25)

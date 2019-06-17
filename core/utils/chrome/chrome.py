@@ -65,4 +65,9 @@ class Chrome(object):
         nav_panel_height = self.driver.execute_script('return window.outerHeight - window.innerHeight;')
         x = rel_x + element.size['width'] * 0.5
         y = rel_y + nav_panel_height + element.size['height'] * 0.5
+
+        # Hack to respect macOS default toolbar on top
+        if Settings.HOST_OS == OSType.OSX:
+            y = y + 25
+
         return x, y
