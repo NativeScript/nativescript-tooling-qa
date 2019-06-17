@@ -53,8 +53,7 @@ def verify_demo_initial_state(device):
     device.wait_for_text("initial values")
 
 
-def sync_plugin_common_verify_demo(app_name, app_type, platform, device, log_result, bundle=True, hmr=True):
-    verify_demo_initial_state(device=device)
+def sync_plugin_common(app_name, app_type, platform, device, log_result, bundle=True, hmr=True):
     # Edit common file in SRC
     change_set = Changes.DateTimePicker.COMMON_TS
     File.replace(path=change_set.file_path, old_string=change_set.old_value, new_string=change_set.new_value,
@@ -71,8 +70,7 @@ def sync_plugin_common_verify_demo(app_name, app_type, platform, device, log_res
     device.wait_for_text(today)
 
 
-def sync_platform_spec_verify_demo(app_name, app_type, log_result, platform, device, bundle=True, hmr=True):
-    verify_demo_initial_state(device=device)
+def sync_plugin_platform_spec(app_name, app_type, log_result, platform, device, bundle=True, hmr=True):
     # Edit platform specific file and verify change is applied on device
     if platform == platform.ANDROID:
         platform_change_set = Changes.DateTimePicker.ANDROID_TS
