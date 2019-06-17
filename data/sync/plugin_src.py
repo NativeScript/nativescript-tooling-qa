@@ -5,7 +5,6 @@ import datetime
 import os
 
 from core.enums.app_type import AppType
-from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File
 from data.changes import Changes

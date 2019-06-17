@@ -8,7 +8,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.git import Git
 from core.utils.npm import Npm
-from data.sync.plugin_src import sync_plugin_platform_specific_verify_demo
+# from data.sync.plugin_src import sync_plugin_platform_specific_verify_demo
 from data.sync.plugin_src import sync_plugin_common_verify_demo
 from data.sync.plugin_src import run_demo_app
 plugin_repo = 'https://github.com/NativeScript/nativescript-datetimepicker'
