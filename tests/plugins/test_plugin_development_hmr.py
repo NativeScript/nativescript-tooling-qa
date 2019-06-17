@@ -11,20 +11,21 @@ from core.utils.npm import Npm
 # from data.sync.plugin_src import sync_platform_spec_verify_demo
 from data.sync.plugin_src import sync_plugin_common_verify_demo
 from data.sync.plugin_src import run_demo_app
-plugin_repo = 'https://github.com/NativeScript/nativescript-datetimepicker'
 
 
 class DateTimePickerHmrTests(TnsRunTest):
     app_name = 'datetimepicker.demo'
     plugin_name = 'nativescript-datetimepicker'
     plugin_folder = os.path.join(Settings.TEST_SUT_HOME, plugin_name)
+    plugin_repo = 'https://github.com/NativeScript/nativescript-datetimepicker'
 
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
 
         # Clone the plugin
-        Git.clone(repo_url=plugin_repo, local_folder=DateTimePickerHmrTests.plugin_folder, branch="master")
+        Git.clone(repo_url=DateTimePickerHmrTests.plugin_repo, local_folder=DateTimePickerHmrTests.plugin_folder,
+                  branch="master")
 
     def setUp(self):
         TnsRunTest.setUp(self)
