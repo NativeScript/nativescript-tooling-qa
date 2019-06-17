@@ -22,7 +22,7 @@ class TnsPreviewNGTests(TnsRunTest):
         TnsRunTest.setUpClass()
 
         # Download Preview and Playground packages
-        # Preview.get_app_packages()
+        Preview.get_app_packages()
 
         # Install Preview and Playground
         Preview.install_preview_app(cls.emu, Platform.ANDROID)
