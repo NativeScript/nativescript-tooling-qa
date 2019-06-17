@@ -1,6 +1,3 @@
-"""
-Sync changes on JS/TS project helper.
-"""
 import datetime
 import os
 
@@ -20,7 +17,6 @@ def run_demo_app(app_name, app_type, plugin_name, platform, bundle=True, hmr=Tru
         :param app_type: Application type: js,ts,ng,vue.
         :param plugin_name: The name of the plugin. for example: nativescript-datetimepicker
         :param platform: The platform type Platform.IOS or Platform.ANDROID
-        :param device: Device info.
         :param bundle: Bundle flag boolean.
         :param hmr: HMR flag boolean.
     """
@@ -75,7 +71,7 @@ def sync_plugin_common_verify_demo(app_name, app_type, platform, device, log_res
     device.wait_for_text(today)
 
 
-def sync_plugin_platform_specific_verify_demo(app_name, app_type, log_result, platform, device, bundle=True, hmr=True):
+def sync_platform_spec_verify_demo(app_name, app_type, log_result, platform, device, bundle=True, hmr=True):
     verify_demo_initial_state(device=device)
     # Edit platform specific file and verify change is applied on device
     if platform == platform.ANDROID:
