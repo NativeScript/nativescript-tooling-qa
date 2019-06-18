@@ -211,7 +211,6 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
 
-    # @unittest.skip("Webpack only")
     def test_110_tns_run_android_release(self):
         # Run app and verify on device
         result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
@@ -240,12 +239,11 @@ class TnsRunJSTests(TnsRunTest):
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
         self.emu.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
 
-    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_110_tns_run_ios_release(self):
         # Run app and verify on device
         result = Tns.run_ios(app_name=self.app_name, release=True, verify=True, emulator=True)
-        strings = ['Webpack compilation complete', 'Project successfully built', 'Successfully started on device']
+        strings = ['Webpack compilation complete', 'Project successfully built', 'Successfully installed on device']
         # Verify console logs are not displayed in release builds
         not_existing_strings = ['JS:']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
@@ -378,7 +376,6 @@ class TnsRunJSTests(TnsRunTest):
         strings = ["Module build failed: Error: ENOENT"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
-    @unittest.skip("Webpack only")
     def test_120_tns_run_android_just_launch(self):
         """
         This test verify following things:
@@ -409,7 +406,6 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
-    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_120_tns_run_ios_just_launch(self):
         """
@@ -481,7 +477,6 @@ class TnsRunJSTests(TnsRunTest):
         assert green_count > 0, 'Failed to find green color on {0}'.format(self.emu.name)
         assert yellow_count == 0, 'Found yellow color on {0}'.format(self.emu.name)
 
-    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_300_tns_run_android_clean(self):
         """
@@ -504,7 +499,7 @@ class TnsRunJSTests(TnsRunTest):
         Sync.replace(self.app_name, Changes.JSHelloWord.XML)
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       run_type=RunType.JUST_LAUNCH, device=self.emu)
+                                       run_type=RunType.FULL, device=self.emu)
         strings.append('Gradle clean')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
@@ -517,7 +512,6 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_strings)
 
-    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_300_tns_run_ios_clean(self):
         """
@@ -773,4 +767,4 @@ class TnsRunJSTests(TnsRunTest):
         # Run the app and verify there is appropriate error
         result = Tns.run_android('TestApp2', verify=True, device=self.emu.id, just_launch=True)
         strings = ['No space left on device']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
