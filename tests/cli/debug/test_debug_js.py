@@ -288,6 +288,7 @@ class DebugJSTests(TnsRunTest):
         assert "Test Debug!" in tns_logs, 'Console log messages not available in CLI output.' + os.linesep + tns_logs
 
         # Verify debug is working (covers https://github.com/NativeScript/nativescript-cli/issues/2831)
+        self.dev_tools.open_tab(ChromeDevToolsTabs.SOURCES)
         self.dev_tools.load_source_file("main-view-model.js")
         self.dev_tools.breakpoint(17)
         device.click(text="TAP", case_sensitive=True)
