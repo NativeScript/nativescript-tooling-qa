@@ -116,11 +116,11 @@ class TnsAssert(object):
                 else:
                     assert 'The project is not prepared for any platform' in output
             if prepared is Platform.ANDROID:
-                assert 'The project is prepared for:  android' in output
+                assert 'The project is prepared for:  Android' in output
             if prepared is Platform.IOS:
-                assert 'The project is prepared for:  ios' in output
+                assert 'The project is prepared for:  iOS' in output
             if prepared is Platform.BOTH:
-                assert 'The project is prepared for:  ios and android' in output
+                assert 'The project is prepared for:  iOS and Android' in output
 
             # Assert platform added status
             if added is Platform.NONE:
