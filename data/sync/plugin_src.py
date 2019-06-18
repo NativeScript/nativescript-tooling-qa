@@ -10,7 +10,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
-def run_demo_app(app_name, app_type, plugin_name, platform, bundle=True, hmr=True):
+def run_demo_app(app_name, app_type, plugin_name, platform, bundle=True, hmr=True, transfer_all=False):
     """
         Change plugin in src and verify demo is updated.
         :param app_name: The name of the App. for example: demo, demo-angular, demo-vue
@@ -18,6 +18,7 @@ def run_demo_app(app_name, app_type, plugin_name, platform, bundle=True, hmr=Tru
         :param plugin_name: The name of the plugin. for example: nativescript-datetimepicker
         :param platform: The platform type Platform.IOS or Platform.ANDROID
         :param bundle: Bundle flag boolean.
+        :param transfer_all: String for transfer all files in log - boolean
         :param hmr: HMR flag boolean.
     """
     # Navigate to demo folder and run the demo app
@@ -32,7 +33,7 @@ def run_demo_app(app_name, app_type, plugin_name, platform, bundle=True, hmr=Tru
 
     result = Tns.run(app_name=app_path, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
-                                   hmr=hmr, app_type=app_type, transfer_all=False)
+                                   hmr=hmr, app_type=app_type, transfer_all=transfer_all)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
     return result
 
