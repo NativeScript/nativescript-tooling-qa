@@ -22,7 +22,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
                                    hmr=hmr, app_type=AppType.VUE, transfer_all=True)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
 
     # start appium driver
     appium = None

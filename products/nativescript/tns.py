@@ -526,7 +526,7 @@ class Tns(object):
         Get version of CLI
         :return: Version of the CLI as string
         """
-        return Tns.exec_command(command='--version').output.split(os.linesep)[-1]
+        return Tns.exec_command(command='--version')
 
     @staticmethod
     def kill():

@@ -412,7 +412,20 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, "TAP Button is missing on the device! V8 with debug symbols is making the app crash!"
 
-    def test_445_test_ES6_support(self):
+    def test_445_test_Buffer_is_deprecated_warning_is_not_shown(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1392
+        """
+        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
+        # check buffer deprecation warning is not shown
+        strings = ['DeprecationWarning: ,',
+                   'Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc()',
+                   'Buffer.allocUnsafe(), or Buffer.from() methods instead.']
+        test_result = Wait.until(lambda: all(string not in log.output for string in strings), timeout=5,
+                                 period=5)
+        assert test_result, "Buffer deprecated warning is shown! Logs: " + log.output
+
+    def test_446_test_ES6_support(self):
         """
          https://github.com/NativeScript/android-runtime/issues/1375
         """
