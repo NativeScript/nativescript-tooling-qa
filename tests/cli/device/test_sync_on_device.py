@@ -51,13 +51,6 @@ class TnsSyncOnDevices(TnsDeviceTest):
     def test_100_run_android(self):
         sync_hello_world_ng(self.app_name, Platform.ANDROID, self.android_device)
 
-    def test_200_run_android_no_bundle(self):
-        sync_hello_world_ng(self.app_name, Platform.ANDROID, self.android_device, bundle=False)
-
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_run_ios(self):
         sync_hello_world_ng(self.app_name, Platform.IOS, self.ios_device)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_200_run_ios_no_bundle(self):
-        sync_hello_world_ng(self.app_name, Platform.IOS, self.ios_device, bundle=False)
