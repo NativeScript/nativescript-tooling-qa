@@ -1,4 +1,5 @@
 import os
+from time import sleep
 
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -28,6 +29,7 @@ class Chrome(object):
         self.implicitly_wait = implicitly_wait
         self.driver.implicitly_wait(self.implicitly_wait)
         self.driver.maximize_window()
+        self.focus()
         Log.info('Google Chrome started!')
 
     def open(self, url):
@@ -50,3 +52,22 @@ class Chrome(object):
                 Process.kill(proc_name="chrome", proc_cmdline=None)
             Process.kill(proc_name='chromedriver')
         Log.info('Kill Chrome browser!')
+
+    def focus(self):
+        self.driver.switch_to.window(self.driver.current_window_handle)
+        Log.info("Focus Chrome browser.")
+
+    def get_absolute_center(self, element):
+        self.focus()
+        sleep(1)
+        rel_x = element.location['x']
+        rel_y = element.location['y']
+        nav_panel_height = self.driver.execute_script('return window.outerHeight - window.innerHeight;')
+        x = rel_x + element.size['width'] * 0.5
+        y = rel_y + nav_panel_height + element.size['height'] * 0.5
+
+        # Hack to respect macOS default toolbar on top
+        if Settings.HOST_OS == OSType.OSX:
+            y = y + 25
+
+        return x, y

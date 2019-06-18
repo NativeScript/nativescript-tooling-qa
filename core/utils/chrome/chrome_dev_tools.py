@@ -1,5 +1,6 @@
 from time import sleep
 
+import pyautogui
 from aenum import IntEnum
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -34,6 +35,7 @@ class ChromeDevTools(object):
     def __init__(self, chrome, platform, tab=None):
         # Start Chrome and open debug url
         self.chrome = chrome
+        self.chrome.focus()
         debug_url = 'chrome-devtools://devtools/bundled/inspector.html'
         port = None
         if platform == Platform.ANDROID:
@@ -122,11 +124,19 @@ class ChromeDevTools(object):
         Open file on Sources tab of Chrome Dev Tools.
         :param file_name: Name of file.
         """
-        actions = ActionChains(self.chrome.driver)
+        self.chrome.focus()
+        sleep(1)
+
+        # Double click to set focus
+        panel = self.chrome.driver.find_element(By.ID, "sources-panel-sources-view")
+        x, y = self.chrome.get_absolute_center(panel)
+        pyautogui.click(x, y, 2, 0.05)
+        sleep(1)
         if Settings.HOST_OS == OSType.OSX:
-            actions.send_keys(Keys.COMMAND, 'p').perform()
+            pyautogui.hotkey('command', 'p')
+            # ActionChains(self.chrome.driver).send_keys(Keys.COMMAND, "p").perform()
         else:
-            actions.send_keys(Keys.CONTROL, 'p').perform()
+            pyautogui.hotkey('ctrl', 'p')
         sleep(1)
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR,
                                                              "div[style='z-index: 3000;'][class='vbox flex-auto']")
@@ -178,7 +188,7 @@ class ChromeDevTools(object):
 
     def __find_span_by_text(self, text):
         line = self.__find_line_by_text(text=text)
-        spans = line.find_elements(By.CSS_SELECTOR, "span")
+        spans = line.find_elements(By.CSS_SELECTOR, "span[class='webkit-html-attribute-value']")
         for span in spans:
             if span.text == text:
                 return span
@@ -192,11 +202,15 @@ class ChromeDevTools(object):
         """
         span = self.__find_span_by_text(text=old_text)
         assert span is not None, "Failed to find element with text " + old_text
-        actions = ActionChains(self.chrome.driver)
-        actions.double_click(span).perform()
-        self.chrome.driver.execute_script('arguments[0].innerHTML = "{0}";'.format(new_text), span)
-        actions.double_click(span).perform()
-        actions.send_keys(Keys.ENTER).perform()
+        x, y = self.chrome.get_absolute_center(span)
+        pyautogui.click(x, y, clicks=3, interval=0.1)
+        sleep(0.5)
+        pyautogui.doubleClick(x, y)
+        sleep(0.5)
+        pyautogui.typewrite(new_text, interval=0.25)
+        sleep(0.5)
+        pyautogui.press('enter')
+        sleep(0.5)
         Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))
 
     def doubleclick_line(self, text):
@@ -206,8 +220,8 @@ class ChromeDevTools(object):
         """
         line = self.__find_line_by_text(text=text)
         assert line is not None, "Failed to find line with text " + text
-        actions = ActionChains(self.chrome.driver)
-        actions.double_click(line).perform()
+        x, y = self.chrome.get_absolute_center(line)
+        pyautogui.doubleClick(x, y)
         Log.info('Double click line with text "{0}".'.format(text))
 
     def __clean_console(self):
