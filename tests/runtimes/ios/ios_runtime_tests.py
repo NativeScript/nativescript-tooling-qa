@@ -110,8 +110,9 @@ class IOSRuntimeTests(TnsTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app is NOT running on device
-        app_is_running = Simctl.is_process_running(self.sim, 'org.nativescript.' + APP_NAME)
-        assert not app_is_running, "It seems that " + APP_NAME + " is still running when it should not!"
+        test_result = Wait.until(lambda: Simctl.is_process_running(self.sim, 'org.nativescript.' + APP_NAME) is False,
+                                 timeout=120, period=5)
+        assert test_result, "It seems that " + APP_NAME + " is still running when it should not!"
 
     def test_385_methods_with_same_name_and_different_parameters(self):
         """
