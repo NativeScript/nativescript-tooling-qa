@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from nose_parameterized import parameterized
+
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.app_type import AppType
 from core.enums.os_type import OSType
@@ -8,7 +10,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.git import Git
 from core.utils.npm import Npm
-# from data.sync.plugin_src import sync_plugin_platform_spec
+from data.sync.plugin_src import sync_plugin_platform_spec
 from data.sync.plugin_src import verify_demo_initial_state
 from data.sync.plugin_src import sync_plugin_common
 from data.sync.plugin_src import run_demo_app
@@ -19,6 +21,15 @@ class DateTimePickerHmrTests(TnsRunTest):
     plugin_name = 'nativescript-datetimepicker'
     plugin_folder = os.path.join(Settings.TEST_SUT_HOME, plugin_name)
     plugin_repo = 'https://github.com/NativeScript/nativescript-datetimepicker'
+
+    test_data = [
+        (AppType.TS, True, True),
+        (AppType.TS, True, False),
+        (AppType.NG, True, True),
+        (AppType.NG, True, False),
+        (AppType.VUE, True, True),
+        (AppType.VUE, True, False)
+    ]
 
     @classmethod
     def setUpClass(cls):
@@ -38,32 +49,38 @@ class DateTimePickerHmrTests(TnsRunTest):
         cmd = 'run build'
         Npm.run_command(cmd, os.path.join(DateTimePickerHmrTests.plugin_folder, 'src'))
 
-    def test_101_run_android_typescript_common(self):
-        result = run_demo_app(app_name=self.app_name, app_type=AppType.TS, plugin_name=self.plugin_name,
-                              platform=Platform.ANDROID)
+    @unittest.skipIf(Settings.HOST_OS == OSType.OSX, 'Android tests will be executed on linux.')
+    @parameterized.expand(test_data)
+    def test_101_run_android_typescript_common(self, app_type, bundle, hmr):
+        result = run_demo_app(app_name=self.app_name, app_type=app_type, plugin_name=self.plugin_name,
+                              platform=Platform.ANDROID, bundle=bundle, hmr=hmr)
         verify_demo_initial_state(self.emu)
-        sync_plugin_common(app_name=self.app_name, app_type=AppType.TS, platform=Platform.ANDROID,
-                           device=self.emu, log_result=result)
+        sync_plugin_common(app_name=self.app_name, app_type=app_type, platform=Platform.ANDROID,
+                           device=self.emu, log_result=result, bundle=bundle, hmr=hmr)
 
-    # def test_102_run_android_typescript_platform_spec(self):
-    #     result = run_demo_app(app_name=self.app_name, app_type=AppType.TS, plugin_name=self.plugin_name,
-    #                           platform=Platform.ANDROID)
-    #     verify_demo_initial_state(self.emu)
-    #     sync_platform_spec(app_name=self.app_name, app_type=AppType.TS,
-    #                                               platform=Platform.ANDROID, device=self.emu, log_result=result)
+    @unittest.skipIf(Settings.HOST_OS == OSType.OSX, 'Android tests will be executed on linux.')
+    @parameterized.expand(test_data)
+    def test_102_run_android_typescript_platform_spec(self, app_type, bundle, hmr):
+        result = run_demo_app(app_name=self.app_name, app_type=app_type, plugin_name=self.plugin_name,
+                              platform=Platform.ANDROID, bundle=bundle, hmr=hmr)
+        verify_demo_initial_state(self.emu)
+        sync_plugin_platform_spec(app_name=self.app_name, app_type=app_type,
+                                  platform=Platform.ANDROID, device=self.emu, log_result=result, bundle=bundle, hmr=hmr)
 
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_103_run_ios_typescript_common(self):
-        result = run_demo_app(app_name=self.app_name, app_type=AppType.TS, plugin_name=self.plugin_name,
-                              platform=Platform.IOS)
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests will be executed on macOS.')
+    @parameterized.expand(test_data)
+    def test_103_run_ios_typescript_common(self, app_type, bundle, hmr):
+        result = run_demo_app(app_name=self.app_name, app_type=app_type, plugin_name=self.plugin_name,
+                              platform=Platform.IOS, bundle=bundle, hmr=hmr)
         verify_demo_initial_state(self.sim)
-        sync_plugin_common(app_name=self.app_name, app_type=AppType.TS, platform=Platform.IOS,
-                           device=self.sim, log_result=result)
+        sync_plugin_common(app_name=self.app_name, app_type=app_type, platform=Platform.IOS,
+                           device=self.sim, log_result=result, bundle=bundle, hmr=hmr)
 
-    # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    # def test_104_run_ios_typescript_platform_spec(self):
-    #     result = run_demo_app(app_name=self.app_name, app_type=AppType.TS, plugin_name=self.plugin_name,
-    #                           platform=Platform.IOS)
-    #     verify_demo_initial_state(self.sim)
-    #     sync_platform_spec(app_name=self.app_name, app_type=AppType.TS, platform=Platform.IOS,
-    #                                               device=self.sim, log_result=result)
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests will be executed on macOS.')
+    @parameterized.expand(test_data)
+    def test_104_run_ios_typescript_platform_spec(self, app_type, bundle, hmr):
+        result = run_demo_app(app_name=self.app_name, app_type=app_type, plugin_name=self.plugin_name,
+                              platform=Platform.IOS, bundle=bundle, hmr=hmr)
+        verify_demo_initial_state(self.sim)
+        sync_plugin_platform_spec(app_name=self.app_name, app_type=app_type, platform=Platform.IOS,
+                                  device=self.sim, log_result=result, bundle=bundle, hmr=hmr)

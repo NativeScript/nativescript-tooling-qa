@@ -33,7 +33,7 @@ def run_demo_app(app_name, app_type, plugin_name, platform, bundle=True, hmr=Tru
     result = Tns.run(app_name=app_path, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
                                    hmr=hmr, app_type=app_type, transfer_all=False)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
     return result
 
 
@@ -63,7 +63,7 @@ def sync_plugin_common(app_name, app_type, platform, device, log_result, bundle=
 
     # remove "Skipping prepare." from strings since no new build is triggered.
     strings.remove("Skipping prepare.")
-    TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=240)
+    TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=60)
     # Click on datepicker field and verify new value of picker is applied
     device.click(text="DatePickerField")
     today = datetime.date.today().strftime("%b %d, %Y")
@@ -81,5 +81,5 @@ def sync_plugin_platform_spec(app_name, app_type, log_result, platform, device, 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, app_type=app_type, transfer_all=True)
     strings.remove("Skipping prepare.")
-    TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=240)
+    TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=60)
     device.click(text="DatePickerField")
