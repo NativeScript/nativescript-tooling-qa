@@ -32,3 +32,13 @@ class Git(object):
         result = run(cmd=command)
         assert "fatal" not in result.output, "Failed to clone: " + repo_url
         assert result.exit_code == 0, "Failed to clone: " + repo_url
+
+    @staticmethod
+    def clean_repo_changes(local_folder):
+        """
+        :param local_folder: the folder of the git project in which clean and reset commands will be called
+        """
+        commands = ['git clean -fdx', 'git reset', 'git checkout .']
+        Log.info(commands)
+        for command in commands:
+            run(cmd=command, cwd=local_folder)
