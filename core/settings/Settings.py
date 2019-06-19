@@ -67,7 +67,6 @@ BACKUP_FOLDER = os.path.join(TEST_RUN_HOME, "backup_folder")
 
 def resolve_package(name, variable, default=str(ENV)):
     tag = os.environ.get(variable, default)
-    webpack = 'webpack'
     # For local packages (tgz files) or NG nightly builds (angular/cli-builds) just return value of the env. variable
     if '.tgz' not in tag and '-builds' not in tag:
         return name + '@' + tag
@@ -108,8 +107,7 @@ class Packages(object):
     # Modules and Plugins
     MODULES = resolve_package(name='tns-core-modules', variable='tns_core_modules')
     ANGULAR = resolve_package(name='nativescript-angular', variable='nativescript_angular')
-    # WEBPACK = resolve_package(name='nativescript-dev-webpack', variable='nativescript_dev_webpack')
-    WEBPACK = 'nativescript-dev-webpack@webpack'
+    WEBPACK = resolve_package(name='nativescript-dev-webpack', variable='nativescript_dev_webpack')
     TYPESCRIPT = resolve_package(name='nativescript-dev-typescript', variable='nativescript_dev_typescript')
     SASS = resolve_package(name='nativescript-dev-sass', variable='nativescript_dev_sass')
 

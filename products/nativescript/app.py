@@ -71,12 +71,11 @@ class App(object):
             Npm.install(package=Settings.Packages.WEBPACK, option='--save-dev --save-exact', folder=app_path)
             Folder.clean(os.path.join(app_name, 'hooks'))
             Folder.clean(os.path.join(app_name, 'node_modules'))
-            # assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
-            # assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
             Npm.install(folder=app_path)
-            Folder.clean(os.path.join(modules_path, 'nativescript-dev-webpack', '.git'))
             update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
             result = run(cmd=update_script, log_level=logging.INFO)
+            assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
+            assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
 
         if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
             Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
