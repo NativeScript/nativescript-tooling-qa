@@ -16,7 +16,6 @@ from core.utils.file_utils import File
 from data.changes import Changes
 from data.templates import Template
 from products.nativescript.tns import Tns
-from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_paths import TnsPaths
 

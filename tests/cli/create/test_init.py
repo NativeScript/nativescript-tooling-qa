@@ -9,7 +9,6 @@ from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 
-# APP_NAME = Settings.AppName.DEFAULT
 
 class InitAndInstallTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
@@ -20,13 +19,11 @@ class InitAndInstallTests(TnsTest):
         Folder.clean(self.APP_PATH)
 
     def test_204_install_defaults(self):
-        # self.test_202_init_path()
         Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         result = Tns.exec_command(command='install', path=self.APP_PATH)
         self.verify_installed(output=result.output)
 
     def test_205_install_external_packages(self):
-        # self.test_202_init_path()
         Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         # Add packages
         Npm.install(package='lodash', option='--save', folder=self.APP_PATH)
@@ -47,7 +44,6 @@ class InitAndInstallTests(TnsTest):
         assert Folder.exists(os.path.join(self.APP_PATH, 'node_modules', 'gulp'))
 
     def test_300_install_and_prepare(self):
-        # self.test_202_init_path()
         Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         # Add packages
         Npm.install(package='lodash', option='--save', folder=self.APP_PATH)

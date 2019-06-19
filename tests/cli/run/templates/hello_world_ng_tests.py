@@ -1,4 +1,3 @@
-import logging
 import os
 import unittest
 
@@ -7,8 +6,6 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
-from core.utils.npm import Npm
-from core.utils.run import run
 from data.sync.hello_world_ng import sync_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns

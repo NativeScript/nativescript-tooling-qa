@@ -52,13 +52,13 @@ class TnsAssert(object):
         if webpack:
             assert Folder.exists(os.path.join(node_path, 'nativescript-dev-webpack')), 'Webpack not installed in app.'
             assert File.exists(os.path.join(app_path, 'webpack.config.js')), 'Missing webpack config.'
-            # assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
 
         # Assert app data
         if app_data is not None:
             # Verify typescript in TS and NG apps:
             if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
-                assert not Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
+                assert not Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), \
+                    'TS not installed in app.'
                 assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
                 if webpack:
                     assert File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'

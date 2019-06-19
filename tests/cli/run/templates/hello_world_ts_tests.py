@@ -1,4 +1,3 @@
-import logging
 import os
 import unittest
 
@@ -8,8 +7,6 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
-from core.utils.npm import Npm
-from core.utils.run import run
 from data.changes import Changes
 from data.sync.hello_world_js import sync_hello_world_ts
 from data.templates import Template

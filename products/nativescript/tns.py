@@ -357,8 +357,8 @@ class Tns(object):
                          app_data=app_data)
 
     @staticmethod
-    def deploy(app_name, platform, device=None, bundle=True, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
-               wait=False, just_launch=False, log_trace=False, verify=True):
+    def deploy(app_name, platform, device=None, bundle=True, release=False, provision=Settings.IOS.PROVISIONING,
+               for_device=False, wait=False, just_launch=False, log_trace=False, verify=True):
         result = Tns.exec_command(command='deploy', path=app_name, platform=platform, device=device, bundle=bundle,
                                   release=release, provision=provision, for_device=for_device, wait=wait,
                                   just_launch=just_launch, log_trace=log_trace)
