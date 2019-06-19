@@ -52,6 +52,7 @@ class PlaygroundMarketSamples(TnsRunTest):
 
     @parameterized.expand(test_data)
     def test(self, name, url, text, flavor):
+        Log.info(text)
         retries = 1
         original_name = name.replace("_", " ").encode("utf8")
         data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor),
