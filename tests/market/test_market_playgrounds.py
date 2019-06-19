@@ -52,57 +52,87 @@ class PlaygroundMarketSamples(TnsRunTest):
 
     @parameterized.expand(test_data)
     def test(self, name, url, text, flavor):
+        Log.info(text)
         retries = 1
+        original_name = name.replace("_", " ").encode("utf8")
+        data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor),
+                "timeout": "False", "slow": "False"}
+        is_android_fail = True
+        is_ios_fail = True
+
         while retries >= 0:
-            print text
-            self.chrome = Chrome()
-            link, is_slow = PlaygroundMarketSamples.get_link(self.chrome, url)
-            original_name = name.replace("_", " ").encode("utf8")
-            if link == "":
-                Log.info('No Playground URL found !!!')
-                data = {"name": original_name, "ios": "False", "android": "False", "flavor": str(flavor),
-                        "timeout": "True", "slow": "True"}
-                retries -= 1
-            else:
+            # =====================Android RUN========================
+            if is_android_fail:
+                self.chrome = Chrome()
+                link, is_slow = PlaygroundMarketSamples.get_link(self.chrome, url)
+                if link == "":
+                    Log.info('No Playground URL found in Android stage !!!')
+                    data["timeout"] = "True"
+                    data["slow"] = "True"
+                    retries -= 1
+                    continue
+
+                Log.info('Testing Android !!!')
                 image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
                 Preview.run_url(url=link, device=self.emu)
                 emulator_result = PlaygroundMarketSamples.get_error(self.chrome)
                 is_android_fail = emulator_result > 0
+                android = str(not is_android_fail)
+                data["android"] = android
+                data["slow"] = str(is_slow)
+
                 if is_android_fail:
                     self.emu.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
-                if Settings.HOST_OS == OSType.OSX:
-                    image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.IOS))
+                self.chrome.kill()
 
-                    if self.is_ios_fail:
-                        Log.info(' Installing Preview app on iOS ...')
-                        Preview.install_preview_app_no_unpack(self.sim, Platform.IOS)
+            # =====================iOS RUN========================
+            if Settings.HOST_OS == OSType.OSX and is_ios_fail:
+                image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.IOS))
 
-                    Preview.run_url(url=link, device=self.sim)
-                    Log.info(' Waiting iOS app to load...')
-                    time.sleep(12)
-                    Preview.dismiss_simulator_alert()
-                    if name == 'Instagram_Clone_with_Image_Filters':
-                        is_ok_button_visible = PlaygroundMarketSamples.wait_for_text(self.sim, "OK", 10)
-                        while is_ok_button_visible:
-                            Preview.dismiss_simulator_alert()
-                            time.sleep(1)
-                            is_ok_button_visible = PlaygroundMarketSamples.wait_for_text(self.sim, "OK", 5)
-                    simulator_result = PlaygroundMarketSamples.get_error(self.chrome, emulator_result)
-                    is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
-                    self.is_ios_fail = simulator_result > 0 or not is_app_active
-                    os.environ["is_ios_fail"] = str(self.is_ios_fail)
+                if self.is_ios_fail:
+                    Log.info(' Installing Preview app on iOS ...')
+                    Preview.install_preview_app_no_unpack(self.sim, Platform.IOS)
 
-                    if self.is_ios_fail:
-                        self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
+                self.chrome = Chrome()
+                link, is_slow = PlaygroundMarketSamples.get_link(self.chrome, url)
+                if link == "":
+                    Log.info('No Playground URL found in iOS stage !!!')
+                    data["timeout"] = "True"
+                    data["slow"] = "True"
+                    retries -= 1
+                    continue
+
+                Log.info('Testing iOS !!!')
+                Preview.run_url(url=link, device=self.sim)
+                Log.info(' Waiting iOS app to load...')
+                Preview.dismiss_simulator_alert()
+                time.sleep(12)
+                Preview.dismiss_simulator_alert()
+
+                if "test_0_" in self._testMethodName or "test_000_" in self._testMethodName:
+                    if PlaygroundMarketSamples.wait_for_text(self.sim, "Open", 10):
+                        # self.sim.click(text="Open")
+                        Preview.dismiss_simulator_alert()
+
+                PlaygroundMarketSamples.close_permissions_windows_ios(name, self.sim)
+                simulator_result = PlaygroundMarketSamples.get_error(self.chrome)
+                is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
+                self.is_ios_fail = simulator_result > 0 or not is_app_active
+                is_ios_fail = self.is_ios_fail
+                os.environ["is_ios_fail"] = str(self.is_ios_fail)
+
+                if self.is_ios_fail:
+                    self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
 
                 ios = str(not self.is_ios_fail)
-                android = str(not is_android_fail)
-                data = {"name": original_name, "ios": ios, "android": android, "flavor": str(flavor),
-                        "slow": str(is_slow)}
-                if self.is_ios_fail is False and is_android_fail is False:
-                    break
-                retries -= 1
-                self.tearDown()
+                data["ios"] = ios
+                data["slow"] = str(is_slow)
+
+            if self.is_ios_fail is False and is_android_fail is False:
+                break
+            retries -= 1
+            self.tearDown()
+
         Market.preserve_data(data)
 
     # noinspection PyBroadException
@@ -160,3 +190,17 @@ class PlaygroundMarketSamples(TnsRunTest):
             text = emu.get_text()
             Log.info('Current text: {0}{1}'.format(os.linesep, text))
         return found
+
+    @staticmethod
+    def close_permissions_windows_ios(name, sim):
+        samples = ['Instagram_Clone_with_Image_Filters']
+        iterations = 1
+        if name in samples:
+            is_ok_button_visible = PlaygroundMarketSamples.wait_for_text(sim, "OK", 10)
+            while is_ok_button_visible:
+                iterations = iterations + 1
+                Preview.dismiss_simulator_alert()
+                time.sleep(1)
+                is_ok_button_visible = PlaygroundMarketSamples.wait_for_text(sim, "OK", 5)
+                if iterations == 5:
+                    break
