@@ -30,7 +30,9 @@ class CreateTests(TnsTest):
 
     def test_001_create_app_like_real_user(self):
         """Create app with no any params"""
-        Tns.create(app_name=Settings.AppName.DEFAULT, app_data=Apps.HELLO_WORLD_JS, update=False)
+        # webpack - remove template after merge
+        Tns.create(app_name=Settings.AppName.DEFAULT, app_data=Apps.HELLO_WORLD_JS,
+                   template=Template.HELLO_WORLD_JS.local_package, update=False)
 
     def test_002_create_app_template_js(self):
         """Create app with --template js project"""
@@ -76,8 +78,10 @@ class CreateTests(TnsTest):
                    app_data=Apps.HELLO_WORLD_JS, update=False, app_id='org.nativescript.MyApp')
 
     def test_009_create_app_default(self):
+        # webpack - remove template after merge
         Folder.clean(os.path.join(Settings.AppName.APP_NAME))
-        Tns.create(app_name=Settings.AppName.DEFAULT, default=True, update=False)
+        Tns.create(app_name=Settings.AppName.DEFAULT, default=True, template=Template.HELLO_WORLD_JS.local_package,
+                   update=False)
 
     def test_010_create_app_remove_app_resources(self):
         # creates valid project from local directory template
@@ -104,7 +108,9 @@ class CreateTests(TnsTest):
         assert json['nativescript']['id'] == 'org.nativescript.{0}'.format(Settings.AppName.APP_NAME)
 
         # Create project should fail without --force
-        result = Tns.create(app_name=Settings.AppName.APP_NAME, verify=False, update=False)
+        # webpack - remove template after merge
+        result = Tns.create(app_name=Settings.AppName.APP_NAME, verify=False,
+                            template=Template.HELLO_WORLD_JS.local_package, update=False)
         assert "You cannot build applications named '" + Settings.AppName.APP_NAME + "' in Xcode." in result.output
 
     @parameterized.expand([
@@ -140,14 +146,17 @@ class CreateTests(TnsTest):
 
     def test_402_create_project_in_folder_with_existing_project(self):
         """Create project with name that already exist should show friendly error message"""
-        Tns.create(app_name=Settings.AppName.DEFAULT, update=False)
+        # webpack - remove template after merge
+        Tns.create(app_name=Settings.AppName.DEFAULT, template=Template.HELLO_WORLD_JS.local_package, update=False)
         result = Tns.create(app_name=Settings.AppName.DEFAULT, update=False, verify=False, force_clean=False)
         assert "successfully created" not in result.output
         assert "Path already exists and is not empty" in result.output
 
     def test_403_create_project_with_no_name(self):
+        # webpack - remove template after merge
         """Create project without name should show friendly error message"""
-        result = Tns.create(app_name="", force_clean=False, verify=False, update=False)
+        result = Tns.create(app_name="", template=Template.HELLO_WORLD_JS.local_package, force_clean=False,
+                            verify=False, update=False)
         assert "You must specify <App name> when creating a new project" in result.output
         assert "# tns create" in result.output
 

@@ -21,7 +21,7 @@ class BuildTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package,
-                   update=False)
+                   update=True)
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):

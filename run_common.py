@@ -40,7 +40,7 @@ def __get_templates(branch='master'):
     :param branch: Branch of https://github.com/NativeScript/nativescript-app-templates
     """
     local_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates')
-    Git.clone(repo_url=Template.REPO, branch=branch, local_folder=local_folder)
+    Git.clone(repo_url=Template.REPO, branch="mdonev/webpack-only", local_folder=local_folder)
 
     apps = [Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS, Template.HELLO_WORLD_NG, Template.MASTER_DETAIL_NG,
             Template.VUE_BLANK, Template.MASTER_DETAIL_VUE, Template.TAB_NAVIGATION_JS]

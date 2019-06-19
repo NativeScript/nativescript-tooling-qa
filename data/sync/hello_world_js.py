@@ -151,7 +151,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_js_ts(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, instrumented=False):
     result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
                              device=device, instrumented=instrumented)
 

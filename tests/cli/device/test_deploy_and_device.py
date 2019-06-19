@@ -16,7 +16,6 @@ from core.utils.file_utils import File
 from data.changes import Changes
 from data.templates import Template
 from products.nativescript.tns import Tns
-from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_paths import TnsPaths
 
@@ -37,9 +36,7 @@ class TnsDeviceTests(TnsRunTest):
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
-        result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
-                            update=True, verify=False)
-        TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False, theme=False)
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True, verify=False)
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS == OSType.OSX:
             Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH)
@@ -150,7 +147,7 @@ class TnsDeviceTests(TnsRunTest):
 
     def test_402_deploy_invalid_platform(self):
         result = Tns.exec_command(command='deploy platform', path=APP_NAME)
-        assert "Invalid platform platform. Valid platforms are ios or android." in result.output
+        assert "Invalid platform platform. Valid platforms are iOS or Android." in result.output
 
     def test_403_deploy_command_with_invalid_device_id(self):
         invalid_device_id = 'fakeDevice'
