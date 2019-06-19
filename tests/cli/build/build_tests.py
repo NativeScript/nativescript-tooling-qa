@@ -27,10 +27,10 @@ class BuildTests(TnsTest):
         TnsTest.setUpClass()
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Folder.clean(os.path.join(cls.app_name, 'hooks'))
-        Folder.clean(os.path.join(cls.app_name, 'node_modules'))
-        Folder.clean(os.path.join(cls.app_name_with_space, 'hooks'))
-        Folder.clean(os.path.join(cls.app_name_with_space, 'node_modules'))
+        # Folder.clean(os.path.join(cls.app_name, 'hooks'))
+        # Folder.clean(os.path.join(cls.app_name, 'node_modules'))
+        # Folder.clean(os.path.join(cls.app_name_with_space, 'hooks'))
+        # Folder.clean(os.path.join(cls.app_name_with_space, 'node_modules'))
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
                                  framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
@@ -49,8 +49,8 @@ class BuildTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Folder.clean(cls.app_temp_path)
-        Folder.clean(cls.app_name_with_space)
+        Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
+        Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
 
     def test_001_build_android(self):
         Tns.build_android(self.app_name)
@@ -73,12 +73,12 @@ class BuildTests(TnsTest):
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
 
         # Verify apk does not contain aar files
-        archive = os.path.join(TnsPaths.get_apk_path(self.app_name), self.debug_apk)
-        File.unzip(archive, 'temp')
+        apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
+        File.unzip(apk_path, 'temp')
         # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
         # https://github.com/NativeScript/nativescript-cli/pull/3923
-        Folder.clean(os.path.join(self.app_name, 'temp', 'META-INF'))
-        temp_folder = os.path.join(self.app_name, 'temp')
+        temp_folder = os.path.join(self.app_path, 'temp')
+        Folder.clean(os.path.join(temp_folder, 'META-INF'))
         assert not File.pattern_exists(temp_folder, '*.aar')
         assert not File.pattern_exists(temp_folder, '*.plist')
         assert not File.pattern_exists(temp_folder, '*.android.*')
@@ -100,8 +100,8 @@ class BuildTests(TnsTest):
 
         # Create zip
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
-        run(command, wait=True)
-        assert File.exists(os.path.join(self.app_name, 'app', 'app.tar.gz'))
+        run(cmd=command, cwd=Settings.TEST_RUN_HOME, wait=True)
+        assert File.exists(os.path.join(self.app_path, 'app', 'app.tar.gz'))
 
     def test_301_build_project_with_space_release(self):
 
@@ -121,8 +121,9 @@ class BuildTests(TnsTest):
 
     def test_302_build_project_with_space_debug_with_plugin(self):
         # skip remove platform because androidx is not released official
+        app_space_path = TnsPaths.get_app_path(app_name=self.app_name_with_space)
         # Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
-        Npm.install(package='nativescript-mapbox', option='--save', folder=self.app_name_with_space)
+        Npm.install(package='nativescript-mapbox', option='--save', folder=app_space_path)
         result = Tns.build_android(app_name='"' + self.app_name_with_space + '"')
         assert "Project successfully built" in result.output
 
