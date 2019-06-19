@@ -138,7 +138,12 @@ class TnsLogs(object):
                 logs.append('Starting incremental webpack compilation...')
         else:
             if not hmr:
-                logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
+                # logs.extend(TnsLogs.prepare_messages(platform=platform, plugins=None))
+                logs.append('Webpack compilation complete.')
+                logs.append('Webpack build done!')
+                logs.append('File change detected. Starting incremental webpack compilation...')
+                logs.append('Restarting application on device')
+                logs.append('Successfully synced application')
             if bundle:
                 logs.append('File change detected.')
                 logs.append('Starting incremental webpack compilation...')
