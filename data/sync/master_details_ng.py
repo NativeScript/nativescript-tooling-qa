@@ -20,7 +20,7 @@ def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugl
             uglify=uglify)
 
     # Verify it looks properly
-    device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text, timeout=420, retry_delay=5)
+    device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text, timeout=450, retry_delay=5)
     device.wait_for_text(text=Changes.MasterDetailNG.HTML.old_text, timeout=30)
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
