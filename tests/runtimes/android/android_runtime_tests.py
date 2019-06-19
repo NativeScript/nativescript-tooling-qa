@@ -77,21 +77,6 @@ class AndroidRuntimeTests(TnsTest):
         # make sure we called custom activity declared in manifest
         assert assert_result, "Expected output not found! Logs: " + Adb.get_logcat(device_id=self.emulator.id)
 
-    def test_250_check_plugin_dependencies_are_found(self):
-        """
-         Test that all plugin's dependencies are found
-         https://github.com/NativeScript/android-runtime/issues/1379
-        """
-        Tns.plugin_add(plugin_name="nativescript-image", path=os.path.join(TEST_RUN_HOME, APP_NAME))
-        log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
-
-        strings = ['WARNING: Skipping interface',
-                   'as it cannot be resolved']
-        test_result = Wait.until(lambda: all(string not in log.output for string in strings),
-                                 timeout=10, period=5)
-
-        assert test_result, 'It seems that not all plugin\'s dependencies are found!'
-
     def test_300_verbose_log_android(self):
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'verbose_log', 'app.js'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), True)
@@ -427,18 +412,21 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, "TAP Button is missing on the device! V8 with debug symbols is making the app crash!"
 
-    def test_445_test_Buffer_is_deprecated_warning_is_not_shown(self):
+    def test_445_test_warnings_are_not_shown_when_building_android(self):
         """
          https://github.com/NativeScript/android-runtime/issues/1392
+         https://github.com/NativeScript/android-runtime/issues/1396
         """
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
         # check buffer deprecation warning is not shown
         strings = ['DeprecationWarning: ,',
                    'Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc()',
-                   'Buffer.allocUnsafe(), or Buffer.from() methods instead.']
+                   'Buffer.allocUnsafe(), or Buffer.from() methods instead.',
+                   'Note: Some input files use or override a deprecated API.',
+                   'Note: Recompile with -Xlint:deprecation for details.']
         test_result = Wait.until(lambda: all(string not in log.output for string in strings), timeout=5,
                                  period=5)
-        assert test_result, "Buffer deprecated warning is shown! Logs: " + log.output
+        assert test_result, "Warnings are shown when building android app! Logs: " + log.output
 
     def test_446_test_ES6_support(self):
         """
