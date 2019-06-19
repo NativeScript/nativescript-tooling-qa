@@ -87,9 +87,7 @@ class AndroidRuntimeTests(TnsTest):
 
         strings = ['WARNING: Skipping interface',
                    'as it cannot be resolved']
-
-        test_result = Wait.until(lambda: all(string not in log.output for string in strings),
-                             timeout=10, period=5)
+        test_result = Wait.until(lambda: all(string not in log.output for string in strings), timeout=10, period=5)
 
         assert test_result, 'It seems that not all plugin\'s dependencies are found!'
 
