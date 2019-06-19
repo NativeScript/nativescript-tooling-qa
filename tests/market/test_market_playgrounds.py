@@ -217,14 +217,14 @@ class PlaygroundMarketSamples(TnsRunTest):
         t_end = time.time() + timeout
         while time.time() < t_end:
             try:
-                devices_tab = chrome.driver.find_elements_by_xpath("//span[contains(.,'Devices')]")[0].click()
+                chrome.driver.find_elements_by_xpath("//span[contains(.,'Devices')]")[0].click()
                 Log.info('Devices button clicked.')
                 break
             except ElementClickInterceptedException:
                 Log.info('Unable to click Devices button!')
                 time.sleep(3)
         devices = chrome.driver.find_elements_by_class_name('device-name')
-        if len(devices) > 0:
+        if devices:
             device_name = devices[0].text
             if device not in device_name:
                 Log.info("Searched device not found !!! Actual: " + str(device_name) + " Expected: " + device)
@@ -234,7 +234,7 @@ class PlaygroundMarketSamples(TnsRunTest):
     @staticmethod
     def open_device_logs(chrome):
         Log.info("Open device Logs")
-        device_logs_tab = chrome.driver.find_elements_by_xpath("//span[contains(.,'Device Logs')]")[0].click()
+        chrome.driver.find_elements_by_xpath("//span[contains(.,'Device Logs')]")[0].click()
 
     @staticmethod
     def close_popup(device, timeout=10, button_text="Open"):
