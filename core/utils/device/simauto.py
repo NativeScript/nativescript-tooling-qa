@@ -27,14 +27,14 @@ class SimAuto(object):
                     window = simulator.findFirstR(AXTitle=name)
                     window.activate()
                     sleep(1)
-                    elements = window.findAllR()
-                    for element in elements:
-                        if 'AXValue' in element.getAttributes():
-                            if text in str(element.AXValue):
-                                return element
-                            elif 'AXTitle' in element.getAttributes():
-                                if text in str(element.AXTitle):
-                                    return element
+                    element = window.findFirstR(AXTitle=text)
+                    if element is not None:
+                        return element
+
+                    element2 = window.findFirstR(AXValue=text)
+                    if element2 is not None:
+                        return element2
+
             return None
         except Exception:
             return None

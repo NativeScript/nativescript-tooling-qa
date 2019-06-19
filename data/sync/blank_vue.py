@@ -22,7 +22,8 @@ def __run_vue(app_name, platform, bundle, hmr):
 
 def __preview_vue(app_name, platform, device, bundle, hmr):
     # Execute `tns run` and wait until logs are OK
-    return Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform, device=device)
+    return Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform, device=device,
+                           click_open_alert=True)
 
 
 def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):

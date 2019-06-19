@@ -122,7 +122,7 @@ class Preview(object):
         run(command)
 
     @staticmethod
-    def run_app(app_name, platform, device, bundle=False, hmr=False, instrumented=False):
+    def run_app(app_name, platform, device, bundle=False, hmr=False, instrumented=False, click_open_alert=False):
         result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator
@@ -131,8 +131,12 @@ class Preview(object):
         Preview.run_url(url=url, device=device)
         # When you run preview on ios simulator on first run confirmation dialog is shown.
         if device.type == DeviceType.SIM:
-            time.sleep(2)
-            Preview.dismiss_simulator_alert()
+            if click_open_alert is True:
+                time.sleep(5)
+                device.click("Open")
+            else:
+                time.sleep(2)
+                Preview.dismiss_simulator_alert()
 
         # Verify logs
         strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
