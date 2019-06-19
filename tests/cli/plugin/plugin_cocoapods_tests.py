@@ -82,7 +82,6 @@ class PluginCocoapodsTests(TnsTest):
             assert "googlesdk" in output
 
             result = Tns.build_ios(self.app_name)
-            assert "Successfully prepared plugin googlesdk for ios." in result.output
             assert "Installing pods..." in result.output
 
             output = File.read(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), 'Podfile'))

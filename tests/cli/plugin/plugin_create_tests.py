@@ -1,4 +1,5 @@
 import os
+import unittest
 
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
@@ -46,10 +47,11 @@ class PluginCreateTests(TnsTest):
                                  "--username gitUser --pluginName customName")
         # TODO: Assert username and pluginName are replaced in generated files.
 
+    @unittest.skip("Webpack only, must upgrade plugin")
     def test_300_build_demo(self):
         # TODO: Run npm scripts from plugin seed (build plugin, link plugin and then build the app).
         Tns.plugin_create(self.plugin_name, type_script=True)
         demo_path = os.path.join(self.plugin_name, 'demo')
-        Tns.build_android(demo_path, bundle=True)
+        Tns.build_android(demo_path)
         if Settings.HOST_OS is OSType.OSX:
-            Tns.build_ios(demo_path, bundle=True)
+            Tns.build_ios(demo_path)

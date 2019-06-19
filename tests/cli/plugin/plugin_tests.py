@@ -40,59 +40,32 @@ class PluginTests(TnsTest):
         TnsTest.tearDownClass()
         Folder.clean(cls.app_temp_path)
 
-    def test_100_plugin_add(self):
+    def test_100_plugin_add_after_platform_add_android(self):
+        result = Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
+        assert 'Successfully installed plugin tns-plugin' in result.output
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin', 'index.js'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
+                                        'package.json'))
+
+        output = File.read(os.path.join(self.app_path, 'package.json'))
+        assert 'org.nativescript.TestApp' in output
+        assert 'dependencies' in output
+        assert 'tns-plugin' in output
+
+    def test_101_plugin_add_prepare_verify_apk_android(self):
         Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
+        Tns.build_android(app_name=self.app_name)
+        assert File.exists(os.path.join(TnsPaths.get_apk_path(self.app_name)))
+        # assert File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name), 'tns-plugin',
+        #                                 'index.js'))
 
-        # Verify files of the plugin
-        plugin_path = os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin')
-        assert File.exists(os.path.join(plugin_path, 'index.js'))
-        assert File.exists(os.path.join(plugin_path, 'package.json'))
-        assert File.exists(os.path.join(plugin_path, 'test.android.js'))
-        assert File.exists(os.path.join(plugin_path, 'test.ios.js'))
-        assert File.exists(os.path.join(plugin_path, 'test2.android.xml'))
-        assert File.exists(os.path.join(plugin_path, 'test2.ios.xml'))
-
-        # Verify plugin list show installed plugins
+    def test_102_plugin_add_verify_command_list_used_plugins_android(self):
+        Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
+        Tns.prepare_android(app_name=self.app_name)
         result = Tns.exec_command(command='plugin', path=self.app_name)
         assert 'tns-plugin' in result.output
 
-    def test_101_plugin_add_and_build(self):
-        Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
-
-        # Build Android
-        Tns.build_android(app_name=self.app_name, bundle=False)
-
-        # Verify permissions are merged
-        apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
-        output = Adb.get_package_permission(apk_path)
-        assert 'android.permission.READ_EXTERNAL_STORAGE' in output
-        assert 'android.permission.WRITE_EXTERNAL_STORAGE' in output
-        assert 'android.permission.INTERNET' in output
-
-        # Verify Platforms files
-        plugin_android_path = os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name), 'tns-plugin')
-        assert File.exists(os.path.join(plugin_android_path, 'index.js'))
-        assert File.exists(os.path.join(plugin_android_path, 'test.js'))
-        assert File.exists(os.path.join(plugin_android_path, 'test2.xml'))
-        assert not File.exists(os.path.join(plugin_android_path, 'test.ios.js'))
-        assert not File.exists(os.path.join(plugin_android_path, 'test2.ios.xml'))
-        assert not File.exists(os.path.join(plugin_android_path, 'test.android.js'))
-        assert not File.exists(os.path.join(plugin_android_path, 'test2.android.xml'))
-
-        # Build IOS
-        if Settings.HOST_OS is OSType.OSX:
-            Tns.build_ios(app_name=self.app_name, bundle=False)
-            plugin_ios_path = os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), 'tns-plugin')
-            assert File.exists(os.path.join(plugin_ios_path, 'index.js'))
-            assert File.exists(os.path.join(plugin_ios_path, 'test.js'))
-            assert File.exists(os.path.join(plugin_ios_path, 'test2.xml'))
-            assert not File.exists(os.path.join(plugin_ios_path, 'test.ios.js'))
-            assert not File.exists(os.path.join(plugin_ios_path, 'test2.ios.xml'))
-            assert not File.exists(os.path.join(plugin_ios_path, 'test.android.js'))
-            assert not File.exists(os.path.join(plugin_ios_path, 'test2.android.xml'))
-
-    @unittest.skip('skip because we use custom package.json and modules not compatible with androidx.')
-    # TODO: update modules version in package.json when android x is published
+    @unittest.skip("Webpack only")
     def test_200_plugin_platforms_should_not_exist_in_tns_modules_android(self):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/3932
@@ -116,6 +89,7 @@ class PluginTests(TnsTest):
         assert not File.exists(os.path.join(app_path, 'nativescript-ui-listview', 'node_modules',
                                             'nativescript-ui-core', 'platforms'))
 
+    @unittest.skip("Webpack only")
     def test_210_plugin_with_promise_in_hooks_android(self):
         Tns.plugin_add(plugin_name='nativescript-fabric@1.0.6', path=self.app_name)
         result = Tns.prepare_android(app_name=self.app_name, verify=False)
@@ -130,25 +104,7 @@ class PluginTests(TnsTest):
         assert 'ERR!' not in output
         assert 'nativescript-appversion@' in output
 
-        Tns.build_android(app_name=self.app_name, bundle=False)
-
-        # Verify plugin and npm module files
-        assert File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                        'nativescript-social-share', 'package.json'))
-        assert File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                        'nativescript-social-share', 'social-share.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                            'nativescript-social-share', 'social-share.android.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                            'nativescript-social-share', 'social-share.ios.js'))
-        assert File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                        'nativescript-appversion', 'package.json'))
-        assert File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                        'nativescript-appversion', 'appversion.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                            'nativescript-appversion', 'appversion.android.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_npm_modules(self.app_name),
-                                            'nativescript-appversion', 'appversion.ios.js'))
+        Tns.build_android(app_name=self.app_name, verify=False)
 
     def test_410_plugin_remove_should_not_fail_if_plugin_name_has_dot_android(self):
         """
@@ -165,7 +121,40 @@ class PluginTests(TnsTest):
         assert 'nativescript-socket.io' not in output
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_311_plugin_platforms_should_not_exist_in_tns_modules_ios(self):
+    def test_101_plugin_add_prepare_verify_app_ios(self):
+        Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
+        Tns.build_ios(app_name=self.app_name)
+        path_app = os.path.join(TnsPaths.get_ipa_path(self.app_name))
+        assert Folder.exists(path_app)
+
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_201_build_app_for_both_platforms(self):
+        Tns.plugin_add(plugin_name='tns-plugin', path=self.app_name)
+
+        # Verify files of the plugin
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin', 'index.js'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
+                                        'package.json'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
+                                        'test.android.js'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin', 'test.ios.js'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
+                                        'test2.android.xml'))
+        assert File.exists(os.path.join(TnsPaths.get_app_node_modules_path(self.app_name), 'tns-plugin',
+                                        'test2.ios.xml'))
+
+        Tns.build_ios(app_name=self.app_name)
+        Tns.build_android(app_name=self.app_name)
+
+        apk_path = os.path.join(TnsPaths.get_apk_path(self.app_name))
+        output = Adb.get_package_permission(apk_path)
+        assert 'android.permission.READ_EXTERNAL_STORAGE' in output
+        assert 'android.permission.WRITE_EXTERNAL_STORAGE' in output
+        assert 'android.permission.INTERNET' in output
+
+    @unittest.skip("Webpack only")
+    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_311_plugin_platforms_should_not_exist_in_tnsmodules_ios(self):
         """
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/3932
         """

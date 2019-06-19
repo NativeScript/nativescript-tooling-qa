@@ -52,17 +52,17 @@ class TnsAssert(object):
         if webpack:
             assert Folder.exists(os.path.join(node_path, 'nativescript-dev-webpack')), 'Webpack not installed in app.'
             assert File.exists(os.path.join(app_path, 'webpack.config.js')), 'Missing webpack config.'
-            assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-webpack.js')), 'Hooks not installed.'
 
         # Assert app data
         if app_data is not None:
             # Verify typescript in TS and NG apps:
             if app_data.app_type in {AppType.TS, AppType.NG, AppType.SHARED_NG}:
-                assert Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), 'TS not installed in app.'
+                assert not Folder.exists(os.path.join(node_path, 'nativescript-dev-typescript')), \
+                    'TS not installed in app.'
                 assert File.exists(os.path.join(app_path, 'tsconfig.json')), 'Missing config.'
                 if webpack:
                     assert File.exists(os.path.join(app_path, 'tsconfig.tns.json')), 'Missing config.'
-                assert File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
+                assert not File.exists(os.path.join(before_watch_hooks, 'nativescript-dev-typescript.js')), \
                     'Hooks not installed.'
 
             # Assert app id
@@ -116,19 +116,19 @@ class TnsAssert(object):
                 else:
                     assert 'The project is not prepared for any platform' in output
             if prepared is Platform.ANDROID:
-                assert 'The project is prepared for:  android' in output
+                assert 'The project is prepared for:  Android' in output
             if prepared is Platform.IOS:
-                assert 'The project is prepared for:  ios' in output
+                assert 'The project is prepared for:  iOS' in output
             if prepared is Platform.BOTH:
-                assert 'The project is prepared for:  ios and android' in output
+                assert 'The project is prepared for:  iOS and Android' in output
 
             # Assert platform added status
             if added is Platform.NONE:
                 assert 'No installed platforms found. Use $ tns platform add' in output
                 if Settings.HOST_OS is OSType.OSX:
-                    assert 'Available platforms for this OS:  ios and android' in output
+                    assert 'Available platforms for this OS:  iOS and Android' in output
                 else:
-                    assert 'Available platforms for this OS:  android' in output
+                    assert 'Available platforms for this OS:  Android' in output
             if added is Platform.ANDROID:
                 assert 'Installed platforms:  android' in output
             if added is Platform.IOS:

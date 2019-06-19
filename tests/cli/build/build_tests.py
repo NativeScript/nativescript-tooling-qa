@@ -26,7 +26,11 @@ class BuildTests(TnsTest):
     def setUpClass(cls):
         TnsTest.setUpClass()
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        # Folder.clean(os.path.join(cls.app_name, 'hooks'))
+        # Folder.clean(os.path.join(cls.app_name, 'node_modules'))
+        # Folder.clean(os.path.join(cls.app_name_with_space, 'hooks'))
+        # Folder.clean(os.path.join(cls.app_name_with_space, 'node_modules'))
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
                                  framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
@@ -49,18 +53,18 @@ class BuildTests(TnsTest):
         Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
 
     def test_001_build_android(self):
-        Tns.build_android(self.app_name, bundle=True)
+        Tns.build_android(self.app_name)
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.plist'))
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
         assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
 
-        src = os.path.join(self.app_path, 'app', 'app.js')
-        dest_1 = os.path.join(self.app_path, 'app', 'new.android.js')
-        dest_2 = os.path.join(self.app_path, 'app', 'new.ios.js')
+        src = os.path.join(self.app_name, 'app', 'app.js')
+        dest_1 = os.path.join(self.app_name, 'app', 'new.android.js')
+        dest_2 = os.path.join(self.app_name, 'app', 'new.ios.js')
         File.copy(src, dest_1)
         File.copy(src, dest_2)
 
-        result = Tns.build_android(self.app_path, bundle=True)
+        result = Tns.build_android(self.app_name)
         assert "Gradle build..." in result.output, "Gradle build not called."
         assert result.output.count("Gradle build...") == 1, "Only one gradle build is triggered."
 
@@ -71,7 +75,6 @@ class BuildTests(TnsTest):
         # Verify apk does not contain aar files
         apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
         File.unzip(apk_path, 'temp')
-
         # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
         # https://github.com/NativeScript/nativescript-cli/pull/3923
         temp_folder = os.path.join(self.app_path, 'temp')
@@ -83,14 +86,17 @@ class BuildTests(TnsTest):
         Folder.clean(temp_folder)
 
         # Verify incremental native build
-        result = Tns.exec_command(command='build --clean', bundle=True, path=self.app_name,
+        result = Tns.exec_command(command='build --clean', path=self.app_name,
                                   platform=Platform.ANDROID)
         assert "Gradle clean..." in result.output, "Gradle clean is not called."
         assert "Gradle build..." in result.output, "Gradle build is not called."
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
     def test_002_build_android_release(self):
-        Tns.build_android(self.app_name, bundle=True, release=True)
+        Tns.build_android(self.app_name, release=True)
+
+        # Configs are respected
+        assert File.exists(TnsPaths.get_apk_path(self.app_name, release=True))
 
         # Create zip
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
@@ -98,13 +104,14 @@ class BuildTests(TnsTest):
         assert File.exists(os.path.join(self.app_path, 'app', 'app.tar.gz'))
 
     def test_301_build_project_with_space_release(self):
+
         # Ensure ANDROID_KEYSTORE_PATH contain spaces (verification for CLI issue 2650)
         Folder.create("with space")
         file_name = os.path.basename(Settings.Android.ANDROID_KEYSTORE_PATH)
         cert_with_space_path = os.path.join("with space", file_name)
         File.copy(Settings.Android.ANDROID_KEYSTORE_PATH, cert_with_space_path)
 
-        Tns.build_android(app_name='"' + self.app_name_with_space + '"', bundle=True, release=True)
+        Tns.build_android(app_name='"' + self.app_name_with_space + '"', release=True)
         output = File.read(os.path.join(self.app_name_with_space, "package.json"))
         assert self.app_identifier in output.lower()
 
@@ -113,10 +120,12 @@ class BuildTests(TnsTest):
         assert self.app_identifier in output.lower()
 
     def test_302_build_project_with_space_debug_with_plugin(self):
+        # skip remove platform because androidx is not released official
         app_space_path = TnsPaths.get_app_path(app_name=self.app_name_with_space)
-        Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
+        # Tns.platform_remove(app_name='"' + self.app_name_with_space + '"', platform=Platform.ANDROID)
         Npm.install(package='nativescript-mapbox', option='--save', folder=app_space_path)
-        Tns.build_android(app_name='"' + self.app_name_with_space + '"', bundle=True)
+        result = Tns.build_android(app_name='"' + self.app_name_with_space + '"')
+        assert "Project successfully built" in result.output
 
     def test_310_build_android_with_custom_compile_sdk_new(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
@@ -137,8 +146,8 @@ class BuildTests(TnsTest):
         assert File.exists(os.path.join(self.app_name, 'android-declarations.d.ts'))
 
     def test_450_resources_update_android(self):
-        target_app = os.path.join(self.app_name)
-        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41')
+        target_app = os.path.join(self.app_name, 'app', 'App_Resources')
+        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41', 'app', 'App_Resources')
         Folder.clean(target_app)
         Folder.copy(source_app, target_app)
 
@@ -161,8 +170,8 @@ class BuildTests(TnsTest):
             os.path.join(TnsPaths.get_platforms_android_src_main_path(self.app_name), 'AndroidManifest.xml'))
 
     def test_451_resources_update(self):
-        target_app = os.path.join(self.app_name)
-        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41')
+        target_app = os.path.join(self.app_name, 'app', 'App_Resources')
+        source_app = os.path.join(TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41', 'app', 'App_Resources')
         Folder.clean(target_app)
         Folder.copy(source_app, target_app)
 
@@ -186,10 +195,10 @@ class BuildTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_001_build_ios(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        Tns.build_ios(self.app_name, bundle=True)
-        Tns.build_ios(self.app_name, release=True, bundle=True)
-        Tns.build_ios(self.app_name, for_device=True, bundle=True)
-        Tns.build_ios(self.app_name, for_device=True, release=True, bundle=True)
+        Tns.build_ios(self.app_name)
+        Tns.build_ios(self.app_name, release=True)
+        Tns.build_ios(self.app_name, for_device=True)
+        Tns.build_ios(self.app_name, for_device=True, release=True)
         assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), '*.aar'))
         assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), '*.framework'))
 
@@ -204,7 +213,7 @@ class BuildTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_190_build_ios_distribution_provisions(self):
         Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        result = Tns.exec_command(command='build ios --provision', path=self.app_name, bundle=True)
+        result = Tns.exec_command(command='build ios --provision', path=self.app_name)
         assert "Provision Name" in result.output
         assert "Provision UUID" in result.output
         assert "App Id" in result.output
@@ -217,11 +226,10 @@ class BuildTests(TnsTest):
         assert Settings.IOS.DEVELOPMENT_TEAM in result.output
 
         # Build with correct distribution provision
-        Tns.build_ios(self.app_name, provision=Settings.IOS.DISTRIBUTION_PROVISIONING, for_device=True, release=True,
-                      bundle=True)
+        Tns.build_ios(self.app_name, provision=Settings.IOS.DISTRIBUTION_PROVISIONING, for_device=True, release=True)
 
         # Verify that passing wrong provision shows user friendly error
-        result = Tns.build_ios(self.app_name, provision="fake", verify=False, bundle=True)
+        result = Tns.build_ios(self.app_name, provision="fake", verify=False)
         assert "Failed to find mobile provision with UUID or Name: fake" in result.output
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
@@ -242,7 +250,7 @@ class BuildTests(TnsTest):
         File.copy(source, target)
 
         # Build again and verify entitlements are merged
-        Tns.build_ios(self.app_name, bundle=True)
+        Tns.build_ios(self.app_name)
         entitlements_path = os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), self.app_name,
                                          'TestApp.entitlements')
         assert File.exists(entitlements_path), "Entitlements file is missing!"
@@ -254,7 +262,7 @@ class BuildTests(TnsTest):
         plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'plugins', 'nativescript-test-entitlements-1.0.0.tgz')
         Npm.install(package=plugin_path, option='--save', folder=self.app_name)
 
-        Tns.build_ios(self.app_name, bundle=True)
+        Tns.build_ios(self.app_name)
         entitlements_content = File.read(entitlements_path)
         assert '<key>aps-environment</key>' in entitlements_content, "Entitlements file content is wrong!"
         assert '<string>development</string>' in entitlements_content, "Entitlements file content is wrong!"
@@ -262,6 +270,6 @@ class BuildTests(TnsTest):
         assert '<true/>' in entitlements_content, "Entitlements file content is wrong!"
 
         # Build in release, for device (provision without entitlements)
-        result = Tns.build_ios(self.app_name, for_device=True, release=True, bundle=True, verify=False)
+        result = Tns.build_ios(self.app_name, for_device=True, release=True, verify=False)
         assert "Provisioning profile" in result.output
         assert "doesn't include the aps-environment and inter-app-audio entitlements" in result.output

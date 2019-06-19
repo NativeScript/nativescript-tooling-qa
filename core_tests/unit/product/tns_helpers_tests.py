@@ -21,7 +21,7 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'Preparing project...' in logs
         assert 'Successfully prepared plugin tns-core-modules for android' in logs
         assert 'Successfully prepared plugin fake-plugin for android' in logs
-        assert 'Project successfully prepared (Android)' in logs
+        assert 'Project successfully prepared (android)' in logs
         assert len(logs) == 4
 
     def test_10_get_run_messages_first_run(self):
@@ -32,7 +32,7 @@ class SyncMessagesTests(unittest.TestCase):
                                     device=Device(id='123', name='Emu', type=DeviceType.EMU, version=6.0))
         assert 'Skipping prepare.' not in logs
         assert 'Preparing project...' in logs
-        assert 'Project successfully prepared (Android)' in logs
+        assert 'Project successfully prepared (android)' in logs
         assert 'Building project...' in logs
         assert 'Gradle build...' in logs
         assert 'Xcode build...' not in logs
@@ -53,8 +53,6 @@ class SyncMessagesTests(unittest.TestCase):
                                     bundle=False,
                                     hmr=False,
                                     device=Device(id='123', name='Emu', type=DeviceType.EMU, version=8.0))
-        assert 'Preparing project...' in logs
-        assert 'Project successfully prepared (Android)' in logs
         assert 'Successfully transferred main-view-model.js' in logs
         assert 'Restarting application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
@@ -71,8 +69,6 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
         assert 'Webpack compilation complete.' in logs
-        assert 'Preparing project...' in logs
-        assert 'Project successfully prepared (Android)' in logs
         assert 'Successfully transferred bundle.js' in logs
         assert 'Successfully transferred vendor.js' not in logs
         assert 'Restarting application on device' in logs
@@ -93,8 +89,6 @@ class SyncMessagesTests(unittest.TestCase):
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs
         assert 'Webpack compilation complete.' in logs
-        assert 'Preparing project...' in logs
-        assert 'Project successfully prepared (Android)' in logs
         assert 'Successfully transferred bundle.js' in logs
         assert 'Successfully transferred vendor.js' in logs
         assert 'Restarting application on device' in logs
