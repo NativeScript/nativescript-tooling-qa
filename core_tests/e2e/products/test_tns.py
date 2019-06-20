@@ -18,7 +18,7 @@ class TnsSmokeTests(TnsRunTest):
     def setUpClass(cls):
         run_common.prepare(clone_templates=True, install_ng_cli=False)
         TnsRunTest.setUpClass()
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=APP_NAME, framework_path=Settings.IOS.FRAMEWORK_PATH)
