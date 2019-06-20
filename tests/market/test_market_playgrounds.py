@@ -2,7 +2,7 @@ import os
 import time
 
 from parameterized import parameterized
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.common.exceptions import ElementClickInterceptedException
 
 from core.base_test.tns_run_test import TnsRunTest
@@ -76,8 +76,9 @@ class PlaygroundMarketSamples(TnsRunTest):
                 Log.info('Testing Android !!!')
                 image_name = '{0}_{1}.png'.format(name.encode("utf8"), str(Platform.ANDROID))
                 Preview.run_url(url=link, device=self.emu)
+                Log.info(' Waiting Android app to load...')
+                time.sleep(10)
                 PlaygroundMarketSamples.verify_device_is_connected(self.chrome, "Android SDK built")
-                PlaygroundMarketSamples.open_device_logs(self.chrome)
                 emulator_result = PlaygroundMarketSamples.get_error(self.chrome)
                 is_android_fail = emulator_result > 0
                 android = str(not is_android_fail)
@@ -120,7 +121,6 @@ class PlaygroundMarketSamples(TnsRunTest):
                     PlaygroundMarketSamples.close_popup(self.sim)
 
                 PlaygroundMarketSamples.close_permissions_windows_ios(name, self.sim)
-                PlaygroundMarketSamples.open_device_logs(self.chrome)
                 simulator_result = PlaygroundMarketSamples.get_error(self.chrome)
                 is_app_active = Preview.is_running_on_ios(self.sim, Settings.Packages.PREVIEW_APP_ID)
                 self.is_ios_fail = simulator_result > 0 or not is_app_active
@@ -165,8 +165,9 @@ class PlaygroundMarketSamples(TnsRunTest):
 
     @staticmethod
     def get_error(chrome, previous_errors=0):
+        PlaygroundMarketSamples.open_device_logs(chrome)
         exceptions = 0
-        timeout = 15  # In seconds
+        timeout = 10  # In seconds
         end_time = time.time() + timeout
         while end_time > time.time():
             Log.info(' Searching for exception ...')
@@ -213,6 +214,7 @@ class PlaygroundMarketSamples(TnsRunTest):
 
     @staticmethod
     def verify_device_is_connected(chrome, device, timeout=15):
+        PlaygroundMarketSamples.close_cookie_alert(chrome)
         Log.info("Check device in Playground")
         t_end = time.time() + timeout
         while time.time() < t_end:
@@ -224,20 +226,38 @@ class PlaygroundMarketSamples(TnsRunTest):
                 Log.info('Unable to click Devices button!')
                 time.sleep(3)
         devices = chrome.driver.find_elements_by_class_name('device-name')
-        if devices:
-            device_name = devices[0].text
-            if device not in device_name:
-                Log.info("Searched device not found !!! Actual: " + str(device_name) + " Expected: " + device)
-        else:
-            Log.info("No device has been found to be attached !!!")
+        try:
+            if devices:
+                device_name = devices[0].text
+                if device not in device_name:
+                    Log.info("Searched device not found !!! Actual: " + str(device_name) + " Expected: " + device)
+            else:
+                Log.info("No device has been found to be attached !!!")
+        except StaleElementReferenceException:
+            Log.info('Device name element has been removed from the DOM!!!')
 
     @staticmethod
-    def open_device_logs(chrome):
+    def open_device_logs(chrome, timeout=5):
         Log.info("Open device Logs")
-        chrome.driver.find_elements_by_xpath("//span[contains(.,'Device Logs')]")[0].click()
+        t_end = time.time() + timeout
+        while time.time() < t_end:
+            try:
+                chrome.driver.find_elements_by_xpath("//span[contains(.,'Device Logs')]")[0].click()
+                Log.info('Device Log opened.')
+                break
+            except ElementClickInterceptedException:
+                Log.info('Unable to click Device Log!')
+                time.sleep(2)
 
     @staticmethod
     def close_popup(device, timeout=10, button_text="Open"):
         if PlaygroundMarketSamples.wait_for_text(device, button_text, timeout):
             device.click(text=button_text)
             # Preview.dismiss_simulator_alert()
+
+    @staticmethod
+    def close_cookie_alert(chrome):
+        Log.info("Close cookie alert.")
+        accept_cookies = chrome.driver.find_elements_by_xpath("//button[contains(.,'Accept Cookies')]")
+        if accept_cookies:
+            accept_cookies[0].click()
