@@ -9,6 +9,7 @@ from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
 from core.utils.device.adb import Adb
 from core.utils.device.simctl import Simctl
+from core.utils.device.simauto import SimAuto
 from core.utils.file_utils import File
 from core.utils.run import run
 from products.nativescript.tns import Tns
@@ -122,7 +123,7 @@ class Preview(object):
         run(command)
 
     @staticmethod
-    def run_app(app_name, platform, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
+    def run_app(app_name, platform, device, bundle=False, hmr=False, instrumented=False, click_open_alert=False):
         result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator
@@ -132,11 +133,9 @@ class Preview(object):
         # When you run preview on ios simulator on first run confirmation dialog is shown.
         if device.type == DeviceType.SIM:
             if click_open_alert is True:
-                time.sleep(5)
-                device.click("Open")
-            else:
-                time.sleep(2)
-                Preview.dismiss_simulator_alert()
+                if SimAuto.find(device_info=device, text="Open"):
+                    time.sleep(5)
+                    device.click("Open")
 
         # Verify logs
         strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
