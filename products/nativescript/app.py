@@ -72,7 +72,8 @@ class App(object):
             Folder.clean(os.path.join(app_name, 'hooks'))
             Folder.clean(os.path.join(app_name, 'node_modules'))
             Npm.install(folder=app_path)
-            update_script = os.path.join(modules_path, '.bin', 'update-ns-webpack') + ' --deps --configs'
+            path_script = '"' + os.path.join(modules_path, '.bin', 'update-ns-webpack') + '"'
+            update_script = path_script + ' --deps --configs'
             result = run(cmd=update_script, log_level=logging.INFO)
             assert 'Updating dev dependencies...' in result.output, 'Webpack dependencies not updated.'
             assert 'Updating configuration files...' in result.output, 'Webpack configs not updated.'
