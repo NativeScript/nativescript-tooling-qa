@@ -45,7 +45,7 @@ class App(object):
         Npm.install(package='{0}@{1}'.format(dependency, version), option='--save-dev --save-exact', folder=app_path)
 
     @staticmethod
-    def update(app_name, modules=True, angular=True, typescript=True, web_pack=True, vue=True):
+    def update(app_name, modules=True, angular=True, typescript=False, web_pack=True, vue=True):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         modules_path = os.path.join(app_path, 'node_modules')
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):
