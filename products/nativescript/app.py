@@ -79,4 +79,4 @@ class App(object):
 
         if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
             Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
-            Npm.install(package='nativescript-vue@latest', option='--save --save-exact', folder=app_path)
+            Npm.install(package='nativescript-vue@next', option='--save --save-exact', folder=app_path)
