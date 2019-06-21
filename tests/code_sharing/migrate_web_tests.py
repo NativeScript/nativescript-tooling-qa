@@ -61,7 +61,7 @@ class MigrateWebToMobileTests(TnsRunTest):
         # NG Serve (to check web is not broken by {N})
         self.ng_serve(prod=False)
         self.chrome.open(url='https://google.com/ncr')  # change url to be sure next serve do not assert previous serve
-        self.ng_serve(prod=True)
+        # self.ng_serve(prod=True) Broken by https://github.com/NativeScript/nativescript-schematics/pull/214
 
     # noinspection PyUnusedLocal
     @parameterized.expand([
