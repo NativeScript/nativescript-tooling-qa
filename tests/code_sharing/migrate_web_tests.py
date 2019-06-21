@@ -54,7 +54,7 @@ class MigrateWebToMobileTests(TnsRunTest):
         assert 'Adding {N} files' in result.output
         assert 'Adding NativeScript specific exclusions to .gitignore' in result.output
         assert 'Adding NativeScript run scripts to package.json' in result.output
-        assert 'Excluding NativeScript files from web tsconfig' in result.output
+        assert 'Modifying web tsconfig' in result.output
         assert 'Adding Sample Shared Component' in result.output
         assert 'Adding npm dependencies' in result.output
 

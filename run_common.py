@@ -113,9 +113,10 @@ def __install_ng_cli():
 
 def __install_schematics():
     """
-    Install NativeScript Schematics locally.
+    Install NativeScript Schematics globally.
     """
-    Npm.install(package=Settings.Packages.NS_SCHEMATICS, folder=Settings.TEST_RUN_HOME)
+    Npm.uninstall(package='@nativescript/schematics', option='-g')
+    Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='-g')
 
 
 def prepare(clone_templates=True, install_ng_cli=False, get_preivew_packages=False):
