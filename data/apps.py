@@ -50,7 +50,7 @@ class AppInfo(object):
 
 class Apps(object):
     __ns_only_size = SizeInfo(init=248157241, apk_bundle_uglify_aot_snapshot=15743753, ipa_bundle_uglify_aot=15743753)
-    __shared_size = SizeInfo(init=273331339, apk_bundle_uglify_aot_snapshot=15743753, ipa_bundle_uglify_aot=15743753)
+    __shared_size = SizeInfo(init=357412574, apk_bundle_uglify_aot_snapshot=15743753, ipa_bundle_uglify_aot=15743753)
     SCHEMATICS_SHARED = AppInfo(app_type=AppType.SHARED_NG, app_id=None, size=__shared_size, texts=['Welcome'])
     SCHEMATICS_SHARED_SAMPLE = AppInfo(app_type=AppType.SHARED_NG, app_id=None, size=__shared_size, texts=['Barcelona'])
     SCHEMATICS_NS = AppInfo(app_type=AppType.NG, app_id=None, size=__ns_only_size, texts=['Tap the button'])
