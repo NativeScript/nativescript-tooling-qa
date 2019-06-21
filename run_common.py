@@ -105,14 +105,10 @@ def __install_ns_cli():
 
 def __install_ng_cli():
     """
-    Install Angular CLI locally.
+    Install Angular CLI globally.
     """
-    Npm.install(package=Settings.Packages.NG_CLI, folder=Settings.TEST_RUN_HOME)
-
-    # Verify executable exists after install
-    path = os.path.join(Settings.TEST_RUN_HOME, 'node_modules', '.bin', 'ng')
-    assert File.exists(path), 'Angular CLI executable not found at ' + path
-    Settings.Executables.NG = path
+    Npm.uninstall(package='@angular/cli', option='-g')
+    Npm.install(package=Settings.Packages.NG_CLI, option='-g')
 
 
 def __install_schematics():
