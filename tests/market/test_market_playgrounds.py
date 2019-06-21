@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from parameterized import parameterized
@@ -15,13 +16,23 @@ from products.nativescript.market_helpers import Market
 from products.nativescript.preview_helpers import Preview
 
 
+def custom_name_func(testcase_func, param_num, param):
+    return "%s_%s_%s" % (testcase_func.__name__, param_num, param.args[0])
+
+
 # noinspection PyUnusedLocal
 class PlaygroundMarketSamples(TnsRunTest):
     chrome = None
     app_name = Settings.AppName.DEFAULT
     is_ios_fail = None
     test_data = Market.get_data_market()
-
+    range = sys.argv[-1]
+    if "samples=" in range:
+        range_array = str(range).replace("samples=", "").split("-")
+        start = int(range_array[0])
+        end = int(range_array[1])
+        test_data = test_data[start:end]
+        Log.info("====== Running test for samples in the range {}-{} ======".format(start, end))
     # test_data = [x for x in test_data1 if u'Getting_a_User\'s_Current_Location' in x]
     # print test_data
     # test_data = [
