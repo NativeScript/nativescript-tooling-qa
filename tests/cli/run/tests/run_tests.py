@@ -203,7 +203,7 @@ class TnsRunJSTests(TnsRunTest):
         # Make changes in AppResources/Android
         File.copy(os.path.join(Settings.TEST_RUN_HOME, 'assets', 'resources', 'android', 'drawable-hdpi', 'icon.png'),
                   os.path.join(self.app_resources_android, 'src', 'main', 'res', 'drawable-hdpi', 'icon.png'))
-        result = Tns.run_ios(app_name=self.app_name, device=self.sim.id)
+        result = Tns.run_ios(app_name=self.app_name, emulator=True, provision=False)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.IOS,
                                        run_type=RunType.UNKNOWN, device=self.sim)
         # Verify no build is triggered
