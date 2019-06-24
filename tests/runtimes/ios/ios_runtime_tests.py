@@ -106,7 +106,7 @@ class IOSRuntimeTests(TnsTest):
                    'sig_handler(int)',
                    'JS Stack:',
                    '1   @[native code]',
-                   '2   onNavigatingTo@file:///app/bundle.js:197:20']
+                   '2   onNavigatingTo@ file:///app/main-page.js:34:0']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=150, check_interval=10)
 
         # Verify app is NOT running on device
@@ -147,8 +147,8 @@ class IOSRuntimeTests(TnsTest):
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
-        strings = ['CONSOLE LOG file:///app/bundle.js:142:16: The folder “not-existing-path” doesn’t exist.',
-                   'JS: 1   contentsOfDirectoryAtPathError@file:///app/bundle.js:235:47']
+        strings = ['CONSOLE LOG The folder “not-existing-path” doesn’t exist. file:///app/app.js:36:0',
+                   'JS: 1   contentsOfDirectoryAtPathError@ file:///app/main-view-model.js:6:0']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
