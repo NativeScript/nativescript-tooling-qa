@@ -55,9 +55,6 @@ class NGNewTests(TnsRunTest):
     def test_202_shared_with_custom_source_dir_and_prefix(self):
         NGNewTests.create_and_run(shared=True, prefix='myapp', source_dir='mysrc', style=StylingType.CSS)
 
-    def test_210_simple_no_webpack(self):
-        NGNewTests.create_and_run(shared=False, webpack=False, prefix='app')
-
     @unittest.skip('Ignore because of https://github.com/NativeScript/nativescript-schematics/issues/157')
     def test_300_help_ng_new(self):
         output = NG.exec_command('new --collection={0} --help'.format(NS_SCHEMATICS)).output
