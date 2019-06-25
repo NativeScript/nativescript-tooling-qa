@@ -14,7 +14,7 @@ class Npm(object):
     @staticmethod
     def run_npm_command(cmd, folder=Settings.TEST_RUN_HOME, verify=True):
         command = 'npm {0}'.format(cmd).strip()
-        Log.info(command + " (at " + folder + ").")
+        Log.info(command + " (at " + str(folder) + ").")
         result = run(cmd=command, cwd=folder, wait=True, timeout=300)
         if verify:
             assert result.exit_code == 0, '" + command + " exited with non zero exit code!: \n' + result.output
@@ -48,7 +48,7 @@ class Npm(object):
         File.delete(src_file)
 
     @staticmethod
-    def install(package='', option='', folder=None):
+    def install(package='', option='', folder=Settings.TEST_RUN_HOME):
         if package is None:
             raise NameError('Package can not be None.')
         command = 'i {0} {1}'.format(package, option)
@@ -57,7 +57,7 @@ class Npm(object):
         return output
 
     @staticmethod
-    def uninstall(package, option='', folder=None):
+    def uninstall(package, option='', folder=Settings.TEST_RUN_HOME):
         if package is None or package == '':
             raise NameError('Package can not be None.')
         return Npm.run_npm_command('un {0} {1}'.format(package, option), folder=folder)

@@ -105,21 +105,18 @@ def __install_ns_cli():
 
 def __install_ng_cli():
     """
-    Install Angular CLI locally.
+    Install Angular CLI globally.
     """
-    Npm.install(package=Settings.Packages.NG_CLI, folder=Settings.TEST_RUN_HOME)
-
-    # Verify executable exists after install
-    path = os.path.join(Settings.TEST_RUN_HOME, 'node_modules', '.bin', 'ng')
-    assert File.exists(path), 'Angular CLI executable not found at ' + path
-    Settings.Executables.NG = path
+    Npm.uninstall(package='@angular/cli', option='-g')
+    Npm.install(package=Settings.Packages.NG_CLI, option='-g')
 
 
 def __install_schematics():
     """
-    Install NativeScript Schematics locally.
+    Install NativeScript Schematics globally.
     """
-    Npm.install(package=Settings.Packages.NS_SCHEMATICS, folder=Settings.TEST_RUN_HOME)
+    Npm.uninstall(package='@nativescript/schematics', option='-g')
+    Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='-g')
 
 
 def prepare(clone_templates=True, install_ng_cli=False, get_preivew_packages=False):
