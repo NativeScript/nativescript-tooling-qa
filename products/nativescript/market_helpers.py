@@ -79,7 +79,7 @@ class Market(object):
                     record.append(key.encode("utf8"))
                     testing_data.append(record)
 
-        return testing_data
+        return sorted(testing_data, key=lambda smpl: smpl[0])
 
     @staticmethod
     def get_preserved_data():
