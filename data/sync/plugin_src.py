@@ -36,7 +36,7 @@ def run_demo_app(app_name, app_type, plugin_name, platform, hmr=True):
     else:
         Tns.platform_add_android(app_name=app_path, framework_path=Settings.Android.FRAMEWORK_PATH)
 
-    App.update(app_path, modules=True, web_pack=True, angular=True, typescript=True, vue=True)
+    App.update(app_path)
 
     result = Tns.run(app_name=app_path, platform=platform, emulator=True, wait=False, hmr=hmr)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, hmr=hmr,
