@@ -73,7 +73,7 @@ class TestsForTnsTest(TnsRunTest):
             Tns.test_init(app_name=APP_NAME, framework=framework)
 
         # Run Tests
-        Tns.test(app_name=APP_NAME, platform=Platform.ANDROID, emulator=True, just_launch=True)
+        Tns.test(app_name=APP_NAME, platform=platform, emulator=True, just_launch=True)
 
     def test_400_invalid_framework_name(self):
         result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
