@@ -2,9 +2,11 @@ import datetime
 import os
 
 from core.enums.app_type import AppType
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.file_utils import File
 from data.changes import Changes
+from products.nativescript.app import App
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
@@ -21,25 +23,26 @@ def run_demo_app(app_name, app_type, plugin_name, platform, hmr=True):
     """
     # Navigate to demo folder and run the demo app
     app_folder = 'demo'
-    transfer_all = False
     if app_type == AppType.NG:
         app_folder = 'demo-angular'
         app_name = app_name + 'ng'
     elif app_type == AppType.VUE:
         app_folder = 'demo-vue'
         app_name = app_name + 'vue'
-        transfer_all = True
     app_path = os.path.join(Settings.TEST_SUT_HOME, plugin_name, app_folder)
+
+    if Settings.HOST_OS is OSType.OSX:
+        Tns.platform_add_ios(app_name=app_path, framework_path=Settings.IOS.FRAMEWORK_PATH)
+    else:
+        Tns.platform_add_android(app_name=app_path, framework_path=Settings.Android.FRAMEWORK_PATH)
+
+    App.update(app_path)
 
     result = Tns.run(app_name=app_path, platform=platform, emulator=True, wait=False, hmr=hmr)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, hmr=hmr,
-                                   app_type=app_type, transfer_all=transfer_all)
-    if hmr:
-        not_exp_string = ['Restarting application on device']
-    else:
-        not_exp_string = None
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                         not_existing_string_list=not_exp_string, timeout=180)
+                                   app_type=app_type)
+
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
     return result
 
 
@@ -60,8 +63,9 @@ def verify_demo_initial_state(device):
 
 
 def sync_plugin_common(app_name, app_type, platform, device, log_result, hmr=True):
-    # Setting the application Identifier depending on app_type
-    app_name = app_name + str(app_type)
+    # Setting the application Identifier depending on app_type except for TS
+    if app_type is not AppType.TS:
+        app_name = app_name + str(app_type)
     # Edit common file in SRC
     change_set = Changes.DateTimePicker.COMMON_TS
     File.replace(path=change_set.file_path, old_string=change_set.old_value, new_string=change_set.new_value,
@@ -70,8 +74,6 @@ def sync_plugin_common(app_name, app_type, platform, device, log_result, hmr=Tru
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, hmr=hmr,
                                    app_type=app_type)
 
-    # remove "Skipping prepare." from strings since no new build is triggered.
-    strings.remove("Skipping prepare.")
     TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=60)
     # Click on datepicker field and verify new value of picker is applied
     device.click(text="DatePickerField")
@@ -80,8 +82,9 @@ def sync_plugin_common(app_name, app_type, platform, device, log_result, hmr=Tru
 
 
 def sync_plugin_platform_spec(app_name, app_type, log_result, platform, device, hmr=True):
-    # Setting the application Identifier depending on app_type
-    app_name = app_name + str(app_type)
+    # Setting the application Identifier depending on app_type except for TS
+    if app_type is not AppType.TS:
+        app_name = app_name + str(app_type)
     # Edit platform specific file and verify change is applied on device
     if platform == platform.ANDROID:
         platform_change_set = Changes.DateTimePicker.ANDROID_TS
@@ -91,7 +94,6 @@ def sync_plugin_platform_spec(app_name, app_type, log_result, platform, device, 
                  new_string=platform_change_set.new_value, fail_safe=True)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, hmr=hmr,
                                    app_type=app_type)
-    strings.remove("Skipping prepare.")
     TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=60)
     device.click(text="DatePickerField")
     device.wait_for_text("select date")
