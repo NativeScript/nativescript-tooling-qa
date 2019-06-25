@@ -286,8 +286,10 @@ class TnsRunJSTests(TnsRunTest):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         # Rename file
+
         os.rename(new_file, renamed_file)
         File.replace(renamed_file, 'test.js', 'renamed file')
+        time.sleep(1)
         File.replace(app_js_file, 'test.js', 'test_2.js')
         strings = ["JS: renamed file synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
@@ -344,6 +346,7 @@ class TnsRunJSTests(TnsRunTest):
         # Rename file
         os.rename(new_file, renamed_file)
         File.replace(renamed_file, 'test.js', 'renamed file')
+        time.sleep(1)
         File.replace(app_js_file, 'test.js', 'test_2.js')
         strings = ["renamed file synced!!!"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
