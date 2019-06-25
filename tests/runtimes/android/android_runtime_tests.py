@@ -57,7 +57,7 @@ class AndroidRuntimeTests(TnsTest):
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'custom-activity.js'), True)
         webpack_config = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
         old_string = '"tns-core-modules/ui/frame/activity",'
-        my_custom_class = ',resolve(__dirname, "app/my-custom-class.js")'
+        my_custom_class = 'resolve(__dirname, "app/my-custom-class.js")'
         custom_activity = ',resolve(__dirname, "app/custom-activity.js"),'
         new_string = old_string + my_custom_class + custom_activity
         File.replace(path=webpack_config, old_string=old_string, new_string=new_string, backup_files=True)
@@ -131,6 +131,7 @@ class AndroidRuntimeTests(TnsTest):
         """
          Test native crash will not crash the app when discardUncaughtJsExceptions used
          https://github.com/NativeScript/android-runtime/issues/1119
+         https://github.com/NativeScript/android-runtime/issues/1354
         """
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1119',
                                  'main-page.js')
@@ -164,13 +165,39 @@ class AndroidRuntimeTests(TnsTest):
         Device.wait_for_text(self.emulator, "TAP")
         Adb.is_text_visible(self.emulator.id, "TAP", True)
         Device.click(self.emulator, "TAP", True)
-
+        stack_trace = """### Stack Trace Start
+JS: 	Frame: function:'viewModel.onTap', file:'file:///app/main-view-model.js:18:0
+JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable.notify', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:107:0
+JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable._emit', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:127:0
+JS: 	Frame: function:'ClickListenerImpl.onClick', file:'file:///node_modules/tns-core-modules/ui/button/button.js:29:0
+JS: 	at com.tns.Runtime.callJSMethodNative(Native Method)
+JS: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1242)
+JS: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1122)
+JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1109)
+JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1089)
+JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1081)
+JS: 	at com.tns.gen.java.lang.Object_vendor_13799_32_ClickListenerImpl.onClick(Object_vendor_13799_32_ClickListenerImpl.java:18)
+JS: 	at android.view.View.performClick(View.java:5198)
+JS: 	at android.view.View$PerformClick.run(View.java:21147)
+JS: 	at android.os.Handler.handleCallback(Handler.java:739)
+JS: 	at android.os.Handler.dispatchMessage(Handler.java:95)
+JS: 	at android.os.Looper.loop(Looper.java:148)
+JS: 	at android.app.ActivityThread.main(ActivityThread.java:5417)
+JS: 	at java.lang.reflect.Method.invoke(Native Method)
+JS: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:726)
+JS: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:616)
+JS: Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File
+JS: 	at com.tns.Runtime.resolveMethodOverload(Runtime.java:1201)
+JS: 	... 16 more
+JS: ### Stack Trace End"""  # noqa: E501
         strings = ["Error: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
-                   "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File"]
+                   "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
+                   stack_trace]
 
-        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=20,
                                  period=5)
-        assert test_result, 'Native crash should not crash the app when discardUncaughtJsExceptions used fails!'
+        message = 'Native crash should not crash the app when discardUncaughtJsExceptions used fails! Logs: '
+        assert test_result, message + File.read(log.log_file)
         Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
 
     def test_318_generated_classes_not_be_deleted_on_rebuild(self):
@@ -182,6 +209,11 @@ class AndroidRuntimeTests(TnsTest):
                               'MyActivity.js')
         File.copy(source, target, True)
 
+        webpack_config = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
+        old_string = '"tns-core-modules/ui/frame/activity",'
+        custom_activity = 'resolve(__dirname, "app/MyActivity.js"),'
+        new_string = old_string + custom_activity
+        File.replace(path=webpack_config, old_string=old_string, new_string=new_string, backup_files=True)
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
 
         assert File.exists(os.path.join(TEST_RUN_HOME, APP_NAME, "app", "MyActivity.js"))
@@ -191,6 +223,10 @@ class AndroidRuntimeTests(TnsTest):
 
         File.delete(os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'MyActivity.js'))
 
+        webpack_config = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
+        old_string = 'resolve(__dirname, "app/MyActivity.js"),'
+        new_string = ''
+        File.replace(path=webpack_config, old_string=old_string, new_string=new_string, backup_files=False)
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
 
         assert not File.exists(
@@ -206,6 +242,12 @@ class AndroidRuntimeTests(TnsTest):
                               'testActivity.android.js')
         target = os.path.join(TEST_RUN_HOME, APP_NAME, 'app')
         File.copy(source=source, target=target, backup_files=True)
+
+        webpack_config = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
+        old_string = '"tns-core-modules/ui/frame/activity",'
+        custom_activity = 'resolve(__dirname, "app/testActivity.android.js"),'
+        new_string = old_string + custom_activity
+        File.replace(path=webpack_config, old_string=old_string, new_string=new_string, backup_files=True)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME))
         activity_class_path = os.path.join(TEST_RUN_HOME, APP_NAME, "platforms", "android", "app", "src", "main",
@@ -264,8 +306,9 @@ class AndroidRuntimeTests(TnsTest):
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False).output
 
         assert "FAILURE: Build failed with an exception" in log
+        # https://github.com/NativeScript/android-runtime/issues/1405
         assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
-               "java.util.List in file: main-page" in log
+               "java.util.List in file: bundle.js" in log
         assert "Execution failed for task ':app:runSbg'" in log
 
     def test_440_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
@@ -443,7 +486,52 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, "Warnings are shown when building android app! Logs: " + log.output
 
-    def test_446_test_ES6_support(self):
+    def test_446_test_print_stack_trace_in_release_and_debug(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1359
+        """
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1359',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        strings = ['Successfully synced application', 'Successfully installed on device with identifier']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
+        Adb.clear_logcat(self.emulator.id)
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        error_message_tns_logs = 'System.err: An uncaught Exception occurred on "main" thread.'
+        test_result = Wait.until(lambda: error_message_tns_logs in File.read(log.log_file), timeout=45, period=5)
+        assert test_result, 'Error message in tns logs not found! Logs:' + File.read(log.log_file)
+
+        system_error_message = 'System.err: An uncaught Exception occurred on "main" thread.'
+        log_cat = Adb.get_logcat(self.emulator.id)
+        test_result = Wait.until(lambda: system_error_message in log_cat,
+                                 timeout=15, period=5)
+        assert test_result, 'Error message in tns log cat not found! Logs:' + log_cat
+
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False, release=True)
+        strings = ['Project successfully built', 'Successfully installed on device with identifier']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
+        Adb.clear_logcat(self.emulator.id)
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        error_message_tns_logs = 'System.err: An uncaught Exception occurred on "main" thread.'
+        test_result = Wait.until(lambda: error_message_tns_logs not in File.read(log.log_file), timeout=45, period=5)
+        assert test_result, 'Error message in tns logs not found! Logs:' + File.read(log.log_file)
+
+        system_error_message = 'System.err: An uncaught Exception occurred on "main" thread.'
+        log_cat = Adb.get_logcat(self.emulator.id)
+        test_result = Wait.until(lambda: system_error_message not in log_cat,
+                                 timeout=15, period=5)
+        assert test_result, 'Error message in tns log cat should be shown! Logs:' + log_cat
+
+    def test_500_test_ES6_support(self):
         """
          https://github.com/NativeScript/android-runtime/issues/1375
         """
