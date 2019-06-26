@@ -105,11 +105,11 @@ class Preview(object):
         Log.info('Open "{0}" on {1}.'.format(url, device.name))
         if device.type == DeviceType.EMU or device.type == DeviceType.ANDROID:
             cmd = 'shell am start -a android.intent.action.VIEW -d "{0}" org.nativescript.preview'.format(url)
-            result = Adb.run_adb_command(command=cmd, device_id=device.id)
-            assert 'error' not in result.output
+            output = Adb.run_adb_command(command=cmd, device_id=device.id).output
+            assert 'error' not in output, 'Failed to open URL!' + os.linesep + 'Error:' + os.linesep + output
         elif device.type == DeviceType.SIM:
-            result = Simctl.run_simctl_command(command='openurl {0} {1}.'.format(device.id, url))
-            assert 'error' not in result.output
+            output = Simctl.run_simctl_command(command='openurl {0} {1}.'.format(device.id, url)).output
+            assert 'error' not in output, 'Failed to open URL!' + os.linesep + 'Error:' + os.linesep + output
         else:
             raise NotImplementedError('Open url not implemented for real iOS devices.')
 
