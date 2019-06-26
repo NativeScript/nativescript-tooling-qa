@@ -78,3 +78,4 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)
     if appium is not None:
         appium.driver.quit()
+        appium.quit()
