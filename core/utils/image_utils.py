@@ -144,7 +144,10 @@ class ImageUtils(object):
                     temp_text = "".join([s for s in temp_text.splitlines(True) if s.strip()])
                     temp_text = temp_text.encode(encoding='utf-8', errors='ignore')
                     if temp_text not in text:
-                        text = text + os.linesep + temp_text
+                        if Settings.PYTHON_VERSION < 3:
+                            text = text + os.linesep + temp_text
+                        else:
+                            text = text + str.encode(os.linesep) + temp_text
         if Settings.PYTHON_VERSION < 3:
             return text
         else:
