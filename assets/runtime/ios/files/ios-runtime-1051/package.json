@@ -1,6 +1,8 @@
 {
-  "name": "hello-world-js",
   "main": "app.js",
-  "version": "1.7.0",
-  "discardUncaughtJsExceptions": true
+  "discardUncaughtJsExceptions": true,
+  "android": {
+    "v8Flags": "--expose_gc",
+    "markingMode": "none"
+  }
 }
