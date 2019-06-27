@@ -30,7 +30,7 @@ class Simctl(object):
     def start(simulator_info):
         if simulator_info.id is not None:
             Simctl.run_simctl_command(command='boot {0}'.format(simulator_info.id))
-            Simctl.wait_until_boot(simulator_info)
+            assert Simctl.wait_until_boot(simulator_info), 'Failed to boot "{0}".'.format(simulator_info.id)
             return simulator_info
         else:
             raise Exception('Can not boot iOS simulator if udid is not specified!')
@@ -84,7 +84,7 @@ class Simctl(object):
             device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
         sims = devices[device_key]
         for sim in sims:
-            if sim['name'] == simulator_info.name:
+            if sim['name'] == simulator_info.name and sim['availability'] == u'(available)':
                 simulator_info.id = str(sim['udid'])
                 return simulator_info
         return False

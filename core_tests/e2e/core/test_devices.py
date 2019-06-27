@@ -1,5 +1,8 @@
+import unittest
+
 from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from core.utils.device.emulator_info import EmulatorInfo
@@ -30,7 +33,6 @@ class DeviceTests(TnsTest):
         assert emu.id == Settings.Emulators.DEFAULT.emu_id, 'Emulator should be booted on specified port.'
         assert emu.name == Settings.Emulators.DEFAULT.avd, 'Device name should match avd name from settings.'
         assert emu.version == Settings.Emulators.DEFAULT.os_version, 'Device version should match os_version.'
-        assert emu.type == DeviceType.EMU
 
         # Verify Emulator.is_running returns true if emu is running
         valid_emu = EmulatorInfo(avd=Settings.Emulators.DEFAULT.avd,
@@ -55,6 +57,15 @@ class DeviceTests(TnsTest):
 
         is_running = DeviceManager.Emulator.is_running(wrong_version_emu)
         assert is_running is False, 'Emulator.is_running() should return false if os_version is different.'
+
+    @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
+    def test_002_simulator(self):
+        assert DeviceManager.Simulator.is_available(Settings.Simulators.DEFAULT)
+        sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+        assert sim.type == DeviceType.SIM, 'Device should be of type DeviceType.EMU'
+        assert sim.id is not None, 'Sim ID should not be none.'
+        assert sim.name == Settings.Simulators.DEFAULT.name, 'Device name should match avd name from settings.'
+        assert sim.version == Settings.Simulators.DEFAULT.sdk, 'Device version should match os_version.'
 
     def test_100_detect_available_emulators(self):
         # Verify Emulator.is_available() return correct result
