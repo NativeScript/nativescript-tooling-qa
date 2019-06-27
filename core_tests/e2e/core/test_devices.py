@@ -61,11 +61,6 @@ class DeviceTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_002_simulator(self):
         assert DeviceManager.Simulator.is_available(Settings.Simulators.DEFAULT)
-        sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
-        assert sim.type == DeviceType.SIM, 'Device should be of type DeviceType.EMU'
-        assert sim.id is not None, 'Sim ID should not be none.'
-        assert sim.name == Settings.Simulators.DEFAULT.name, 'Device name should match avd name from settings.'
-        assert sim.version == Settings.Simulators.DEFAULT.sdk, 'Device version should match os_version.'
 
     def test_100_detect_available_emulators(self):
         # Verify Emulator.is_available() return correct result
