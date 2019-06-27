@@ -89,4 +89,3 @@ class SBGTests(TnsTest):
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False).output
         test_result = Wait.until(lambda: "Project successfully built." in log, timeout=300, period=5)
         assert test_result, 'App not build correct! Logs:' + log
-        Folder.clean(new_folder)
