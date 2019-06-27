@@ -1,4 +1,4 @@
-var application = require("application");
+const application = require("tns-core-modules/application");
 
 global.__onDiscardedError = function(error){
     console.log(error.message);
@@ -8,5 +8,5 @@ global.__onDiscardedError = function(error){
     console.log(error.nativeException);
 }
 
-application.start({ moduleName: "main-page" });
+application.run({ moduleName: "app-root" });
 
