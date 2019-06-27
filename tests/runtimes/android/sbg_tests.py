@@ -87,7 +87,6 @@ class SBGTests(TnsTest):
         const dataToCopy = [dataInfo];"""
         File.replace(path=webpack_config, old_string=old_string, new_string=new_string, backup_files=False)
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False).output
-        test_result = Wait.until(lambda: "Project successfully built." in log, timeout=300,  period=5)
+        test_result = Wait.until(lambda: "Project successfully built." in log, timeout=300, period=5)
         assert test_result, 'App not build correct! Logs:' + log
         Folder.clean(new_folder)
-
