@@ -70,7 +70,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Make changes in xml that will break the app
         Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
-        strings = ['main-page.xml', 'Error: Parsing XML']
+        strings = ['main-page.xml', 'Error: Building UI from XML']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
 
@@ -113,7 +113,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Make changes in xml that will break the app
         Sync.replace(self.app_name, Changes.JSHelloWord.XML_INVALID)
-        strings = ['main-page.xml', 'Error: Parsing XML']
+        strings = ['main-page.xml', 'Error: Building UI from XML']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         # Revert changes
