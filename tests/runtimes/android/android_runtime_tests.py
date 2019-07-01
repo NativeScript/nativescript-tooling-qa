@@ -176,7 +176,7 @@ JS: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1122)
 JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1109)
 JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1089)
 JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1081)
-"""
+"""  # noqa: E501
         stack_trace_first_second = """JS: 	at android.view.View.performClick(View.java:5198)
 JS: 	at android.view.View$PerformClick.run(View.java:21147)
 JS: 	at android.os.Handler.handleCallback(Handler.java:739)
