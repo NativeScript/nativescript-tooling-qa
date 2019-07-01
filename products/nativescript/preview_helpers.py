@@ -2,12 +2,12 @@ import os
 import re
 import time
 
+from products.nativescript.tns import Tns
+from products.nativescript.tns_logs import TnsLogs
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
 from core.enums.os_type import OSType
 from core.log.log import Log
-from products.nativescript.tns import Tns
-from products.nativescript.tns_logs import TnsLogs
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
 from core.utils.device.adb import Adb
