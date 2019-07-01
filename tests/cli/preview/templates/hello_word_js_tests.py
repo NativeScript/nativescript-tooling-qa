@@ -69,7 +69,7 @@ class PreviewJSTests(TnsPreviewJSTests):
     def test_100_preview_ios(self):
         """Preview project on simulator. Make valid changes in JS, CSS and XML"""
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
-                                       device=self.sim)
+                                       device=self.sim, click_open_alert=True)
 
     def test_205_preview_android_no_hmr(self):
         """Preview project on emulator with --no-hmr. Make valid changes in JS, CSS and XML"""

@@ -2,8 +2,11 @@ import os
 import re
 import time
 
+from products.nativescript.tns import Tns
+from products.nativescript.tns_logs import TnsLogs
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
+from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
@@ -11,8 +14,8 @@ from core.utils.device.adb import Adb
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File
 from core.utils.run import run
-from products.nativescript.tns import Tns
-from products.nativescript.tns_logs import TnsLogs
+if Settings.HOST_OS is OSType.OSX:
+    from core.utils.device.simauto import SimAuto
 
 
 class Preview(object):
@@ -132,11 +135,9 @@ class Preview(object):
         # When you run preview on ios simulator on first run confirmation dialog is shown.
         if device.type == DeviceType.SIM:
             if click_open_alert is True:
-                time.sleep(5)
-                device.click("Open")
-            else:
-                time.sleep(2)
-                Preview.dismiss_simulator_alert()
+                if SimAuto.find(device_info=device, text="Open"):
+                    time.sleep(5)
+                    device.click("Open")
 
         # Verify logs
         strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
