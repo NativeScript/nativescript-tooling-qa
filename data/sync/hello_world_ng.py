@@ -102,7 +102,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, instrumented=False, 
+def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, instrumented=False,
                            click_open_alert=False):
     result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
                              device=device, instrumented=instrumented, click_open_alert=click_open_alert)

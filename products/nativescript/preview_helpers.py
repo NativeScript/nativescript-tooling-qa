@@ -12,11 +12,10 @@ from core.utils.device.adb import Adb
 from core.utils.device.simctl import Simctl
 from core.utils.file_utils import File
 from core.utils.run import run
-from products.nativescript.tns import Tns
-from products.nativescript.tns_logs import TnsLogs
-
 if Settings.HOST_OS is OSType.OSX:
     from core.utils.device.simauto import SimAuto
+from products.nativescript.tns import Tns
+from products.nativescript.tns_logs import TnsLogs
 
 
 class Preview(object):
