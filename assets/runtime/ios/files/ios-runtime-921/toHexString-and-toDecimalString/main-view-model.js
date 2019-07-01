@@ -1,4 +1,4 @@
-var Observable = require("data/observable").Observable;
+const Observable = require("tns-core-modules/data/observable").Observable;
 
 function getMessage() {
     console.log("### TEST START ###");
@@ -12,7 +12,7 @@ function getMessage() {
 }
 
 function createViewModel() {
-    var viewModel = new Observable();
+    const viewModel = new Observable();
     viewModel.message = getMessage();
 
     viewModel.onTap = function() {
