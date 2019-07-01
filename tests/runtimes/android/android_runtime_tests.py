@@ -531,6 +531,48 @@ JS: ### Stack Trace End"""  # noqa: E501
                                  timeout=15, period=5)
         assert test_result, 'Error message in tns log cat should be shown! Logs:' + log_cat
 
+    def test_447_test_worker_post_message(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1408
+        """
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1408',
+                                 'main-page.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1408',
+                                 'worker.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'worker.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        correct_object = """JS: ==== object dump start ====
+JS: id: "1"
+JS: data: {
+JS:   "Hi": "Hi",
+JS:   "table1": [
+JS:     {
+JS:       "blah": "a"
+JS:     },
+JS:     {
+JS:       "blah": "a"
+JS:     }
+JS:   ],
+JS:   "table2": [
+JS:     {
+JS:       "blah": "a"
+JS:     }
+JS:   ]
+JS: }
+JS: data2: "{"Hi":"Hi","table1":[{"blah":"a"},{"blah":"a"}],"table2":[{"blah":"a"}]}"
+JS: ==== object dump end ===="""
+        strings = ['Successfully synced application', 'Successfully installed on device with identifier']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
+        test_result = Wait.until(lambda: correct_object in File.read(log.log_file), timeout=30, period=5)
+        assert test_result, 'Worker PostMessage Data is not correct! Logs:' + File.read(log.log_file)
+
     def test_500_test_ES6_support(self):
         """
          https://github.com/NativeScript/android-runtime/issues/1375
