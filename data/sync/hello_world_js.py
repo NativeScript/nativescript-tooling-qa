@@ -151,7 +151,8 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
+def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, instrumented=False,
+                              click_open_alert=False):
     result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
                              device=device, instrumented=instrumented, click_open_alert=click_open_alert)
 
@@ -164,7 +165,8 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True,
     return result
 
 
-def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
+def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, hmr=True, instrumented=False,
+                                   click_open_alert=False):
     result = preview_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
                                        instrumented=instrumented, click_open_alert=click_open_alert)
 
