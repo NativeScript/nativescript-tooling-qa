@@ -491,7 +491,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify run --clean without changes skip prepare and rebuild of native project
 
         result = Tns.run_android(app_name=self.app_name, verify=True, device=self.emu.id, clean=True, just_launch=True)
-        strings = ['Preparing project', 'Building project', 'Gradle clean']
+        strings = ['Preparing project', 'Building project', 'Gradle clean', 'Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
 
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
@@ -525,12 +525,8 @@ class TnsRunJSTests(TnsRunTest):
 
         # Verify run --clean without changes rebuilds native project
         result = Tns.run_ios(app_name=self.app_name, verify=True, device=self.sim.id, clean=True, just_launch=True)
-        strings = ['Building project', 'Xcode build...']
-        not_existing_strings = ['Successfully transferred bundle.js on device',
-                                'Successfully transferred package.json on device',
-                                'Successfully transferred vendor.js on device']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings, timeout=120)
+        strings = ['Building project', 'Xcode build...', 'Successfully synced application']
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
         # Verify if changes are applied and then run with clean it will apply changes on device
