@@ -177,7 +177,7 @@ JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1109)
 JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1089)
 JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1081)
 """  # noqa: E501
-        stack_trace_first_second = """JS: 	at android.view.View.performClick(View.java:5198)
+        stack_trace_second_part = """JS: 	at android.view.View.performClick(View.java:5198)
 JS: 	at android.view.View$PerformClick.run(View.java:21147)
 JS: 	at android.os.Handler.handleCallback(Handler.java:739)
 JS: 	at android.os.Handler.dispatchMessage(Handler.java:95)
@@ -192,7 +192,7 @@ JS: 	... 16 more
 JS: ### Stack Trace End"""  # noqa: E501
         strings = ["Error: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
                    "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
-                   stack_trace_first_part, stack_trace_first_second]
+                   stack_trace_first_part, stack_trace_second_part]
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=20,
                                  period=5)
