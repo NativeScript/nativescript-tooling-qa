@@ -4,6 +4,7 @@ import time
 
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
+from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME
