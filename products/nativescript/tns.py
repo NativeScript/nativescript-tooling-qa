@@ -25,7 +25,7 @@ class Tns(object):
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=None, bundle=True,
                      hmr=True, aot=False, uglify=False, source_map=False, snapshot=False, log_trace=False,
-                     just_launch=False, sync_all_files=False, clean=False,
+                     just_launch=False, sync_all_files=False, clean=False, aab=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -93,6 +93,8 @@ class Tns(object):
             cmd += ' --clean'
         if sync_all_files:
             cmd += ' --syncAllFiles'
+        if aab:
+            cmd += ' --aab'
         if log_trace:
             cmd += ' --log trace'
         if options:
@@ -318,10 +320,10 @@ class Tns(object):
 
     @staticmethod
     def build(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
-              aot=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None):
+              aot=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None, aab=False):
         result = Tns.exec_command(command='build', path=app_name, platform=platform, release=release,
                                   provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
-                                  snapshot=snapshot, wait=True, log_trace=log_trace)
+                                  snapshot=snapshot, wait=True, log_trace=log_trace, aab=aab)
         if verify:
             # Verify output
             assert result.exit_code == 0, 'Build failed with non zero exit code.'
@@ -345,9 +347,10 @@ class Tns(object):
 
     @staticmethod
     def build_android(app_name, release=False, bundle=True, aot=False, uglify=False, snapshot=False, log_trace=False,
-                      verify=True, app_data=None):
+                      verify=True, app_data=None, aab=False):
         return Tns.build(app_name=app_name, platform=Platform.ANDROID, release=release, bundle=bundle, aot=aot,
-                         uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify, app_data=app_data)
+                         uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify, app_data=app_data,
+                         aab=aab)
 
     @staticmethod
     def build_ios(app_name, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
