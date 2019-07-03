@@ -77,7 +77,7 @@ def sync_plugin_common(app_name, app_type, platform, device, log_result, hmr=Tru
     TnsLogs.wait_for_log(log_file=log_result.log_file, string_list=strings, timeout=60)
     # Click on datepicker field and verify new value of picker is applied
     device.click(text="DatePickerField")
-    today = datetime.date.today().strftime("%b %d, %Y")
+    today = datetime.date.today().strftime("%b %-d, %Y")
     device.wait_for_text(today)
 
 
@@ -100,5 +100,5 @@ def sync_plugin_platform_spec(app_name, app_type, log_result, platform, device, 
     device.click(text="select date")
     device.click(text="OK")
     date = datetime.date.today().replace(year=2010)
-    date = date.strftime("%b %d, %Y")
+    date = date.strftime("%b %-d, %Y")
     device.wait_for_text(str(date))
