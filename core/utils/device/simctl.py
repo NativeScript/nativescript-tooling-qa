@@ -167,7 +167,7 @@ class Simctl(object):
     def get_log_file(device_id):
         command = 'spawn {0} log stream --level=debug'.format(device_id)
         Process.kill_by_commandline(command)
-        log_file = Simctl.run_simctl_command(command=command.format(device_id), wait=False).log_file
+        log_file = Simctl.run_simctl_command(command=command, wait=False).log_file
         if File.exists(log_file):
             Log.debug('Log of {0} redirected to {1}'.format(device_id, log_file))
             return log_file

@@ -27,7 +27,7 @@ else:
 def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False, register=True,
         log_level=logging.DEBUG):
     # Init result values
-    time_string = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+    time_string = datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
     log_file = os.path.join(Settings.TEST_OUT_LOGS, 'command_{0}.txt'.format(time_string))
     complete = False
     duration = None
