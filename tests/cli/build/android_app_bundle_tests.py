@@ -56,7 +56,7 @@ class AndroidAppBundleTests(TnsRunTest):
                                                                 Android.ANDROID_KEYSTORE_ALIAS,
                                                                 Android.ANDROID_KEYSTORE_ALIAS_PASS)
         result = run(build_command)
-        assert  "Error" not in result.output, "create of .apks file failed"
+        assert "Error" not in result.output, "create of .apks file failed"
 
     @staticmethod
     def bundletool_deploy(bundletool_path, path_to_apks, device_id):
@@ -73,8 +73,8 @@ class AndroidAppBundleTests(TnsRunTest):
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs",
                                    "bundle", "debug", "app.aab")
 
-        result = Tns.build_android(self.app_path, aab=True, verify=False)
-        # There is an issue at the moment that the path is not shown in log. 
+        Tns.build_android(self.app_path, aab=True, verify=False)
+        # There is an issue at the moment that the path is not shown in log.
         # TODO: uncomment this when the issue is fixed
         # assert "The build result is located at:" in result.output
         # assert path_to_aab in result.output
@@ -112,11 +112,10 @@ class AndroidAppBundleTests(TnsRunTest):
         File.replace(webpack_config, 'webpackConfig: config,', """webpackConfig: config,
             targetArchs: [\"arm\", \"arm64\", \"ia32\"],
             useLibs: true,
-			androidNdkPath: \"$ANDROID_NDK_HOME\"""")
+		    androidNdkPath: \"$ANDROID_NDK_HOME\"""")
 
         # env.snapshot is applicable only in release build
-        build_command = 'build android --path {0} --aab --release'.format(self.app_path)
-        result = Tns.build_android(self.app_path, aab=True, release=True, snapshot=True,
+        tns.build_android(self.app_path, aab=True, release=True, snapshot=True,
                                    uglify=True, verify=False)
         # There is an issue at the moment that the path is not shown in log.
         # TODO: uncomment this when the issue is fixed
@@ -132,7 +131,7 @@ class AndroidAppBundleTests(TnsRunTest):
         # Verify that the correct .so file is included in the package
         File.unzip(self.path_to_apks, os.path.join(self.app_name, 'apks'))
         File.unzip(os.path.join(self.app_name, 'apks', 'splits', 'base-x86.apk'),
-                                os.path.join(self.app_name,'base_apk'))
+                                os.path.join(self.app_name, 'base_apk'))
         assert File.exists(os.path.join(self.app_name, 'base_apk', 'lib', 'x86', 'libNativeScript.so'))
 
         # Deploy on device
@@ -143,4 +142,3 @@ class AndroidAppBundleTests(TnsRunTest):
 
         # Verify app looks correct inside emulator
         self.emu.wait_for_text(text='TAP')
-
