@@ -210,7 +210,7 @@ class ChromeDevTools(object):
         pyautogui.typewrite(new_text, interval=0.25)
         sleep(0.5)
         pyautogui.press('enter')
-        sleep(0.5)
+        sleep(1)
         Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))
 
     def doubleclick_line(self, text):
@@ -222,6 +222,7 @@ class ChromeDevTools(object):
         assert line is not None, "Failed to find line with text " + text
         x, y = self.chrome.get_absolute_center(line)
         pyautogui.doubleClick(x, y)
+        sleep(1)
         Log.info('Double click line with text "{0}".'.format(text))
 
     def __clean_console(self):
