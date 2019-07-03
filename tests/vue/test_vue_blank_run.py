@@ -39,7 +39,7 @@ class VueJSHelloWorldTests(TnsRunTest):
         Folder.copy(source=source_src, target=target_src)
 
     def test_100_run_android(self):
-        sync_blank_vue(self.app_name, Platform.ANDROID, self.emu, hmr=False)
+        sync_blank_vue(self.app_name, Platform.ANDROID, self.emu)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_run_ios(self):
