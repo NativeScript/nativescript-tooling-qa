@@ -274,7 +274,7 @@ class ChromeDevTools(object):
         for _ in range(1, 25):
             actions.send_keys(Keys.BACKSPACE).perform()
         actions.send_keys(expression).perform()
-        sleep(1)
+        sleep(3)
         Log.info('Add watch expression: {0}'.format(expression))
 
         # Refresh
