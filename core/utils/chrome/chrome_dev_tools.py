@@ -74,6 +74,7 @@ class ChromeDevTools(object):
         if 'toolbar-state-on' in button.get_attribute("class"):
             Log.info('Expand dev tools main pannel.')
             button.click()
+            sleep(1)
         else:
             Log.info('Dev tools main panel already expanded.')
 
@@ -105,6 +106,7 @@ class ChromeDevTools(object):
         Log.info('Navigate to {0}.'.format(str(tab)))
         element = self.main_panel.find_element(By.ID, str(tab))
         element.click()
+        sleep(1)
         self.__refresh_main_panel()
         if verify:
             if tab == ChromeDevToolsTabs.SOURCES:
@@ -145,13 +147,21 @@ class ChromeDevTools(object):
         popup = self.__get_shadow_element_in_shadow_dom(".vbox.flex-auto", shadow_root)
         search_box = popup.find_element(By.CSS_SELECTOR, "span > div > div")
         search_box.click()
+        sleep(1)
         search_box.clear()
+        sleep(1)
         search_box.send_keys(file_name)
+        sleep(1)
         search_box.click()
+        sleep(1)
         search_box.clear()
+        sleep(1)
         search_box.send_keys(file_name)
+        sleep(1)
         search_box.click()
+        sleep(1)
         search_box.send_keys(Keys.ENTER)
+        sleep(1)
 
     def breakpoint(self, line):
         """
@@ -165,6 +175,7 @@ class ChromeDevTools(object):
         length = len(lines)
         assert len(lines) >= line, "Line {0} not found! Total lines of code: {1}".format(str(line), str(length))
         lines[line - 1].click()
+        sleep(1)
         Log.info("Toggle breakpoint on line {0}".format(str(line)))
 
     def continue_debug(self):
@@ -176,6 +187,7 @@ class ChromeDevTools(object):
         button = debug_panel.find_element(By.CSS_SELECTOR, "button[aria-label='Pause script execution']")
         assert 'toolbar-state-on' in button.get_attribute("class"), "Continue button not enabled!"
         button.click()
+        sleep(1)
 
     def __find_line_by_text(self, text):
         shadow_dom_element = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='elements-content'] > div")
@@ -204,11 +216,11 @@ class ChromeDevTools(object):
         assert span is not None, "Failed to find element with text " + old_text
         x, y = self.chrome.get_absolute_center(span)
         pyautogui.click(x, y, clicks=3, interval=0.1)
-        sleep(0.5)
+        sleep(1)
         pyautogui.doubleClick(x, y)
-        sleep(0.5)
+        sleep(1)
         pyautogui.typewrite(new_text, interval=0.25)
-        sleep(0.5)
+        sleep(1)
         pyautogui.press('enter')
         sleep(1)
         Log.info('Replace "{0}" with "{1}".'.format(old_text, new_text))
@@ -233,6 +245,7 @@ class ChromeDevTools(object):
         root_element = self.__expand_shadow_element(root_holder)
         button = root_element.find_element(By.CSS_SELECTOR, "button[aria-label='Clear console']")
         button.click()
+        sleep(1)
 
     def type_on_console(self, text, clear_console=True):
         """
@@ -245,6 +258,7 @@ class ChromeDevTools(object):
         console = self.chrome.driver.find_element(By.CSS_SELECTOR, "div[id='console-prompt']")
         actions = ActionChains(self.chrome.driver)
         actions.click(console).perform()
+        sleep(1)
         for _ in range(1, 25):
             actions.send_keys(Keys.BACKSPACE).perform()
         actions.send_keys(text).perform()
@@ -265,6 +279,7 @@ class ChromeDevTools(object):
         if 'true' not in str(expander.get_attribute("aria-expanded")):
             Log.info('Expand watch expression bar.')
             expander.click()
+            sleep(1)
 
         # Add expression
         tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
@@ -272,6 +287,7 @@ class ChromeDevTools(object):
         tool_bar = self.__expand_shadow_element(tool_bar_holder)
         add_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Add expression']")
         add_button.click()
+        sleep(1)
         for _ in range(1, 25):
             actions.send_keys(Keys.BACKSPACE).perform()
         actions.send_keys(expression).perform()
@@ -299,4 +315,5 @@ class ChromeDevTools(object):
         root = self.__expand_shadow_element(toolbar)
         button = root.find_element(By.CSS_SELECTOR, "button[aria-label='Clear']")
         button.click()
+        sleep(1)
         Log.info("Clear Network tab.")
