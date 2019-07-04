@@ -12,7 +12,6 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-
 class AndroidAppBundleTests(TnsRunTest):
 
     app_name = AppName.DEFAULT
