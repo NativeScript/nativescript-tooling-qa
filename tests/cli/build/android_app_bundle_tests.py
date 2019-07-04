@@ -3,13 +3,14 @@ import urllib
 import unittest
 from core.enums.os_type import OSType
 from core.utils.file_utils import Folder, File
-from data.templates import Template
+from core.utils.device.adb import Adb
+from core.utils.run import run
 from core.base_test.tns_run_test import TnsRunTest
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android, IOS, HOST_OS
+from data.templates import Template
 from products.nativescript.tns import Tns
-from core.utils.device.adb import Adb
-from core.utils.run import run
+
 
 
 class AndroidAppBundleTests(TnsRunTest):
