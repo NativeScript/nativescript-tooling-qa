@@ -280,6 +280,11 @@ class ChromeDevTools(object):
             Log.info('Expand watch expression bar.')
             expander.click()
             sleep(1)
+            # if expand detect watch bar holder again
+            watch_bar_holder = self.chrome.driver \
+                .find_element(By.CSS_SELECTOR, "div[aria-label='sources']") \
+                .find_element(By.CSS_SELECTOR, "div[class='widget vbox'][slot='insertion-point-sidebar']") \
+                .find_elements(By.CSS_SELECTOR, "div[class='vbox flex-auto flex-none']")[0]
 
         # Add expression
         tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
