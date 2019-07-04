@@ -93,7 +93,7 @@ class BuildTests(TnsTest):
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
     def test_002_build_android_release(self):
-        Tns.build_android(self.app_name, release=True)
+        Tns.build_android(self.app_name, release=True, source_map=True, uglify=True, aot=True)
 
         # Configs are respected
         assert File.exists(TnsPaths.get_apk_path(self.app_name, release=True))
@@ -102,6 +102,12 @@ class BuildTests(TnsTest):
         command = "tar -czf " + self.app_name + "/app/app.tar.gz " + self.app_name + "/app/app.js"
         run(cmd=command, cwd=Settings.TEST_RUN_HOME, wait=True)
         assert File.exists(os.path.join(self.app_path, 'app', 'app.tar.gz'))
+
+    def test_100_build_snapshot_uglify_release_aot_sourceMap(self):
+        #https://github.com/NativeScript/nativescript-dev-webpack/issues/920
+        result = Tns.build_android(self.app_name, release=True, aot=True, uglify=True, snapshot=True, source_map=True)
+        assert not "ERROR in NativeScriptSnapshot. Snapshot generation failed!" in result.output
+        assert not "Target architecture: arm64-v8a" in result.output
 
     def test_301_build_project_with_space_release(self):
 
