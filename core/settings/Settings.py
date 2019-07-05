@@ -30,7 +30,7 @@ def get_env():
     elif 'rc' in env:
         return EnvironmentType.RC
     elif 'pr' in env:
-        return EnvironmentType.LIVE
+        return EnvironmentType.PR
     else:
         return EnvironmentType.LIVE
 
@@ -111,6 +111,9 @@ class Packages(object):
     TYPESCRIPT = resolve_package(name='nativescript-dev-typescript', variable='nativescript_dev_typescript')
     SASS = resolve_package(name='nativescript-dev-sass', variable='nativescript_dev_sass')
 
+    # Templates branch
+    TEMPLATES_BRANCH = os.environ.get('templates_branch', 'master')
+
 
 # noinspection SpellCheckingInspection
 class Android(object):
@@ -151,6 +154,9 @@ class Emulators(object):
                               emu_id='emulator-5564')
     EMU_API_28 = EmulatorInfo(avd=os.environ.get('EMU_API_28', 'Emulator-Api28-Google'), os_version=9.0, port='5566',
                               emu_id='emulator-5566')
+    EMU_API_29 = EmulatorInfo(avd=os.environ.get('EMU_API_29', 'Emulator-Api29-Google'), os_version=10.0, port='5568',
+                              emu_id='emulator-5568')
+
     DEFAULT = EMU_API_23
 
 
@@ -158,7 +164,8 @@ class Simulators(object):
     SIM_IOS10 = SimulatorInfo(name=os.environ.get('SIM_IOS10', 'iPhone7_10'), device_type='iPhone 7', sdk=10.0)
     SIM_IOS11 = SimulatorInfo(name=os.environ.get('SIM_IOS11', 'iPhone7_11'), device_type='iPhone 7', sdk=11.2)
     SIM_IOS12 = SimulatorInfo(name=os.environ.get('SIM_IOS12', 'iPhoneXR_12'), device_type='iPhone XR', sdk=12.0)
-    DEFAULT = SIM_IOS11
+    SIM_IOS13 = SimulatorInfo(name=os.environ.get('SIM_IOS13', 'iPhoneXR_13'), device_type='iPhone XR', sdk=13.0)
+    DEFAULT = SIM_IOS12
 
 
 class AppName(object):

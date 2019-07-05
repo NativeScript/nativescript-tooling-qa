@@ -97,11 +97,11 @@ class Adb(object):
         :return: True if running, False if not running.
         """
         if Settings.HOST_OS is OSType.WINDOWS:
-            command = "shell dumpsys window windows | findstr mCurrentFocus"
+            command = "shell dumpsys window windows | findstr mSurface"
         else:
-            command = "shell dumpsys window windows | grep -E 'mCurrentFocus'"
+            command = "shell dumpsys window windows | grep -E 'mSurface'"
         result = Adb.run_adb_command(command=command, device_id=device_id, timeout=10, fail_safe=True)
-        return bool('Window' in result.output)
+        return bool('mSurface=Surface' in result.output)
 
     @staticmethod
     def wait_until_boot(device_id, timeout=180, check_interval=3):
