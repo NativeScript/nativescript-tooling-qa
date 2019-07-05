@@ -49,7 +49,10 @@ class TnsTest(unittest.TestCase):
             if Xcode.get_version() < 10:
                 Settings.Simulators.DEFAULT = Settings.Simulators.SIM_IOS11
             else:
-                Settings.Simulators.DEFAULT = Settings.Simulators.SIM_IOS12
+                if Xcode.get_version() < 11:
+                    Settings.Simulators.DEFAULT = Settings.Simulators.SIM_IOS12
+                else:
+                    Settings.Simulators.DEFAULT = Settings.Simulators.SIM_IOS13
 
     def setUp(self):
         TestContext.TEST_NAME = self._testMethodName
