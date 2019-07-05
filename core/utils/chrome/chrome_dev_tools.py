@@ -234,7 +234,7 @@ class ChromeDevTools(object):
         assert line is not None, "Failed to find line with text " + text
         x, y = self.chrome.get_absolute_center(line)
         pyautogui.doubleClick(x, y)
-        sleep(1)
+        sleep(2)
         Log.info('Double click line with text "{0}".'.format(text))
 
     def __clean_console(self):
@@ -279,7 +279,7 @@ class ChromeDevTools(object):
         if 'true' not in str(expander.get_attribute("aria-expanded")):
             Log.info('Expand watch expression bar.')
             expander.click()
-            sleep(1)
+            sleep(2)
 
         # Add expression
         tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
@@ -291,13 +291,10 @@ class ChromeDevTools(object):
         for _ in range(1, 25):
             actions.send_keys(Keys.BACKSPACE).perform()
         actions.send_keys(expression).perform()
+        sleep(1)
+        actions.send_keys(Keys.ENTER).perform()
         sleep(3)
         Log.info('Add watch expression: {0}'.format(expression))
-
-        # Refresh
-        refresh_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Refresh']")
-        refresh_button.click()
-        sleep(1)
 
         # Verify result
         if expected_result is not None:
