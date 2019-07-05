@@ -58,7 +58,6 @@ class TemplateTests(TnsRunTest):
 
         # Create app
         app_name = template_info.name.replace('template-', '')
-        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         Tns.create(app_name=app_name, template='tns-' + template_name, update=False)
         if Settings.ENV != EnvironmentType.LIVE and Settings.ENV != EnvironmentType.PR:
             App.update(app_name=app_name)
