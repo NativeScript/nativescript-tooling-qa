@@ -1,5 +1,3 @@
-import os
-
 from parameterized import parameterized
 
 from core.base_test.tns_run_test import TnsRunTest
@@ -7,11 +5,7 @@ from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.device.adb import Adb
 from core.utils.device.simctl import Simctl
-from core.utils.file_utils import Folder, File
-from core.utils.gradle import Gradle
-from core.utils.npm import Npm
 from data.const import Colors
 from data.templates import Template
 from products.nativescript.app import App
@@ -58,21 +52,15 @@ class TemplateTests(TnsRunTest):
 
     @parameterized.expand(test_data)
     def test(self, template_name, template_info):
-        # Ensure template local package
-        template_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates', 'packages', template_name)
-        out_file = os.path.join(Settings.TEST_SUT_HOME, template_name + '.tgz')
-        Npm.pack(folder=template_folder, output_file=out_file)
-        assert File.exists(out_file), "Failed to pack template: " + template_name
+        TnsRunTest.setUp(self)
 
         # Create app
         app_name = template_info.name.replace('template-', '')
-        app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
-        Tns.create(app_name=app_name, template=template_info.local_package, update=False)
+        Tns.create(app_name=app_name, template='tns-' + template_name, update=False)
         if Settings.ENV != EnvironmentType.LIVE and Settings.ENV != EnvironmentType.PR:
             App.update(app_name=app_name)
 
         # Run Android
-        Adb.open_home(device_id=self.emu.id)
         result = Tns.run_android(app_name=app_name, device=self.emu.id)
         strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.FULL, platform=Platform.ANDROID)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
@@ -97,6 +85,4 @@ class TemplateTests(TnsRunTest):
                 self.sim.wait_for_main_color(color=Colors.WHITE, timeout=60)
 
         # Cleanup
-        Tns.kill()
-        Gradle.kill()
-        Folder.clean(app_path)
+        TnsRunTest.tearDown(self)
