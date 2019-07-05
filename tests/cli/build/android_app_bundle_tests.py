@@ -1,5 +1,4 @@
 import os
-import urllib
 import unittest
 from core.enums.os_type import OSType
 from core.utils.file_utils import Folder, File
@@ -38,7 +37,7 @@ class AndroidAppBundleTests(TnsRunTest):
 
         # Download bundletool
         url = 'https://github.com/google/bundletool/releases/download/0.10.0/bundletool-all-0.10.0.jar'
-        urllib.urlretrieve(url, os.path.join(TEST_SUT_HOME, 'bundletool.jar'))
+        File.download('bundletool.jar', url, TEST_SUT_HOME)
 
     def setUp(self):
         TnsRunTest.setUp(self)
