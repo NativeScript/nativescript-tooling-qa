@@ -1,5 +1,3 @@
-import os
-
 from parameterized import parameterized
 
 from core.base_test.tns_run_test import TnsRunTest
