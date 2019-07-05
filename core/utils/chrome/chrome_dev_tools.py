@@ -279,12 +279,7 @@ class ChromeDevTools(object):
         if 'true' not in str(expander.get_attribute("aria-expanded")):
             Log.info('Expand watch expression bar.')
             expander.click()
-            sleep(1)
-            # if expand detect watch bar holder again
-            watch_bar_holder = self.chrome.driver \
-                .find_element(By.CSS_SELECTOR, "div[aria-label='sources']") \
-                .find_element(By.CSS_SELECTOR, "div[class='widget vbox'][slot='insertion-point-sidebar']") \
-                .find_elements(By.CSS_SELECTOR, "div[class='vbox flex-auto flex-none']")[0]
+            sleep(2)
 
         # Add expression
         tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
@@ -300,11 +295,6 @@ class ChromeDevTools(object):
         actions.send_keys(Keys.ENTER).perform()
         sleep(3)
         Log.info('Add watch expression: {0}'.format(expression))
-
-        # Refresh
-        refresh_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Refresh']")
-        refresh_button.click()
-        sleep(1)
 
         # Verify result
         if expected_result is not None:
