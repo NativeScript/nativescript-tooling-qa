@@ -69,5 +69,7 @@ class Chrome(object):
         # Hack to respect macOS and Linux default toolbar on top
         if Settings.HOST_OS != OSType.WINDOWS:
             y = y + 25
+            if Settings.HOST_OS == OSType.LINUX:
+                x = x + 68
 
         return x, y
