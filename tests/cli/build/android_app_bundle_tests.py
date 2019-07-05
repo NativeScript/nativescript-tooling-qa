@@ -25,12 +25,7 @@ class AndroidAppBundleTests(TnsRunTest):
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        src = os.path.join(TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
-        target = os.path.join(cls.app_path, 'app')
-        File.copy(source=src, target=target)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Android.FRAMEWORK_PATH)
-        if HOST_OS is OSType.OSX:
-            Tns.platform_add_ios(app_name=cls.app_name, framework_path=IOS.FRAMEWORK_PATH)
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.app_path, target=cls.target_project_dir)
