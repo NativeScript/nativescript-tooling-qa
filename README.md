@@ -26,7 +26,7 @@ Install packages on macOS:
 ```bash
 pip install --upgrade -r requirements_darwin.txt --user 
 ```
-Install packages on Windows on Linux:
+Install packages on Windows or Linux:
 ```bash
 pip install --upgrade -r requirements.txt --user
 ```
