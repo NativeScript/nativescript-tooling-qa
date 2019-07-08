@@ -503,13 +503,17 @@ JS: ### Stack Trace End"""  # noqa: E501
         assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
         Adb.clear_logcat(self.emulator.id)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        error_message_tns_logs = 'System.err: An uncaught Exception occurred on "main" thread.'
+        error_message_tns_logs = """System.err: An uncaught Exception occurred on "main" thread.
+System.err: Calling js method onClick failed
+System.err: Error: test!
+System.err: StackTrace:"""
         test_result = Wait.until(lambda: error_message_tns_logs in File.read(log.log_file), timeout=45, period=5)
         assert test_result, 'Error message in tns logs not found! Logs:' + File.read(log.log_file)
 
-        system_error_message = 'System.err: An uncaught Exception occurred on "main" thread.'
+        system_error_message = ['System.err: An uncaught Exception occurred on "main" thread.',
+                                'System.err: StackTrace:']
         log_cat = Adb.get_logcat(self.emulator.id)
-        test_result = Wait.until(lambda: system_error_message in log_cat,
+        test_result = Wait.until(lambda: all(message in log_cat for message in system_error_message),
                                  timeout=15, period=5)
         assert test_result, 'Error message in tns log cat not found! Logs:' + log_cat
 
@@ -521,13 +525,11 @@ JS: ### Stack Trace End"""  # noqa: E501
         assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
         Adb.clear_logcat(self.emulator.id)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        error_message_tns_logs = 'System.err: An uncaught Exception occurred on "main" thread.'
         test_result = Wait.until(lambda: error_message_tns_logs not in File.read(log.log_file), timeout=45, period=5)
         assert test_result, 'Error message in tns logs not found! Logs:' + File.read(log.log_file)
 
-        system_error_message = 'System.err: An uncaught Exception occurred on "main" thread.'
         log_cat = Adb.get_logcat(self.emulator.id)
-        test_result = Wait.until(lambda: system_error_message not in log_cat,
+        test_result = Wait.until(lambda: all(message not in log_cat for message in system_error_message),
                                  timeout=15, period=5)
         assert test_result, 'Error message in tns log cat should be shown! Logs:' + log_cat
 

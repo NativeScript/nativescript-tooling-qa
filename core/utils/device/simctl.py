@@ -6,6 +6,7 @@ from core.log.log import Log
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
+from core.utils.xcode import Xcode
 
 
 # noinspection PyShadowingBuiltins
@@ -84,9 +85,14 @@ class Simctl(object):
             device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
         sims = devices[device_key]
         for sim in sims:
-            if sim['name'] == simulator_info.name and sim['availability'] == u'(available)':
-                simulator_info.id = str(sim['udid'])
-                return simulator_info
+            if Xcode.get_version() < 11.0:
+                if sim['name'] == simulator_info.name and sim['availability'] == u'(available)':
+                    simulator_info.id = str(sim['udid'])
+                    return simulator_info
+            else:
+                if sim['name'] == simulator_info.name and sim['isAvailable']:
+                    simulator_info.id = str(sim['udid'])
+                    return simulator_info
         return False
 
     @staticmethod

@@ -66,8 +66,10 @@ class Chrome(object):
         x = rel_x + element.size['width'] * 0.5
         y = rel_y + nav_panel_height + element.size['height'] * 0.5
 
-        # Hack to respect macOS default toolbar on top
-        if Settings.HOST_OS == OSType.OSX:
+        # Hack to respect macOS and Linux default toolbar on top
+        if Settings.HOST_OS != OSType.WINDOWS:
             y = y + 25
+            if Settings.HOST_OS == OSType.LINUX:
+                x = x + 68
 
         return x, y
