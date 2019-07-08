@@ -59,6 +59,8 @@ class PlaygroundDocSamples(TnsRunTest):
 
     @parameterized.expand(test_data)
     def test(self, name, url, text):
+        TnsRunTest.setUp(self)
+
         link = PlaygroundDocSamples.get_link(self.chrome, url)
         image_name = '{0}_{1}.png'.format(name, str(Platform.ANDROID))
         Preview.run_url(url=link, device=self.emu)
@@ -71,6 +73,8 @@ class PlaygroundDocSamples(TnsRunTest):
             Preview.dismiss_simulator_alert()
             self.sim.wait_for_text(text=text)
             self.sim.get_screen(os.path.join(Settings.TEST_OUT_IMAGES, image_name))
+
+        TnsRunTest.tearDown(self)
 
     # noinspection PyBroadException
     @staticmethod
