@@ -6,7 +6,7 @@ from core.utils.device.adb import Adb
 from core.utils.run import run
 from core.base_test.tns_run_test import TnsRunTest
 from core.settings import Settings
-from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android, IOS, HOST_OS
+from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
 from data.templates import Template
 from products.nativescript.tns import Tns
 
