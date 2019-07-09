@@ -7,6 +7,7 @@ from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.utils.appium.appium_driver import AppiumDriver
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import Folder, File
@@ -59,6 +60,7 @@ class TnsTest(unittest.TestCase):
         Log.test_start(test_name=TestContext.TEST_NAME)
         Tns.kill()
         Gradle.kill()
+        AppiumDriver.kill()
         TnsTest.__clean_backup_folder_and_dictionary()
 
     def tearDown(self):
@@ -66,6 +68,7 @@ class TnsTest(unittest.TestCase):
 
         # Kill processes
         Tns.kill()
+        AppiumDriver.kill()
         Gradle.kill()
         Process.kill_all_in_context()
         TnsTest.restore_files()
