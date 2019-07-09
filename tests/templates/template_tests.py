@@ -62,7 +62,7 @@ class TemplateTests(TnsRunTest):
 
         # Run Android
         result = Tns.run_android(app_name=app_name, device=self.emu.id)
-        strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.FULL, platform=Platform.ANDROID)
+        strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.UNKNOWN, platform=Platform.ANDROID)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
         if template_info.texts is not None:
             for text in template_info.texts:
@@ -74,9 +74,7 @@ class TemplateTests(TnsRunTest):
         if Settings.HOST_OS is OSType.OSX:
             Simctl.uninstall_all(simulator_info=self.sim)
             result = Tns.run_ios(app_name=app_name, device=self.sim.id)
-            strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.FULL, platform=Platform.IOS)
-            if template_info == Template.DRAWER_NAVIGATION_NG:
-                strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.UNKNOWN, platform=Platform.IOS)
+            strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.UNKNOWN, platform=Platform.IOS)
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
             if template_info.texts is not None:
                 for text in template_info.texts:
