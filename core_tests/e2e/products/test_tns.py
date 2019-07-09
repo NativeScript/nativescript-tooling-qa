@@ -1,6 +1,5 @@
 import unittest
 
-import run_common
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
@@ -16,7 +15,6 @@ class TnsSmokeTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
-        run_common.prepare(clone_templates=True, install_ng_cli=False)
         TnsRunTest.setUpClass()
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
