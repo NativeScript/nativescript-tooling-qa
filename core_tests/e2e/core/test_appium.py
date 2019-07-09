@@ -24,7 +24,6 @@ class AppiumTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
-        run_common.prepare(clone_templates=True, install_ng_cli=False)
         TnsRunTest.setUpClass()
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
@@ -35,7 +34,6 @@ class AppiumTests(TnsRunTest):
         TnsRunTest.setUp(self)
 
     def tearDown(self):
-        self.appium.stop()
         TnsRunTest.tearDown(self)
 
     @classmethod
