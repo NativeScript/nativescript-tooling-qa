@@ -296,7 +296,8 @@ class TnsRunJSTests(TnsRunTest):
 
         # Delete file
         File.delete(renamed_file)
-        strings = ["Module build failed: Error: ENOENT", 'Successfully synced application']
+        strings = ["Module build failed", "Error: ENOENT: no such file or directory",
+                   'Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
 
@@ -319,7 +320,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Delete folder
         Folder.clean(folder_name)
-        strings = ["Module build failed: Error: ENOENT"]
+        strings = ["Module build failed", "Error: ENOENT: no such file or directory"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text='Exception')
 
@@ -353,7 +354,8 @@ class TnsRunJSTests(TnsRunTest):
 
         # Delete file
         File.delete(renamed_file)
-        strings = ["Module build failed: Error: ENOENT", "NativeScript debugger detached"]
+        strings = ["Module build failed", "Error: ENOENT: no such file or directory",
+                   "NativeScript debugger detached"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         File.replace(app_js_file, "require('./test_2.js');", ' ')
@@ -376,7 +378,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Delete folder
         Folder.clean(folder_name)
-        strings = ["Module build failed: Error: ENOENT"]
+        strings = ["Module build failed", "Error: ENOENT: no such file or directory"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     def test_120_tns_run_android_just_launch(self):
