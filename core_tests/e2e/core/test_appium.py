@@ -2,7 +2,6 @@ import unittest
 
 from selenium.webdriver.common.by import By
 
-import run_common
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
