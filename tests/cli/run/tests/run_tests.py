@@ -739,14 +739,23 @@ class TnsRunJSTests(TnsRunTest):
         assert Folder.exists(node_modules)
 
     # @unittest.skip("Webpack only")
+    def test_360_tns_run_android_on_folder_with_spaces(self):
+        """
+        `tns run android` for apps with spaces
+        """
+        Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        app_name = '"' + self.app_name_space + '"'
+        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
+
+    # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_360_tns_run_ios_on_folder_with_spaces(self):
+    def test_361_tns_run_ios_on_folder_with_spaces(self):
         """
         `tns run ios` for apps with spaces
         """
         Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
         app_name = '"' + self.app_name_space + '"'
-        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
+        run_hello_world_js_ts(app_name, Platform.IOS, self.emu, just_launch=True)
 
     @unittest.skip("Skip this test due to emulator api28 ui crashing when no space left on device")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, '`shell cp -r` fails on emulators on Linux and Win.')
