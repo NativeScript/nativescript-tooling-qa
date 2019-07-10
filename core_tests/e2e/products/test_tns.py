@@ -1,12 +1,12 @@
 import unittest
 
-from core.utils.appium.appium_driver import AppiumDriver
 from selenium.webdriver.common.by import By
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
+from core.utils.appium.appium_driver import AppiumDriver
 from data.sync.hello_world_js import sync_hello_world_js
 from data.templates import Template
 from products.nativescript.tns import Tns
