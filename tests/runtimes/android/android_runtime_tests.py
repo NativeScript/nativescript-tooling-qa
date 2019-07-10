@@ -25,6 +25,7 @@ APP_NAME = AppName.DEFAULT
 TAP_THE_BUTTON = 'Tap the button'
 
 
+# noinspection PyMethodMayBeStatic
 class AndroidRuntimeTests(TnsTest):
 
     @classmethod

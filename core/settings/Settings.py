@@ -18,13 +18,6 @@ def get_os():
     return OSType.LINUX
 
 
-def is_debug():
-    if getattr(sys, 'gettrace', None) is not None:
-        return True
-    else:
-        return False
-
-
 def get_python_version():
     return sys.version_info[0]
 
@@ -48,7 +41,7 @@ def get_project_home():
     return home
 
 
-IS_DEBUG = is_debug()
+IS_DEBUG = bool(getattr(sys, 'gettrace', None) is not None)
 HOST_OS = get_os()
 PYTHON_VERSION = get_python_version()
 ENV = get_env()
