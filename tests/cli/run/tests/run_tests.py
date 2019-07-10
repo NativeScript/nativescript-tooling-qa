@@ -746,7 +746,7 @@ class TnsRunJSTests(TnsRunTest):
         Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
         app_name = '"' + self.app_name_space + '"'
         run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
-        
+
     # @unittest.skip("Webpack only")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_361_tns_run_ios_on_folder_with_spaces(self):
