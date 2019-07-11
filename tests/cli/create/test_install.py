@@ -18,13 +18,12 @@ class InitAndInstallTests(TnsTest):
         TnsTest.setUp(self)
         Folder.clean(self.APP_PATH)
 
-    def test_204_install_defaults(self):
+    def test_300_install_packages_and_prepare_after_install(self):
         Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        result = Tns.exec_command(command='install', path=self.APP_PATH)
-        self.verify_installed(output=result.output)
+        Tns.platform_add_android(app_name=self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        if Settings.HOST_OS == OSType.OSX:
+            Tns.platform_add_ios(app_name=self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
-    def test_205_install_external_packages(self):
-        Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         # Add packages
         Npm.install(package='lodash', option='--save', folder=self.APP_PATH)
         Npm.install(package='gulp', option='--save-dev', folder=self.APP_PATH)
@@ -42,24 +41,6 @@ class InitAndInstallTests(TnsTest):
         # Verify external packages are also installed
         assert Folder.exists(os.path.join(self.APP_PATH, 'node_modules', 'lodash'))
         assert Folder.exists(os.path.join(self.APP_PATH, 'node_modules', 'gulp'))
-
-    def test_300_install_and_prepare(self):
-        Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        # Add packages
-        Npm.install(package='lodash', option='--save', folder=self.APP_PATH)
-        Npm.install(package='gulp', option='--save-dev', folder=self.APP_PATH)
-        assert App.is_dependency(app_name=self.app_name, dependency='lodash')
-        assert App.is_dev_dependency(app_name=self.app_name, dependency='gulp')
-
-        # Call install and verify it do not fail if everything is already installed
-        result = Tns.exec_command(command='install', path=self.APP_PATH)
-        self.verify_installed(output=result.output)
-        assert Folder.exists(os.path.join(self.APP_PATH, 'node_modules', 'lodash'))
-        assert Folder.exists(os.path.join(self.APP_PATH, 'node_modules', 'gulp'))
-
-        # Copy app folder and app resources
-        Folder.copy(source=os.path.join(Settings.TEST_RUN_HOME, 'assets', 'apps', 'test-app-js-41', 'app'),
-                    target=os.path.join(self.APP_PATH, 'app'))
 
         # Prepare project
         Tns.prepare_android(app_name=self.app_name)
@@ -84,5 +65,3 @@ class InitAndInstallTests(TnsTest):
         if Settings.HOST_OS == OSType.OSX:
             assert Folder.exists(os.path.join(self.APP_PATH, 'platforms', 'ios'))
             assert Folder.exists(os.path.join(self.APP_PATH, 'platforms', 'ios', 'TestApp.xcodeproj'))
-
-        # App resources not created, see https://github.com/NativeScript/nativescript-cli/issues/4341
