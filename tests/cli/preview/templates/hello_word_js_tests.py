@@ -176,12 +176,12 @@ class PreviewJSTests(TnsPreviewJSTests):
         # Verify warnings for plugins
         strings = [
             'Plugin nativescript-barcodescanner is not included in preview app',
-            # TODO: Uncomment next line after we release preview app with version of nativescript-geolocation > 5.1.0
             # 'Local plugin nativescript-geolocation differs in major version from plugin in preview app',
+            # 'Some features might not work as expected'
+            # TODO: Uncomment line above after we release preview app with version of nativescript-geolocation > 5.1.0
             # Notes:
             # Preview command will fail bacause CLI will detect project needs update, see:
             # https://github.com/NativeScript/nativescript-cli/
             # blob/b5f88a45fbde0ef5559dc02e8cee5fb95cefe882/lib/controllers/migrate-controller.ts#L58
-            'Some features might not work as expected'
         ]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
