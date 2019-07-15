@@ -1,19 +1,20 @@
 import os
 import unittest
-from core.base_test.tns_test import TnsTest
+
 from core.base_test.tns_run_test import TnsRunTest
+from core.base_test.tns_test import TnsTest
+from core.enums.app_type import AppType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
-from core.enums.app_type import AppType
 from core.settings import Settings
-from core.utils.file_utils import File, Folder
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
+from core.utils.file_utils import File, Folder
+from data.changes import Changes, Sync
 from data.sync.hello_world_js import preview_sync_hello_world_js_ts
 from data.templates import Template
-from data.changes import Changes, Sync
-from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
+from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
@@ -157,10 +158,13 @@ class PreviewJSTests(TnsPreviewJSTests):
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
 
     def test_240_tns_preview_android_verify_plugin_warnings(self):
-        """Test if correct messages are shown if plugin is missing or versions differ in Preview App."""
+        """
+        Test if correct messages are shown if plugin is missing or versions differ in Preview App.
+        """
+
         # Add some plugins
         Tns.plugin_add("nativescript-barcodescanner", path=self.app_name)
-        Tns.plugin_add("nativescript-geolocation@3.0.1", path=self.app_name)
+        Tns.plugin_add("nativescript-geolocation@5.1.0", path=self.app_name)
 
         result = Tns.preview(app_name=self.app_name)
 
@@ -172,7 +176,12 @@ class PreviewJSTests(TnsPreviewJSTests):
         # Verify warnings for plugins
         strings = [
             'Plugin nativescript-barcodescanner is not included in preview app',
-            'Local plugin nativescript-geolocation differs in major version from plugin in preview app',
-            'Some features might not work as expected'
-            ]
+            # 'Local plugin nativescript-geolocation differs in major version from plugin in preview app',
+            # 'Some features might not work as expected'
+            # TODO: Uncomment line above after we release preview app with version of nativescript-geolocation > 5.1.0
+            # Notes:
+            # Preview command will fail bacause CLI will detect project needs update, see:
+            # https://github.com/NativeScript/nativescript-cli/
+            # blob/b5f88a45fbde0ef5559dc02e8cee5fb95cefe882/lib/controllers/migrate-controller.ts#L58
+        ]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)

@@ -1,25 +1,26 @@
 import os
-import nose
 import time
 import unittest
+
+import nose
+
 from core.base_test.tns_run_test import TnsRunTest
+from core.enums.device_type import DeviceType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
-from core.enums.device_type import DeviceType
+from core.log.log import Log
 from core.settings import Settings
-from core.utils.file_utils import Folder, File, Process
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.log.log import Log
+from core.utils.file_utils import Folder, File, Process
 from data.changes import Changes, Sync
-from data.templates import Template
 from data.const import Colors
 from data.sync.hello_world_js import run_hello_world_js_ts
+from data.templates import Template
+from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
-from products.nativescript.run_type import RunType
 from products.nativescript.tns_paths import TnsPaths
-
 
 Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
 
@@ -721,7 +722,6 @@ class TnsRunJSTests(TnsRunTest):
         # Verify app looks correct inside simulator
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
-    # @unittest.skip("Webpack only")
     def test_355_tns_run_android_delete_node_modules(self):
         """
         Run should not fail if node_modules folder is deleted
@@ -738,15 +738,22 @@ class TnsRunJSTests(TnsRunTest):
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
         assert Folder.exists(node_modules)
 
-    # @unittest.skip("Webpack only")
+    def test_360_tns_run_android_on_folder_with_spaces(self):
+        """
+        `tns run android` for apps with spaces
+        """
+        Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        app_name = '"' + self.app_name_space + '"'
+        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
+
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_360_tns_run_ios_on_folder_with_spaces(self):
+    def test_361_tns_run_ios_on_folder_with_spaces(self):
         """
         `tns run ios` for apps with spaces
         """
         Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
         app_name = '"' + self.app_name_space + '"'
-        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
+        run_hello_world_js_ts(app_name, Platform.IOS, self.sim, just_launch=True)
 
     @unittest.skip("Skip this test due to emulator api28 ui crashing when no space left on device")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, '`shell cp -r` fails on emulators on Linux and Win.')

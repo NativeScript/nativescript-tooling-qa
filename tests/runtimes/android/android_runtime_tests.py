@@ -434,7 +434,7 @@ JS: ### Stack Trace End"""  # noqa: E501
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
         Npm.install(package="tns-core-modules@next", folder=os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.plugin_add(plugin_name="nativescript-ui-dataform", path=os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.plugin_add(plugin_name="nativescript-ui-dataform@5.0.0", path=os.path.join(TEST_RUN_HOME, APP_NAME))
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
         strings = ['Successfully synced application', 'on device', self.emulator.id]
