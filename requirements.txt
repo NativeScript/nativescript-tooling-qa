@@ -12,7 +12,7 @@ pytesseract>=0.2.5
 flake8>=3.6.0
 pylint>=1.9.4
 selenium>=3.141.0
-webdriver_manager>=1.7
+webdriver_manager==1.8
 subprocess32>=3.5.3
 requests>=2.21.0
 pytz>=2018.9

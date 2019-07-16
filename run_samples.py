@@ -10,5 +10,6 @@ if __name__ == '__main__':
     Log.info("Running tests...")
     arguments = ['nosetests', '-v', '-s', '--nologcapture', '--logging-filter=nose', '--with-xunit', '--with-flaky']
     for i in sys.argv:
-        arguments.append(str(i))
+        if "samples=" not in i:
+            arguments.append(str(i))
     nose.run(argv=arguments)
