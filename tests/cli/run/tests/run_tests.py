@@ -44,10 +44,10 @@ class TnsRunJSTests(TnsRunTest):
         src = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'logs', 'hello-world-js', 'app.js')
         target = os.path.join(cls.app_path, 'app')
         File.copy(source=src, target=target)
-        
+
         # Create app with space in name
-        Tns.create(app_name=self.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        
+        Tns.create(app_name=cls.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
+
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name=cls.app_name_space, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
