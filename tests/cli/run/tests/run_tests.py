@@ -50,7 +50,7 @@ class TnsRunJSTests(TnsRunTest):
         Tns.create(app_name=cls.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
 
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        Tns.platform_add_android(app_name=cls.normalized_app_name_space, verify =False,
+        Tns.platform_add_android(app_name=cls.normalized_app_name_space, verify=False,
                                  framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
