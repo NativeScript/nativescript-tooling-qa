@@ -28,6 +28,7 @@ Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
 class TnsRunJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_name_space = Settings.AppName.WITH_SPACE
+    normalized_app_name_space = '"' + app_name_space + '"'
     app_path = TnsPaths.get_app_path(app_name)
     app_resources_path = TnsPaths.get_path_app_resources(app_name)
     source_project_dir = TnsPaths.get_app_path(app_name)
@@ -49,10 +50,12 @@ class TnsRunJSTests(TnsRunTest):
         Tns.create(app_name=cls.app_name_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
 
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
-        Tns.platform_add_android(app_name=cls.app_name_space, framework_path=Settings.Android.FRAMEWORK_PATH)
+        Tns.platform_add_android(app_name=cls.normalized_app_name_space, verify =False,
+                                 framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
-            Tns.platform_add_ios(app_name=cls.app_name_space, framework_path=Settings.IOS.FRAMEWORK_PATH)
+            Tns.platform_add_ios(app_name=cls.normalized_app_name_space, verify=False,
+                                 framework_path=Settings.IOS.FRAMEWORK_PATH)
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
@@ -748,16 +751,14 @@ class TnsRunJSTests(TnsRunTest):
         """
         `tns run android` for apps with spaces
         """
-        app_name = '"' + self.app_name_space + '"'
-        run_hello_world_js_ts(app_name, Platform.ANDROID, self.emu, just_launch=True)
+        run_hello_world_js_ts(self.normalized_app_name_space, Platform.ANDROID, self.emu, just_launch=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_361_tns_run_ios_on_folder_with_spaces(self):
         """
         `tns run ios` for apps with spaces
         """
-        app_name = '"' + self.app_name_space + '"'
-        run_hello_world_js_ts(app_name, Platform.IOS, self.sim, just_launch=True)
+        run_hello_world_js_ts(self.normalized_app_name_space, Platform.IOS, self.sim, just_launch=True)
 
     @unittest.skip("Skip this test due to emulator api28 ui crashing when no space left on device")
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, '`shell cp -r` fails on emulators on Linux and Win.')
