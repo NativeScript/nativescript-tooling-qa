@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import unittest
 from time import sleep
@@ -146,10 +147,16 @@ class DebugJSTests(TnsRunTest):
         # Ensure logs are available in tns logs
         tns_logs = File.read(result.log_file)
         assert "Test Debug!" in tns_logs, 'Console log messages not available in CLI output.' + os.linesep + tns_logs
+        message = 'Console log messages(Arabic and Kurdish characters) not available in CLI output.'
+        # add test for issue https://github.com/NativeScript/android-runtime/issues/1302
+        assert 'العربییە' in tns_logs, message + os.linesep + tns_logs
 
         # Verify console logs are available in Chrome dev tools
         log = self.dev_tools.wait_element_by_text(text='Test Debug!')
         assert log is not None, 'Console logs not displayed in Chrome Dev Tools.'
+        log = self.dev_tools.wait_element_by_text(text='العربییە'.decode('utf-8'))
+        # add test for issue https://github.com/NativeScript/android-runtime/issues/1302
+        assert log is not None, 'Console logs(Arabic and Kurdish characters) not displayed in Chrome Dev Tools.'
 
     def __console_eval(self, platform, device):
         # Run `tns debug` wait until debug url is in the console and app is loaded
