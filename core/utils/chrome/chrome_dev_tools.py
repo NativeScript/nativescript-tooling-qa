@@ -93,8 +93,8 @@ class ChromeDevTools(object):
         self.chrome.driver.implicitly_wait(1)
         result = Wait.until(lambda: self.find_element_by_text(text) is not None, timeout=timeout, period=1)
         self.chrome.driver.implicitly_wait(self.chrome.implicitly_wait)
-        assert result, 'Failed to find element by "{0}" text.'.format(text)
-        Log.info('Element with text "{0}" found in CDT.'.format(text))
+        assert result, 'Failed to find element by "{0}" text.'.format(text.encode('utf-8'))
+        Log.info('Element with text "{0}" found in CDT.'.format(text.encode('utf-8')))
         return self.find_element_by_text(text)
 
     def open_tab(self, tab, verify=True):
