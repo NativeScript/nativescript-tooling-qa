@@ -216,7 +216,7 @@ class Device(object):
                        "Actual main color: " + str(self.get_main_color())
 
     def click(self, text, case_sensitive=False):
-        self.wait_for_text(text=text)
+        self.wait_for_text(text=text, case_sensitive=case_sensitive)
         if self.type is DeviceType.EMU or self.type is DeviceType.ANDROID:
             Adb.click_element_by_text(self.id, text, case_sensitive)
         elif self.type is DeviceType.SIM:

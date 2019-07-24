@@ -162,7 +162,6 @@ class AndroidRuntimeTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'Application is not build successfully! Logs: ' + File.read(log.log_file)
-        Device.wait_for_text(self.emulator, "TAP")
         Adb.is_text_visible(self.emulator.id, "TAP", True)
         Device.click(self.emulator, "TAP", True)
         stack_trace_first_part = """### Stack Trace Start
