@@ -56,6 +56,10 @@ class AppiumDriver(object):
         capabilities = {}
         capabilities['platformName'] = str(platform)
         capabilities['platformVersion'] = device.version
+        capabilities['deviceName'] = device.name
+        capabilities['udid'] = device.id
+        capabilities['noReset'] = 'true'
+        capabilities['fullReset'] = 'false'
         if platform == Platform.ANDROID:
             capabilities['automationName'] = 'uiautomator2'
             capabilities['appPackage'] = bundle_id
@@ -63,9 +67,6 @@ class AppiumDriver(object):
         if platform == Platform.IOS:
             capabilities['automationName'] = 'XCUITest'
             capabilities['bundleId'] = bundle_id
-        capabilities['deviceName'] = device.name
-        capabilities['noReset'] = 'true'
-        capabilities['fullReset'] = 'false'
         # In case debug session is found increase 'newCommandTimeout' to allow debugging longer period of time.
         capabilities['newCommandTimeout'] = 3600 if Settings.IS_DEBUG else 60
         return capabilities
