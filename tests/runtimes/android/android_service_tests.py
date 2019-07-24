@@ -208,7 +208,7 @@ class AndroidServiceTests(TnsTest):
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
 
-        Device.wait_for_text(self.emulator, text='TAP', timeout=20)
+        Device.wait_for_text(self.emulator, text='TAP', timeout=20, case_sensitive=True)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Intent Handled!" in File.read(log.log_file), timeout=30,

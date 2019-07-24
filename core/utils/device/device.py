@@ -76,19 +76,20 @@ class Device(object):
         File.delete(path=actual_image_path)
         return text
 
-    def wait_for_text(self, text, timeout=60, retry_delay=1):
+    def wait_for_text(self, text, timeout=60, retry_delay=1, case_sensitive=False):
         """
         Wait until text is visible on device.
         :param text: Text as string.
         :param timeout: Timeout in seconds.
         :param retry_delay: Retry interval in seconds.
+        :param case_sensitive: Should text be case sensitive.
         """
         t_end = time.time() + timeout
         found = False
         error_msg = '{0} NOT found on {1}.'.format(text, self.name)
         found_msg = '{0} found on {1}.'.format(text, self.name)
         while time.time() < t_end:
-            if self.is_text_visible(text=text):
+            if self.is_text_visible(text=text, case_sensitive=case_sensitive):
                 found = True
                 Log.info(found_msg)
                 break
