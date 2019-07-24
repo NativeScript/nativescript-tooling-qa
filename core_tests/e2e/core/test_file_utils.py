@@ -8,11 +8,11 @@ from core.utils.file_utils import File, Folder
 # noinspection PyMethodMayBeStatic
 class FileUtilsTests(TnsTest):
 
-    def test_01_file_dowload(self):
-        file_name = "test.apk"
+    def test_01_file_download(self):
+        file_name = "nativescript-logo.png"
         file_path_default = TEST_RUN_HOME
         file_path = os.path.join(TEST_RUN_HOME, "test")
-        url = "https://github.com/webdriverio/native-demo-app/releases/download/0.2.1/Android-NativeDemoApp-0.2.1.apk"
+        url = "https://www.nativescript.org/images/default-source/logos/nativescript-logo.png"
         File.download(file_name, url)
         Folder.create(file_path)
         assert File.exists(os.path.join(file_path_default, file_name))
