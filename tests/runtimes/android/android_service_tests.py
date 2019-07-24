@@ -56,7 +56,6 @@ class AndroidServiceTests(TnsTest):
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
 
-        Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
@@ -97,7 +96,6 @@ class AndroidServiceTests(TnsTest):
                                  period=5)
 
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
-        Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
@@ -138,7 +136,6 @@ class AndroidServiceTests(TnsTest):
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
 
-        Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Create Foreground Service!" in File.read(log.log_file), timeout=30,
@@ -178,8 +175,6 @@ class AndroidServiceTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
-
-        Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Intent Handled!" in File.read(log.log_file), timeout=30,
@@ -207,8 +202,6 @@ class AndroidServiceTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
-
-        Device.wait_for_text(self.emulator, text='TAP', timeout=20)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
         time.sleep(5)
         test_result = Wait.until(lambda: "Intent Handled!" in File.read(log.log_file), timeout=30,
