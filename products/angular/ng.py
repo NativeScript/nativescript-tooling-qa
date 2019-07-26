@@ -5,6 +5,7 @@ from core.base_test.test_context import TestContext
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
+from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
 from core.utils.wait import Wait
@@ -75,9 +76,23 @@ class NG(object):
         if not theme:
             command = command + ' --no-theme'
 
+        # Add skip install due to the fact we relay on package not published in npm.
+        # See https://github.com/NativeScript/nativescript-schematics/pull/220
+        command = command + ' --skip-install'
+
         # Execute the command and add current app to context
         TestContext.TEST_APP_NAME = project
-        return NG.exec_command(command)
+
+        # Execute the command
+        result = NG.exec_command(command)
+
+        # Manually run npm install if skip_install detected.
+        # See https://github.com/NativeScript/nativescript-schematics/pull/220
+        Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='--save --save-exact', folder=project_path)
+        Npm.install(folder=project_path)
+
+        # Return result
+        return result
 
     @staticmethod
     def add(project, schematics_package):
