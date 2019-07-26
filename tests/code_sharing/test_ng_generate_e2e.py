@@ -1,5 +1,5 @@
 """
-Tests for `ng g` during livesync.
+Tests for `ng g` while livesync is running in same time.
 """
 import os
 import unittest

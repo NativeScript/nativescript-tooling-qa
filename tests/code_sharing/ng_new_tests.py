@@ -1,3 +1,8 @@
+"""
+Tests for `ng new` command.
+- Check if we generate correct shared project
+- We are able to run them and build in release.
+"""
 import os
 import unittest
 
