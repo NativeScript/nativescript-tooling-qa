@@ -88,7 +88,7 @@ class NG(object):
 
         # Manually run npm install if skip_install detected.
         # See https://github.com/NativeScript/nativescript-schematics/pull/220
-        Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='--save --save-exact', folder=project_path)
+        Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='--save-dev --save-exact', folder=project_path)
         Npm.install(folder=project_path)
 
         # Return result
