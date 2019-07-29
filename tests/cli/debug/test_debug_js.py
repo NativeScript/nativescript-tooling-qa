@@ -154,7 +154,7 @@ class DebugJSTests(TnsRunTest):
         # Verify console logs are available in Chrome dev tools
         log = self.dev_tools.wait_element_by_text(text='Test Debug!')
         assert log is not None, 'Console logs not displayed in Chrome Dev Tools.'
-        if os.name == 'posix' and Settings.PYTHON_VERSION < 3:
+        if Settings.PYTHON_VERSION < 3:
             text = 'العربییە'.decode('utf-8')
         else:
             text = 'العربییە'
