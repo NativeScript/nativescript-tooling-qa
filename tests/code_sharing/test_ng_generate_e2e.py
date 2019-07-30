@@ -61,7 +61,7 @@ class NGGenE2ETestsNS(TnsRunTest):
         text = 'TAP'
         if shared:
             text = 'Welcome to'
-        # Do NOT use hmr because of https://github.com/NativeScript/nativescript-schematics/issues/233
+
         result = Tns.run(app_name=app_name, platform=platform, emulator=True, hmr=True)
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, hmr=True, app_type=AppType.NG)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
@@ -101,10 +101,8 @@ class NGGenE2ETestsNS(TnsRunTest):
         File.replace(path=app_routing_module_path, old_string='HomeComponent', new_string='ComponentTestComponent')
 
         # Verify app is updated
-        logs = ['Successfully synced application']
-        # If --no-hmr next lines are missing.
-        # We do not use --hrm because of https://github.com/NativeScript/nativescript-schematics/issues/233
-        # logs.append(app_module_name.replace('.tns', ''))
-        # logs.append(app_routing_module_name.replace('.tns', ''))
+        logs = [app_module_name.replace('.tns', ''),
+                app_routing_module_name.replace('.tns', ''),
+                'Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=logs, timeout=120)
         device.wait_for_text(text='component-test works!')
