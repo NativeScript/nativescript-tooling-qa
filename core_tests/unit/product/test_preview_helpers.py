@@ -5,7 +5,6 @@ from core.utils.file_utils import File
 from products.nativescript.preview_helpers import Preview
 
 
-# noinspection PyMethodMayBeStatic
 class PreviewHelperTests(unittest.TestCase):
     current_folder = os.path.dirname(os.path.realpath(__file__))
 
