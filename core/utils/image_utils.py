@@ -127,7 +127,7 @@ class ImageUtils(object):
 
             # apply some dilation and erosion to join the gaps - change iteration to detect more or less area's
             thresh = cv2.dilate(thresh, None, iterations=5)
-            thresh = cv2.erode(thresh, None, iterations=5)
+            thresh = cv2.erode(thresh, None, iterations=3)
 
             # Find the contours
             contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
