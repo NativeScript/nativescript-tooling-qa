@@ -81,9 +81,9 @@ class Preview(object):
         :param output: Output of `tns preview` command.
         :return: Playground url.
         """
-        url=re.findall(r"(https[^\s']+)(?=.)", output)
-        url=requests.get(url[0], allow_redirects=False)
-        url=url.headers['Location']
+        url = re.findall(r"(https[^\s']+)(?=.)", output)
+        url = requests.get(url[0], allow_redirects=False)
+        url = url.headers['Location']
         if Settings.PYTHON_VERSION < 3:
             import urllib
             url = urllib.unquote(url)
