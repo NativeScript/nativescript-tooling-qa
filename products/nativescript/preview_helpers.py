@@ -73,6 +73,7 @@ class Preview(object):
         elif platform is Platform.ANDROID:
             Adb.install(package_android, device_info.id)
 
+    # noinspection PyUnresolvedReferences
     @staticmethod
     def get_url(output):
         """
