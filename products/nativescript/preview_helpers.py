@@ -83,8 +83,8 @@ class Preview(object):
         :return: Playground url.
         """
         # pylint: disable=no-member
-	    # pylint: disable=no-name-in-module
-	    # pylint: disable=import-error
+        # pylint: disable=no-name-in-module
+        # pylint: disable=import-error
         url = re.findall(r"(https[^\s']+)(?=.)", output)
         url = requests.get(url[0], allow_redirects=False)
         url = url.headers['Location']
