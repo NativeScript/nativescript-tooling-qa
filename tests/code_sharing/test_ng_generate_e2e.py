@@ -3,6 +3,7 @@ Tests for `ng g` while livesync is running in same time.
 """
 import os
 import unittest
+from time import sleep
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.app_type import AppType
@@ -60,39 +61,49 @@ class NGGenE2ETestsNS(TnsRunTest):
         text = 'TAP'
         if shared:
             text = 'Welcome to'
+
         result = Tns.run(app_name=app_name, platform=platform, emulator=True, hmr=True)
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, bundle=True, hmr=True, app_type=AppType.NG)
+        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, hmr=True, app_type=AppType.NG)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
         device.wait_for_text(text=text)
 
         # Generate module and component
         NG.exec_command(command='g m module-test', cwd=app_path)
+        sleep(3)
         NG.exec_command(command='g c module-test/component-test', cwd=app_path)
+        sleep(3)
 
         # Update app.modules.ts
         app_module_name = 'app.module.ts'
         app_module_path = os.path.join(app_path, 'app', app_module_name)
+        old_string = "import { HomeComponent } from './home/home.component';"
+        new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
         if shared:
             app_module_name = 'app.module.tns.ts'
             app_module_path = os.path.join(app_path, 'src', 'app', app_module_name)
-        old_string = "import { HomeComponent } from './home/home.component';"
-        new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
+            old_string = "import { HomeComponent } from '@src/app/home/home.component';"
+            new_string = \
+                "import { ComponentTestComponent } from '@src/app/module-test/component-test/component-test.component';"
         File.replace(path=app_module_path, old_string=old_string, new_string=new_string)
         File.replace(path=app_module_path, old_string='HomeComponent,', new_string='ComponentTestComponent,')
+        sleep(3)
 
         # Update app-routing.module.ts
         app_routing_module_name = 'app-routing.module.ts'
         app_routing_module_path = os.path.join(app_path, 'app', app_routing_module_name)
+        old_string = "import { HomeComponent } from './home/home.component';"
+        new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
         if shared:
             app_routing_module_name = 'app.routes.ts'
             app_routing_module_path = os.path.join(app_path, 'src', 'app', app_routing_module_name)
-        old_string = "import { HomeComponent } from './home/home.component';"
-        new_string = "import { ComponentTestComponent } from './module-test/component-test/component-test.component';"
+            old_string = "import { HomeComponent } from '@src/app/home/home.component';"
+            new_string = \
+                "import { ComponentTestComponent } from '@src/app/module-test/component-test/component-test.component';"
         File.replace(path=app_routing_module_path, old_string=old_string, new_string=new_string)
         File.replace(path=app_routing_module_path, old_string='HomeComponent', new_string='ComponentTestComponent')
+        sleep(3)
 
         # Verify app is updated
-        logs = [app_module_name.replace('.tns', ''), app_routing_module_name.replace('.tns', ''),
-                'Successfully synced application']
+        logs = [app_module_name, app_routing_module_name, 'Successfully synced application']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=logs, timeout=120)
         device.wait_for_text(text='component-test works!')
