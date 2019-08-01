@@ -1,3 +1,7 @@
+"""
+Tests for migrating Angular web project to shared project.
+Note: Those tests are ordered (can not run last if first fails).
+"""
 # pylint: disable=unused-argument
 import os
 import unittest

@@ -17,6 +17,7 @@ function createViewModel() {
         viewModel.counter--;
         viewModel.set("message", getMessage(viewModel.counter));
         console.log("Test Debug!");
+        console.log("العربییە");
     };
 
     return viewModel;

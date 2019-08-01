@@ -32,10 +32,12 @@ class SBGTests(TnsTest):
         TnsTest.tearDown(self)
 
     def test_300_fail_build_when_sbg_bindings_file_is_missing(self):
-        # add webpack.config.js where devtool: "eval"
-        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
-                               'android-runtime-1286', 'webpack.config.js'),
-                  os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js'), True)
+        # edit webpack.config.js where devtool: "eval"
+        webpack_config = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
+        old_str = "devtool: hiddenSourceMap ? \"hidden-source-map\" : (sourceMap ? \"inline-source-map\" : \"none\"),"
+        new_str = "devtool: \"eval\","
+
+        File.replace(path=webpack_config, old_string=old_str, new_string=new_str, backup_files=True)
         result = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False, bundle=True)
 
         sbg_bindings_path = os.path.join(TEST_RUN_HOME, APP_NAME, 'platforms', 'android', 'build-tools',

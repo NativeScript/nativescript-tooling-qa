@@ -40,7 +40,7 @@ class TnsAssert(object):
 
         # Verify modules installed
         node_path = TnsPaths.get_app_node_modules_path(app_name=app_name, path=path)
-        assert Folder.exists(os.path.join(node_path, 'tns-core-modules')), '{N} theme do not exists in app.'
+        assert Folder.exists(os.path.join(node_path, 'tns-core-modules')), '{N} core modules not installed.'
         assert File.exists(os.path.join(node_path, 'tns-core-modules', 'tns-core-modules.d.ts'))
 
         # Verify {N} core theme is installed
