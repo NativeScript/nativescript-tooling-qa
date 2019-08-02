@@ -436,7 +436,7 @@ class Tns(object):
         return result
 
     @staticmethod
-    def preview(app_name, bundle=True, hmr=True, log_trace=True, verify=True, timeout=120):
+    def preview(app_name, bundle=True, hmr=True, log_trace=False, verify=True, timeout=120, options='--link'):
         """
         Execute `tns preview` command.
         :param app_name: Pass --path <app_name>.
@@ -448,10 +448,9 @@ class Tns(object):
         :return: Result of `tns preview` command.
         """
         result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, wait=False,
-                                  log_trace=log_trace, timeout=timeout)
+                                  log_trace=log_trace, timeout=timeout, options=options)
         if verify:
-            strings = [
-                'Use NativeScript Playground app and scan the QR code above to preview the application on your device']
+            strings = ['Generating qrcode for url']
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         return result
 
