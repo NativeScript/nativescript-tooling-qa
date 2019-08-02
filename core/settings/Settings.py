@@ -6,7 +6,6 @@ import sys
 
 from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
-from core.utils.device.appium_capabilities import AppiumCapabilities
 from core.utils.device.emulator_info import EmulatorInfo
 from core.utils.device.simulator_info import SimulatorInfo
 
@@ -42,6 +41,7 @@ def get_project_home():
     return home
 
 
+IS_DEBUG = bool(getattr(sys, 'gettrace', None) is not None)
 HOST_OS = get_os()
 PYTHON_VERSION = get_python_version()
 ENV = get_env()
@@ -177,8 +177,3 @@ class AppName(object):
     WITH_DASH = 'tns-app'
     WITH_SPACE = 'Test App'
     WITH_NUMBER = '123'
-
-
-class AppiumCaps(object):
-    SIM_iOS12 = AppiumCapabilities(platform_name='iOS', platform_version='12.0', automation_name='XCUITest')
-    EMU_API_23 = AppiumCapabilities(platform_name='Android', platform_version='6.0', automation_name='UIAutomator2')
