@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import requests
 
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
@@ -75,16 +76,18 @@ class Preview(object):
     # noinspection PyUnresolvedReferences
     @staticmethod
     def get_url(output):
-        # pylint: disable=no-member
-        # pylint: disable=no-name-in-module
-        # pylint: disable=import-error
         """
         Get preview URL form tns log.
         This is the url you need to load in Preview app in order to see and sync your project.
         :param output: Output of `tns preview` command.
         :return: Playground url.
         """
-        url = re.findall(r"(nsplay[^\s']+)", output)[0]
+        # pylint: disable=no-member
+        # pylint: disable=no-name-in-module
+        # pylint: disable=import-error
+        url = re.findall(r"(https[^\s']+)(?=.)", output)
+        url = requests.get(url[0], allow_redirects=False)
+        url = url.headers['Location']
         if Settings.PYTHON_VERSION < 3:
             import urllib
             url = urllib.unquote(url)
