@@ -86,7 +86,7 @@ class Packages(object):
     # CLIs
     NS_CLI = resolve_package(name='nativescript', variable='nativescript')
     NS_SCHEMATICS = resolve_package(name='@nativescript/schematics', variable='nativescript_schematics')
-    NG_CLI = resolve_package(name='@angular/cli', variable='ng_cli', default='latest')
+    NG_CLI = resolve_package(name='@angular/cli', variable='ng_cli', default='8.1')
 
     # Preview and Playground packages
     __default_preview_folder = 'debug'
