@@ -184,9 +184,9 @@ class DebugJSTests(TnsRunTest):
         # Open sources tab and verify content is loaded
         self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
 
-        # Open JS file and place breakpoint on line 17
+        # Open JS file and place breakpoint on line 18
         self.dev_tools.load_source_file("main-view-model.js")
-        self.dev_tools.breakpoint(17)
+        self.dev_tools.breakpoint(18)
 
         # Tap on TAP button in emulator and check it is hit
         device.click(text="TAP", case_sensitive=True)
@@ -205,9 +205,9 @@ class DebugJSTests(TnsRunTest):
         # Open sources tab and verify content is loaded
         self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
 
-        # Open JS file and place breakpoint on line 17
+        # Open JS file and place breakpoint on line 18
         self.dev_tools.load_source_file("main-view-model.js")
-        self.dev_tools.breakpoint(17)
+        self.dev_tools.breakpoint(18)
 
         # Sync JS changes works fine until breakpoint is hit
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
@@ -249,10 +249,10 @@ class DebugJSTests(TnsRunTest):
         Tns.debug(app_name=self.app_name, platform=platform, emulator=True)
         device.wait_for_text(text='TAP')
 
-        # Open sources tab and place breakpoint on line 17 of main-view-model.js
+        # Open sources tab and place breakpoint on line 18 of main-view-model.js
         self.dev_tools = ChromeDevTools(self.chrome, platform=platform, tab=ChromeDevToolsTabs.SOURCES)
         self.dev_tools.load_source_file("main-view-model.js")
-        self.dev_tools.breakpoint(17)
+        self.dev_tools.breakpoint(18)
 
         # Tap on TAP button in emulator and check it is hit
         device.click(text="TAP", case_sensitive=True)
@@ -301,7 +301,7 @@ class DebugJSTests(TnsRunTest):
         # Verify debug is working (covers https://github.com/NativeScript/nativescript-cli/issues/2831)
         self.dev_tools.open_tab(ChromeDevToolsTabs.SOURCES)
         self.dev_tools.load_source_file("main-view-model.js")
-        self.dev_tools.breakpoint(17)
+        self.dev_tools.breakpoint(18)
         device.click(text="TAP", case_sensitive=True)
         pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
