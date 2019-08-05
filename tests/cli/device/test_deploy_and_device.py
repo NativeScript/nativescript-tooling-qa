@@ -85,8 +85,8 @@ class TnsDeviceTests(TnsRunTest):
         result = Tns.exec_command(command='device android --available-devices')
         assert self.emu.name in result.output
         assert self.emu.id in result.output
-        assert Settings.Emulators.EMU_API_19.avd in result.output
-        assert str(Settings.Emulators.EMU_API_19.os_version) in result.output
+        assert Settings.Emulators.DEFAULT.avd in result.output
+        assert str(Settings.Emulators.DEFAULT.os_version) in result.output
         if Settings.HOST_OS == OSType.OSX:
             DeviceManager.Simulator.stop()
             result = Tns.exec_command(command='device ios --available-devices')
