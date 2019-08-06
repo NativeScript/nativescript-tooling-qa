@@ -69,7 +69,7 @@ class IOSRuntimeTests(TnsTest):
 
     def test_380_tns_run_ios_plugin_dependencies(self):
         """
-        issue https://github.com/NativeScript/ios-runtime/issues/890
+        https://github.com/NativeScript/ios-runtime/issues/890
         Check app is running when reference plugin A - plugin A depends on plugin B which depends on plugin C.
         Plugin A has dependency only to plugin B.
         Old behavior (version < 4.0.0) was in plugin A to reference plugin B and C.
@@ -133,8 +133,8 @@ class IOSRuntimeTests(TnsTest):
 
     def test_386_check_native_crash_will_not_crash_when_discardUncaughtJsExceptions_used(self):
         """
-            Test native crash will not crash the app when discardUncaughtJsExceptions used
-            https://github.com/NativeScript/ios-runtime/issues/1051
+        Test native crash will not crash the app when discardUncaughtJsExceptions used
+        https://github.com/NativeScript/ios-runtime/issues/1051
         """
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1051', 'app.js'),
                   os.path.join(APP_PATH, 'app', 'app.js'), True)
@@ -161,9 +161,9 @@ class IOSRuntimeTests(TnsTest):
 
     def test_387_test_pointers_and_conversions_to_string(self):
         """
-            Test pointers and conversions to strings
-            https://github.com/NativeScript/ios-runtime/pull/1069
-            https://github.com/NativeScript/ios-runtime/issues/921
+        Test pointers and conversions to strings
+        https://github.com/NativeScript/ios-runtime/pull/1069
+        https://github.com/NativeScript/ios-runtime/issues/921
         """
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-921', 'special-value',
                                'main-view-model.js'),
@@ -268,7 +268,27 @@ class IOSRuntimeTests(TnsTest):
                             period=5)
         assert result, 'NSStringFromClass function returns INCORRECT name of iOS internal class!'
 
-    def test_391_tns_run_ios_console_time(self):
+    def test_391_native_properties_provided_by_internal_classes_are_available(self):
+        """
+        Test native properties provided by internal classes are available
+        https://github.com/NativeScript/ios-runtime/issues/1149
+        """
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1149',
+                               'main-view-model.js'),
+                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
+
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
+
+        strings = ['response1:  <NSHTTPURLResponse:', 'response2:  <NSHTTPURLResponse:', 'Status Code: 200']
+        result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                            period=5)
+        assert result, 'It seems that native properties provided by internal classes are not available'
+
+    def test_398_tns_run_ios_console_time(self):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_NG.local_package, update=True)
         Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
@@ -294,7 +314,7 @@ class IOSRuntimeTests(TnsTest):
         console_time = ['CONSOLE INFO startup:']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=console_time)
 
-    def test_392_tns_run_ios_console_dir(self):
+    def test_399_tns_run_ios_console_dir(self):
         # NOTE: This test depends on creation of app in test_391_tns_run_ios_console_time
         # Replace app.component.ts to use console.time() and console.timeEnd()
 
