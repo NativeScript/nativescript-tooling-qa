@@ -16,6 +16,7 @@ from data.templates import Template
 from products.nativescript.preview_helpers import Preview
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.tns_assert import TnsAssert
 
 
 class TnsPreviewJSTests(TnsRunTest):
@@ -152,10 +153,28 @@ class PreviewJSTests(TnsPreviewJSTests):
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
 
-        # Edit XML file and verify changes are applied
+        # Check changes are not synced more than once per platform
+        # Extract the last part of the log
+        log = File.read(result.log_file)
+        log = File.extract_part_of_text(log, '[VERIFIED]')
+        # Verify files are synced once
+        TnsAssert.file_is_synced_once(log, Platform.ANDROID, 'main-view-model.js')
+        TnsAssert.file_is_synced_once(log, Platform.IOS, 'main-view-model.js')
+        # Mark that part of the log as verified before next sync
+        File.append(result.log_file, '[VERIFIED]')
+
+        # Edit XML file and verify changes are applied on both emulators
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
+
+        # Check changes are not synced more than once per platform
+        # Extract the last part of the log
+        log = File.read(result.log_file)
+        log = File.extract_part_of_text(log, '[VERIFIED]')
+        # Verify files are synced once
+        TnsAssert.file_is_synced_once(log, Platform.ANDROID, 'main-page.xml')
+        TnsAssert.file_is_synced_once(log, Platform.IOS, 'main-page.xml')
 
     def test_240_tns_preview_android_verify_plugin_warnings(self):
         """
