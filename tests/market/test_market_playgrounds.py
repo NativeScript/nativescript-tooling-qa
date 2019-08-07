@@ -204,9 +204,6 @@ class PlaygroundMarketSamples(TnsRunTest):
             else:
                 Log.info(error_msg + ' Waiting ...')
                 time.sleep(retry_delay)
-        if not found:
-            text = emu.get_text()
-            Log.info('Current text: {0}{1}'.format(os.linesep, text))
         return found
 
     @staticmethod
