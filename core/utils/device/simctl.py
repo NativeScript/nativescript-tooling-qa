@@ -6,7 +6,6 @@ from core.log.log import Log
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
-from core.utils.xcode import Xcode
 
 
 # noinspection PyShadowingBuiltins
@@ -26,6 +25,15 @@ class Simctl(object):
         except ValueError:
             Log.error('Failed to parse json ' + os.linesep + result.output)
             return json.loads('{}')
+
+    @staticmethod
+    def __get_availability(sim):
+        available = False
+        if 'availability' in sim:
+            available = sim['availability'] == u'(available)'
+        elif 'isAvailable' in sim:
+            available = sim['isAvailable']
+        return available
 
     @staticmethod
     def start(simulator_info):
@@ -85,14 +93,9 @@ class Simctl(object):
             device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
         sims = devices[device_key]
         for sim in sims:
-            if Xcode.get_version() < 11.0:
-                if sim['name'] == simulator_info.name and sim['availability'] == u'(available)':
-                    simulator_info.id = str(sim['udid'])
-                    return simulator_info
-            else:
-                if sim['name'] == simulator_info.name and sim['isAvailable']:
-                    simulator_info.id = str(sim['udid'])
-                    return simulator_info
+            if sim['name'] == simulator_info.name and Simctl.__get_availability(sim):
+                simulator_info.id = str(sim['udid'])
+                return simulator_info
         return False
 
     @staticmethod
