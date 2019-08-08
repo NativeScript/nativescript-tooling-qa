@@ -16,7 +16,7 @@ class PreviewHelperTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         Folder.clean(os.path.join(TEST_RUN_HOME, AppName.DEFAULT))
-        Tns.create(app_name=AppName.DEFAULT, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.create(app_name=AppName.DEFAULT, template=Template.HELLO_WORLD_JS.local_package)
         cls.log = File.read(Tns.preview(AppName.DEFAULT).log_file)
 
     def test_01_constants(self):
