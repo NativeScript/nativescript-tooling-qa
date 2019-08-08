@@ -58,13 +58,6 @@ class TnsRunTSTests(TnsRunTest):
     def test_200_run_ios_no_hmr(self):
         sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, hmr=False)
 
-    def test_300_run_android_bundle_aot(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, aot=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_300_run_ios_bundle_aot(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, aot=True)
-
     def test_310_run_android_bundle_uglify(self):
         sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True)
 
@@ -72,9 +65,3 @@ class TnsRunTSTests(TnsRunTest):
     def test_310_run_ios_bundle_uglify(self):
         sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, uglify=True)
 
-    def test_320_run_android_bundle_aot_and_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)

@@ -50,26 +50,9 @@ class TnsRunJSTests(TnsRunTest):
     def test_100_run_ios(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim)
 
-    def test_300_run_android_bundle_aot(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, aot=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_300_run_ios_bundle_aot(self):
-        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, aot=True)
-
     def test_310_run_android_bundle_uglify(self):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, uglify=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_310_run_ios_bundle_uglify(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, uglify=True)
-
-    def test_320_run_android_bundle_aot_and_uglify(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync_hello_world_js(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)
-
-    def test_390_run_android_bundle_aot_uglify_snapshot(self):
-        sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
