@@ -75,13 +75,17 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device, release=Fa
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit SCSS file and verify changes are applied
+    # Navigate to Browse tab and verify when scss is synced navigation is preserved
+    # https://github.com/NativeScript/NativeScript/issues/6953
+    device.click(text="Browse")
     Sync.replace(app_name=app_name, change_set=scss_change)
     assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.RED) > 100), \
-        'Platform specific SCSS not applied!'
-    device.wait_for_text(text=xml_change.new_text)
-    device.wait_for_text(text=js_change.new_text)
+        'SCSS not applied!'
+    device.wait_for_text(text="Browse page content goes here")
 
     # Revert all the changes in app
+    # Navigate to Home tab again
+    device.click(text="Home")
     Sync.revert(app_name=app_name, change_set=js_change)
     device.wait_for_text(text=js_change.old_text)
     device.wait_for_text(text=xml_change.new_text)
@@ -98,7 +102,7 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device, release=Fa
 
     Sync.revert(app_name=app_name, change_set=scss_change)
     assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.ACCENT_DARK) > 100), \
-        'Platform specific SCSS not applied!'
+        'SCSS not applied!'
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
 
