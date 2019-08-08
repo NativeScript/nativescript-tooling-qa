@@ -192,6 +192,9 @@ class File(object):
     def copy(source, target, backup_files=False):
         if backup_files:
             File.__back_up_files(target, source)
+        if os.name == 'nt':
+            if "tns-dist" in source:
+                source = source.replace("tns-dist", "\\telerik.com\\distributions\\DailyBuilds\\NativeScript")
         shutil.copy(source, target)
         Log.info('Copy {0} to {1}'.format(os.path.abspath(source), os.path.abspath(target)))
 
