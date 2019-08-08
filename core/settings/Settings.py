@@ -66,12 +66,15 @@ BACKUP_FOLDER = os.path.join(TEST_RUN_HOME, "backup_folder")
 
 
 def resolve_package(name, variable, default=str(ENV)):
-    tag = os.environ.get(variable, default)
+    package = os.environ.get(variable, default)
     # For local packages (tgz files) or NG nightly builds (angular/cli-builds) just return value of the env. variable
-    if '.tgz' not in tag and '-builds' not in tag:
-        return name + '@' + tag
+    if '.tgz' not in package and '-builds' not in package:
+        return name + '@' + package
     else:
-        return tag
+        if os.name == 'nt':
+            if "tns-dist" in package:
+                package = package.replace("tns-dist", "\\telerik.com\\distributions\\DailyBuilds\\NativeScript")
+        return package
 
 
 class Executables(object):
