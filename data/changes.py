@@ -125,10 +125,10 @@ class Changes(object):
                                    old_value='#D7D7D7', new_value='red',
                                    old_color='#D7D7D7', new_color=Colors.RED)
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('app', 'app.android.scss'),
-                                            old_value='$$blue-dark;', new_value='pink;',
+                                            old_value='$blue-dark;', new_value='pink;',
                                             old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('app', 'app.ios.scss'),
-                                            old_value='$blue-dark;', new_value='pink;',
+                                            old_value='$item-active-color;', new_value='pink;',
                                             old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
 
     class TSTabNavigation(object):
@@ -147,7 +147,7 @@ class Changes(object):
                                    old_value='$blue-dark;', new_value='pink;',
                                    old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('app', 'app.ios.scss'),
-                                   old_value='$blue-dark;', new_value='pink;',
+                                   old_value='$item-active-color;', new_value='pink;',
                                    old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
 
     class SharedHelloWorld(object):
