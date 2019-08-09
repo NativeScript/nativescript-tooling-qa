@@ -1,8 +1,10 @@
 import os
 
+from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
+from core.settings.Settings import get_env
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
@@ -78,6 +80,19 @@ def __get_runtimes():
             Npm.download(package=Settings.Packages.IOS, output_file=ios_package)
 
 
+def __fix_path_for_tns_core_modules_dependencies():
+    """
+    Fix tns-core-modules dependencies location
+    """
+
+    share_path = "\\telerik.com\\distributions\\DailyBuilds\\NativeScript"
+    path = Settings.Packages.MODULES.replace("tns-core-modules.tgz", "").replace(share_path, "")
+    require_path = path.replace(share_path, os.path.join(share_path, "tns-dist"))
+    if not Folder.exists(require_path):
+        Folder.create(require_path)
+    Folder.copy(path, require_path, True, True)
+
+
 def __install_ns_cli():
     """
     Install NativeScript CLI locally.
@@ -124,6 +139,8 @@ def prepare(clone_templates=True, install_ng_cli=False, get_preivew_packages=Fal
     __cleanup()
     __install_ns_cli()
     __get_runtimes()
+    if os.name == 'nt' and "PR" in Settings.Packages.MODULES and ".tgz" in Settings.Packages.MODULES:
+        __fix_path_for_tns_core_modules_dependencies()
     if install_ng_cli:
         __install_ng_cli()
         __install_schematics()
