@@ -242,13 +242,21 @@ class Adb(object):
         Log.info('Open home screen of {0}.'.format(str(device_id)))
 
     @staticmethod
-    def install(apk_path, device_id):
+    def install(apk_path, device_id, time_out=60):
         """
         Install application.
         :param apk_path: File path to .apk.
         :param device_id: Device id.
+        :param time_out: command timeout interval.
         """
-        result = Adb.run_adb_command(command='-s {0} install -r {1}'.format(device_id, apk_path), timeout=60, wait=True)
+        command = '-s {0} install -r {1}'.format(device_id, apk_path)
+        result = Adb.run_adb_command(command=command, timeout=time_out, wait=True)
+        # Retry to install the app. Recently too many attempts failed from first time.
+        if not result.complete:
+            Log.info('Failed to install {0} on {1}.'.format(apk_path, device_id))
+            Log.info('Retry...')
+            result = Adb.run_adb_command(command=command, timeout=time_out, wait=True)
+
         assert 'Success' in result.output, 'Failed to install {0}. Output: {1}'.format(apk_path, result.output)
         Log.info('{0} installed successfully on {1}.'.format(apk_path, device_id))
 
