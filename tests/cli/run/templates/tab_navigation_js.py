@@ -22,7 +22,7 @@ class TnsRunJSTabNavigation(TnsRunTest):
         TnsRunTest.setUpClass()
 
         # Create app
-        Tns.create(app_name=cls.app_name, template=Template.TAB_NAVIGATION_JS.local_package, update=False)
+        Tns.create(app_name=cls.app_name, template=Template.TAB_NAVIGATION_JS.local_package, update=True)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)

@@ -7,7 +7,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from data.changes import Changes
-from data.sync.hello_world_js import sync_hello_world_js
+from data.sync.hello_world_js import sync_hello_world_js, run_hello_world_js_ts
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -45,14 +45,17 @@ class TnsRunJSTests(TnsRunTest):
 
     def test_100_run_android(self):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_run_ios(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim)
-
+    
     def test_310_run_android_bundle_uglify(self):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, uglify=True)
-
+    
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_310_run_ios_bundle_uglify(self):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, uglify=True)
+
+    def test_320_run_android_release_snapshot_uglify(self):
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True, release=True, snapshot=True)

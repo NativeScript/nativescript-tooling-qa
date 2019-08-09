@@ -89,7 +89,8 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device, release=Fa
     assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.RED) > 100), \
         'SCSS not applied!'
     # Verify navigation is preserved and you are still on Browse tab
-    device.wait_for_text(text="Browse page content goes here")
+    assert device.is_text_visible(text="Browse page content goes here"), \
+        'Navigation is not preserved when syncing scss/css file!'
 
     # Edit platform specific SCSS on root level
     if platform == Platform.ANDROID:
