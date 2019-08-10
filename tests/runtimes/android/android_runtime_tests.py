@@ -170,11 +170,11 @@ JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/obse
 JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable._emit', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:127:0
 JS: 	Frame: function:'ClickListenerImpl.onClick', file:'file:///node_modules/tns-core-modules/ui/button/button.js:29:0
 JS: 	at com.tns.Runtime.callJSMethodNative(Native Method)
-JS: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1242)
-JS: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1122)
-JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1109)
-JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1089)
-JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1081)
+JS: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1209)
+JS: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1096)
+JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1083)
+JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1063)
+JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1055)
 """  # noqa: E501
         stack_trace_second_part = """JS: 	at android.view.View.performClick(View.java:5198)
 JS: 	at android.view.View$PerformClick.run(View.java:21147)
@@ -186,7 +186,7 @@ JS: 	at java.lang.reflect.Method.invoke(Native Method)
 JS: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:726)
 JS: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:616)
 JS: Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File
-JS: 	at com.tns.Runtime.resolveMethodOverload(Runtime.java:1201)
+JS: 	at com.tns.Runtime.resolveMethodOverload(Runtime.java:1168)
 JS: 	... 16 more
 JS: ### Stack Trace End"""  # noqa: E501
         strings = ["Error: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
