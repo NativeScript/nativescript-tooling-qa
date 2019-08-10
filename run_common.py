@@ -85,7 +85,7 @@ def __fix_path_for_tns_core_modules_dependencies():
     Fix tns-core-modules dependencies location
     """
 
-    share_path = "\\telerik.com\\distributions\\DailyBuilds\\NativeScript"
+    share_path = "\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript"
     path = Settings.Packages.MODULES.replace("tns-core-modules.tgz", "")
     require_path = path.replace(share_path, (share_path+"\\tns-dist"))
     if not Folder.exists(require_path):
