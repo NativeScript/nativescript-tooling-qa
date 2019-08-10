@@ -74,6 +74,7 @@ def resolve_package(name, variable, default=str(ENV)):
         if os.name == 'nt':
             if "tns-dist" in package:
                 package = package.replace("/tns-dist/", "\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript\\")
+                package = package.replace("/", "\\")
         return package
 
 
