@@ -45,6 +45,9 @@ class Changes(object):
                                    old_text='My App', new_text='TestApp')
         XML_INVALID = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                                 old_value='</Page>', new_value='</Page ')
+        TEST = ChangeSet(file_path=os.path.join('app', 'tests', 'example.js'),
+                         old_value='// A sample Jasmine test', new_value='console.log("log for test");',
+                         old_text='// A sample Jasmine test', new_text='console.log("log for test");')
 
     class TSHelloWord(object):
         TS = ChangeSet(file_path=os.path.join('app', 'main-view-model.ts'),
@@ -72,6 +75,9 @@ class Changes(object):
                                    old_text='My App', new_text='TestApp')
         XML_INVALID = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                                 old_value='</Page>', new_value='</Page')
+        TEST = ChangeSet(file_path=os.path.join('src', 'tests', 'example.ts'),
+                         old_value='// A sample Mocha test', new_value='console.log("log for test");',
+                         old_text='// A sample Mocha test', new_text='console.log("log for test");')
 
     class MasterDetailNG(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'shared', 'car.model.ts'),

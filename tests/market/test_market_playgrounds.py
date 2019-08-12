@@ -45,7 +45,7 @@ class PlaygroundMarketSamples(TnsRunTest):
         Market.remove_results_file()
         Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
         TnsRunTest.setUpClass()
-        Preview.install_preview_app(cls.emu, Platform.ANDROID)
+        Preview.install_preview_app(cls.emu, Platform.ANDROID, 80)
         if Settings.HOST_OS is OSType.OSX:
             Preview.install_preview_app(cls.sim, Platform.IOS)
             Preview.install_playground_app(cls.sim, Platform.IOS)
