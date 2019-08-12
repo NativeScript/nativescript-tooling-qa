@@ -95,8 +95,8 @@ class BuildTests(TnsTest):
     def test_002_build_android_release_uglify_snapshot_sourceMap(self):
         # https://github.com/NativeScript/nativescript-dev-webpack/issues/920
         result = Tns.build_android(self.app_name, release=True, uglify=True, snapshot=True, source_map=True)
-        assert not "ERROR in NativeScriptSnapshot. Snapshot generation failed!" in result.output
-        assert not "Target architecture: arm64-v8a" in result.output
+        assert "ERROR in NativeScriptSnapshot. Snapshot generation failed!" not in result.output
+        assert "Target architecture: arm64-v8a" not in result.output
 
         # Configs are respected
         assert File.exists(TnsPaths.get_apk_path(self.app_name, release=True))
