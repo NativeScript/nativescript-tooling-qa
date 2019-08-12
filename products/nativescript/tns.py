@@ -475,7 +475,7 @@ class Tns(object):
         return result
 
     @staticmethod
-    def test(app_name, platform, emulator=True, device=None, just_launch=True, verify=True):
+    def test(app_name, platform, emulator=True, device=None, just_launch=True, verify=True, wait=True):
         """
         Execute `tns test <platform>` command.
         :param app_name: App name (passed as --path <App name>)
@@ -487,15 +487,23 @@ class Tns(object):
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
-        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, just_launch=just_launch)
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, just_launch=just_launch,
+                                  wait=wait)
         if verify:
-            assert 'server started at' in result.output
-            assert 'Launching browser' in result.output
-            assert 'Starting browser' in result.output
-            assert 'Connected on socket' in result.output
-            assert 'Executed 1 of 1' in result.output
-            assert 'TOTAL: 1 SUCCESS' in result.output \
-                   or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
+            if wait:
+                assert 'server started at' in result.output
+                assert 'Launching browser' in result.output
+                assert 'Starting browser' in result.output
+                assert 'Connected on socket' in result.output
+                assert 'Executed 1 of 1' in result.output
+                assert 'TOTAL: 1 SUCCESS' in result.output \
+                       or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
+            else:
+                strings = ['server started at', 'Launching browser', 'Starting browser', 'Connected on socket',
+                           'Executed 1 of 1']
+                assert 'TOTAL: 1 SUCCESS' in result.output \
+                       or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
+                TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         return result
 
     @staticmethod
