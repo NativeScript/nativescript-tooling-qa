@@ -125,16 +125,14 @@ class TestsForTnsTest(TnsRunTest):
 
         # Run Tests
         result = Tns.test(app_name=APP_NAME, platform=platform, emulator=True, just_launch=False, wait=False)
+        test_change = None
         if framework == FrameworkType.JASMINE:
             test_change = Changes.JSHelloWord.TEST
-            Sync.replace(app_name=APP_NAME, change_set=test_change)
-            strings = ["log for test"]
-            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         if framework == FrameworkType.MOCHA:
             test_change = Changes.NGHelloWorld.TEST
-            Sync.replace(app_name=APP_NAME, change_set=test_change)
-            strings = ["log for test"]
-            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        Sync.replace(app_name=APP_NAME, change_set=test_change)
+        strings = ["log for test"]
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     def test_400_invalid_framework_name(self):
         result = Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package,
