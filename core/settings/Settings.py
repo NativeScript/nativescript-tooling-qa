@@ -75,6 +75,9 @@ def resolve_package(name, variable, default=str(ENV)):
             if "tns-dist" in package:
                 package = package.replace("/tns-dist/", "\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript\\")
                 package = package.replace("/", "\\")
+                # add next for tns-core-modules on windows for PRs, because of tns-dist dependency in the package
+                if name == 'tns-core-modules' and "PR" in package and ".tgz" in package:
+                    return name + '@next'
         return package
 
 
