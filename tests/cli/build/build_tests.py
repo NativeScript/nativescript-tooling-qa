@@ -27,10 +27,6 @@ class BuildTests(TnsTest):
         TnsTest.setUpClass()
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        # Folder.clean(os.path.join(cls.app_name, 'hooks'))
-        # Folder.clean(os.path.join(cls.app_name, 'node_modules'))
-        # Folder.clean(os.path.join(cls.app_name_with_space, 'hooks'))
-        # Folder.clean(os.path.join(cls.app_name_with_space, 'node_modules'))
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
                                  framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
@@ -92,8 +88,11 @@ class BuildTests(TnsTest):
         assert "Gradle build..." in result.output, "Gradle build is not called."
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
-    def test_002_build_android_release(self):
-        Tns.build_android(self.app_name, release=True)
+    def test_002_build_android_release_uglify_snapshot_sourcemap(self):
+        # https://github.com/NativeScript/nativescript-dev-webpack/issues/920
+        result = Tns.build_android(self.app_name, release=True, uglify=True, snapshot=True, source_map=True)
+        assert "ERROR in NativeScriptSnapshot. Snapshot generation failed!" not in result.output
+        assert "Target architecture: arm64-v8a" not in result.output
 
         # Configs are respected
         assert File.exists(TnsPaths.get_apk_path(self.app_name, release=True))

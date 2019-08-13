@@ -81,7 +81,6 @@ def resolve_package(name, variable, default=str(ENV)):
                         return name + '@rc'
                     else:
                         return name + '@next'
-        return package
 
 
 class Executables(object):

@@ -1,10 +1,8 @@
 import os
 
-from core.enums.env import EnvironmentType
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
-from core.settings.Settings import get_env
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
@@ -33,7 +31,6 @@ def __cleanup():
     Adb.restart()
     Tns.kill()
     Gradle.kill()
-    Gradle.cache_clean()
 
 
 def __get_templates(branch=Settings.Packages.TEMPLATES_BRANCH):
