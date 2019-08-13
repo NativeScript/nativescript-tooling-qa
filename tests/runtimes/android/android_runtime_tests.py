@@ -165,10 +165,10 @@ class AndroidRuntimeTests(TnsTest):
         assert test_result, 'Application is not build successfully! Logs: ' + File.read(log.log_file)
         Device.click(self.emulator, "TAP", True)
         stack_trace_first_part = """### Stack Trace Start
-JS: 	Frame: function:'viewModel.onTap', file:'file:///app/main-view-model.js:18:0
-JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable.notify', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:107:0
-JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable._emit', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:127:0
-JS: 	Frame: function:'ClickListenerImpl.onClick', file:'file:///node_modules/tns-core-modules/ui/button/button.js:29:0
+JS: 	viewModel.onTapfile:///app/main-view-model.js:18:0
+JS: 	at push.../node_modules/tns-core-modules/data/observable/observable.js.Observable.notifyfile:///node_modules/tns-core-modules/data/observable/observable.js:107:0
+JS: 	at push.../node_modules/tns-core-modules/data/observable/observable.js.Observable._emitfile:///node_modules/tns-core-modules/data/observable/observable.js:127:0
+JS: 	at ClickListenerImpl.onClickfile:///node_modules/tns-core-modules/ui/button/button.js:29:0
 JS: 	at com.tns.Runtime.callJSMethodNative(Native Method)
 JS: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1209)
 JS: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1096)
