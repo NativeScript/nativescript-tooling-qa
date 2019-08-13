@@ -27,10 +27,6 @@ class BuildTests(TnsTest):
         TnsTest.setUpClass()
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        # Folder.clean(os.path.join(cls.app_name, 'hooks'))
-        # Folder.clean(os.path.join(cls.app_name, 'node_modules'))
-        # Folder.clean(os.path.join(cls.app_name_with_space, 'hooks'))
-        # Folder.clean(os.path.join(cls.app_name_with_space, 'node_modules'))
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
                                  framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
