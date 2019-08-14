@@ -104,6 +104,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
 
     # Assert final and initial states are same
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 

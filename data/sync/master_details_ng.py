@@ -126,4 +126,5 @@ def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugl
         'Platform specific SCSS on root level not applied!'
 
     # Assert final and initial states are same
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)

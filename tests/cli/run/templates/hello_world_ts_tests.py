@@ -8,7 +8,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from data.changes import Changes
-from data.sync.hello_world_js import sync_hello_world_ts
+from data.sync.hello_world_js import sync_hello_world_ts, run_hello_world_js_ts
 from data.templates import Template
 from products.nativescript.tns import Tns
 
