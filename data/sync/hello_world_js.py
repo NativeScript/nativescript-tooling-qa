@@ -15,6 +15,7 @@ from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.tns_assert import TnsAssert
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
@@ -38,7 +39,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     # Execute `tns run` and wait until logs are OK
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr, release=release,
                      uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files, just_launch=just_launch)
-    __verify_snapshot_skipped(snapshot, result, release=release)
+    TnsAssert.snapshot_skipped(snapshot, result, release)
 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented, device=device,release=release)
