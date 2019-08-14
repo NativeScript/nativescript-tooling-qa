@@ -7,6 +7,7 @@ import os
 import unittest
 
 from parameterized import parameterized
+from selenium.webdriver.common.by import By
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -65,23 +66,23 @@ class MigrateWebToMobileTests(TnsRunTest):
         # NG Serve (to check web is not broken by {N})
         self.ng_serve(prod=False)
         self.chrome.open(url='https://google.com/ncr')  # change url to be sure next serve do not assert previous serve
-        # self.ng_serve(prod=True) Broken by https://github.com/NativeScript/nativescript-schematics/pull/214
+        self.ng_serve(prod=True)
 
     # noinspection PyUnusedLocal
     @parameterized.expand([
-        ('android', Platform.ANDROID, True, False, False),
-        ('ios', Platform.IOS, True, False, False),
-        # ('android_aot', Platform.ANDROID, True, True, False),
-        # ('ios_aot', Platform.IOS, True, True, False),
-        # ('android_aot_uglify', Platform.ANDROID, True, True, True),
-        # ('ios_aot_uglify', Platform.IOS, True, True, True),
+        ('android', Platform.ANDROID, False, False),
+        ('ios', Platform.IOS, False, False),
+        ('android_aot', Platform.ANDROID, True, False),
+        ('ios_aot', Platform.IOS, True, False),
+        ('android_aot_uglify', Platform.ANDROID, True, True),
+        ('ios_aot_uglify', Platform.IOS, True, True),
     ])
-    def test_10_run(self, name, platform, bundle, aot, uglify):
+    def test_10_run(self, name, platform, aot, uglify):
         if (platform == Platform.IOS) and (Settings.HOST_OS == OSType.WINDOWS or Settings.HOST_OS == OSType.LINUX):
             unittest.skip('Can not run iOS tests on Windows or Linux.')
         else:
             ng_app_text = 'auto-generated works!'
-            Tns.run(platform=platform, app_name=self.app_name, bundle=bundle, aot=aot, uglify=uglify, emulator=True)
+            Tns.run(platform=platform, app_name=self.app_name, aot=aot, uglify=uglify, emulator=True)
             if platform == Platform.ANDROID:
                 self.emu.wait_for_text(text=ng_app_text, timeout=300)
             if platform == Platform.IOS:
@@ -90,7 +91,10 @@ class MigrateWebToMobileTests(TnsRunTest):
     def ng_serve(self, prod=False):
         NG.serve(project=self.app_name, prod=prod)
         self.chrome.open(DEFAULT_WEB_URL)
-        welcome_element = self.chrome.driver.find_element_by_xpath('//h1')
-        assert 'Welcome to' in welcome_element.text, 'Failed to find welcome message.'
-        Log.info('Welcome page served successfully.')
+        if "Angular CLI: 8.3" in NG.exec_command(command="version").output:
+            element = self.chrome.driver.find_element(By.XPATH, '//*[contains(text(), "TestApp app is running!")]')
+        else:
+            element = self.chrome.driver.find_element(By.XPATH, '//*[contains(text(), "Welcome to")]')
+        assert element.is_displayed(), 'Failed to serve default NG project.'
+        Log.info('Default NG web project loaded!')
         NG.kill()
