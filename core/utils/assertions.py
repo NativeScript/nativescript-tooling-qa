@@ -4,9 +4,9 @@ Smart assert method for regex.
 import re
 
 
-class RegexAssert(object):
+class Assert(object):
     @staticmethod
-    def regex_assert(actual, expected, error_message=""):
+    def assert_with_regex(actual, expected, error_message=""):
         """
         Assert using regex.
         :param actual: string containing actual result.

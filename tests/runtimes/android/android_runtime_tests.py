@@ -11,7 +11,7 @@ import pytz
 
 from core.base_test.tns_test import TnsTest
 from core.utils.npm import Npm
-from core.utils.regex_assert import RegexAssert
+from core.utils.assertions import Assert
 from core.utils.run import run
 from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
@@ -195,7 +195,7 @@ JS: ### Stack Trace End"""  # noqa: E501
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=20,
                                  period=5)
-        RegexAssert.regex_assert(File.read(log.log_file), stack_trace_first_part)
+        Assert.assert_with_regex(File.read(log.log_file), stack_trace_first_part)
         message = 'Native crash should not crash the app when discardUncaughtJsExceptions used fails! Logs: '
         assert test_result, message + File.read(log.log_file)
         Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)

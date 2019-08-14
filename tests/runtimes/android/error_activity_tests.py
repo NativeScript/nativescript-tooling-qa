@@ -12,7 +12,7 @@ from core.base_test.tns_test import TnsTest
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File
-from core.utils.regex_assert import RegexAssert
+from core.utils.assertions import Assert
 from data.changes import Sync, ChangeSet
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -57,7 +57,7 @@ System\.err: 	at checkDeferredModulesfile:///app/webpack/bootstrap:\d+:\d+
 System\.err: 	at webpackJsonpCallbackfile:///app/webpack/bootstrap:\d+:\d+
 System\.err: 	at \(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
 System\.err: 	at require\(:\d+:\d+\)""" # noqa: E501, E261, W291
-        RegexAssert.regex_assert(File.read(result.log_file),
+        Assert.assert_with_regex(File.read(result.log_file),
                                  regex_to_check)
         self.emu.wait_for_text('Exception')
         self.emu.wait_for_text('Logcat')
