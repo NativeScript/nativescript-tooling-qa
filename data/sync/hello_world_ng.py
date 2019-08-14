@@ -16,18 +16,11 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
-def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
-                        instrumented=True):
-    # Define if it should be executed on device or emulator
-    emulator = True
-    device_id = None
-    if device.type == DeviceType.ANDROID or device.type == DeviceType.IOS:
-        emulator = False
-        device_id = device.id
-
+def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
+                        instrumented=True, release=False, snapshot=False):
     # Execute tns run command
     result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, device=device_id, wait=False,
-                     bundle=bundle, aot=aot, uglify=uglify, hmr=hmr)
+                     bundle=bundle, aot=aot, uglify=uglify, hmr=hmr, release=release, snapshot=snapshot)
     # Check logs
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented, app_type=AppType.NG, device=device)
@@ -38,6 +31,18 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
+    return result
+
+def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
+                        instrumented=True):
+    # Define if it should be executed on device or emulator
+    emulator = True
+    device_id = None
+    if device.type == DeviceType.ANDROID or device.type == DeviceType.IOS:
+        emulator = False
+        device_id = device.id
+
+    result = run_hello_world_ng(app_name=app_name, platform=platform, device=device, uglify=uglify, aot=aot, hmr=hmr)
 
     # Apply changes
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
