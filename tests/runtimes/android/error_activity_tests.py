@@ -11,6 +11,8 @@ import os
 from core.base_test.tns_test import TnsTest
 from core.settings import Settings
 from core.utils.device.device_manager import DeviceManager
+from core.utils.file_utils import File
+from core.utils.regex_assert import RegexAssert
 from data.changes import Sync, ChangeSet
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -44,7 +46,19 @@ class AndroidErrorActivityTests(TnsTest):
 
         # Verify logs and screen
         TnsLogs.wait_for_log(log_file=result.log_file,
-                             string_list=['StackTrace:', 'Error: Kill the app!', 'line:', 'column:'])
+                             string_list=['StackTrace:', 'Error: Kill the app!'])
+        regex_to_check = r"""System\.err: Error: Kill the app!
+System\.err: File: \"file:///app/app\.js:\d+:\d+
+System.err: StackTrace: 
+System\.err: 	file:///app/app.js:\d+:\d+
+System\.err: 	at \./app\.js\(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
+System\.err: 	at __webpack_require__file:///app/webpack/bootstrap:\d+:\d+
+System\.err: 	at checkDeferredModulesfile:///app/webpack/bootstrap:\d+:\d+
+System\.err: 	at webpackJsonpCallbackfile:///app/webpack/bootstrap:\d+:\d+
+System\.err: 	at \(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
+System\.err: 	at require\(:\d+:\d+\)""" # noqa: E501, E261, W291
+        RegexAssert.regex_assert(File.read(result.log_file),
+                                 regex_to_check)
         self.emu.wait_for_text('Exception')
         self.emu.wait_for_text('Logcat')
         self.emu.wait_for_text('Error: Kill the app!')
