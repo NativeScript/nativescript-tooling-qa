@@ -257,7 +257,7 @@ class TnsRunJSTests(TnsRunTest):
         # Verify console logs are not displayed in release builds
         not_existing_strings = ['JS:']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_strings)
+                             not_existing_string_list=not_existing_strings, timeout=120)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
         blue_count = self.sim.get_pixels_by_color(color=Colors.LIGHT_BLUE)
