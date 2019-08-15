@@ -20,8 +20,8 @@ from products.nativescript.tns_assert import TnsAssert
 def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
                         instrumented=True, release=False, snapshot=False):
     # Execute tns run command
-    result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, device=device_id, wait=False,
-                     bundle=bundle, aot=aot, uglify=uglify, hmr=hmr, release=release, snapshot=snapshot)
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, bundle=bundle, aot=aot,
+                     uglify=uglify, hmr=hmr, release=release, snapshot=snapshot)
     TnsAssert.snapshot_skipped(snapshot, result, release)
     # Check logs
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
