@@ -105,6 +105,7 @@ class PreviewJSTests(TnsPreviewJSTests):
 
         # Preview on second emulator
         Preview.run_url(url=url, device=self.emu_API24)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Verify first emulator is not refreshed, state of app is preserved
