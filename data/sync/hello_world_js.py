@@ -104,6 +104,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit CSS file and verify changes are applied
+    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
     Sync.replace(app_name=app_name, change_set=css_change)
     device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
     device.wait_for_text(text=xml_change.new_text)
