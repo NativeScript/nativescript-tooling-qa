@@ -40,4 +40,4 @@ class AutocompleteTests(TnsTest):
     def test_400_autocomplete_invalid_parameter(self):
         result = Tns.exec_command(command='autocomplete fake')
         assert "This command doesn't accept parameters." in result.output
-        assert 'This operation might modify the .bash_profile, .bashrc and .zshrc files.' in result.output
+        assert "Run 'tns autocomplete --help' for more information." in result.output
