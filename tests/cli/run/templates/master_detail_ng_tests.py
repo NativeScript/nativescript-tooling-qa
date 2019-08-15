@@ -46,7 +46,7 @@ class TnsRunMasterDetailTests(TnsRunTest):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim)
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'temporary skip on windows')
-    #TODO: remove skip when https://github.com/NativeScript/nativescript-dev-webpack/issues/1021 fixed
+    # TODO: remove skip when https://github.com/NativeScript/nativescript-dev-webpack/issues/1021 fixed
     def test_300_run_android_bundle_aot(self):
         sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, aot=True)
 
@@ -62,7 +62,7 @@ class TnsRunMasterDetailTests(TnsRunTest):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, uglify=True)
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'temporary skip on windows')
-    #TODO: remove skip when https://github.com/NativeScript/nativescript-dev-webpack/issues/1021 fixed
+    # TODO: remove skip when https://github.com/NativeScript/nativescript-dev-webpack/issues/1021 fixed
     def test_320_run_android_bundle_aot_and_uglify(self):
         sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
 
