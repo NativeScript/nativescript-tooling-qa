@@ -196,14 +196,15 @@ class TnsAssert(object):
             assert log.count('hot-update.json for platform ios') == 1, "File is synced more than once!"
             assert file_name in log
 
+    @staticmethod
     def snapshot_skipped(snapshot, result, release):
         """
         Verify if snapshot flag is passed it it skipped.
         :param snapshot: True if snapshot flag is present.
         :param result: Result of `tns run` command.
-        :param release: True if release build 
+        :param release: True if release build
         """
-        if snapshot and Settings.HOST_OS == OSType.WINDOWS or not release:
+        if snapshot and Settings.HOST_OS == OSType.WINDOWS or snapshot and not release:
             msg = 'Bear in mind that snapshot is only available in release builds and is NOT available on Windows'
             skip_snapshot = Wait.until(lambda: 'Stripping the snapshot flag' in File.read(result.log_file), timeout=180)
             assert skip_snapshot, 'Not message that snapshot is skipped.'
