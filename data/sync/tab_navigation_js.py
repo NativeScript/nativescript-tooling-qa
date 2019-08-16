@@ -85,6 +85,7 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device, release=Fa
     # https://github.com/NativeScript/NativeScript/issues/6953
     # Navigate to Browse tab and verify when scss is synced navigation is preserved
     device.click(text="Browse")
+    assert not device.is_text_visible(text=js_change.new_text)
     Sync.replace(app_name=app_name, change_set=scss_change)
     assert Wait.until(lambda: device.get_pixels_by_color(color=Colors.RED) > 100), \
         'SCSS not applied!'

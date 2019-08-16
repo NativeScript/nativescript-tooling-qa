@@ -24,8 +24,8 @@ def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, ao
                      uglify=uglify, hmr=hmr, release=release, snapshot=snapshot)
     TnsAssert.snapshot_skipped(snapshot, result, release)
     # Check logs
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
-                                   hmr=hmr, instrumented=instrumented, app_type=AppType.NG, device=device)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle, release=release,
+                                   hmr=hmr, instrumented=instrumented, app_type=AppType.NG, device=device, snapshot=snapshot)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
 
     # Verify it looks properly

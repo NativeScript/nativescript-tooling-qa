@@ -42,7 +42,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     TnsAssert.snapshot_skipped(snapshot, result, release)
 
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
-                                   hmr=hmr, instrumented=instrumented, device=device,release=release)
+                                   hmr=hmr, instrumented=instrumented, device=device,release=release, snapshot=snapshot)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
     # Verify it looks properly
