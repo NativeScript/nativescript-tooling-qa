@@ -7,8 +7,6 @@ import os
 from core.enums.app_type import AppType
 from core.enums.os_type import OSType
 from core.settings import Settings
-from core.utils.file_utils import File
-from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
 from products.nativescript.preview_helpers import Preview
@@ -55,19 +53,6 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
     return result
-
-
-def __verify_snapshot_skipped(snapshot, result, release=False):
-    """
-    Verify if snapshot flag is passed it it skipped.
-    :param snapshot: True if snapshot flag is present.
-    :param result: Result of `tns run` command.
-    """
-    if snapshot and Settings.HOST_OS == OSType.WINDOWS or snapshot and not release:
-        msg = 'Bear in mind that snapshot is only available in release builds and is NOT available on Windows'
-        skip_snapshot = Wait.until(lambda: 'Stripping the snapshot flag' in File.read(result.log_file), timeout=180)
-        assert skip_snapshot, 'Not message that snapshot is skipped.'
-        assert msg in File.read(result.log_file), 'No message that snapshot is NOT available on Windows.'
 
 
 def __sync_hello_world_js_ts(app_type, app_name, platform, device,
