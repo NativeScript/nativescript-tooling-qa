@@ -14,10 +14,11 @@ from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.tns_assert import TnsAssert
 
 
-def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
-                        instrumented=True):
+def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
+                       instrumented=True, release=False, snapshot=False):
     # Define if it should be executed on device or emulator
     emulator = True
     device_id = None
@@ -26,11 +27,14 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
         device_id = device.id
 
     # Execute tns run command
-    result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, device=device_id, wait=False,
-                     bundle=bundle, aot=aot, uglify=uglify, hmr=hmr)
+    result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, bundle=bundle, aot=aot,
+                     uglify=uglify, hmr=hmr, release=release, snapshot=snapshot, device=device_id)
+    TnsAssert.snapshot_skipped(snapshot, result, release)
+
     # Check logs
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
-                                   hmr=hmr, instrumented=instrumented, app_type=AppType.NG, device=device)
+                                   release=release, hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
+                                   device=device, snapshot=snapshot)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
 
     # Verify it looks properly
@@ -38,6 +42,12 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
+    return result
+
+
+def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
+                        instrumented=True):
+    result = run_hello_world_ng(app_name=app_name, platform=platform, device=device, uglify=uglify, aot=aot, hmr=hmr)
 
     # Apply changes
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
@@ -99,6 +109,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
 
     # Assert final and initial states are same
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 

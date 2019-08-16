@@ -13,11 +13,14 @@ from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 
 
-def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False):
-    Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr, aot=aot,
-            uglify=uglify)
+def run_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
+                         release=False, snapshot=False):
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle,
+                     hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot, release=release)
+    TnsAssert.snapshot_skipped(snapshot, result, release)
 
     # Verify it looks properly
     device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text, timeout=450, retry_delay=5)
@@ -25,6 +28,12 @@ def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugl
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
+    return result
+
+
+def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False):
+    run_master_detail_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+                         uglify=uglify, aot=aot)
 
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailNG.TS)
@@ -121,4 +130,5 @@ def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugl
         'Platform specific SCSS on root level not applied!'
 
     # Assert final and initial states are same
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
