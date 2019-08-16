@@ -591,16 +591,16 @@ JS: ==== object dump end ===="""
         assert test_result, "App not build correctly after updating tns-core modules! Logs: " + File.read(log.log_file)
         button_text = "Use ES6 language features"
 
-        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text),
                                  timeout=30, period=5)
         message = "Use ES6 language features Button is missing on the device! The app has crashed!"
         assert test_result, message
 
-        Device.click(self.emulator, text=button_text, case_sensitive=True)
+        Device.click(self.emulator, text=button_text, case_sensitive=False)
         test_result = Wait.until(lambda: "class com.js.NativeList" in File.read(log.log_file), timeout=25,
                                  period=5)
         assert test_result, "com.js.NativeList not found! Logs: " + File.read(log.log_file)
 
-        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text),
                                  timeout=30, period=5)
         assert test_result, message
