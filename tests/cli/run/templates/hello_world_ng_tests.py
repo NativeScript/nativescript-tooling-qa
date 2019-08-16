@@ -73,4 +73,5 @@ class TnsRunNGTests(TnsRunTest):
         sync_hello_world_ng(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)
 
     def test_320_run_android_release_snapshot_aot_and_uglify(self):
-        run_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True, release=True, snapshot=True)
+        run_hello_world_ng(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True,
+                           release=True, snapshot=True)

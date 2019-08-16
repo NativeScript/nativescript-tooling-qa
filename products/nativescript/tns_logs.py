@@ -131,7 +131,6 @@ class TnsLogs(object):
             logs.append('Successfully generated snapshots')
             logs.append('Snapshot enabled')
 
-
         # Return logs
         return logs
 

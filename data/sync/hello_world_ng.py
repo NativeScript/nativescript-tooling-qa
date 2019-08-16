@@ -18,14 +18,23 @@ from products.nativescript.tns_assert import TnsAssert
 
 
 def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
-                        instrumented=True, release=False, snapshot=False):
+                       instrumented=True, release=False, snapshot=False):
+    # Define if it should be executed on device or emulator
+    emulator = True
+    device_id = None
+    if device.type == DeviceType.ANDROID or device.type == DeviceType.IOS:
+        emulator = False
+        device_id = device.id
+
     # Execute tns run command
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, bundle=bundle, aot=aot,
-                     uglify=uglify, hmr=hmr, release=release, snapshot=snapshot)
+    result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, bundle=bundle, aot=aot,
+                     uglify=uglify, hmr=hmr, release=release, snapshot=snapshot, device=device_id)
     TnsAssert.snapshot_skipped(snapshot, result, release)
+
     # Check logs
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle, release=release,
-                                   hmr=hmr, instrumented=instrumented, app_type=AppType.NG, device=device, snapshot=snapshot)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
+                                   release=release, hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
+                                   device=device, snapshot=snapshot)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
 
     # Verify it looks properly
@@ -35,15 +44,9 @@ def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, ao
     device.get_screen(path=initial_state)
     return result
 
+
 def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,
                         instrumented=True):
-    # Define if it should be executed on device or emulator
-    emulator = True
-    device_id = None
-    if device.type == DeviceType.ANDROID or device.type == DeviceType.IOS:
-        emulator = False
-        device_id = device.id
-
     result = run_hello_world_ng(app_name=app_name, platform=platform, device=device, uglify=uglify, aot=aot, hmr=hmr)
 
     # Apply changes

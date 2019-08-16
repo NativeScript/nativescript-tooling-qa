@@ -13,7 +13,6 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 
-
 def sync_tab_navigation_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
                            snapshot=False, instrumented=False, release=False):
     __sync_tab_navigation_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
@@ -104,7 +103,7 @@ def __sync_tab_navigation_js_ts(app_type, app_name, platform, device, release=Fa
     assert Wait.until(lambda: device.get_pixels_by_color(color=change.new_color) > 100), \
         'Platform specific SCSS on root level not applied!'
     Log.info('Platform specific SCSS on root level applied successfully!')
-    
+
     # Revert all the changes in app
     # Navigate to Home tab again
     device.click(text="Home")

@@ -16,9 +16,10 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
 
 
-def run_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False, release=False, snapshot=False):
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr, aot=aot,
-            uglify=uglify, snapshot=snapshot, release=release)
+def run_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
+                         release=False, snapshot=False):
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle,
+                     hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot, release=release)
     TnsAssert.snapshot_skipped(snapshot, result, release)
 
     # Verify it looks properly
@@ -31,7 +32,8 @@ def run_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugli
 
 
 def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False):
-    result = run_master_detail_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr, uglify=uglify, aot=aot)
+    run_master_detail_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+                         uglify=uglify, aot=aot)
 
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailNG.TS)
