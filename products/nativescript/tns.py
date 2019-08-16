@@ -505,7 +505,7 @@ class Tns(object):
                            'Executed 1 of 1']
                 assert 'TOTAL: 1 SUCCESS' in result.output \
                        or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
-                TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+                TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         return result
 
     @staticmethod
