@@ -117,7 +117,7 @@ class TnsLogs(object):
             app_id = TnsPaths.get_bundle_id(app_name)
             logs.append('Successfully synced application {0} on device'.format(app_id))
 
-        if app_type == AppType.NG:
+        if app_type == AppType.NG and not release:
             logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
                         'the production mode.')
             # If you are in NG with hmr project changes of app.css should not cause angular reload
