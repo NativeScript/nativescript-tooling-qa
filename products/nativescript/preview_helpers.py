@@ -36,7 +36,7 @@ class Preview(object):
         File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplay.tgz'), TEST_SUT_HOME)
 
     @staticmethod
-    def install_preview_app(device_info, platform):
+    def install_preview_app(device_info, platform, timeout=60):
         """Installs Preview App on emulator and simulator"""
         package_android = os.path.join(TEST_SUT_HOME, 'app-universal-release.apk')
         package_ios = os.path.join(TEST_SUT_HOME, 'nsplaydev.app')
@@ -45,7 +45,7 @@ class Preview(object):
             File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
-            Adb.install(package_android, device_info.id)
+            Adb.install(package_android, device_info.id, timeout)
 
     @staticmethod
     def install_preview_app_no_unpack(device_info, platform, uninstall=True):

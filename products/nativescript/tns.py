@@ -320,10 +320,12 @@ class Tns(object):
 
     @staticmethod
     def build(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
-              aot=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None, aab=False):
+              aot=False, source_map=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None,
+              aab=False):
         result = Tns.exec_command(command='build', path=app_name, platform=platform, release=release,
-                                  provision=provision, for_device=for_device, bundle=bundle, aot=aot, uglify=uglify,
-                                  snapshot=snapshot, wait=True, log_trace=log_trace, aab=aab)
+                                  provision=provision, for_device=for_device, bundle=bundle, aot=aot,
+                                  source_map=source_map, uglify=uglify, snapshot=snapshot, wait=True,
+                                  log_trace=log_trace, aab=aab)
         if verify:
             # Verify output
             assert result.exit_code == 0, 'Build failed with non zero exit code.'
@@ -346,11 +348,11 @@ class Tns(object):
         return result
 
     @staticmethod
-    def build_android(app_name, release=False, bundle=True, aot=False, uglify=False, snapshot=False, log_trace=False,
-                      verify=True, app_data=None, aab=False):
+    def build_android(app_name, release=False, bundle=True, aot=False, source_map=False, uglify=False, snapshot=False,
+                      log_trace=False, verify=True, app_data=None, aab=False):
         return Tns.build(app_name=app_name, platform=Platform.ANDROID, release=release, bundle=bundle, aot=aot,
-                         uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify, app_data=app_data,
-                         aab=aab)
+                         source_map=source_map, uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify,
+                         app_data=app_data, aab=aab)
 
     @staticmethod
     def build_ios(app_name, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
@@ -475,7 +477,7 @@ class Tns(object):
         return result
 
     @staticmethod
-    def test(app_name, platform, emulator=True, device=None, just_launch=True, verify=True):
+    def test(app_name, platform, emulator=True, device=None, just_launch=True, verify=True, wait=True):
         """
         Execute `tns test <platform>` command.
         :param app_name: App name (passed as --path <App name>)
@@ -487,15 +489,23 @@ class Tns(object):
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
-        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, just_launch=just_launch)
+        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, just_launch=just_launch,
+                                  wait=wait)
         if verify:
-            assert 'server started at' in result.output
-            assert 'Launching browser' in result.output
-            assert 'Starting browser' in result.output
-            assert 'Connected on socket' in result.output
-            assert 'Executed 1 of 1' in result.output
-            assert 'TOTAL: 1 SUCCESS' in result.output \
-                   or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
+            if wait:
+                assert 'server started at' in result.output
+                assert 'Launching browser' in result.output
+                assert 'Starting browser' in result.output
+                assert 'Connected on socket' in result.output
+                assert 'Executed 1 of 1' in result.output
+                assert 'TOTAL: 1 SUCCESS' in result.output \
+                       or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
+            else:
+                strings = ['server started at', 'Launching browser', 'Starting browser', 'Connected on socket',
+                           'Executed 1 of 1']
+                assert 'TOTAL: 1 SUCCESS' in result.output \
+                       or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
+                TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         return result
 
     @staticmethod

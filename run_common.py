@@ -31,7 +31,6 @@ def __cleanup():
     Adb.restart()
     Tns.kill()
     Gradle.kill()
-    Gradle.cache_clean()
 
 
 def __get_templates(branch=Settings.Packages.TEMPLATES_BRANCH):

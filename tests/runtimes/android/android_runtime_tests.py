@@ -11,6 +11,7 @@ import pytz
 
 from core.base_test.tns_test import TnsTest
 from core.utils.npm import Npm
+from core.utils.assertions import Assert
 from core.utils.run import run
 from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
@@ -164,37 +165,37 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, 'Application is not build successfully! Logs: ' + File.read(log.log_file)
         Device.click(self.emulator, "TAP", True)
-        stack_trace_first_part = """### Stack Trace Start
-JS: 	Frame: function:'viewModel.onTap', file:'file:///app/main-view-model.js:18:0
-JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable.notify', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:107:0
-JS: 	Frame: function:'push.../node_modules/tns-core-modules/data/observable/observable.js.Observable._emit', file:'file:///node_modules/tns-core-modules/data/observable/observable.js:127:0
-JS: 	Frame: function:'ClickListenerImpl.onClick', file:'file:///node_modules/tns-core-modules/ui/button/button.js:29:0
-JS: 	at com.tns.Runtime.callJSMethodNative(Native Method)
-JS: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1242)
-JS: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1122)
-JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1109)
-JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1089)
-JS: 	at com.tns.Runtime.callJSMethod(Runtime.java:1081)
-"""  # noqa: E501
-        stack_trace_second_part = """JS: 	at android.view.View.performClick(View.java:5198)
-JS: 	at android.view.View$PerformClick.run(View.java:21147)
-JS: 	at android.os.Handler.handleCallback(Handler.java:739)
-JS: 	at android.os.Handler.dispatchMessage(Handler.java:95)
-JS: 	at android.os.Looper.loop(Looper.java:148)
-JS: 	at android.app.ActivityThread.main(ActivityThread.java:5417)
-JS: 	at java.lang.reflect.Method.invoke(Native Method)
-JS: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:726)
-JS: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:616)
-JS: Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File
-JS: 	at com.tns.Runtime.resolveMethodOverload(Runtime.java:1201)
-JS: 	... 16 more
+        stack_trace_first_part = r"""### Stack Trace Start
+JS: 	viewModel\.onTapfile:///app/main-view-model\.js:\d+:\d+
+JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\.notifyfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
+JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\._emitfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
+JS: 	at ClickListenerImpl\.onClickfile:///node_modules/tns-core-modules/ui/button/button\.js:\d+:\d+
+JS: 	at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
+JS: 	at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethod\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethod\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethod\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.gen\.java\.lang\.Object_vendor_\d+_\d+_ClickListenerImpl\.onClick\(Object_vendor_\d+_\d+_ClickListenerImpl\.java:\d+\)
+JS: 	at android\.view\.View\.performClick\(View\.java:\d+\)
+JS: 	at android\.view\.View\$PerformClick\.run\(View\.java:\d+\)
+JS: 	at android\.os\.Handler\.handleCallback\(Handler\.java:\d+\)
+JS: 	at android\.os\.Handler\.dispatchMessage\(Handler\.java:\d+\)
+JS: 	at android\.os\.Looper\.loop\(Looper\.java:148\)
+JS: 	at android\.app\.ActivityThread\.main\(ActivityThread\.java:\d+\)
+JS: 	at java\.lang\.reflect\.Method\.invoke\(Native Method\)
+JS: 	at com\.android\.internal\.os\.ZygoteInit\$MethodAndArgsCaller\.run\(ZygoteInit\.java:\d+\)
+JS: 	at com\.android\.internal\.os\.ZygoteInit\.main\(ZygoteInit\.java:\d+\)
+JS: Caused by: java\.lang\.Exception: Failed resolving method createTempFile on class java\.io\.File
+JS: 	at com\.tns\.Runtime\.resolveMethodOverload\(Runtime\.java:\d+\)
+JS: 	\.\.\. \d+ more
 JS: ### Stack Trace End"""  # noqa: E501
         strings = ["Error: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
-                   "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
-                   stack_trace_first_part, stack_trace_second_part]
+                   "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File"]
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=20,
                                  period=5)
+        Assert.assert_with_regex(File.read(log.log_file), stack_trace_first_part)
         message = 'Native crash should not crash the app when discardUncaughtJsExceptions used fails! Logs: '
         assert test_result, message + File.read(log.log_file)
         Device.wait_for_text(self.emulator, text=TAP_THE_BUTTON)
@@ -590,16 +591,16 @@ JS: ==== object dump end ===="""
         assert test_result, "App not build correctly after updating tns-core modules! Logs: " + File.read(log.log_file)
         button_text = "Use ES6 language features"
 
-        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text),
                                  timeout=30, period=5)
         message = "Use ES6 language features Button is missing on the device! The app has crashed!"
         assert test_result, message
 
-        Device.click(self.emulator, text=button_text, case_sensitive=True)
+        Device.click(self.emulator, text=button_text, case_sensitive=False)
         test_result = Wait.until(lambda: "class com.js.NativeList" in File.read(log.log_file), timeout=25,
                                  period=5)
         assert test_result, "com.js.NativeList not found! Logs: " + File.read(log.log_file)
 
-        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text, True),
+        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, button_text),
                                  timeout=30, period=5)
         assert test_result, message

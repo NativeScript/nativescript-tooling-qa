@@ -45,7 +45,7 @@ class PlaygroundMarketSamples(TnsRunTest):
         Market.remove_results_file()
         Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
         TnsRunTest.setUpClass()
-        Preview.install_preview_app(cls.emu, Platform.ANDROID)
+        Preview.install_preview_app(cls.emu, Platform.ANDROID, 80)
         if Settings.HOST_OS is OSType.OSX:
             Preview.install_preview_app(cls.sim, Platform.IOS)
             Preview.install_playground_app(cls.sim, Platform.IOS)
@@ -119,7 +119,8 @@ class PlaygroundMarketSamples(TnsRunTest):
 
                 Log.info('Testing iOS !!!')
                 Preview.run_url(url=link, device=self.sim)
-                if "test_0_" in self._testMethodName or "test_000_" in self._testMethodName:
+                cases = ["test_0_", "test_00_", "test_000_"]
+                if any(x in self._testMethodName for x in cases):
                     time.sleep(10)
                     PlaygroundMarketSamples.close_popup(self.sim)
                 Log.info(' Waiting iOS app to load...')
