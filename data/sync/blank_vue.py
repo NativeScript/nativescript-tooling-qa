@@ -41,8 +41,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
 
     # Verify it looks properly
-    device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text)
-    device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.old_text)
+    device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text, timeout=120)
+    device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.old_text, timeout=120)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
 
