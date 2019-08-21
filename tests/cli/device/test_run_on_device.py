@@ -61,6 +61,9 @@ class TnsRunOnDevices(TnsDeviceTest):
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID, run_type=RunType.FULL)
         for device in DeviceManager.get_devices(device_type=any):
             strings.append(device.id)
+        strings.append(self.emu.id)
+        if Settings.HOST_OS is OSType.OSX:
+            strings.append(self.sim.id)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
 
         # Verify it looks properly

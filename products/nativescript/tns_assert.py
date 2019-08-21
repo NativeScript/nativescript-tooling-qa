@@ -9,6 +9,7 @@ from core.utils.file_utils import File
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from core.utils.perf_utils import PerfUtils
+from core.utils.wait import Wait
 from products.nativescript.app import App
 from products.nativescript.tns_paths import TnsPaths
 
@@ -194,3 +195,17 @@ class TnsAssert(object):
             assert log.count('Start syncing changes for platform ios') == 1, "File is synced more than once!"
             assert log.count('hot-update.json for platform ios') == 1, "File is synced more than once!"
             assert file_name in log
+
+    @staticmethod
+    def snapshot_skipped(snapshot, result, release):
+        """
+        Verify if snapshot flag is passed it it skipped.
+        :param snapshot: True if snapshot flag is present.
+        :param result: Result of `tns run` command.
+        :param release: True if release build
+        """
+        if snapshot and Settings.HOST_OS == OSType.WINDOWS or snapshot and not release:
+            msg = 'Bear in mind that snapshot is only available in release builds and is NOT available on Windows'
+            skip_snapshot = Wait.until(lambda: 'Stripping the snapshot flag' in File.read(result.log_file), timeout=180)
+            assert skip_snapshot, 'Not message that snapshot is skipped.'
+            assert msg in File.read(result.log_file), 'No message that snapshot is NOT available on Windows.'

@@ -157,14 +157,14 @@ class CreateTests(TnsTest):
         """Create project without name should show friendly error message"""
         result = Tns.create(app_name="", template=Template.HELLO_WORLD_JS.local_package, force_clean=False,
                             verify=False, update=False)
-        assert "You must specify <App name> when creating a new project" in result.output
-        assert "# tns create" in result.output
+        assert "Run 'tns create --help' for more information." in result.output
+        assert "You must specify <App name> when creating a new project." in result.output
 
     def test_405_create_app_with_space_without_quotes(self):
         """Create project with space without quotes."""
         result = Tns.exec_command("create fake fake", log_trace=False)
-        assert "The parameter fake is not valid for this command" in result.output
-        assert "# tns create" in result.output
+        assert "Run 'tns create --help' for more information." in result.output
+        assert "The parameter fake is not valid for this command." in result.output
 
     @staticmethod
     def __clean_folders():

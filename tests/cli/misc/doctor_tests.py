@@ -75,6 +75,7 @@ class DoctorTests(TnsTest):
         output = Tns.doctor().output
         assert 'There seem to be issues with your configuration.' in output
         assert 'The ANDROID_HOME environment variable is not set or it points to a non-existent directory' in output
+        assert 'Verify that your environment is configured according to the system requirements described at' in output
 
     def test_401_doctor_should_detect_wrong_path_to_java(self):
         os.environ['JAVA_HOME'] = 'WRONG_PATH'
