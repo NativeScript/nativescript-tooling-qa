@@ -7,7 +7,7 @@ import os
 from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType
 from core.settings.Settings import TEST_RUN_HOME, AppName
-from core.utils.file_utils import Folder, File
+from core.utils.file_utils import Folder
 from core.utils.device.device import Device, Adb
 from data.templates import Template
 from products.nativescript.app import App

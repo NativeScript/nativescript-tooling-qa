@@ -387,17 +387,3 @@ class Adb(object):
             wait=True, device_id=device_id)
         assert result.output == "", "Process {0} not killed! Logs:{1}".format(process_name, result.output)
         time.sleep(5)
-
-    @staticmethod
-    def kill_server():
-        """
-        Kill adb server.
-        """
-        return Adb.run_adb_command(command='kill-server', wait=True).output
-
-    @staticmethod
-    def start_server():
-        """
-        Start adb server.
-        """
-        return Adb.run_adb_command(command='start-server', wait=True).output

@@ -92,7 +92,7 @@ class AbiSplitTests(TnsTest):
         assert self.check_file_in_zip(app_arm64_v8a_release_path, os.path.join("arm64-v8a", "libNativeScript.so"))
 
         app_armeabi_v7a_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
-                                                  "app-armeabi-v7a-release.apk")
+                                                    "app-armeabi-v7a-release.apk")
         assert File.exists(app_armeabi_v7a_release_path)
         assert self.check_file_in_zip(app_armeabi_v7a_release_path, os.path.join("armeabi-v7a", "libNativeScript.so"))
 
