@@ -45,7 +45,7 @@ class AbiSplitTests(TnsTest):
     def check_file_in_zip(zip_file, file_name_to_check):
         files_list = File.get_files_names_in_zip(zip_file)
         for current_file in files_list:
-            if current_file.get('filename') == file_name_to_check:
+            if file_name_to_check in str(current_file.filename):
                 return True
         return False
 
