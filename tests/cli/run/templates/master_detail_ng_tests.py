@@ -6,7 +6,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
-from data.sync.master_details_ng import sync_master_detail_ng
+from data.sync.master_details_ng import sync_master_detail_ng, run_master_detail_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -45,6 +45,8 @@ class TnsRunMasterDetailTests(TnsRunTest):
     def test_100_run_ios(self):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim)
 
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'temporary skip on windows')
+    # TODO: remove skip when https://github.com/NativeScript/nativescript-dev-webpack/issues/1021 fixed
     def test_300_run_android_bundle_aot(self):
         sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, aot=True)
 
@@ -59,9 +61,15 @@ class TnsRunMasterDetailTests(TnsRunTest):
     def test_310_run_ios_bundle_uglify(self):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, uglify=True)
 
+    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'temporary skip on windows')
+    # TODO: remove skip when https://github.com/NativeScript/nativescript-dev-webpack/issues/1021 fixed
     def test_320_run_android_bundle_aot_and_uglify(self):
         sync_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_320_run_ios_bundle_aot_and_uglify(self):
         sync_master_detail_ng(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)
+
+    def test_330_run_android_release_snapshot_aot_and_uglify(self):
+        run_master_detail_ng(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True,
+                             release=True, snapshot=True)

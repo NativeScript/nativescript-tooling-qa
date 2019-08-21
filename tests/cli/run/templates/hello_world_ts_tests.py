@@ -8,7 +8,7 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
 from data.changes import Changes
-from data.sync.hello_world_js import sync_hello_world_ts
+from data.sync.hello_world_js import sync_hello_world_ts, run_hello_world_js_ts
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -58,13 +58,6 @@ class TnsRunTSTests(TnsRunTest):
     def test_200_run_ios_no_hmr(self):
         sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, hmr=False)
 
-    def test_300_run_android_bundle_aot(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, aot=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_300_run_ios_bundle_aot(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, aot=True)
-
     def test_310_run_android_bundle_uglify(self):
         sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True)
 
@@ -72,9 +65,5 @@ class TnsRunTSTests(TnsRunTest):
     def test_310_run_ios_bundle_uglify(self):
         sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, uglify=True)
 
-    def test_320_run_android_bundle_aot_and_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.ANDROID, self.emu, aot=True, uglify=True)
-
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_320_run_ios_bundle_aot_and_uglify(self):
-        sync_hello_world_ts(self.app_name, Platform.IOS, self.sim, aot=True, uglify=True)
+    def test_315_run_android_release_snapshot_uglify(self):
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True, snapshot=True, release=True)

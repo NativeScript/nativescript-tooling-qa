@@ -52,7 +52,7 @@ class TnsLogs(object):
     @staticmethod
     def run_messages(app_name, platform, run_type=RunType.FULL, bundle=True, hmr=True, uglify=False, app_type=None,
                      file_name=None, instrumented=False, plugins=None, aot=False, device=None, just_launch=False,
-                     transfer_all=False):
+                     transfer_all=False, release=False, snapshot=False):
         """
         Get log messages that should be present when running a project.
         :param app_name: Name of the app (for example TestApp).
@@ -113,10 +113,11 @@ class TnsLogs(object):
                                                            file_name=file_name, hmr=hmr))
 
         # Add message for successful sync
-        app_id = TnsPaths.get_bundle_id(app_name)
-        logs.append('Successfully synced application {0} on device'.format(app_id))
+        if not release:
+            app_id = TnsPaths.get_bundle_id(app_name)
+            logs.append('Successfully synced application {0} on device'.format(app_id))
 
-        if app_type == AppType.NG:
+        if app_type == AppType.NG and not release:
             logs.append('Angular is running in the development mode. Call enableProdMode() to enable '
                         'the production mode.')
             # If you are in NG with hmr project changes of app.css should not cause angular reload
@@ -124,6 +125,11 @@ class TnsLogs(object):
                 if hmr and 'app.css' in file_name:
                     logs.remove('Angular is running in the development mode. Call enableProdMode() to enable '
                                 'the production mode.')
+
+        # Add message for snapshot
+        if snapshot and release and Settings.HOST_OS != OSType.WINDOWS:
+            logs.append('Successfully generated snapshots')
+            logs.append('Snapshot enabled')
 
         # Return logs
         return logs

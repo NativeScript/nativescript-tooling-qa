@@ -77,7 +77,10 @@ def resolve_package(name, variable, default=str(ENV)):
                 package = package.replace("/", "\\")
                 # add next for tns-core-modules on windows for PRs, because of tns-dist dependency in the package
                 if name == 'tns-core-modules' and "PR" in package and ".tgz" in package:
-                    return name + '@next'
+                    if "release" in os.environ.get("ghprbTargetBranch", "master"):
+                        return name + '@rc'
+                    else:
+                        return name + '@next'
         return package
 
 

@@ -105,6 +105,10 @@ class PreviewJSTests(TnsPreviewJSTests):
 
         # Preview on second emulator
         Preview.run_url(url=url, device=self.emu_API24)
+        # Here use bundle=False because on consecutive preview build is not executed again
+        # and no bundle messages are displayed in log
+        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID, bundle=False)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Verify first emulator is not refreshed, state of app is preserved

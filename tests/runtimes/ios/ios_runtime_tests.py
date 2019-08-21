@@ -148,7 +148,7 @@ class IOSRuntimeTests(TnsTest):
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
         strings = ['CONSOLE LOG file:///app/app.js:47:0 The folder “not-existing-path” doesn’t exist.',
-                   'JS: contentsOfDirectoryAtPathError(file:///app/main-view-model.js:6:0']
+                   'JS:\ncontentsOfDirectoryAtPathError(file:///app/main-view-model.js:6:0']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
