@@ -166,6 +166,8 @@ class Emulators(object):
                               emu_id='emulator-5566')
     EMU_API_29 = EmulatorInfo(avd=os.environ.get('EMU_API_29', 'Emulator-Api29-Google'), os_version=10.0, port='5568',
                               emu_id='emulator-5568')
+    EMU_API_23_64 = EmulatorInfo(avd=os.environ.get('EMU_API_23_64', 'Emulator-Api23-64'), os_version=6.0, port='5570',
+                                 emu_id='emulator-5570')
 
     DEFAULT = EMU_API_23
 

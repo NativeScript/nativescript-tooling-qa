@@ -7,7 +7,7 @@ import os
 from core.base_test.tns_test import TnsTest
 from core.enums.device_type import DeviceType
 from core.settings.Settings import TEST_RUN_HOME, AppName
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.device.device import Device, Adb
 from data.templates import Template
 from products.nativescript.app import App
@@ -42,4 +42,10 @@ class AbiSplitTestsForArm64Devices(TnsTest):
         """
         AbiSplitHelper.assert_apk(
             os.path.join(TEST_RUN_HOME, "Test_apks", "app-arm64-v8a-release.apk"),
+            self.device, self.app_id)
+        AbiSplitHelper.assert_apk(
+            os.path.join(TEST_RUN_HOME, "Test_apks", "app-universal-release.apk"),
+            self.device, self.app_id)
+        AbiSplitHelper.assert_apk(
+            os.path.join(TEST_RUN_HOME, "Test_apks", "app-armeabi-v7a-release.apk"),
             self.device, self.app_id)

@@ -300,6 +300,13 @@ class File(object):
             Log.debug('Failed to unzip file {0}'.format(file_path))
 
     @staticmethod
+    def get_files_names_in_zip(file_path):
+        zfile = zipfile.ZipFile(file_path, 'r')
+        file_names = zfile.infolist()
+        zfile.close()
+        return file_names
+
+    @staticmethod
     def download(file_name, url, destination_dir=Settings.TEST_RUN_HOME):
         file_path = os.path.join(destination_dir, file_name)
         if Settings.PYTHON_VERSION < 3:
