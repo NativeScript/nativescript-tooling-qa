@@ -165,7 +165,8 @@ class AndroidRuntimeTests(TnsTest):
                                  period=5)
         assert test_result, 'Application is not build successfully! Logs: ' + File.read(log.log_file)
         Device.click(self.emulator, "TAP", True)
-        stack_trace_first_part = r"""### Stack Trace Start
+        if self.emulator.version == 6.0:
+            stack_trace_first_part = r"""### Stack Trace Start
 JS: 	viewModel\.onTapfile:///app/main-view-model\.js:\d+:\d+
 JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\.notifyfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
 JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\._emitfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
@@ -185,6 +186,34 @@ JS: 	at android\.os\.Looper\.loop\(Looper\.java:148\)
 JS: 	at android\.app\.ActivityThread\.main\(ActivityThread\.java:\d+\)
 JS: 	at java\.lang\.reflect\.Method\.invoke\(Native Method\)
 JS: 	at com\.android\.internal\.os\.ZygoteInit\$MethodAndArgsCaller\.run\(ZygoteInit\.java:\d+\)
+JS: 	at com\.android\.internal\.os\.ZygoteInit\.main\(ZygoteInit\.java:\d+\)
+JS: Caused by: java\.lang\.Exception: Failed resolving method createTempFile on class java\.io\.File
+JS: 	at com\.tns\.Runtime\.resolveMethodOverload\(Runtime\.java:\d+\)
+JS: 	\.\.\. \d+ more
+JS: ### Stack Trace End"""  # noqa: E501
+        else:
+            stack_trace_first_part = r"""### Stack Trace Start
+JS: 	viewModel\.onTapfile:///app/main-view-model\.js:\d+:\d+
+JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\.notifyfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
+JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\._emitfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
+JS: 	at ClickListenerImpl\.onClickfile:///node_modules/tns-core-modules/ui/button/button\.js:\d+:\d+
+JS: 	at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
+JS: 	at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethod\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethod\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.Runtime\.callJSMethod\(Runtime\.java:\d+\)
+JS: 	at com\.tns\.gen\.java\.lang\.Object_vendor_\d+_\d+_ClickListenerImpl\.onClick\(Object_vendor_\d+_\d+_ClickListenerImpl\.java:\d+\)
+JS: 	at android\.view\.View\.performClick\(View\.java:\d+\)
+JS: 	at android\.view\.View\.performClickInternal\(View.java:\d+\)
+JS: 	at android\.view\.View\.access\$\d+\(View\.java:\d+\)
+JS: 	at android\.view\.View\$PerformClick\.run\(View\.java:\d+\)
+JS: 	at android\.os\.Handler\.handleCallback\(Handler\.java:\d+\)
+JS: 	at android\.os\.Handler\.dispatchMessage\(Handler\.java:\d+\)
+JS: 	at android\.os\.Looper\.loop\(Looper\.java:\d+\)
+JS: 	at android\.app\.ActivityThread\.main\(ActivityThread\.java:\d+\)
+JS: 	at java\.lang\.reflect\.Method\.invoke\(Native Method\)
+JS: 	at com\.android\.internal\.os\.RuntimeInit\$MethodAndArgsCaller\.run\(RuntimeInit\.java:\d+\)
 JS: 	at com\.android\.internal\.os\.ZygoteInit\.main\(ZygoteInit\.java:\d+\)
 JS: Caused by: java\.lang\.Exception: Failed resolving method createTempFile on class java\.io\.File
 JS: 	at com\.tns\.Runtime\.resolveMethodOverload\(Runtime\.java:\d+\)
