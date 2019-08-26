@@ -352,9 +352,23 @@ JS: ### Stack Trace End"""  # noqa: E501
 
         output = Adb.run_adb_command("shell settings put global time_zone UTC", self.emulator.id, wait=True)
         assert output.output == '', "Failed to change timezone!"
-        output = Adb.run_adb_command("shell setprop persist.sys.timezone UTC", self.emulator.id, wait=True)
-        assert output.output == '', "Failed to change timezone!"
-
+        if self.emulator.version < 10.0:
+            output = Adb.run_adb_command("shell setprop persist.sys.timezone Atlantic/Reykjavik", self.emulator.id,
+                                         wait=True)
+            assert output.output == '', "Failed to change timezone!"
+        else:
+            # Open Date and time settings to change the timezone
+            output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id,
+                                         wait=True)
+            assert_text = 'Starting: Intent { act=android.settings.DATE_SETTINGS }'
+            assert assert_text in output.output, "Failed to start Date and Time settings activity!"
+            Device.click(self.emulator, text="Time zone", case_sensitive=True)
+            Device.click(self.emulator, text="Region")
+            Adb.run_adb_command("shell input keyevent \"KEYCODE_I\"", self.emulator.id,
+                                wait=True)
+            Adb.run_adb_command("shell input keyevent \"KEYCODE_C\"", self.emulator.id,
+                                wait=True)
+            Device.click(self.emulator, text="Iceland")
         # Change main-page.js so it contains only logging information
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-961',
                                  'main-page.js')
@@ -382,17 +396,17 @@ JS: ### Stack Trace End"""  # noqa: E501
         time_utc = datetime.datetime.utcnow()
 
         # Generate regex for asserting date and time
-        date_to_find_gmt = time_utc.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\+0000 \(UTC\)"
+        date_to_find_gmt = time_utc.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\+0000 \(GMT\)"
         test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "TAP", True), timeout=200,
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        assert_result = Wait.until(lambda: "GMT+0000 (UTC)" in File.read(log.log_file), timeout=30, period=5)
+        assert_result = Wait.until(lambda: "GMT+0000 (GMT)" in File.read(log.log_file), timeout=30, period=5)
         assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
         # Assert date time is correct
         assert_result = Wait.until(lambda: re.search(date_to_find_gmt, File.read(log.log_file)), timeout=20,
                                    period=5)
-        assert assert_result, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_gmt, file.read(file(log)))
+        assert assert_result, 'Date {0} was not found! \n Log: \n {1}'.format(date_to_find_gmt, File.read(log.log_file))
         # Get Los Angeles date and time
         los_angeles_time = time_utc.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("America/Los_Angeles"))
 
@@ -400,16 +414,30 @@ JS: ### Stack Trace End"""  # noqa: E501
         output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id, wait=True)
         assert_text = 'Starting: Intent { act=android.settings.DATE_SETTINGS }'
         assert assert_text in output.output, "Failed to start Date and Time settings activity!"
-
         # Change TimeZone
-        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Select time zone", True), timeout=30,
-                                 period=5)
-        assert test_result, "Select time zone Button is missing on the device"
-        Device.click(self.emulator, text="Select time zone")
-        test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Pacific Daylight Time", True),
-                                 timeout=30, period=5)
-        assert test_result, "Pacific Daylight Time Button is missing on the device"
-        Device.click(self.emulator, text="Pacific Daylight Time")
+        if self.emulator.version < 10.0:
+            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Select time zone", True),
+                                     timeout=30,
+                                     period=5)
+            assert test_result, "Select time zone Button is missing on the device"
+            Device.click(self.emulator, text="Select time zone")
+            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Pacific Daylight Time", True),
+                                     timeout=30, period=5)
+            assert test_result, "Pacific Daylight Time Button is missing on the device"
+            Device.click(self.emulator, text="Pacific Daylight Time")
+
+        else:
+            output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id,
+                                         wait=True)
+            assert_text = 'Starting: Intent { act=android.settings.DATE_SETTINGS }'
+            assert assert_text in output.output, "Failed to start Date and Time settings activity!"
+            Device.click(self.emulator, text="Region")
+            Adb.run_adb_command("shell input keyevent \"KEYCODE_U\"", self.emulator.id,
+                                wait=True)
+            Adb.run_adb_command("shell input keyevent \"KEYCODE_S\"", self.emulator.id,
+                                wait=True)
+            Device.click(self.emulator, text="United States")
+            Device.click(self.emulator, text="Los Angeles")
 
         # Open the test app again
         output = Adb.run_adb_command("shell am start -n org.nativescript.TestApp/com.tns.NativeScriptActivity",
@@ -524,19 +552,20 @@ JS: ### Stack Trace End"""  # noqa: E501
                                  'main-view-model.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
         File.copy(source=source_js, target=target_js, backup_files=True)
+        Adb.clear_logcat(self.emulator.id)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
         strings = ['Successfully synced application', 'Successfully installed on device with identifier']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
-        Adb.clear_logcat(self.emulator.id)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        error_message_tns_logs = """System.err: An uncaught Exception occurred on "main" thread.
+        error_message_tns_logs = ["""System.err: An uncaught Exception occurred on "main" thread.
 System.err: Calling js method onClick failed
-System.err: Error: test!
-System.err: StackTrace:"""
-        test_result = Wait.until(lambda: error_message_tns_logs in File.read(log.log_file), timeout=45, period=5)
+System.err: Error: test!""", """System.err: StackTrace:"""]
+        test_result = Wait.until(
+            lambda: all(log_message in File.read(log.log_file) for log_message in error_message_tns_logs), timeout=45,
+            period=5)
         assert test_result, 'Error message in tns logs not found! Logs:' + File.read(log.log_file)
 
         system_error_message = ['System.err: An uncaught Exception occurred on "main" thread.',
@@ -545,22 +574,27 @@ System.err: StackTrace:"""
         test_result = Wait.until(lambda: all(message in log_cat for message in system_error_message),
                                  timeout=15, period=5)
         assert test_result, 'Error message in tns log cat not found! Logs:' + log_cat
-
+        Adb.clear_logcat(self.emulator.id)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False, release=True)
         strings = ['Project successfully built', 'Successfully installed on device with identifier']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         assert test_result, 'Build was not successful! Logs:' + File.read(log.log_file)
-        Adb.clear_logcat(self.emulator.id)
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        test_result = Wait.until(lambda: error_message_tns_logs not in File.read(log.log_file), timeout=45, period=5)
+        test_result = Wait.until(
+            lambda: all(message not in File.read(log.log_file) for message in system_error_message), timeout=45,
+            period=5)
         assert test_result, 'Error message in tns logs not found! Logs:' + File.read(log.log_file)
 
         log_cat = Adb.get_logcat(self.emulator.id)
-        test_result = Wait.until(lambda: all(message not in log_cat for message in system_error_message),
-                                 timeout=15, period=5)
-        assert test_result, 'Error message in tns log cat should be shown! Logs:' + log_cat
+        if self.emulator.version < 10.0:
+            test_result = Wait.until(lambda: all(message not in log_cat for message in system_error_message),
+                                     timeout=15, period=5)
+        else:
+            test_result = Wait.until(lambda: all(message in log_cat for message in system_error_message),
+                                     timeout=15, period=5)
+        assert test_result, 'Error message in log cat should be shown! Logs:' + log_cat
 
     def test_447_test_worker_post_message(self):
         """
