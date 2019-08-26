@@ -3,6 +3,8 @@ import os
 import re
 import time
 
+from subprocess32 import TimeoutExpired
+
 from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
@@ -49,7 +51,16 @@ class Adb(object):
         Dump the log and then exit (don't block).
         :param device_id: Device id.
         """
-        return Adb.run_adb_command(command='logcat -d', device_id=device_id, wait=True).output
+        # sometimes command timeout. Very often on api29. Add a retry that don't wait the process to finish.
+        try:
+            result = Adb.run_adb_command(command='logcat -d', device_id=device_id, wait=True).output
+        except TimeoutExpired:
+            Log.info('get_logcat timeout! Retrying...')
+            command_result = Adb.run_adb_command(command='logcat -d', device_id=device_id, wait=False)
+            time.sleep(15)
+            result = File.read(command_result.log_file)
+            os.kill(command_result.pid, 0)
+        return result
 
     @staticmethod
     def clear_logcat(device_id):
