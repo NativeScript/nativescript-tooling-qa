@@ -67,7 +67,7 @@ class AppSizeTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=53997832, tolerance=0.1)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=796627, tolerance=0.1)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=719734, tolerance=0.1)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=5811260, tolerance=0.1)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=8611480, tolerance=0.1)
 
         # Verify final apk size
         assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=18216351, tolerance=0.05)
