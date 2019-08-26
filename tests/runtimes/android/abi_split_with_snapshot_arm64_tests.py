@@ -49,3 +49,16 @@ class AbiSplitTestsForArm64Devices(TnsTest):
         AbiSplitHelper.assert_apk(
             os.path.join(TEST_RUN_HOME, "Test_apks", "app-armeabi-v7a-release.apk"),
             self.device, self.app_id)
+        with self.assertRaises(AssertionError) as error:
+            AbiSplitHelper.assert_apk(
+                os.path.join(TEST_RUN_HOME, "Test_apks", "app-x86_64-release.apk"),
+                self.device, self.app_id)
+        error_message = "apk with x86_64 architecture should not be installed on arm device!Logs:" + str(
+            error.exception)
+        assert "INSTALL_FAILED_NO_MATCHING_ABIS" in str(error.exception), error_message
+        with self.assertRaises(AssertionError) as error:
+            AbiSplitHelper.assert_apk(
+                os.path.join(TEST_RUN_HOME, "Test_apks", "app-x86-release.apk"),
+                self.device, self.app_id)
+        error_message = "apk with x86 architecture should not be installed on arm device!Logs:" + str(error.exception)
+        assert "INSTALL_FAILED_NO_MATCHING_ABIS" in str(error.exception), error_message
