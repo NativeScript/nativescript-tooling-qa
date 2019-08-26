@@ -70,7 +70,7 @@ class AppSizeTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=8611480, tolerance=0.1)
 
         # Verify final apk size
-        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=18216351, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=24506215, tolerance=0.05)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_js_app_ipa(self):
