@@ -111,7 +111,7 @@ class PluginTests(TnsTest):
         Test for issue https://github.com/NativeScript/nativescript-cli/issues/3451
         """
         Tns.platform_remove(app_name=self.app_name, platform=Platform.ANDROID)
-        Tns.plugin_add(plugin_name='nativescript-socket.io', path=self.app_name)
+        Tns.plugin_add(plugin_name='nativescript-socket.io@0.10.1', path=self.app_name)
         assert Folder.exists(os.path.join(self.app_path, 'node_modules', 'nativescript-socket.io'))
         result = Tns.plugin_remove(plugin_name='nativescript-socket.io', path=self.app_name, log_trace=True)
         assert 'Successfully removed plugin nativescript-socket.io' in result.output
