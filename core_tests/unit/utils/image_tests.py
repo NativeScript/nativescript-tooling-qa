@@ -23,6 +23,7 @@ class ImageUtilsTests(unittest.TestCase):
     app_image = os.path.join(current_folder, 'resources', 'app.png')
     app_image_ng = os.path.join(current_folder, 'resources', 'app_ng.png')
     app_image_ios = os.path.join(current_folder, 'resources', 'app_ios.png')
+    app_image_default_ios = os.path.join(current_folder, 'resources', 'app_ios_default.png')
     iphone_image = os.path.join(current_folder, 'resources', 'screenshot.png')
     unicode_image = os.path.join(current_folder, 'resources', 'unicode.png')
     blue = numpy.array([255, 188, 48])
@@ -43,6 +44,12 @@ class ImageUtilsTests(unittest.TestCase):
 
     @unittest.skipIf(os.environ.get('TRAVIS', None) is not None, 'Skip on Travis.')
     def test_04_get_text(self):
+        # OCR on iOS 13
+        text = ImageUtils.get_text(self.app_image_default_ios)
+        assert 'taps left' in text
+        assert 'Tap the button' in text
+        assert 'TAP' in text
+        
         # OCR on Hello-World app
         text = ImageUtils.get_text(self.app_image_ios)
         assert 'My App' in text

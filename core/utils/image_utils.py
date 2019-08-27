@@ -126,7 +126,7 @@ class ImageUtils(object):
             thresh = cv2.adaptiveThreshold(gray, 255, 1, 1, 11, 2)
 
             # apply some dilation and erosion to join the gaps - change iteration to detect more or less area's
-            thresh = cv2.dilate(thresh, None, iterations=5)
+            thresh = cv2.dilate(thresh, None, iterations=10)
             thresh = cv2.erode(thresh, None, iterations=3)
 
             # Find the contours
