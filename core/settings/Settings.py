@@ -156,6 +156,20 @@ class IOS(object):
     DEBUG_PORT = 41000
 
 
+def resolve_default_emulator(environment_variable, default_value):
+    avd_value = os.environ.get(environment_variable, default_value.avd)
+    emulator_switcher = {
+        "Api19": Emulators.EMU_API_19,
+        "Api23": Emulators.EMU_API_23,
+        "Api24": Emulators.EMU_API_24,
+        "Api26": Emulators.EMU_API_26,
+        "Api28": Emulators.EMU_API_28,
+        "Api29": Emulators.EMU_API_29,
+        "Api23-64": Emulators.EMU_API_23_64,
+    }
+    return emulator_switcher.get(avd_value, default_value)
+
+
 class Emulators(object):
     EMU_API_19 = EmulatorInfo(avd=os.environ.get('EMU_API_19', 'Emulator-Api19-Default'), os_version=4.4, port='5560',
                               emu_id='emulator-5560')
@@ -172,7 +186,10 @@ class Emulators(object):
     EMU_API_23_64 = EmulatorInfo(avd=os.environ.get('EMU_API_23_64', 'Emulator-Api23-64'), os_version=6.0, port='5570',
                                  emu_id='emulator-5570')
 
-    DEFAULT = EMU_API_23
+    DEFAULT = ""
+
+
+Emulators.DEFAULT = resolve_default_emulator("EMULATOR_API_VERSION", Emulators.EMU_API_23)
 
 
 class Simulators(object):
