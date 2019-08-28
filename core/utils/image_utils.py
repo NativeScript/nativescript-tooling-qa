@@ -105,7 +105,8 @@ class ImageUtils(object):
 
     @staticmethod
     def get_text(image_path, use_cv2=True):
-        char_whitelist = string.digits
+        char_whitelist = string.whitespace
+        char_whitelist += string.digits
         char_whitelist += string.ascii_lowercase
         char_whitelist += string.ascii_uppercase
 
