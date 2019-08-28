@@ -279,6 +279,10 @@ class DebugJSTests(TnsRunTest):
         assert self.dev_tools.find_element_by_text(text="function") is not None, 'Failed to stop on first line of code.'
         assert 'NativeScript' in device.get_text(), 'Failed to stop on first line of code.'
 
+        # Resume execution
+        self.dev_tools.continue_debug()
+        device.wait_for_text(text='TAP')
+
     def __debug_start(self, platform, device):
         # Run the app and verify it is deployed
         Tns.run(app_name=self.app_name, platform=platform, emulator=True, source_map=True, just_launch=True)
