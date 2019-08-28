@@ -13,6 +13,9 @@ In order to get OCR features working you need to install `tesseract`.
 **macOS**
 ```bash
 brew install tesseract
+brew install usbmuxd --HEAD
+brew install ideviceinstaller --HEAD
+brew install libimobiledevice --HEAD
 ```
 
 Note: If you are unable to install 'atomac' on Mojave and get the error below:
