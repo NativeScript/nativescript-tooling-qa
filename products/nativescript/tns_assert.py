@@ -10,6 +10,7 @@ from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from core.utils.perf_utils import PerfUtils
 from core.utils.wait import Wait
+from core.utils.run import run
 from products.nativescript.app import App
 from products.nativescript.tns_paths import TnsPaths
 
@@ -238,8 +239,8 @@ class TnsAssert(object):
         :param string: string you want to assert exists in AndroidManifest.xml 
         """
         apk_tool = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
-        command = '{0} manifest print {1}'.format(self.apk_tool, apk_path)
+        command = '{0} manifest print {1}'.format(apk_tool, path_to_apk)
         result = run(command, timeout=30)
-        assert string_to_assert in result.output
+        assert string in result.output
 
 

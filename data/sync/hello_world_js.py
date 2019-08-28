@@ -6,6 +6,7 @@ import os
 
 from core.enums.app_type import AppType
 from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -52,6 +53,13 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
+    if platform == Platform.ANDROID
+        # Verify app is built with android sdk 29 by default
+        if release:
+            apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=True)
+        else:
+            apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
+        TnsAssert.string_in_android_manifest(apk_path, 'compileSdkVersion="29"')
     return result
 
 
