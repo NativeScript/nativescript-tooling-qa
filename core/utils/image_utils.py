@@ -105,7 +105,8 @@ class ImageUtils(object):
 
     @staticmethod
     def get_text(image_path, use_cv2=True):
-        char_whitelist = string.digits
+        char_whitelist = string.whitespace
+        char_whitelist += string.digits
         char_whitelist += string.ascii_lowercase
         char_whitelist += string.ascii_uppercase
 
@@ -126,7 +127,7 @@ class ImageUtils(object):
             thresh = cv2.adaptiveThreshold(gray, 255, 1, 1, 11, 2)
 
             # apply some dilation and erosion to join the gaps - change iteration to detect more or less area's
-            thresh = cv2.dilate(thresh, None, iterations=10)
+            thresh = cv2.dilate(thresh, None, iterations=5)
             thresh = cv2.erode(thresh, None, iterations=3)
 
             # Find the contours
