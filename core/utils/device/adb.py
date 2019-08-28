@@ -59,7 +59,10 @@ class Adb(object):
             command_result = Adb.run_adb_command(command='logcat -d', device_id=device_id, wait=False)
             time.sleep(15)
             result = File.read(command_result.log_file)
-            os.kill(command_result.pid, 0)
+            try:
+                os.kill(command_result.pid, 0)
+            except OSError:
+                Log.info('Process already killed...')
         return result
 
     @staticmethod
