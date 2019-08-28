@@ -67,11 +67,9 @@ class AndroidAppBundleTests(TnsRunTest):
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs",
                                    "bundle", "debug", "app-debug.aab")
 
-        Tns.build_android(self.app_path, aab=True, verify=False)
-        # There is an issue at the moment that the path is not shown in log.
-        # TODO: uncomment this when the issue is fixed
-        # assert "The build result is located at:" in result.output
-        # assert path_to_aab in result.output
+        result = Tns.build_android(self.app_path, aab=True, verify=False)
+        assert "The build result is located at:" in result.output
+        assert path_to_aab in result.output
         assert File.exists(path_to_aab)
 
         # Verify app can be deployed on emulator via bundletool
@@ -107,12 +105,10 @@ class AndroidAppBundleTests(TnsRunTest):
         \nuseLibs: true,\nandroidNdkPath: \"$ANDROID_NDK_HOME\"""")
 
         # env.snapshot is applicable only in release build
-        Tns.build_android(self.app_path, aab=True, release=True, snapshot=True,
+        result = Tns.build_android(self.app_path, aab=True, release=True, snapshot=True,
                           uglify=True, verify=False)
-        # There is an issue at the moment that the path is not shown in log.
-        # TODO: uncomment this when the issue is fixed
-        # assert "The build result is located at:" in result.output
-        # assert path_to_aab in result.output
+        assert "The build result is located at:" in result.output
+        assert path_to_aab in result.output
         assert File.exists(path_to_aab)
 
         # Verify app can be deployed on emulator via bundletool
