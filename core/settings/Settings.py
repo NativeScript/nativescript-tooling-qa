@@ -159,13 +159,13 @@ class IOS(object):
 def resolve_default_emulator(environment_variable, default_value):
     avd_value = os.environ.get(environment_variable, default_value.avd)
     emulator_switcher = {
-        "Api19": Emulators.EMU_API_19,
-        "Api23": Emulators.EMU_API_23,
-        "Api24": Emulators.EMU_API_24,
-        "Api26": Emulators.EMU_API_26,
-        "Api28": Emulators.EMU_API_28,
-        "Api29": Emulators.EMU_API_29,
-        "Api23-64": Emulators.EMU_API_23_64,
+        "19": Emulators.EMU_API_19,
+        "23": Emulators.EMU_API_23,
+        "24": Emulators.EMU_API_24,
+        "26": Emulators.EMU_API_26,
+        "28": Emulators.EMU_API_28,
+        "29": Emulators.EMU_API_29,
+        "23-64": Emulators.EMU_API_23_64,
     }
     return emulator_switcher.get(avd_value, default_value)
 
