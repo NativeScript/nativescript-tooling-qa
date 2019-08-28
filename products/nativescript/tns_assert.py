@@ -209,3 +209,37 @@ class TnsAssert(object):
             skip_snapshot = Wait.until(lambda: 'Stripping the snapshot flag' in File.read(result.log_file), timeout=180)
             assert skip_snapshot, 'Not message that snapshot is skipped.'
             assert msg in File.read(result.log_file), 'No message that snapshot is NOT available on Windows.'
+
+    @staticmethod
+    def snapshot_build(path_to_apk, path_to_extract_apk):
+        """
+        Verify snapshot build.
+        :param path_to_apk: path to the built apk.
+        :param path_to_extract_apk: path where to extract the .apk files
+        """
+        # Extract the built .apk file
+        File.unzip(path_to_apk, path_to_extract_apk) 
+        # Verify lib files
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'x86', 'libNativeScript.so'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'x86_64', 'libNativeScript.so'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'arm64-v8a', 'libNativeScript.so'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'armeabi-v7a', 'libNativeScript.so'))
+        # Verify snapshot files
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'x86', 'snapshot.blob'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'x86_64', 'snapshot.blob'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'arm64-v8a', 'snapshot.blob'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'armeabi-v7a', 'snapshot.blob'))
+
+    @staticmethod
+    def string_in_android_manifest(path_to_apk, string):
+        """
+        Verify string exists in AndroidManifest.xml file in the built .apk
+        :param path_to_apk: path to the built apk.
+        :param string: string you want to assert exists in AndroidManifest.xml 
+        """
+        apk_tool = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
+        command = '{0} manifest print {1}'.format(self.apk_tool, apk_path)
+        result = run(command, timeout=30)
+        assert string_to_assert in result.output
+
+
