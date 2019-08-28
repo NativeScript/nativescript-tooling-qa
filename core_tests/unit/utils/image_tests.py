@@ -49,7 +49,7 @@ class ImageUtilsTests(unittest.TestCase):
         assert 'taps left' in text
         assert 'Tap the button' in text
         assert 'TAP' in text
-        
+
         # OCR on Hello-World app
         text = ImageUtils.get_text(self.app_image_ios)
         assert 'My App' in text
