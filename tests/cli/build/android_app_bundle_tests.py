@@ -106,7 +106,7 @@ class AndroidAppBundleTests(TnsRunTest):
 
         # env.snapshot is applicable only in release build
         result = Tns.build_android(self.app_path, aab=True, release=True, snapshot=True,
-                          uglify=True, verify=False)
+                                   uglify=True, verify=False)
         assert "The build result is located at:" in result.output
         assert path_to_aab in result.output
         assert File.exists(path_to_aab)
