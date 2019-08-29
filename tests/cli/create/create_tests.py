@@ -5,7 +5,6 @@ from nose_parameterized import parameterized
 from core.base_test.tns_test import TnsTest
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
-from core.utils.git import Git
 from data.apps import Apps
 from data.templates import Template
 from products.nativescript.app import App
@@ -85,16 +84,13 @@ class CreateTests(TnsTest):
 
     def test_010_create_app_remove_app_resources(self):
         # creates valid project from local directory template
-        Folder.clean(os.path.join("template-hello-world"))
+        tns_ts_template_path = os.path.join(Settings.TEST_SUT_HOME, 'templates', 'packages', 'template-hello-world-ts')
         Folder.clean(os.path.join(Settings.AppName.DEFAULT))
-        Git.clone(repo_url='git@github.com:NativeScript/template-hello-world.git',
-                  local_folder="template-hello-world")
-        Folder.clean(os.path.join(Settings.TEST_RUN_HOME, 'template-hello-world', 'app', 'App_Resources'))
-        file_path = os.path.join(Settings.TEST_RUN_HOME, 'template-hello-world', 'package.json')
-        File.replace(path=file_path, old_string="tns-template-hello-world",
-                     new_string="test-tns-template-hello-world")
-        path = os.path.join(Settings.TEST_RUN_HOME, 'template-hello-world')
-        Tns.create(app_name=Settings.AppName.DEFAULT, template=path)
+        Folder.clean(os.path.join(tns_ts_template_path, 'app', 'App_Resources'))
+        file_path = os.path.join(tns_ts_template_path, 'package.json')
+        File.replace(path=file_path, old_string="tns-template-hello-world-ts",
+                     new_string="test-tns-template-hello-world-ts")
+        Tns.create(app_name=Settings.AppName.DEFAULT, template=tns_ts_template_path)
 
     def test_011_create_app_scoped_packages(self):
         result = Tns.create(app_name=Settings.AppName.DEFAULT, template="@angular/core", verify=False)
@@ -115,9 +111,9 @@ class CreateTests(TnsTest):
 
     @parameterized.expand([
         "tns-template-hello-world",
-        "https://github.com/NativeScript/template-hello-world.git",
-        "https://github.com/NativeScript/template-hello-world-ts/tarball/master",
-        "https://github.com/NativeScript/template-hello-world-ts.git#master"
+        "https://github.com/NativeScript/test-template-hello-world.git",
+        "https://github.com/NativeScript/test-template-hello-world/tarball/master",
+        "https://github.com/NativeScript/test-template-hello-world#master"
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
