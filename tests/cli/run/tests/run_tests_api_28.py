@@ -49,7 +49,7 @@ class TnsRunJSTests(TnsRunTest):
 
     def test_200_run_android_release_snapshot(self):
         """
-            Run android, verify app is built with api28 and verify livesync
+            Run android, verify app is built with api28
         """
         # Run app and verify on emulator
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, default_andr_sdk='28',
