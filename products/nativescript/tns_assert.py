@@ -4,6 +4,7 @@ from core.enums.app_type import AppType
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.file_utils import Folder
@@ -219,7 +220,7 @@ class TnsAssert(object):
         :param path_to_extract_apk: path where to extract the .apk files
         """
         # Extract the built .apk file
-        File.unzip(path_to_apk, path_to_extract_apk) 
+        File.unzip(path_to_apk, path_to_extract_apk)
         # Verify lib files
         assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'x86', 'libNativeScript.so'))
         assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'x86_64', 'libNativeScript.so'))
@@ -236,11 +237,10 @@ class TnsAssert(object):
         """
         Verify string exists in AndroidManifest.xml file in the built .apk
         :param path_to_apk: path to the built apk.
-        :param string: string you want to assert exists in AndroidManifest.xml 
+        :param string: string you want to assert exists in AndroidManifest.xml
         """
         apk_tool = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
         command = '{0} manifest print {1}'.format(apk_tool, path_to_apk)
         result = run(command, timeout=30)
-        assert string in result.output
-
-
+        assert string in result.output, '{0} NOT found in AndroidManifest.xml'.format(string)
+        Log.info('{0} found in AndroidManifest.xml'.format(string))

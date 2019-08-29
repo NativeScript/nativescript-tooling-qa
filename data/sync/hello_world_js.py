@@ -19,11 +19,11 @@ from products.nativescript.tns_paths import TnsPaths
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
-                        snapshot=False, instrumented=True):
+                        snapshot=False, instrumented=True, default_andr_sdk='29'):
     __sync_hello_world_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
-                             instrumented=instrumented)
+                             instrumented=instrumented, default_andr_sdk=default_andr_sdk)
 
 
 def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
@@ -63,7 +63,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
             apk_path = TnsPaths.get_apk_path(app_name=app_name, release=False)
         TnsAssert.string_in_android_manifest(apk_path, 'compileSdkVersion="{0}"'.format(default_andr_sdk))
     if snapshot and Settings.HOST_OS != OSType.WINDOWS:
-        TnsAssert.snapshot_build(TnsPaths.get_apk_path(app_name=app_name, release=True), 'temp')
+        TnsAssert.snapshot_build(TnsPaths.get_apk_path(app_name=app_name, release=True), Settings.TEST_OUT_TEMP)
     return result
 
 
