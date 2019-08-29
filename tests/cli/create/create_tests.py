@@ -5,7 +5,6 @@ from nose_parameterized import parameterized
 from core.base_test.tns_test import TnsTest
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
-from core.utils.git import Git
 from data.apps import Apps
 from data.templates import Template
 from products.nativescript.app import App
