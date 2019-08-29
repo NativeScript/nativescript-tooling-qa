@@ -112,9 +112,9 @@ class CreateTests(TnsTest):
 
     @parameterized.expand([
         "tns-template-hello-world",
-        "https://github.com/NativeScript/sample-Groceries.git",
-        "https://github.com/NativeScript/sample-Groceries/tarball/master",
-        "https://github.com/NativeScript/sample-Groceries.git#master"
+        "https://github.com/NativeScript/test-template-hello-world.git",
+        "https://github.com/NativeScript/test-template-hello-world/tarball/master",
+        "https://github.com/NativeScript/test-template-hello-world#master"
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
