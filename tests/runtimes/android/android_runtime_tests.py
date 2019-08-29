@@ -167,10 +167,10 @@ class AndroidRuntimeTests(TnsTest):
         Device.click(self.emulator, "TAP", True)
         if self.emulator.version == 6.0:
             stack_trace_first_part = r"""### Stack Trace Start
-JS: 	viewModel\.onTapfile:///app/main-view-model\.js:\d+:\d+
-JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\.notifyfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
-JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\._emitfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
-JS: 	at ClickListenerImpl\.onClickfile:///node_modules/tns-core-modules/ui/button/button\.js:\d+:\d+
+JS: 	viewModel\.onTap\(file:\/\/\/app\/main-view-model\.js:\d+:\d+\)
+JS: 	at push\.\.\.\/node_modules\/tns-core-modules\/data\/observable\/observable\.js\.Observable\.notify\(file:\/\/\/node_modules\/tns-core-modules\/data\/observable\/observable\.js:\d+:\d+\)
+JS: 	at push\.\.\.\/node_modules\/tns-core-modules\/data\/observable\/observable\.js\.Observable\._emit\(file:\/\/\/node_modules\/tns-core-modules\/data\/observable\/observable\.js:\d+:\d+\)
+JS: 	at ClickListenerImpl\.onClick\(file:\/\/\/node_modules\/tns-core-modules\/ui\/button\/button\.js:\d+:\d+\)
 JS: 	at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS: 	at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
 JS: 	at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
@@ -193,10 +193,10 @@ JS: 	\.\.\. \d+ more
 JS: ### Stack Trace End"""  # noqa: E501
         else:
             stack_trace_first_part = r"""### Stack Trace Start
-JS: 	viewModel\.onTapfile:///app/main-view-model\.js:\d+:\d+
-JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\.notifyfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
-JS: 	at push\.\.\./node_modules/tns-core-modules/data/observable/observable\.js\.Observable\._emitfile:///node_modules/tns-core-modules/data/observable/observable\.js:\d+:\d+
-JS: 	at ClickListenerImpl\.onClickfile:///node_modules/tns-core-modules/ui/button/button\.js:\d+:\d+
+JS: 	viewModel\.onTap\(file:\/\/\/app\/main-view-model\.js:\d+:\d+\)
+JS: 	at push\.\.\.\/node_modules\/tns-core-modules\/data\/observable\/observable\.js\.Observable\.notify\(file:\/\/\/node_modules\/tns-core-modules\/data\/observable\/observable\.js:\d+:\d+\)
+JS: 	at push\.\.\.\/node_modules\/tns-core-modules\/data\/observable\/observable\.js\.Observable\._emit\(file:\/\/\/node_modules\/tns-core-modules\/data\/observable\/observable\.js:\d+:\d+\)
+JS: 	at ClickListenerImpl\.onClick\(file:\/\/\/node_modules\/tns-core-modules\/ui\/button\/button\.js:\d+:\d+\)
 JS: 	at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS: 	at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
 JS: 	at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
