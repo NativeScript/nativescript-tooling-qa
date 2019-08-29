@@ -85,7 +85,7 @@ class CreateTests(TnsTest):
 
     def test_010_create_app_remove_app_resources(self):
         # creates valid project from local directory template
-        tns_ts_template_path = os.path.join(Settings.TEST_RUN_HOME, 'templates', 'packages', 'template-hello-world-ts')
+        tns_ts_template_path = os.path.join(Settings.TEST_SUT_HOME, 'templates', 'packages', 'template-hello-world-ts')
         Folder.clean(os.path.join(Settings.AppName.DEFAULT))
         Folder.clean(os.path.join(tns_ts_template_path, 'app', 'App_Resources'))
         file_path = os.path.join(tns_ts_template_path, 'package.json')
