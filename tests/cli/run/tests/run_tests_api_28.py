@@ -13,14 +13,8 @@ Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
 
 class TnsRunJSTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
-    app_name_space = Settings.AppName.WITH_SPACE
-    normalized_app_name_space = '"' + app_name_space + '"'
-    app_path = TnsPaths.get_app_path(app_name)
-    app_resources_path = TnsPaths.get_path_app_resources(app_name)
     source_project_dir = TnsPaths.get_app_path(app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
-    app_resources_android = os.path.join(app_resources_path, 'Android')
-    app_resources_ios = os.path.join(app_resources_path, 'iOS')
 
     @classmethod
     def setUpClass(cls):
@@ -50,13 +44,13 @@ class TnsRunJSTests(TnsRunTest):
         """
             Run android, verify app is built with api28 and verify livesync
         """
-        # Run app and verify on device
+        # Run app and verify on emulator
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu, default_andr_sdk='28')
 
     def test_200_run_android_release_snapshot(self):
         """
             Run android, verify app is built with api28 and verify livesync
         """
-        # Run app and verify on device
+        # Run app and verify on emulator
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, default_andr_sdk='28',
                               release=True, snapshot=True)
