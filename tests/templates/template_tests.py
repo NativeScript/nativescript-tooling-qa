@@ -44,10 +44,7 @@ class TemplateTests(TnsRunTest):
         [Template.PATIENT_CARE_NG.name, Template.PATIENT_CARE_NG],
         [Template.TAB_NAVIGATION_JS.name, Template.TAB_NAVIGATION_JS],
         [Template.TAB_NAVIGATION_TS.name, Template.TAB_NAVIGATION_TS],
-        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG],
-        [Template.ENTERPRISE_AUTH_JS.name, Template.ENTERPRISE_AUTH_JS],
-        [Template.ENTERPRISE_AUTH_TS.name, Template.ENTERPRISE_AUTH_TS],
-        [Template.ENTERPRISE_AUTH_NG.name, Template.ENTERPRISE_AUTH_NG]
+        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG]
     ]
 
     @parameterized.expand(test_data)
