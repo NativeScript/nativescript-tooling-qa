@@ -65,7 +65,7 @@ class IOSRuntimeTests(TnsTest):
         # https://github.com/NativeScript/nativescript-cli/issues/4524
         strings = ['JavaScript stack trace',
                    'JS ERROR AssertionError: expected -1 to equal 1']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
 
     def test_380_tns_run_ios_plugin_dependencies(self):
         """
