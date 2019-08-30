@@ -13,6 +13,7 @@ from core.enums.platform_type import Platform
 from data.templates import Template
 from products.nativescript.tns import Tns
 
+PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join('platforms', 'android', 'app', 'build', 'outputs', 'apk', 'debug')
 APP_NAME = AppName.DEFAULT
 
 
@@ -331,3 +332,23 @@ class AndroidRuntimePluginTests(TnsTest):
         Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+
+        Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
+
+    def test_452_support_gradle_properties_for_enable_Kotlin(self):
+        """
+        Support gradle.properties file for enable Kotlin
+        https://github.com/NativeScript/android-runtime/issues/1459
+        https://github.com/NativeScript/android-runtime/issues/1463
+        """
+        Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'gradle.properties')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+        app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
+                                                  "app-debug.apk")
+        assert File.exists(app_universal_release_path)
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
