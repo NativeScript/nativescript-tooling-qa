@@ -1,5 +1,7 @@
 import os
 import unittest
+import platform
+
 from core.enums.os_type import OSType
 from core.utils.file_utils import Folder, File
 from core.utils.device.adb import Adb
@@ -87,6 +89,7 @@ class AndroidAppBundleTests(TnsRunTest):
         self.emu.wait_for_text(text='TAP')
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, "Skip on Windows")
+    @unittest.skipIf(platform.platform() == 'Darwin-19.0.0-x86_64-i386-64bit', 'snapshot not working on Catalina')
     def test_205_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""
