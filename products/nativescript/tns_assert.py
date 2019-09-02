@@ -240,7 +240,7 @@ class TnsAssert(object):
         :param string: string you want to assert exists in AndroidManifest.xml
         """
         apk_tool = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
-        command = '{0} manifest print {1}'.format(apk_tool, path_to_apk)
+        command = '{0} manifest print "{1}"'.format(apk_tool, path_to_apk)
         result = run(command, timeout=30)
         assert string in result.output, '{0} NOT found in AndroidManifest.xml'.format(string)
         Log.info('{0} found in AndroidManifest.xml'.format(string))
