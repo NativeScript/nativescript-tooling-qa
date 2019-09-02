@@ -21,7 +21,7 @@ class TnsRunJSTests(TnsRunTest):
         TnsRunTest.setUpClass()
 
         # Create app
-        Tns.create(app_name=cls.app_name, template='tns-template-hello-world@6.0.2')
+        Tns.create(app_name=cls.app_name, template='tns-template-hello-world@6.0')
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
