@@ -100,7 +100,8 @@ class BuildTests(TnsTest):
 
         # Verify snapshot files in the built .apk
         apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=True)
-        TnsAssert.snapshot_build(apk_path, self.temp_folder)
+        if Settings.HOST_OS != OSType.WINDOWS:
+            TnsAssert.snapshot_build(apk_path, self.temp_folder)
 
         # Verify app is built with android sdk 29 by default
         TnsAssert.string_in_android_manifest(apk_path, 'compileSdkVersion="29"')
