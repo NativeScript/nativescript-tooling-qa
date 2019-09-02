@@ -49,47 +49,47 @@ class BuildTests(TnsTest):
         Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
         Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
 
-    def test_001_build_android(self):
-        Tns.build_android(self.app_name)
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.plist'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
+    # def test_001_build_android(self):
+    #     Tns.build_android(self.app_name)
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.plist'))
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
+    #
+    #     src = os.path.join(self.app_name, 'app', 'app.js')
+    #     dest_1 = os.path.join(self.app_name, 'app', 'new.android.js')
+    #     dest_2 = os.path.join(self.app_name, 'app', 'new.ios.js')
+    #     File.copy(src, dest_1)
+    #     File.copy(src, dest_2)
+    #
+    #     result = Tns.build_android(self.app_name)
+    #     assert "Gradle build..." in result.output, "Gradle build not called."
+    #     assert result.output.count("Gradle build...") == 1, "Only one gradle build is triggered."
+    #
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.plist'))
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
+    #
+    #     # Verify apk does not contain aar files
+    #     apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
+    #     File.unzip(apk_path, 'temp')
+    #     # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
+    #     # https://github.com/NativeScript/nativescript-cli/pull/3923
+    #     temp_folder = os.path.join(self.app_path, 'temp')
+    #     Folder.clean(os.path.join(temp_folder, 'META-INF'))
+    #     assert not File.pattern_exists(temp_folder, '*.aar')
+    #     assert not File.pattern_exists(temp_folder, '*.plist')
+    #     assert not File.pattern_exists(temp_folder, '*.android.*')
+    #     assert not File.pattern_exists(temp_folder, '*.ios.*')
+    #     Folder.clean(temp_folder)
+    #
+    #     # Verify incremental native build
+    #     result = Tns.exec_command(command='build --clean', path=self.app_name,
+    #                               platform=Platform.ANDROID)
+    #     assert "Gradle clean..." in result.output, "Gradle clean is not called."
+    #     assert "Gradle build..." in result.output, "Gradle build is not called."
+    #     assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
-        src = os.path.join(self.app_name, 'app', 'app.js')
-        dest_1 = os.path.join(self.app_name, 'app', 'new.android.js')
-        dest_2 = os.path.join(self.app_name, 'app', 'new.ios.js')
-        File.copy(src, dest_1)
-        File.copy(src, dest_2)
-
-        result = Tns.build_android(self.app_name)
-        assert "Gradle build..." in result.output, "Gradle build not called."
-        assert result.output.count("Gradle build...") == 1, "Only one gradle build is triggered."
-
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.plist'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.android.js'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_android_folder(self.app_name), '*.ios.js'))
-
-        # Verify apk does not contain aar files
-        apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
-        File.unzip(apk_path, 'temp')
-        # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
-        # https://github.com/NativeScript/nativescript-cli/pull/3923
-        temp_folder = os.path.join(self.app_path, 'temp')
-        Folder.clean(os.path.join(temp_folder, 'META-INF'))
-        assert not File.pattern_exists(temp_folder, '*.aar')
-        assert not File.pattern_exists(temp_folder, '*.plist')
-        assert not File.pattern_exists(temp_folder, '*.android.*')
-        assert not File.pattern_exists(temp_folder, '*.ios.*')
-        Folder.clean(temp_folder)
-
-        # Verify incremental native build
-        result = Tns.exec_command(command='build --clean', path=self.app_name,
-                                  platform=Platform.ANDROID)
-        assert "Gradle clean..." in result.output, "Gradle clean is not called."
-        assert "Gradle build..." in result.output, "Gradle build is not called."
-        assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
-
-    @unittest.skipIf(platform.platform() == 'Darwin-19', 'snapshot not working on Catalina')
+    @unittest.skipIf(platform.platform() == 'Darwin-19.0.0-x86_64-i386-64bit', 'snapshot not working on Catalina')
     def test_002_build_android_release_uglify_snapshot_sourcemap(self):
         # https://github.com/NativeScript/nativescript-dev-webpack/issues/920
         result = Tns.build_android(self.app_name, release=True, uglify=True, snapshot=True, source_map=True)
@@ -193,23 +193,23 @@ class BuildTests(TnsTest):
         assert File.exists(
             os.path.join(TnsPaths.get_platforms_android_src_main_path(self.app_name), 'AndroidManifest.xml'))
 
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_001_build_ios(self):
-        Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
-        Tns.build_ios(self.app_name)
-        Tns.build_ios(self.app_name, release=True)
-        Tns.build_ios(self.app_name, for_device=True)
-        Tns.build_ios(self.app_name, for_device=True, release=True)
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), '*.aar'))
-        assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), '*.framework'))
-
-        # Verify ipa has both armv7 and arm64 archs
-        ipa_path = TnsPaths.get_ipa_path(app_name=self.app_name, release=True, for_device=True)
-        run("mv " + ipa_path + " TestApp-ipa.tgz")
-        run("unzip -o TestApp-ipa.tgz")
-        result = run("lipo -info Payload/TestApp.app/TestApp")
-        Folder.clean("Payload")
-        assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in result.output
+    # @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
+    # def test_001_build_ios(self):
+    #     Tns.platform_remove(self.app_name, platform=Platform.ANDROID)
+    #     Tns.build_ios(self.app_name)
+    #     Tns.build_ios(self.app_name, release=True)
+    #     Tns.build_ios(self.app_name, for_device=True)
+    #     Tns.build_ios(self.app_name, for_device=True, release=True)
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_folder(self.app_name), '*.aar'))
+    #     assert not File.exists(os.path.join(TnsPaths.get_platforms_ios_npm_modules(self.app_name), '*.framework'))
+    #
+    #     # Verify ipa has both armv7 and arm64 archs
+    #     ipa_path = TnsPaths.get_ipa_path(app_name=self.app_name, release=True, for_device=True)
+    #     run("mv " + ipa_path + " TestApp-ipa.tgz")
+    #     run("unzip -o TestApp-ipa.tgz")
+    #     result = run("lipo -info Payload/TestApp.app/TestApp")
+    #     Folder.clean("Payload")
+    #     assert "Architectures in the fat file: Payload/TestApp.app/TestApp are: armv7 arm64" in result.output
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_190_build_ios_distribution_provisions(self):
