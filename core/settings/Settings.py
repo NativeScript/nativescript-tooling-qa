@@ -13,8 +13,10 @@ from core.utils.device.simulator_info import SimulatorInfo
 def get_os():
     if 'Windows' in platform.platform():
         return OSType.WINDOWS
-    if 'Darwin' in platform.platform():
+    if 'Darwin-18' in platform.platform():
         return OSType.OSX
+    if 'Darwin-19' in platform.platform():
+        return  OSType.OSX_CATALINA
     return OSType.LINUX
 
 

@@ -10,6 +10,7 @@ class OSType(IntEnum):
     WINDOWS = 1, 'Windows'
     LINUX = 2, 'Linux'
     OSX = 3, 'macOS'
+    OSX_CATALINA = 4, 'macOSCatalina'
 
     def __str__(self):
         return self.string
