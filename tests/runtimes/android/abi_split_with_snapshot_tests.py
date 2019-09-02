@@ -41,14 +41,6 @@ class AbiSplitTests(TnsTest):
         Adb.uninstall(cls.app_id, device_id, assert_success=False)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
-    @staticmethod
-    def check_file_in_zip(zip_file, file_name_to_check):
-        files_list = File.get_files_names_in_zip(zip_file)
-        for current_file in files_list:
-            if file_name_to_check in str(current_file.filename):
-                return True
-        return False
-
     def test_100_build_app_with_abi_split_and_snapshot(self):
         """
          Test build with abi split and snapshot. Also check if the apk for emulator is working
@@ -83,31 +75,31 @@ class AbiSplitTests(TnsTest):
 
         app_x86_64_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
                                                "app-x86_64-release.apk")
-        assert self.check_file_in_zip(app_x86_64_release_path, os.path.join("x86_64", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_x86_64_release_path, os.path.join("x86_64", "libNativeScript.so"))
         assert File.exists(app_x86_64_release_path)
 
         app_arm64_v8a_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
                                                   "app-arm64-v8a-release.apk")
         assert File.exists(app_arm64_v8a_release_path)
-        assert self.check_file_in_zip(app_arm64_v8a_release_path, os.path.join("arm64-v8a", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_arm64_v8a_release_path, os.path.join("arm64-v8a", "libNativeScript.so"))
 
         app_armeabi_v7a_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
                                                     "app-armeabi-v7a-release.apk")
         assert File.exists(app_armeabi_v7a_release_path)
-        assert self.check_file_in_zip(app_armeabi_v7a_release_path, os.path.join("armeabi-v7a", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_armeabi_v7a_release_path, os.path.join("armeabi-v7a", "libNativeScript.so"))
 
         app_x86_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
                                             "app-x86-release.apk")
         assert File.exists(app_x86_release_path)
-        assert self.check_file_in_zip(app_x86_release_path, os.path.join("x86", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_x86_release_path, os.path.join("x86", "libNativeScript.so"))
 
         app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH,
                                                   "app-universal-release.apk")
         assert File.exists(app_universal_release_path)
-        assert self.check_file_in_zip(app_universal_release_path, os.path.join("arm64-v8a", "libNativeScript.so"))
-        assert self.check_file_in_zip(app_universal_release_path, os.path.join("armeabi-v7a", "libNativeScript.so"))
-        assert self.check_file_in_zip(app_universal_release_path, os.path.join("x86", "libNativeScript.so"))
-        assert self.check_file_in_zip(app_universal_release_path, os.path.join("x86_64", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("arm64-v8a", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("armeabi-v7a", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("x86", "libNativeScript.so"))
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("x86_64", "libNativeScript.so"))
 
         AbiSplitHelper.assert_apk(
             os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_RELEASE_PATH, "app-x86-release.apk"),

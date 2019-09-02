@@ -307,6 +307,14 @@ class File(object):
         return file_names
 
     @staticmethod
+    def is_file_in_zip(zip_file, file_name_to_check):
+        files_list = File.get_files_names_in_zip(zip_file)
+        for current_file in files_list:
+            if file_name_to_check in str(current_file.filename):
+                return True
+        return False
+
+    @staticmethod
     def download(file_name, url, destination_dir=Settings.TEST_RUN_HOME):
         file_path = os.path.join(destination_dir, file_name)
         if Settings.PYTHON_VERSION < 3:
