@@ -22,7 +22,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_paths import TnsPaths
 
-Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
+Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_29
 
 
 class TnsRunJSTests(TnsRunTest):
