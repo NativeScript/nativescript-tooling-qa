@@ -241,6 +241,9 @@ class TnsAssert(object):
         """
         apk_tool = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
         command = '{0} manifest print "{1}"'.format(apk_tool, path_to_apk)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            apk_tool=os.environ.get('APKTOOL')
+            command = '{0} d "{1} -f -o {2}"'.format(apk_tool, path_to_apk, Settings.TEST_OUT_TEMP)
         result = run(command, timeout=30)
         assert string in result.output, '{0} NOT found in AndroidManifest.xml'.format(string)
         Log.info('{0} found in AndroidManifest.xml'.format(string))
