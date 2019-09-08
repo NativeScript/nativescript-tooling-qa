@@ -237,8 +237,15 @@ class TnsAssert(object):
         :param path_to_apk: path to the built apk.
         :param string: string you want to assert exists in AndroidManifest.xml
         """
-        apk_tool = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
-        command = '{0} manifest print "{1}"'.format(apk_tool, path_to_apk)
+        apkanalyzer = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
+        command = '{0} manifest print "{1}"'.format(apkanalyzer, path_to_apk)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            apk_tool = os.path.join(os.environ.get('APKTOOL'), 'apktool.jar')
+            command = '{0} d {1} -f -o {2}'.format(apk_tool, path_to_apk, Settings.TEST_OUT_TEMP)
         result = run(command, timeout=30)
-        assert string in result.output, '{0} NOT found in AndroidManifest.xml'.format(string)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            manifest = File.read(os.path.join(Settings.TEST_OUT_TEMP, 'AndroidManifest.xml'))
+            assert string in manifest, '{0} NOT found in AndroidManifest.xml'.format(string)
+        else:
+            assert string in result.output, '{0} NOT found in AndroidManifest.xml'.format(string)
         Log.info('{0} found in AndroidManifest.xml'.format(string))
