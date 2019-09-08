@@ -93,10 +93,8 @@ class TnsAssert(object):
         package_json = os.path.join(app_path, 'package.json')
         json = JsonUtils.read(package_json)
         if version is not None:
-            if 'next' in version:
+            if 'next' or 'rc' in version:
                 assert json['nativescript']['tns-' + platform_string]['version'] is not None
-            if 'rc' in version:
-                assert 'rc' in json['nativescript']['tns-' + platform_string]['version']
             else:
                 assert version in json['nativescript']['tns-' + platform_string]['version']
         else:
