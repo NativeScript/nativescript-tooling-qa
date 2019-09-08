@@ -242,7 +242,8 @@ class TnsAssert(object):
         apkanalyzer = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
         command = '{0} manifest print "{1}"'.format(apkanalyzer, path_to_apk)
         if Settings.HOST_OS == OSType.WINDOWS:
-            apk_tool = os.path.join(os.environ.get('APKTOOL'), 'apktool')
+            print(os.environ)
+            apk_tool = os.path.join(os.environ.get('APKTOOL'), 'apktool.jar')
             command = '{0} d {1} -f -o {2}'.format(apk_tool, path_to_apk, Settings.TEST_OUT_TEMP)
         result = run(command, timeout=30)
         if Settings.HOST_OS == OSType.WINDOWS:
