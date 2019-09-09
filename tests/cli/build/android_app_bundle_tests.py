@@ -1,21 +1,19 @@
 import os
 import unittest
-import platform
 
-from core.enums.os_type import OSType
-from core.utils.file_utils import Folder, File
-from core.utils.device.adb import Adb
-from core.utils.os_utils import OSUtils
-from core.utils.run import run
 from core.base_test.tns_run_test import TnsRunTest
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
+from core.utils.device.adb import Adb
+from core.utils.file_utils import Folder, File
+from core.utils.os_utils import OSUtils
+from core.utils.run import run
 from data.templates import Template
 from products.nativescript.tns import Tns
 
 
 class AndroidAppBundleTests(TnsRunTest):
-
     app_name = AppName.DEFAULT
     app_path = os.path.join(TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(TEST_RUN_HOME, 'data', 'temp', app_name)
