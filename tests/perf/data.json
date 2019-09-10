@@ -5,39 +5,39 @@
     "platform_add_ios": 7.66259102567,
     "android": {
       "build_incremental": 18.277474880218506,
-      "build_initial": 71.95273876190186,
+      "build_initial": 53.5133252939,
       "prepare_initial": 10.265454371770224
     },
     "ios": {
       "build_incremental": 28.896445671717327,
-      "build_initial": 33.22381011644999,
-      "prepare_initial": 19.72901161511739
+      "build_initial": 48.7859461308,
+      "prepare_initial": 23.8043110371
     }
   },
   "hello-world-ng": {
     "create": 25.8089292844,
     "android": {
       "build_incremental": 29.171478668848675,
-      "build_initial": 55.15028476715088,
+      "build_initial": 84.8207436403,
       "prepare_initial": 21.3153106372
     },
     "ios": {
       "build_incremental": 36.07650327682495,
-      "build_initial": 30.75832970937093,
-      "prepare_initial": 26.571196397145588
+      "build_initial": 69.5189252694,
+      "prepare_initial": 39.4967552821
     }
   },
   "master-detail-ng": {
     "create": 32.040071249,
     "android": {
       "build_incremental": 34.225764989852905,
-      "build_initial": 77.0604100227356,
+      "build_initial": 86.6995469729,
       "prepare_initial": 64.2016587257
     },
     "ios": {
       "build_incremental": 47.50245173772176,
-      "build_initial": 98.57832129796346,
-      "prepare_initial": 37.7520949045817
+      "build_initial": 148.55386591,
+      "prepare_initial": 43.8690192699
     }
   }
 }
