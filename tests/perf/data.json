@@ -1,21 +1,17 @@
 {
   "hello-world-js": {
     "create": 19.4724953175,
-    "platform_add_android": 5.98946801821,
+    "platform_add_android": 8.34259102567,
     "platform_add_ios": 7.66259102567,
     "android": {
       "build_incremental": 18.277474880218506,
       "build_initial": 71.95273876190186,
-      "prepare_incremental": 9.77091360092163,
-      "prepare_initial": 10.265454371770224,
-      "prepare_skip": 5.785666386286418
+      "prepare_initial": 10.265454371770224
     },
     "ios": {
       "build_incremental": 28.896445671717327,
       "build_initial": 33.22381011644999,
-      "prepare_incremental": 11.627002636591593,
-      "prepare_initial": 19.72901161511739,
-      "prepare_skip": 8.201287905375162
+      "prepare_initial": 19.72901161511739
     }
   },
   "hello-world-ng": {
@@ -23,16 +19,12 @@
     "android": {
       "build_incremental": 29.171478668848675,
       "build_initial": 55.15028476715088,
-      "prepare_incremental": 15.646770715713501,
-      "prepare_initial": 16.125288724899292,
-      "prepare_skip": 5.69458532333374
+      "prepare_initial": 21.3153106372
     },
     "ios": {
       "build_incremental": 36.07650327682495,
       "build_initial": 30.75832970937093,
-      "prepare_incremental": 18.537181695302326,
-      "prepare_initial": 26.571196397145588,
-      "prepare_skip": 8.246563275655111
+      "prepare_initial": 26.571196397145588
     }
   },
   "master-detail-ng": {
@@ -40,16 +32,12 @@
     "android": {
       "build_incremental": 34.225764989852905,
       "build_initial": 77.0604100227356,
-      "prepare_incremental": 17.722744941711426,
-      "prepare_initial": 45.164605696996055,
-      "prepare_skip": 5.872320731480916
+      "prepare_initial": 64.2016587257
     },
     "ios": {
       "build_incremental": 47.50245173772176,
       "build_initial": 98.57832129796346,
-      "prepare_incremental": 21.155504782994587,
-      "prepare_initial": 37.7520949045817,
-      "prepare_skip": 9.598381678263346
+      "prepare_initial": 37.7520949045817
     }
   }
 }

@@ -69,32 +69,6 @@ class PrepareAndBuildPerfTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Initial ios prepare time is not OK.'
 
     @parameterized.expand(TEST_DATA)
-    def test_210_prepare_android_skip(self, template, template_package, change_set):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'prepare_skip')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'prepare_skip')
-        assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Skip android prepare time is not OK.'
-
-    @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_211_prepare_ios_skip(self, template, template_package, change_set):
-        actual = Helpers.get_actual_result(template, Platform.IOS, 'prepare_skip')
-        expected = Helpers.get_expected_result(template, Platform.IOS, 'prepare_skip')
-        assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Skip ios prepare time is not OK.'
-
-    @parameterized.expand(TEST_DATA)
-    def test_220_prepare_android_incremental(self, template, template_package, change_set):
-        actual = Helpers.get_actual_result(template, Platform.ANDROID, 'prepare_incremental')
-        expected = Helpers.get_expected_result(template, Platform.ANDROID, 'prepare_incremental')
-        assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental android prepare time is not OK.'
-
-    @parameterized.expand(TEST_DATA)
-    @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_221_prepare_ios_incremental(self, template, template_package, change_set):
-        actual = Helpers.get_actual_result(template, Platform.IOS, 'prepare_incremental')
-        expected = Helpers.get_expected_result(template, Platform.IOS, 'prepare_incremental')
-        assert PerfUtils.is_value_in_range(actual, expected, TOLERANCE), 'Incremental ios prepare time is not OK.'
-
-    @parameterized.expand(TEST_DATA)
     def test_300_build_android_initial(self, template, template_package, change_set):
         actual = Helpers.get_actual_result(template, Platform.ANDROID, 'build_initial')
         expected = Helpers.get_expected_result(template, Platform.ANDROID, 'build_initial')
@@ -133,8 +107,6 @@ class Helpers(object):
     @staticmethod
     def prepare_and_build(template, platform, change_set, result_file):
         prepare_initial = 0
-        prepare_skip = 0
-        prepare_incremental = 0
         build_initial = 0
         build_incremental = 0
         for _ in range(RETRY_COUNT):
@@ -154,11 +126,6 @@ class Helpers(object):
             # Prepare
             time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
             prepare_initial = prepare_initial + time
-            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
-            prepare_skip = prepare_skip + time
-            Sync.replace(app_name=APP_NAME, change_set=change_set)
-            time = Tns.prepare(app_name=APP_NAME, platform=platform, bundle=True).duration
-            prepare_incremental = prepare_incremental + time
 
             # Build
             time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
@@ -170,8 +137,6 @@ class Helpers(object):
         # Calculate averages
         result = PrepareBuildInfo()
         result.prepare_initial = prepare_initial / RETRY_COUNT
-        result.prepare_skip = prepare_skip / RETRY_COUNT
-        result.prepare_incremental = prepare_incremental / RETRY_COUNT
         result.build_initial = build_initial / RETRY_COUNT
         result.build_incremental = build_incremental / RETRY_COUNT
 
