@@ -130,7 +130,7 @@ class Helpers(object):
             # Build
             time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
             build_initial = build_initial + time
-            Sync.revert(app_name=APP_NAME, change_set=change_set)
+            Sync.replace(app_name=APP_NAME, change_set=change_set)
             time = Tns.build(app_name=APP_NAME, platform=platform, bundle=True).duration
             build_incremental = build_incremental + time
 
