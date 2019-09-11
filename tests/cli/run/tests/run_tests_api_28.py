@@ -1,6 +1,6 @@
 import os
 
-from core.base_test.tns_run_test import TnsRunTest
+from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
@@ -11,14 +11,14 @@ from products.nativescript.tns_paths import TnsPaths
 Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
 
 
-class TnsRunJSTests(TnsRunTest):
+class TnsRunJSTests(TnsRunAndroidTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = TnsPaths.get_app_path(app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
 
     @classmethod
     def setUpClass(cls):
-        TnsRunTest.setUpClass()
+        TnsRunAndroidTest.setUpClass()
 
         # Create app
         Tns.create(app_name=cls.app_name, template='tns-template-hello-world@6.0')
@@ -27,7 +27,7 @@ class TnsRunJSTests(TnsRunTest):
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)
 
     def setUp(self):
-        TnsRunTest.setUp(self)
+        TnsRunAndroidTest.setUp(self)
 
         # "src" folder of TestApp will be restored before each test.
         # This will ensure failures in one test do not cause common failures.
@@ -38,7 +38,7 @@ class TnsRunJSTests(TnsRunTest):
 
     @classmethod
     def tearDownClass(cls):
-        TnsRunTest.tearDownClass()
+        TnsRunAndroidTest.tearDownClass()
 
     def test_100_run_android(self):
         """
