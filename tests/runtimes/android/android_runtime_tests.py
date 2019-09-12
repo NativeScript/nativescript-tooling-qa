@@ -334,11 +334,9 @@ JS: ### Stack Trace End"""  # noqa: E501
         File.copy(source=source_js, target=target_js, backup_files=True)
         log = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=False).output
 
-        assert "FAILURE: Build failed with an exception" in log
         # https://github.com/NativeScript/android-runtime/issues/1405
         assert "JSParser Error: Not enough or too many arguments passed(0) when trying to extend interface: " \
                "java.util.List in file: bundle.js" in log
-        assert "Execution failed for task ':app:runSbg'" in log
 
     def test_440_tns_run_android_new_date_work_as_expected_when_changing_timezone(self):
         """
