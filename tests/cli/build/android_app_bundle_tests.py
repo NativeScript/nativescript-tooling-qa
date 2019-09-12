@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from core.base_test.tns_run_test import TnsRunTest
+from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.os_type import OSType
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
@@ -13,7 +13,7 @@ from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-class AndroidAppBundleTests(TnsRunTest):
+class AndroidAppBundleTests(TnsRunAndroidTest):
     app_name = AppName.DEFAULT
     app_path = os.path.join(TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(TEST_RUN_HOME, 'data', 'temp', app_name)
@@ -22,7 +22,7 @@ class AndroidAppBundleTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
-        TnsRunTest.setUpClass()
+        TnsRunAndroidTest.setUpClass()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
@@ -36,7 +36,7 @@ class AndroidAppBundleTests(TnsRunTest):
         File.download('bundletool.jar', url, TEST_SUT_HOME)
 
     def setUp(self):
-        TnsRunTest.setUp(self)
+        TnsRunAndroidTest.setUp(self)
 
         # Ensure app is in initial state
         Folder.clean(self.app_path)
