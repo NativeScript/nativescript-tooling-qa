@@ -44,11 +44,10 @@ class SBGTests(TnsTest):
                                          'sbg-bindings.txt')
         js_parser_path = os.path.join(TEST_RUN_HOME, APP_NAME, 'platforms', 'android', 'build-tools',
                                       'jsparser', 'js_parser.js')
-        exception_text = "Exception in thread \"main\" java.io.IOException: Couldn\'t find \'{0}\' bindings input " \
+        exception_text = "Error executing Static Binding Generator: Couldn\'t find \'{0}\' bindings input " \
                          "file. Most probably there\'s an error in the JS Parser execution. You can run JS Parser " \
                          "with verbose logging by executing \"node \'{1}\' enableErrorLogging\"" \
             .format(sbg_bindings_path, js_parser_path)
-        assert "BUILD FAILED" in result.output, "Expected output not found"
         assert exception_text in result.output, "Expected output not found"
 
     def test_301_check_if_sbg_is_working_correctly_with_nativescript_purchase_plugin(self):
