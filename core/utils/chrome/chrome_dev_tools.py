@@ -1,6 +1,7 @@
 from time import sleep
 
 import pyautogui
+pyautogui.FAILSAFE = False
 from aenum import IntEnum
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
