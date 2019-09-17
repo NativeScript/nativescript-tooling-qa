@@ -1,1 +1,2 @@
 println 'MESSAGE: Plugin include gradle is applied!'
+println "Test variable is set to ${testVariable} in plugin include.gradle"
