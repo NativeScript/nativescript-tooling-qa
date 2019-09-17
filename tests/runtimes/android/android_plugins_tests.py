@@ -498,4 +498,3 @@ Test variable is set to true in plugin app\.gradle"""  # noqa: E501
         Assert.assert_with_regex(result, log_regex)
 
         Tns.plugin_remove("sample-plugin", verify=False, path=APP_NAME)
-
