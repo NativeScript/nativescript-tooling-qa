@@ -45,7 +45,7 @@ class AppSizeTests(TnsTest):
 
     def test_001_js_app_app_resources(self):
         folder = os.path.join(TnsPaths.get_app_path(app_name=self.js_app), 'app')
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(folder), expected=2991548, tolerance=0.1)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(folder), expected=1267420, tolerance=0.1)
 
     def test_002_js_app_node_modules(self):
         folder = os.path.join(TnsPaths.get_app_path(app_name=self.js_app), 'node_modules')
@@ -75,11 +75,11 @@ class AppSizeTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_js_app_ipa(self):
         ipa = TnsPaths.get_ipa_path(app_name=self.js_app, release=True, for_device=True)
-        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=16001936, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=13376474, tolerance=0.05)
 
     def test_100_ng_app_app_resources(self):
         app_folder = os.path.join(TnsPaths.get_app_path(app_name=self.ng_app), 'App_Resources')
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(app_folder), expected=2986244, tolerance=0.1)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(app_folder), expected=1262116, tolerance=0.1)
 
     def test_101_ng_app_node_modules(self):
         app_folder = os.path.join(TnsPaths.get_app_path(app_name=self.ng_app), 'node_modules')
@@ -104,4 +104,4 @@ class AppSizeTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_ng_app_ipa(self):
         ipa = TnsPaths.get_ipa_path(app_name=self.ng_app, release=True, for_device=True)
-        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=16226626, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=13561763, tolerance=0.05)
