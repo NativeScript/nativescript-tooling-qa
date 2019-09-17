@@ -1,18 +1,19 @@
 import os
 import unittest
+
+from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.os_type import OSType
-from core.utils.file_utils import Folder, File
-from core.utils.device.adb import Adb
-from core.utils.run import run
-from core.base_test.tns_run_test import TnsRunTest
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
+from core.utils.device.adb import Adb
+from core.utils.file_utils import Folder, File
+from core.utils.os_utils import OSUtils
+from core.utils.run import run
 from data.templates import Template
 from products.nativescript.tns import Tns
 
 
-class AndroidAppBundleTests(TnsRunTest):
-
+class AndroidAppBundleTests(TnsRunAndroidTest):
     app_name = AppName.DEFAULT
     app_path = os.path.join(TEST_RUN_HOME, app_name)
     target_project_dir = os.path.join(TEST_RUN_HOME, 'data', 'temp', app_name)
@@ -21,7 +22,7 @@ class AndroidAppBundleTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
-        TnsRunTest.setUpClass()
+        TnsRunAndroidTest.setUpClass()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
@@ -35,7 +36,7 @@ class AndroidAppBundleTests(TnsRunTest):
         File.download('bundletool.jar', url, TEST_SUT_HOME)
 
     def setUp(self):
-        TnsRunTest.setUp(self)
+        TnsRunAndroidTest.setUp(self)
 
         # Ensure app is in initial state
         Folder.clean(self.app_path)
@@ -87,6 +88,7 @@ class AndroidAppBundleTests(TnsRunTest):
         self.emu.wait_for_text(text='TAP')
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, "Skip on Windows")
+    @unittest.skipIf(OSUtils.is_catalina(), 'snapshot not working on Catalina')
     def test_205_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""

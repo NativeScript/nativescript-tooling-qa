@@ -4,12 +4,14 @@ from core.enums.app_type import AppType
 from core.enums.framework_type import FrameworkType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import File
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
 from core.utils.perf_utils import PerfUtils
 from core.utils.wait import Wait
+from core.utils.run import run
 from products.nativescript.app import App
 from products.nativescript.tns_paths import TnsPaths
 
@@ -91,10 +93,8 @@ class TnsAssert(object):
         package_json = os.path.join(app_path, 'package.json')
         json = JsonUtils.read(package_json)
         if version is not None:
-            if 'next' in version:
+            if 'next' or 'rc' in version:
                 assert json['nativescript']['tns-' + platform_string]['version'] is not None
-            if 'rc' in version:
-                assert 'rc' in json['nativescript']['tns-' + platform_string]['version']
             else:
                 assert version in json['nativescript']['tns-' + platform_string]['version']
         else:
@@ -209,3 +209,43 @@ class TnsAssert(object):
             skip_snapshot = Wait.until(lambda: 'Stripping the snapshot flag' in File.read(result.log_file), timeout=180)
             assert skip_snapshot, 'Not message that snapshot is skipped.'
             assert msg in File.read(result.log_file), 'No message that snapshot is NOT available on Windows.'
+
+    @staticmethod
+    def snapshot_build(path_to_apk, path_to_extract_apk):
+        """
+        Verify snapshot build.
+        :param path_to_apk: path to the built apk.
+        :param path_to_extract_apk: path where to extract the .apk files
+        """
+        # Extract the built .apk file
+        File.unzip(path_to_apk, path_to_extract_apk)
+        # Verify lib files
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'x86', 'libNativeScript.so'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'x86_64', 'libNativeScript.so'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'arm64-v8a', 'libNativeScript.so'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'lib', 'armeabi-v7a', 'libNativeScript.so'))
+        # Verify snapshot files
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'x86', 'snapshot.blob'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'x86_64', 'snapshot.blob'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'arm64-v8a', 'snapshot.blob'))
+        assert File.exists(os.path.join(path_to_extract_apk, 'assets', 'snapshots', 'armeabi-v7a', 'snapshot.blob'))
+
+    @staticmethod
+    def string_in_android_manifest(path_to_apk, string):
+        """
+        Verify string exists in AndroidManifest.xml file in the built .apk
+        :param path_to_apk: path to the built apk.
+        :param string: string you want to assert exists in AndroidManifest.xml
+        """
+        apkanalyzer = os.path.join(os.environ.get('ANDROID_HOME'), 'tools', 'bin', 'apkanalyzer')
+        command = '{0} manifest print "{1}"'.format(apkanalyzer, path_to_apk)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            apk_tool = os.path.join(os.environ.get('APKTOOL'), 'apktool.jar')
+            command = '{0} d {1} -f -o {2}'.format(apk_tool, path_to_apk, Settings.TEST_OUT_TEMP)
+        result = run(command, timeout=30)
+        if Settings.HOST_OS == OSType.WINDOWS:
+            manifest = File.read(os.path.join(Settings.TEST_OUT_TEMP, 'AndroidManifest.xml'))
+            assert string in manifest, '{0} NOT found in AndroidManifest.xml'.format(string)
+        else:
+            assert string in result.output, '{0} NOT found in AndroidManifest.xml'.format(string)
+        Log.info('{0} found in AndroidManifest.xml'.format(string))

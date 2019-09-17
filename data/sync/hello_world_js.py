@@ -6,6 +6,7 @@ import os
 
 from core.enums.app_type import AppType
 from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -14,14 +15,15 @@ from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_paths import TnsPaths
 
 
 def sync_hello_world_js(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
-                        snapshot=False, instrumented=True):
+                        snapshot=False, instrumented=True, default_andr_sdk='29'):
     __sync_hello_world_js_ts(app_type=AppType.JS, app_name=app_name, platform=platform,
                              device=device,
                              bundle=bundle, hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot,
-                             instrumented=instrumented)
+                             instrumented=instrumented, default_andr_sdk=default_andr_sdk)
 
 
 def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
@@ -33,7 +35,8 @@ def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglif
 
 
 def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, release=False,
-                          aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False):
+                          aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False,
+                          default_andr_sdk='29'):
     # Execute `tns run` and wait until logs are OK
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr,
                      release=release, uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files,
@@ -52,11 +55,20 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
+    if platform == Platform.ANDROID:
+        # Verify android sdk the app is built with
+        if release:
+            apk_path = TnsPaths.get_apk_path(app_name=app_name, release=True)
+        else:
+            apk_path = TnsPaths.get_apk_path(app_name=app_name, release=False)
+        TnsAssert.string_in_android_manifest(apk_path, 'compileSdkVersion="{0}"'.format(default_andr_sdk))
+    if snapshot and Settings.HOST_OS != OSType.WINDOWS:
+        TnsAssert.snapshot_build(TnsPaths.get_apk_path(app_name=app_name, release=True), Settings.TEST_OUT_TEMP)
     return result
 
 
-def __sync_hello_world_js_ts(app_type, app_name, platform, device,
-                             bundle=True, hmr=True, uglify=False, aot=False, snapshot=False, instrumented=False):
+def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, hmr=True, uglify=False,
+                             aot=False, snapshot=False, instrumented=False, default_andr_sdk='29'):
     # Set changes
     js_file = os.path.basename(Changes.JSHelloWord.JS.file_path)
     if app_type == AppType.JS:
@@ -72,8 +84,18 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
         raise ValueError('Invalid app_type value.')
 
     # Execute `tns run` and wait until logs are OK
-    result = run_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle,
-                                   hmr=hmr, uglify=uglify, aot=aot, snapshot=snapshot)
+    result = run_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+                                   uglify=uglify, aot=aot, snapshot=snapshot, default_andr_sdk=default_andr_sdk)
+
+    # Edit CSS file and verify changes are applied
+    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+    Sync.replace(app_name=app_name, change_set=css_change)
+    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+    device.wait_for_text(text=xml_change.old_text)
+    device.wait_for_text(text=js_change.old_text)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
+                                   hmr=hmr, file_name='app.css', instrumented=instrumented, device=device)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
@@ -88,16 +110,6 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device,
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name='main-page.xml', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-
-    # Edit CSS file and verify changes are applied
-    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
-    Sync.replace(app_name=app_name, change_set=css_change)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
-    device.wait_for_text(text=xml_change.new_text)
-    device.wait_for_text(text=js_change.new_text)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                   hmr=hmr, file_name='app.css', instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     # Revert all the changes
@@ -165,6 +177,17 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     if hmr and instrumented:
         not_existing_string_list = ['QA: Application started']
 
+    # Edit CSS file and verify changes are applied
+    Sync.replace(app_name=app_name, change_set=css_change)
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
+                                                    hmr=hmr, file_name='app.css', instrumented=instrumented)
+    if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
+    else:
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
+    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, hmr=hmr,
@@ -185,18 +208,5 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
                              not_existing_string_list=not_existing_string_list)
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
-    device.wait_for_text(text=xml_change.new_text)
-    device.wait_for_text(text=js_change.new_text)
-
-    # Edit CSS file and verify changes are applied
-    Sync.replace(app_name=app_name, change_set=css_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
-                                                    hmr=hmr, file_name='app.css', instrumented=instrumented)
-    if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
-                             not_existing_string_list=not_existing_string_list)
-    else:
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
     device.wait_for_text(text=xml_change.new_text)
     device.wait_for_text(text=js_change.new_text)

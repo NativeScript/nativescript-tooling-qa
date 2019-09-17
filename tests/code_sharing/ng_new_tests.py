@@ -14,6 +14,7 @@ from core.enums.styling_type import StylingType
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
+from core.utils.os_utils import OSUtils
 from data.apps import Apps
 from data.const import Colors
 from products.angular.ng import NG, NS_SCHEMATICS
@@ -177,8 +178,10 @@ class NGNewTests(TnsRunTest):
 
     @staticmethod
     def build_release():
+        # Do not build with snapshot on macOS Catalina due to known issue.
+        snapshot = not OSUtils.is_catalina()
         Tns.build(app_name=NGNewTests.app_name, platform=Platform.ANDROID, release=True,
-                  bundle=True, aot=True, uglify=True, snapshot=True)
+                  bundle=True, aot=True, uglify=True, snapshot=snapshot)
         if Settings.HOST_OS is OSType.OSX:
             Tns.build(app_name=NGNewTests.app_name, platform=Platform.IOS, release=True, for_device=True,
                       bundle=True, aot=True, uglify=True)

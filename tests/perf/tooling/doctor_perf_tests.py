@@ -29,11 +29,11 @@ class DoctorPerfTests(TnsTest):
 
     def test_300_doctor_performance_outside_project(self):
         time = PerfUtils.get_average_time(lambda: Tns.doctor(), retry_count=RETRY_COUNT)
-        assert PerfUtils.is_value_in_range(actual=time, expected=7.67), 'Doctor exec time is not OK.'
+        assert PerfUtils.is_value_in_range(actual=time, expected=9.63), 'Doctor exec time is not OK.'
 
     def test_301_doctor_performance_inside_project(self):
         time = PerfUtils.get_average_time(lambda: Tns.doctor(app_name=APP_NAME), retry_count=RETRY_COUNT)
-        assert PerfUtils.is_value_in_range(actual=time, expected=9.85), 'Doctor exec time is not OK.'
+        assert PerfUtils.is_value_in_range(actual=time, expected=10.73), 'Doctor exec time is not OK.'
 
     def test_302_prepare_with_doctor_do_not_make_it_much_slower(self):
         pa_d_time = PerfUtils.get_average_time(lambda: Tns.prepare_android(app_name=APP_NAME), retry_count=RETRY_COUNT)

@@ -22,7 +22,7 @@ from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_paths import TnsPaths
 
-Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
+Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_29
 
 
 class TnsRunJSTests(TnsRunTest):
@@ -169,7 +169,8 @@ class TnsRunJSTests(TnsRunTest):
         Tns.kill()
         # Make changes in AppResources/iOS
         File.copy(os.path.join('assets', 'resources', 'ios', 'Default.png'),
-                  os.path.join(self.app_resources_ios, 'Assets.xcassets', 'LaunchImage.launchimage', 'Default.png'))
+                  os.path.join(self.app_resources_ios, 'Assets.xcassets', 'LaunchScreen.Center.imageset',
+                               'Default.png'))
         result = Tns.run_android(app_name=self.app_name, device=self.emu.id)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
                                        run_type=RunType.UNKNOWN, device=self.emu)

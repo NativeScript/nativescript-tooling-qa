@@ -8,9 +8,11 @@ from core.settings import Settings
 from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
+from core.utils.os_utils import OSUtils
 from core.utils.run import run
 from data.templates import Template
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_paths import TnsPaths
 
 
@@ -21,6 +23,7 @@ class BuildTests(TnsTest):
     app_temp_path = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', 'TestApp')
     debug_apk = "app-debug.apk"
     app_identifier = "org.nativescript.testapp"
+    temp_folder = os.path.join(app_path, 'temp')
 
     @classmethod
     def setUpClass(cls):
@@ -70,16 +73,18 @@ class BuildTests(TnsTest):
 
         # Verify apk does not contain aar files
         apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=False)
-        File.unzip(apk_path, 'temp')
+        File.unzip(apk_path, self.temp_folder)
         # Clean META-INF folder. It contains com.android.support.... files which are expected to be there due to
         # https://github.com/NativeScript/nativescript-cli/pull/3923
-        temp_folder = os.path.join(self.app_path, 'temp')
-        Folder.clean(os.path.join(temp_folder, 'META-INF'))
-        assert not File.pattern_exists(temp_folder, '*.aar')
-        assert not File.pattern_exists(temp_folder, '*.plist')
-        assert not File.pattern_exists(temp_folder, '*.android.*')
-        assert not File.pattern_exists(temp_folder, '*.ios.*')
-        Folder.clean(temp_folder)
+        Folder.clean(os.path.join(self.temp_folder, 'META-INF'))
+        assert not File.pattern_exists(self.temp_folder, '*.aar')
+        assert not File.pattern_exists(self.temp_folder, '*.plist')
+        assert not File.pattern_exists(self.temp_folder, '*.android.*')
+        assert not File.pattern_exists(self.temp_folder, '*.ios.*')
+
+        # Verify app is built with android sdk 29 by default
+        TnsAssert.string_in_android_manifest(apk_path, 'compileSdkVersion="29"')
+        Folder.clean(self.temp_folder)
 
         # Verify incremental native build
         result = Tns.exec_command(command='build --clean', path=self.app_name,
@@ -88,11 +93,20 @@ class BuildTests(TnsTest):
         assert "Gradle build..." in result.output, "Gradle build is not called."
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
+    @unittest.skipIf(OSUtils.is_catalina(), 'snapshot not working on Catalina')
     def test_002_build_android_release_uglify_snapshot_sourcemap(self):
         # https://github.com/NativeScript/nativescript-dev-webpack/issues/920
         result = Tns.build_android(self.app_name, release=True, uglify=True, snapshot=True, source_map=True)
         assert "ERROR in NativeScriptSnapshot. Snapshot generation failed!" not in result.output
         assert "Target architecture: arm64-v8a" not in result.output
+
+        # Verify snapshot files in the built .apk
+        apk_path = TnsPaths.get_apk_path(app_name=self.app_name, release=True)
+        if Settings.HOST_OS != OSType.WINDOWS:
+            TnsAssert.snapshot_build(apk_path, self.temp_folder)
+
+        # Verify app is built with android sdk 29 by default
+        TnsAssert.string_in_android_manifest(apk_path, 'compileSdkVersion="29"')
 
         # Configs are respected
         assert File.exists(TnsPaths.get_apk_path(self.app_name, release=True))

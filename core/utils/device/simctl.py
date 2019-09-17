@@ -174,7 +174,7 @@ class Simctl(object):
 
     @staticmethod
     def get_log_file(device_id):
-        command = 'spawn {0} log stream --level=debug'.format(device_id)
+        command = 'spawn {0} log stream --level=default'.format(device_id)
         Process.kill_by_commandline(command)
         log_file = Simctl.run_simctl_command(command=command, wait=False).log_file
         if File.exists(log_file):

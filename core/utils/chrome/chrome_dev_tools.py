@@ -1,6 +1,5 @@
 from time import sleep
 
-import pyautogui
 from aenum import IntEnum
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -11,6 +10,9 @@ from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.wait import Wait
+
+import pyautogui
+pyautogui.FAILSAFE = False
 
 
 class ChromeDevToolsTabs(IntEnum):
@@ -285,7 +287,7 @@ class ChromeDevTools(object):
         tool_bar_holder = self.__expand_shadow_element(watch_bar_holder) \
             .find_element(By.CSS_SELECTOR, "div[class='toolbar']")
         tool_bar = self.__expand_shadow_element(tool_bar_holder)
-        add_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Add expression']")
+        add_button = tool_bar.find_element(By.CSS_SELECTOR, "button[aria-label='Add watch expression']")
         add_button.click()
         sleep(1)
         for _ in range(1, 25):
