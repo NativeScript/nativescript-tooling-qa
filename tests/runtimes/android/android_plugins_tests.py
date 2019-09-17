@@ -18,6 +18,7 @@ from products.nativescript.tns import Tns
 
 PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join('platforms', 'android', 'app', 'build', 'outputs', 'apk', 'debug')
 APP_NAME = AppName.DEFAULT
+APK_DEBUG_PATH = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH, "app-debug.apk")
 
 
 class AndroidRuntimePluginTests(TnsTest):
@@ -82,11 +83,9 @@ class AndroidRuntimePluginTests(TnsTest):
          Test native packages in plugin could be used with implementation in include gradle
          https://github.com/NativeScript/android-runtime/issues/993
         """
-
         # Change main-page.js so it contains only logging information
         source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-993',
-                                 "plugins",
-                                 'implementation', 'main-page.js')
+                                 "plugins", 'implementation', 'main-page.js')
         target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
         File.copy(source=source_js, target=target_js, backup_files=True)
         # Change app include.gradle so it contains the dependencies to com.github.myinnos:AwesomeImagePicker:1.0.2
@@ -338,6 +337,14 @@ class AndroidRuntimePluginTests(TnsTest):
 
         Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
 
+    @staticmethod
+    def assert_kotlin_is_working(emulator):
+        assert File.exists(APK_DEBUG_PATH)
+        assert File.is_file_in_zip(APK_DEBUG_PATH, os.path.join("kotlin")), "Kotlin is not working!"
+        Device.click(emulator, text="TAP", case_sensitive=True)
+        error_message = "Kotlin code is not executed correctly! Logs: "
+        assert "Kotlin is here!" in Adb.get_logcat(emulator.id), error_message + Adb.get_logcat(emulator.id)
+
     def test_452_support_gradle_properties_for_enable_Kotlin_with_jar(self):
         """
         Support gradle.properties file for enable Kotlin
@@ -369,13 +376,8 @@ class AndroidRuntimePluginTests(TnsTest):
                                  period=5)
         messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
         assert test_result, messages + File.read(log.log_file)
-        app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
-                                                  "app-debug.apk")
-        assert File.exists(app_universal_release_path)
-        assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
-        Device.click(self.emulator, text="TAP", case_sensitive=True)
-        error_message = "Kotlin code is not executed correctly! Logs: "
-        assert "Kotlin is here!" in Adb.get_logcat(self.emulator.id), error_message + Adb.get_logcat(self.emulator.id)
+
+        self.assert_kotlin_is_working(self.emulator)
 
     def test_453_support_gradle_properties_for_enable_Kotlin_with_kotlin_file(self):
         """
@@ -410,13 +412,7 @@ class AndroidRuntimePluginTests(TnsTest):
                                  period=5)
         messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
         assert test_result, messages + File.read(log.log_file)
-        app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
-                                                  "app-debug.apk")
-        assert File.exists(app_universal_release_path)
-        assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
-        Device.click(self.emulator, text="TAP", case_sensitive=True)
-        error_message = "Kotlin code is not executed correctly! Logs: "
-        assert "Kotlin is here!" in Adb.get_logcat(self.emulator.id), error_message + Adb.get_logcat(self.emulator.id)
+        self.assert_kotlin_is_working(self.emulator)
 
     def test_454_support_Kotlin_with_jar_without_use_kotlin(self):
         """
@@ -445,13 +441,7 @@ class AndroidRuntimePluginTests(TnsTest):
                                  period=5)
         messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
         assert test_result, messages + File.read(log.log_file)
-        app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
-                                                  "app-debug.apk")
-        assert File.exists(app_universal_release_path)
-        assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
-        Device.click(self.emulator, text="TAP", case_sensitive=True)
-        error_message = "Kotlin code is not executed correctly! Logs: "
-        assert "Kotlin is here!" in Adb.get_logcat(self.emulator.id), error_message + Adb.get_logcat(self.emulator.id)
+        self.assert_kotlin_is_working(self.emulator)
 
     def test_455_gradle_hooks(self):
         """
