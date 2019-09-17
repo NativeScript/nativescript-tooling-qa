@@ -5,6 +5,9 @@ Test for specific needs of Android runtime.
 import os
 
 from core.base_test.tns_test import TnsTest
+from core.utils.assertions import Assert
+from core.utils.device.adb import Adb
+from core.utils.device.device import Device
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.utils.wait import Wait
@@ -335,20 +338,164 @@ class AndroidRuntimePluginTests(TnsTest):
 
         Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
 
-    def test_452_support_gradle_properties_for_enable_Kotlin(self):
+    def test_452_support_gradle_properties_for_enable_Kotlin_with_jar(self):
         """
         Support gradle.properties file for enable Kotlin
         https://github.com/NativeScript/android-runtime/issues/1459
         https://github.com/NativeScript/android-runtime/issues/1463
         """
         Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
+        Adb.clear_logcat(self.emulator.id)
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                          'android-runtime-1463-1459', 'gradle.properties')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
         File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'test-jar-1.0-SNAPSHOT.jar')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'libs')
+        Folder.create(target_app_gradle)
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1463-1459',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
-        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        assert test_result, messages + File.read(log.log_file)
         app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
                                                   "app-debug.apk")
         assert File.exists(app_universal_release_path)
         assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        error_message = "Kotlin code is not executed correctly! Logs: "
+        assert "Kotlin is here!" in Adb.get_logcat(self.emulator.id), error_message + Adb.get_logcat(self.emulator.id)
+
+    def test_453_support_gradle_properties_for_enable_Kotlin_with_kotlin_file(self):
+        """
+        Support gradle.properties file for enable Kotlin
+        https://github.com/NativeScript/android-runtime/issues/1459
+        https://github.com/NativeScript/android-runtime/issues/1463
+        """
+        Tns.platform_remove(APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        Adb.clear_logcat(self.emulator.id)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'gradle.properties')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'Test.kt')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
+                                         'java', 'com')
+        Folder.create(target_app_gradle)
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1463-1459',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        assert test_result, messages + File.read(log.log_file)
+        app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
+                                                  "app-debug.apk")
+        assert File.exists(app_universal_release_path)
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        error_message = "Kotlin code is not executed correctly! Logs: "
+        assert "Kotlin is here!" in Adb.get_logcat(self.emulator.id), error_message + Adb.get_logcat(self.emulator.id)
+
+    def test_454_support_Kotlin_with_jar_without_use_kotlin(self):
+        """
+        Support gradle.properties file for enable Kotlin
+        https://github.com/NativeScript/android-runtime/issues/1459
+        https://github.com/NativeScript/android-runtime/issues/1463
+        """
+        Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
+        Adb.clear_logcat(self.emulator.id)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'test-jar-1.0-SNAPSHOT.jar')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'libs')
+        Folder.create(target_app_gradle)
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1463-1459',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        assert test_result, messages + File.read(log.log_file)
+        app_universal_release_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH,
+                                                  "app-debug.apk")
+        assert File.exists(app_universal_release_path)
+        assert File.is_file_in_zip(app_universal_release_path, os.path.join("kotlin")), "Kotlin is not working!"
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        error_message = "Kotlin code is not executed correctly! Logs: "
+        assert "Kotlin is here!" in Adb.get_logcat(self.emulator.id), error_message + Adb.get_logcat(self.emulator.id)
+
+    def test_455_gradle_hooks(self):
+        """
+        Test gradle hooks works correctly
+        https://docs.nativescript.org/core-concepts/android-runtime/advanced-topics/gradle-hooks
+        """
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-gradle-hooks', 'app.gradle')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+
+        source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                                  'android-runtime-gradle-hooks', 'buildscript.gradle')
+        target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_build_script_gradle, target=target_build_script_gradle, backup_files=True)
+
+        source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                                  'android-runtime-gradle-hooks', 'before-plugins.gradle')
+        target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_build_script_gradle, target=target_build_script_gradle, backup_files=True)
+
+        source_build_script_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                                  'android-runtime-gradle-hooks', 'gradle.properties')
+        target_build_script_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_build_script_gradle, target=target_build_script_gradle, backup_files=True)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                   'sample-plugin', 'src')
+        Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
+
+        result = Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True).output
+        log_regex = r"""MESSAGE: buildscript\.gradle in app is applied!
+.+
+MESSAGE: buildscript\.gradle in plugin is applied!
+.+
+.+
+MESSAGE: before-plugins\.gradle is applied!
+Test variable is set to true in plugin before-plugins\.gradle
+MESSAGE: Plugin include gradle is applied!
+Test variable is set to true in plugin include\.gradle
+.+
+MESSAGE: app\.gradle is applied!
+Test variable is set to true in plugin app\.gradle"""  # noqa: E501
+        Assert.assert_with_regex(result, log_regex)
+
+        Tns.plugin_remove("sample-plugin", verify=False, path=APP_NAME)
+
