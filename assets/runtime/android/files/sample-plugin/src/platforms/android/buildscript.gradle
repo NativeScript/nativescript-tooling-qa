@@ -1,0 +1,9 @@
+println 'MESSAGE: buildscript.gradle in plugin is applied!'
+
+repositories {
+    google()
+    jcenter()
+}
+dependencies {
+
+}

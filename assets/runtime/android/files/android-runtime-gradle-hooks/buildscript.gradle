@@ -1,0 +1,9 @@
+println 'MESSAGE: buildscript.gradle in app is applied!'
+
+repositories {
+    google()
+    jcenter()
+}
+dependencies {
+
+}
