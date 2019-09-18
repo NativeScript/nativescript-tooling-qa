@@ -131,7 +131,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Verify app is synced and recovered
         strings = ['Successfully synced application']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
