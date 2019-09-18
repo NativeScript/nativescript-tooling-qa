@@ -254,6 +254,11 @@ class IOSRuntimeTests(TnsTest):
         https://github.com/NativeScript/ios-runtime/issues/1120
         """
 
+        # Delete src folder from the previous test till Folder copy strt to backup folders too
+        src_folder = os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src')
+        if Folder.exists(src_folder):
+            Folder.clean(src_folder)
+
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1120',
                                'main-page.js'),
                   os.path.join(APP_PATH, 'app', 'main-page.js'), True)
