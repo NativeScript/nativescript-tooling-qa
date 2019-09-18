@@ -10,16 +10,19 @@ import os
 
 from core.base_test.tns_test import TnsTest
 from core.settings import Settings
+from core.settings.Settings import TEST_RUN_HOME
 from core.utils.device.adb import Adb
 from core.utils.device.device_manager import DeviceManager
-from core.utils.file_utils import File
+from core.utils.file_utils import File, Folder
 from core.utils.assertions import Assert
+from core.utils.run import run
 from core.utils.wait import Wait
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
 
 APP_NAME = Settings.AppName.DEFAULT
+PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join('platforms', 'android', 'app', 'build', 'outputs', 'apk', 'debug')
 
 
 class AndroidErrorActivityTests(TnsTest):
@@ -30,7 +33,31 @@ class AndroidErrorActivityTests(TnsTest):
         Tns.platform_add_android(app_name=APP_NAME, framework_path=Settings.Android.FRAMEWORK_PATH)
 
         # Start emulator
-        cls.emulator = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_29)
+        cls.emulator = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
+
+    @staticmethod
+    def files_to_delete_in_apk(folder_path, extension):
+        files_to_delete = File.find_by_extension(folder_path, extension)
+        for file_to_delete in files_to_delete:
+            File.delete(file_to_delete)
+
+    @staticmethod
+    def sign_apk(apk_path):
+        unzip_folder = apk_path.replace(".apk", "")
+        File.unzip(apk_path, unzip_folder)
+        meta_inf_folder_path = os.path.join(unzip_folder, "META-INF")
+        File.delete(os.path.join(meta_inf_folder_path, "MANIFEST.MF"))
+        AndroidErrorActivityTests.files_to_delete_in_apk(meta_inf_folder_path, ".RSA")
+        AndroidErrorActivityTests.files_to_delete_in_apk(meta_inf_folder_path, ".SF")
+        File.delete(apk_path)
+        File.zip(unzip_folder, apk_path)
+        command = "jarsigner"
+        command = command + " -keystore $ANDROID_KEYSTORE_PATH "
+        command = command + "-keypass $ANDROID_KEYSTORE_PASS "
+        command = command + "-storepass $ANDROID_KEYSTORE_ALIAS_PASS "
+        command = command + apk_path
+        command = command + " $ANDROID_KEYSTORE_ALIAS"
+        run(cmd=command)
 
     def test_200_error_activity_shown_on_error(self):
         result = Tns.run_android(app_name=APP_NAME, emulator=True, wait=False)
@@ -77,6 +104,30 @@ System\.err: 	at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
         self.emulator.wait_for_text('Exception')
         self.emulator.wait_for_text('Logcat')
         self.emulator.wait_for_text('Error: Kill the app!')
+
+    def test_201_error_is_shown_when_metadata_folder_in_apk_is_missing(self):
+        """
+           https://github.com/NativeScript/android-runtime/issues/1471
+           https://github.com/NativeScript/android-runtime/issues/1382
+        """
+        Adb.uninstall("org.nativescript.TestApp", self.emulator.id, True)
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+        apk_folder_path = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH)
+        apk_path = os.path.join(apk_folder_path, "app-debug.apk")
+        assert File.exists(apk_path)
+        unzip_folder = os.path.join(apk_folder_path, "app-debug")
+        File.unzip(apk_path, unzip_folder)
+        assert File.exists(apk_path)
+        Folder.clean(os.path.join(unzip_folder, "assets", "metadata"))
+        File.delete(apk_path)
+        File.zip(unzip_folder, apk_path)
+        self.sign_apk(apk_path)
+        Adb.install(apk_path, self.emulator.id, 60)
+        Adb.start_application(self.emulator.id, "org.nativescript.TestApp")
+        text_on_screen = "com.tns.NativescriptException: metadata folder couldn\'t be opened!"
+        self.emulator.wait_for_text(text_on_screen)
+        error_message = "Missing metadata in apk is not causing the correct error! Logs: "
+        assert self.emulator.is_text_visible(text_on_screen), error_message + self.emulator.get_text()
 
     def test_400_no_error_activity_in_release_builds(self):
         # Break the app to test error activity
