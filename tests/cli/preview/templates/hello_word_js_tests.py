@@ -98,7 +98,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         Preview.run_url(url=url, device=self.emu)
         strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
+        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90)
 
         # Click on TAP button on emulator
         Adb.click_element_by_text(self.emu.id, 'TAP', case_sensitive=True)
