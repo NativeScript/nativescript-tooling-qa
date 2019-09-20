@@ -38,7 +38,7 @@ def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, ao
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
 
     # Verify it looks properly
-    device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
+    device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text, timeout=180)
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
