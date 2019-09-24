@@ -17,7 +17,7 @@ from core.utils.device.device import Device, Adb
 from core.utils.device.device_manager import DeviceManager
 from core.utils.file_utils import File, Folder
 from core.utils.wait import Wait
-from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName
+from core.settings.Settings import Emulators, Android, TEST_RUN_HOME, AppName, Packages
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
@@ -480,6 +480,9 @@ JS: ### Stack Trace End"""  # noqa: E501
          Test update of tns-core-modules works correctly if you have build the app first
          https://github.com/NativeScript/android-runtime/issues/1257
         """
+        Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
         strings = ['Successfully synced application', 'on device', self.emulator.id]
@@ -487,7 +490,7 @@ JS: ### Stack Trace End"""  # noqa: E501
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
                                  period=5)
         assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
-        Npm.install(package="tns-core-modules@next", folder=os.path.join(TEST_RUN_HOME, APP_NAME))
+        Npm.install(package=Packages.MODULES, folder=os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.plugin_add(plugin_name="nativescript-ui-dataform@5.0.0", path=os.path.join(TEST_RUN_HOME, APP_NAME))
         log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
 
