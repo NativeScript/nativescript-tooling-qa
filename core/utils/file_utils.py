@@ -288,6 +288,27 @@ class File(object):
             Log.debug('Failed to unpack .tar file {0}'.format(file_path))
 
     @staticmethod
+    def __zipdir(path, ziph):
+        # ziph is zipfile handle
+        for root, dirs, files in os.walk(path):
+            file_path = root.replace(path + "/", "")
+            file_path = file_path.replace(path, "")
+            for file_name in files:
+                ziph.write(os.path.join(root, file_name), os.path.join(file_path, file_name))
+
+    @staticmethod
+    def zip(file_path, zip_dest_path, clean_zip_dest_path=True):
+        if clean_zip_dest_path:
+            if File.exists(zip_dest_path):
+                File.delete(clean_zip_dest_path)
+        ziph = zipfile.ZipFile(zip_dest_path, 'w', zipfile.ZIP_DEFLATED)
+        if Folder.exists(file_path):
+            File.__zipdir(file_path, ziph)
+        else:
+            ziph.write(file_path)
+        ziph.close()
+
+    @staticmethod
     def unzip(file_path, dest_dir, clean_dest_dir=True):
         if clean_dest_dir:
             Folder.clean(dest_dir)
