@@ -146,8 +146,8 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True,
                              device=device, instrumented=instrumented, click_open_alert=click_open_alert)
 
     # Verify app looks properly
-    device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=60, retry_delay=5)
-    device.wait_for_text(text=Changes.JSHelloWord.XML.old_text, timeout=60)
+    device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90, retry_delay=5)
+    device.wait_for_text(text=Changes.JSHelloWord.XML.old_text, timeout=90)
     device.wait_for_main_color(color=Colors.WHITE)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
