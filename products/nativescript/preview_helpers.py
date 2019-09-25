@@ -144,7 +144,7 @@ class Preview(object):
 
         # Verify logs
         strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=100)
         return result
 
     @staticmethod
