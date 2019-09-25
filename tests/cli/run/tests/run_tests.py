@@ -303,7 +303,7 @@ class TnsRunJSTests(TnsRunTest):
         time.sleep(1)
         File.replace(app_js_file, 'test.js', 'test_2.js')
         strings = ["JS: renamed file synced!!!"]
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=100)
 
         # Delete file
         File.delete(renamed_file)
