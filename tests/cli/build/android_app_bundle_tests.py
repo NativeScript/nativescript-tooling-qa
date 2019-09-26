@@ -104,7 +104,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
 
         webpack_config = os.path.join(self.app_name, 'webpack.config.js')
         File.replace(webpack_config, 'webpackConfig: config,', """webpackConfig: config,
-        \nuseLibs: true,\nandroidNdkPath: \"$ANDROID_NDK_HOME\"""")
+        \nuseLibs: true,\nandroidNdkPath: \"$ANDROID_NDK_HOME\",""")
 
         # env.snapshot is applicable only in release build
         result = Tns.build_android(self.app_path, aab=True, release=True, snapshot=True,
