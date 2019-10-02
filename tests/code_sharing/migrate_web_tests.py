@@ -94,7 +94,7 @@ class MigrateWebToMobileTests(TnsRunTest):
         if "Angular CLI: 8.3" in NG.exec_command(command="version").output:
             element = self.chrome.driver.find_element(By.XPATH, '//*[contains(text(), "TestApp app is running!")]')
         else:
-            element = self.chrome.driver.find_element(By.XPATH, '//*[contains(text(), "Welcome to")]')
+            element = self.chrome.driver.find_element(By.XPATH, '//*[contains(text(), "Welcome")]')
         assert element.is_displayed(), 'Failed to serve default NG project.'
         Log.info('Default NG web project loaded!')
         NG.kill()
