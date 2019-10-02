@@ -99,10 +99,8 @@ class TnsRunJSTests(TnsRunTest):
         File.delete(app_js_origin_path)
 
         # Verify app is synced
-        strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, run_type=RunType.UNKNOWN)
+        strings = ['ERROR in ./app.js']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text='Exception')
 
         # Restore app.js and verify app is synced and recovered
         File.copy(app_js_backup_path, app_js_origin_path)
@@ -307,10 +305,8 @@ class TnsRunJSTests(TnsRunTest):
 
         # Delete file
         File.delete(renamed_file)
-        strings = ["Module build failed", "Error: ENOENT: no such file or directory",
-                   'Successfully synced application']
+        strings = ["Module build failed", "Error: ENOENT: no such file or directory"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text='Exception')
 
         File.replace(app_js_file, "require('./test_2.js');", ' ')
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
@@ -333,7 +329,6 @@ class TnsRunJSTests(TnsRunTest):
         Folder.clean(folder_name)
         strings = ["Module build failed", "Error: ENOENT: no such file or directory"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text='Exception')
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_115_tns_run_ios_add_remove_files_and_folders(self):
@@ -365,8 +360,7 @@ class TnsRunJSTests(TnsRunTest):
 
         # Delete file
         File.delete(renamed_file)
-        strings = ["Module build failed", "Error: ENOENT: no such file or directory",
-                   "NativeScript debugger detached"]
+        strings = ["Module build failed", "Error: ENOENT: no such file or directory"]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
         File.replace(app_js_file, "require('./test_2.js');", ' ')
