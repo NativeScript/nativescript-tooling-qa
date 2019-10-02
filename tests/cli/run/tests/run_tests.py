@@ -99,10 +99,9 @@ class TnsRunJSTests(TnsRunTest):
         File.delete(app_js_origin_path)
 
         # Verify app is synced
-        strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID,
-                                       device=self.emu, run_type=RunType.UNKNOWN)
+        strings = ['ERROR in ./app.js']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text='Exception')
+        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Restore app.js and verify app is synced and recovered
         File.copy(app_js_backup_path, app_js_origin_path)
