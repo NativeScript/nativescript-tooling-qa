@@ -255,9 +255,7 @@ class IOSRuntimeTests(TnsTest):
         """
 
         # Delete src folder from the previous test till Folder copy strt to backup folders too
-        src_folder = os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src')
-        if Folder.exists(src_folder):
-            Folder.clean(src_folder)
+        Folder.clean(os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'))
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1120',
                                'main-page.js'),
@@ -293,7 +291,32 @@ class IOSRuntimeTests(TnsTest):
                             period=5)
         assert result, 'It seems that native properties provided by internal classes are not available'
 
+    def test_392_use_objective_c_plus_plus_file(self):
+        """
+        https://github.com/NativeScript/ios-runtime/issues/1203
+        """
+
+        Folder.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1203', 'src'),
+                    os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'), True)
+
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1203',
+                               'main-page.js'),
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
+        log = Tns.run_ios(app_name=APP_NAME, emulator=True)
+
+        strings = ['NativeScript logInfo method called']
+        result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                            period=5)
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
+
+        assert result, 'It seems that there\'s a problem with using objective C++ files that are added in App_Resources'
+
     def test_398_tns_run_ios_console_time(self):
+        # Delete src folder from the previous test till Folder copy strt to backup folders too
+        Folder.clean(os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'))
+
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_NG.local_package, update=True)
         Tns.platform_add_ios(APP_NAME, framework_path=IOS.FRAMEWORK_PATH)
