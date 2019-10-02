@@ -101,7 +101,6 @@ class TnsRunJSTests(TnsRunTest):
         # Verify app is synced
         strings = ['ERROR in ./app.js']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Restore app.js and verify app is synced and recovered
         File.copy(app_js_backup_path, app_js_origin_path)
