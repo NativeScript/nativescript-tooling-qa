@@ -14,7 +14,6 @@ from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
-from products.nativescript.tns_assert import TnsAssert
 
 
 def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, aot=False, hmr=True,

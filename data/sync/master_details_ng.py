@@ -13,7 +13,6 @@ from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
 from products.nativescript.tns import Tns
-from products.nativescript.tns_assert import TnsAssert
 
 
 def run_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, uglify=False, aot=False,
