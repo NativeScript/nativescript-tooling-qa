@@ -29,8 +29,6 @@ def run_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, ao
     # Execute tns run command
     result = Tns.run(app_name=app_name, platform=platform, emulator=emulator, bundle=bundle, aot=aot,
                      uglify=uglify, hmr=hmr, release=release, snapshot=snapshot, device=device_id)
-    if os.environ.get('nativescript') == 'rc':
-        TnsAssert.snapshot_skipped(snapshot, result, release)
 
     # Check logs
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,

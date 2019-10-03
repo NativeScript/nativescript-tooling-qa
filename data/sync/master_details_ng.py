@@ -20,8 +20,6 @@ def run_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugli
                          release=False, snapshot=False):
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle,
                      hmr=hmr, aot=aot, uglify=uglify, snapshot=snapshot, release=release)
-    if os.environ.get('nativescript') == 'rc':
-        TnsAssert.snapshot_skipped(snapshot, result, release)
 
     # Verify it looks properly
     device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text, timeout=450, retry_delay=5)
