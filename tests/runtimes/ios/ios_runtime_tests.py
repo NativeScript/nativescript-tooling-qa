@@ -300,18 +300,17 @@ class IOSRuntimeTests(TnsTest):
                     os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'), True)
 
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'ios', 'files', 'ios-runtime-1203',
-                               'main-view-model.js'),
-                  os.path.join(APP_PATH, 'app', 'main-view-model.js'), True)
+                               'main-page.js'),
+                  os.path.join(APP_PATH, 'app', 'main-page.js'), True)
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
-
-        # Verify app is running on device
-        Device.wait_for_text(self.sim, text='Tap the button')
-        Device.click(self.sim, text="TAP", case_sensitive=True)
 
         strings = ['NativeScript logInfo method called']
         result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                             period=5)
         assert result, 'It seems that there\'s a problem with using objective C++ files that are added in App_Resources'
+
+        # Verify app is running on device
+        Device.wait_for_text(self.sim, text='Tap the button')
 
     def test_398_tns_run_ios_console_time(self):
         # Delete src folder from the previous test till Folder copy strt to backup folders too
