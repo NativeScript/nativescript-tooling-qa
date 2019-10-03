@@ -41,7 +41,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr,
                      release=release, uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files,
                      just_launch=just_launch)
-    
+
     if os.environ.get('nativescript') == 'rc':
         TnsAssert.snapshot_skipped(snapshot, result, release)
 
