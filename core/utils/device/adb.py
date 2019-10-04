@@ -371,9 +371,20 @@ class Adb(object):
         :param device_id: Device identifier as float.
         :param service_name: Service name you want to find as string.
         """
-        result = Adb.run_adb_command(command='shell dumpsys activity services {0}'.format(service_name), wait=True,
-                                     device_id=device_id)
-        return result.output
+        try:
+            result = Adb.run_adb_command(command='shell dumpsys activity services {0}'.format(service_name), wait=True,
+                                         device_id=device_id).output
+        except TimeoutExpired:
+            Log.info('get_logcat timeout! Retrying...')
+            command_result = Adb.run_adb_command(command='shell dumpsys activity services {0}'.format(service_name),
+                                                 wait=False, device_id=device_id)
+            time.sleep(15)
+            result = File.read(command_result.log_file)
+            try:
+                os.kill(command_result.pid, 0)
+            except OSError:
+                Log.info('Process already killed...')
+        return result
 
     @staticmethod
     def get_process_pid(device_id, process_name):
@@ -400,4 +411,14 @@ class Adb(object):
             command='shell kill {0}'.format(pid),
             wait=True, device_id=device_id)
         assert result.output == "", "Process {0} not killed! Logs:{1}".format(process_name, result.output)
+        time.sleep(5)
+
+    @staticmethod
+    def run_adb_as_root(device_id):
+        """
+        Run adb on device/emulator as root
+        :param device_id: Device identifier as float.
+        """
+        Adb.run_adb_command(command='kill-server', wait=True, device_id=device_id)
+        Adb.run_adb_command(command='root', wait=True, device_id=device_id)
         time.sleep(5)
