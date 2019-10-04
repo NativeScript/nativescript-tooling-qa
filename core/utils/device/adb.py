@@ -416,7 +416,7 @@ class Adb(object):
     @staticmethod
     def run_adb_as_root(device_id):
         """
-        Get actice services
+        Run adb on device/emulator as root
         :param device_id: Device identifier as float.
         """
         Adb.run_adb_command(command='kill-server', wait=True, device_id=device_id)
