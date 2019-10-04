@@ -1,6 +1,6 @@
 {
   "main": "app.js",
-   "nativescript": "randomtext",
+  "nativescript": "randomtext",
   "android": {
     "v8Flags": "--expose_gc",
     "markingMode": "none"
