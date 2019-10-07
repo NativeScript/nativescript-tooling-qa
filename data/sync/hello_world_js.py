@@ -36,7 +36,7 @@ def sync_hello_world_ts(app_name, platform, device, bundle=True, hmr=True, uglif
 
 def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, uglify=False, release=False,
                           aot=False, snapshot=False, instrumented=False, sync_all_files=False, just_launch=False,
-                          default_andr_sdk='29'):
+                          default_andr_sdk='29', timeout=240):
     # Execute `tns run` and wait until logs are OK
     result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr,
                      release=release, uglify=uglify, aot=aot, snapshot=snapshot, sync_all_files=sync_all_files,
@@ -45,7 +45,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.UNKNOWN, bundle=bundle,
                                    hmr=hmr, instrumented=instrumented, device=device, release=release,
                                    snapshot=snapshot)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=timeout)
 
     # Verify it looks properly
     device.wait_for_text(text=Changes.JSHelloWord.JS.old_text)

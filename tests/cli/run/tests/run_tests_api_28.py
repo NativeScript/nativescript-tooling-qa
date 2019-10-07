@@ -53,4 +53,4 @@ class TnsRunJSTests(TnsRunAndroidTest):
         """
         # Run app and verify on emulator
         run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, default_andr_sdk='28',
-                              release=True, snapshot=True)
+                              release=True, snapshot=True, timeout=300)
