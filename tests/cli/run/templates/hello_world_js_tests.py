@@ -58,4 +58,5 @@ class TnsRunJSTests(TnsRunTest):
         sync_hello_world_js(self.app_name, Platform.IOS, self.sim, uglify=True)
 
     def test_320_run_android_release_snapshot_uglify(self):
-        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True, release=True, snapshot=True)
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, uglify=True, release=True,
+                              snapshot=True)
