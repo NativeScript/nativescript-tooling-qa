@@ -6,6 +6,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
+from core.utils.docker import Docker
 from data.changes import Changes
 from data.sync.hello_world_js import sync_hello_world_js, run_hello_world_js_ts
 from data.templates import Template
@@ -20,6 +21,7 @@ class TnsRunJSTests(TnsRunTest):
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
+        Docker.start()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
@@ -42,6 +44,11 @@ class TnsRunJSTests(TnsRunTest):
             target_src = os.path.join(self.source_project_dir, change.file_path)
             File.clean(path=target_src)
             File.copy(source=source_src, target=target_src)
+    
+    @classmethod
+    def tearDownClass(cls):
+        TnsRunTest.tearDownClass()
+        Docker.kill()
 
     def test_100_run_android(self):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu)

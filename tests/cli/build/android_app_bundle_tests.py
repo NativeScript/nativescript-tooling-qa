@@ -9,6 +9,7 @@ from core.utils.device.adb import Adb
 from core.utils.file_utils import Folder, File
 from core.utils.os_utils import OSUtils
 from core.utils.run import run
+from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -23,6 +24,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
     @classmethod
     def setUpClass(cls):
         TnsRunAndroidTest.setUpClass()
+        Docker.start()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
@@ -41,6 +43,11 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         # Ensure app is in initial state
         Folder.clean(self.app_path)
         Folder.copy(source=self.target_project_dir, target=self.app_path)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()
+        Docker.kill()
 
     @staticmethod
     def bundletool_build(bundletool_path, path_to_aab, path_to_apks):
