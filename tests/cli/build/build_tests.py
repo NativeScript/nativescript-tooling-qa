@@ -9,8 +9,9 @@ from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
 from core.utils.process import Process
+from core.utils.docker import Docker
 
-# from core.utils.os_utils import OSUtils
+from core.utils.os_utils import OSUtils
 from core.utils.run import run
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -31,22 +32,20 @@ class BuildTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        if Settings.HOST_OS == OSType.WINDOWS:
-            cmd = r'"C:\Program Files\Docker\Docker\Docker Desktop.exe"'
-            run(cmd=cmd, wait=False)
-        # Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Docker.start()
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         # Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
-        # Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
+        Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         # Tns.platform_add_android(app_name='"' + cls.app_name_with_space + '"',
         #                          framework_path=Settings.Android.FRAMEWORK_PATH, verify=False)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(cls.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
-        # Folder.copy(cls.app_path, cls.app_temp_path)
+        Folder.copy(cls.app_path, cls.app_temp_path)
 
     def setUp(self):
         TnsTest.setUp(self)
-        # Folder.clean(self.app_path)
-        # Folder.copy(self.app_temp_path, self.app_path)
+        Folder.clean(self.app_path)
+        Folder.copy(self.app_temp_path, self.app_path)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -54,10 +53,10 @@ class BuildTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Process.kill(r"'Docker Desktop.exe'")
+        Docker.kill()
 
-        # Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
-        # Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
+        Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
+        Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
 
     # def test_001_build_android(self):
     #     Tns.build_android(self.app_name)
