@@ -23,5 +23,9 @@ class Docker(object):
     def kill():
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill('Docker Desktop')
+            Process.kill('Docker.Watchguard')
+            Process.kill('com.docker.backend')
+            Process.kill('com.docker.proxy')
         if OSUtils.is_catalina():
             Process.kill('Docker')
+            Process.kill('com.docker.vmnetd')
