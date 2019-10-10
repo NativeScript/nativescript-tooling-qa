@@ -1,7 +1,6 @@
 import os
 
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
-from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
 from core.utils.device.adb import Adb
 from core.utils.file_utils import Folder, File
