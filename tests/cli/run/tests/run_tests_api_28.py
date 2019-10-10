@@ -41,7 +41,7 @@ class TnsRunJSTests(TnsRunAndroidTest):
     @classmethod
     def tearDownClass(cls):
         TnsRunAndroidTest.tearDownClass()
-        Docker.kill()
+        Docker.stop()
 
     def test_100_run_android(self):
         """

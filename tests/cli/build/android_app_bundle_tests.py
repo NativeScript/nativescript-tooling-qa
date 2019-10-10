@@ -47,7 +47,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Docker.kill()
+        Docker.stop()
 
     @staticmethod
     def bundletool_build(bundletool_path, path_to_aab, path_to_apks):

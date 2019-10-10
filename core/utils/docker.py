@@ -20,7 +20,7 @@ class Docker(object):
             Log.info('No need to start docker!')
 
     @staticmethod
-    def kill():
+    def stop():
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill('Docker Desktop')
             Process.kill('Docker.Watchguard')
@@ -28,4 +28,3 @@ class Docker(object):
             Process.kill('com.docker.proxy')
         if OSUtils.is_catalina():
             Process.kill('Docker')
-            Process.kill('com.docker.vmnetd')

@@ -53,7 +53,7 @@ class BuildTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
-        Docker.kill()
+        Docker.stop()
 
         Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
         Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))

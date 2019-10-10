@@ -48,7 +48,7 @@ class TnsRunJSTests(TnsRunTest):
     @classmethod
     def tearDownClass(cls):
         TnsRunTest.tearDownClass()
-        Docker.kill()
+        Docker.stop()
 
     def test_100_run_android(self):
         sync_hello_world_js(self.app_name, Platform.ANDROID, self.emu)
