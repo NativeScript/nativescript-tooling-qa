@@ -4,6 +4,7 @@ from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder
+from core.utils.docker import Docker
 from data.sync.hello_world_js import sync_hello_world_js, run_hello_world_js_ts
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
@@ -19,6 +20,7 @@ class TnsRunJSTests(TnsRunAndroidTest):
     @classmethod
     def setUpClass(cls):
         TnsRunAndroidTest.setUpClass()
+        Docker.start()
 
         # Create app
         Tns.create(app_name=cls.app_name, template='tns-template-hello-world@6.0')
@@ -39,6 +41,7 @@ class TnsRunJSTests(TnsRunAndroidTest):
     @classmethod
     def tearDownClass(cls):
         TnsRunAndroidTest.tearDownClass()
+        Docker.stop()
 
     def test_100_run_android(self):
         """

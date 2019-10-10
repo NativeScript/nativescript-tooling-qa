@@ -1,6 +1,5 @@
 import os
 import unittest
-
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
@@ -8,7 +7,7 @@ from core.settings import Settings
 from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
-from core.utils.os_utils import OSUtils
+from core.utils.docker import Docker
 from core.utils.run import run
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -28,6 +27,7 @@ class BuildTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
+        Docker.start()
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.create(cls.app_name_with_space, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
@@ -48,6 +48,8 @@ class BuildTests(TnsTest):
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
+        Docker.stop()
+
         Folder.clean(TnsPaths.get_app_path(app_name=cls.app_temp_path))
         Folder.clean(TnsPaths.get_app_path(cls.app_name_with_space))
 
@@ -93,7 +95,6 @@ class BuildTests(TnsTest):
         assert "Gradle build..." in result.output, "Gradle build is not called."
         assert result.output.count("Gradle build...") == 1, "More than 1 gradle build is triggered."
 
-    @unittest.skipIf(OSUtils.is_catalina(), 'snapshot not working on Catalina')
     def test_002_build_android_release_uglify_snapshot_sourcemap(self):
         # https://github.com/NativeScript/nativescript-dev-webpack/issues/920
         result = Tns.build_android(self.app_name, release=True, uglify=True, snapshot=True, source_map=True)
