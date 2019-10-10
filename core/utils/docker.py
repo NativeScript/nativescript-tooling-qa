@@ -13,9 +13,11 @@ class Docker(object):
         if Settings.HOST_OS == OSType.WINDOWS:
             cmd = r'"C:\Program Files\Docker\Docker\Docker Desktop.exe"'
             run(cmd=cmd, wait=False)
+            Log.info('Starting docker!')
         if OSUtils.is_catalina():
             cmd = 'open --background -a Docker'
             run(cmd=cmd, wait=False)
+            Log.info('Starting docker!')
         else:
             Log.info('No need to start docker!')
 
