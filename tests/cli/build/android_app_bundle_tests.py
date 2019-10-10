@@ -1,14 +1,11 @@
 import os
-import unittest
 
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
-from core.enums.os_type import OSType
-from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
 from core.utils.device.adb import Adb
 from core.utils.file_utils import Folder, File
-from core.utils.os_utils import OSUtils
 from core.utils.run import run
+from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
 
@@ -23,6 +20,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
     @classmethod
     def setUpClass(cls):
         TnsRunAndroidTest.setUpClass()
+        Docker.start()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
@@ -41,6 +39,11 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         # Ensure app is in initial state
         Folder.clean(self.app_path)
         Folder.copy(source=self.target_project_dir, target=self.app_path)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsRunAndroidTest.tearDownClass()
+        Docker.stop()
 
     @staticmethod
     def bundletool_build(bundletool_path, path_to_aab, path_to_apks):
@@ -87,8 +90,6 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         # Verify app looks correct inside emulator
         self.emu.wait_for_text(text='TAP')
 
-    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, "Skip on Windows")
-    @unittest.skipIf(OSUtils.is_catalina(), 'snapshot not working on Catalina')
     def test_205_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""

@@ -6,6 +6,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
+from core.utils.docker import Docker
 from data.sync.hello_world_ng import sync_hello_world_ng, run_hello_world_ng
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -19,6 +20,7 @@ class TnsRunNGTests(TnsRunTest):
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
+        Docker.start()
 
         # Create app
         Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
@@ -43,6 +45,11 @@ class TnsRunNGTests(TnsRunTest):
         target_src = os.path.join(self.source_project_dir, 'src')
         Folder.clean(target_src)
         Folder.copy(source=source_src, target=target_src)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsRunTest.tearDownClass()
+        Docker.stop()
 
     def test_100_run_android(self):
         sync_hello_world_ng(self.app_name, Platform.ANDROID, self.emu)
