@@ -35,6 +35,14 @@ class SimAuto(object):
                     if element2 is not None:
                         return element2
 
+                    element3 = window.findFirstR(AXDescription=text)
+                    if element3 is not None:
+                        return element3
+
+                    element4 = window.findFirstR(AXIdentifier=text)
+                    if element4 is not None:
+                        return element4
+
             return None
         except Exception:
             return None
