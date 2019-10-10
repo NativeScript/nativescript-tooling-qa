@@ -44,7 +44,7 @@ class TnsRunJSTests(TnsRunTest):
             target_src = os.path.join(self.source_project_dir, change.file_path)
             File.clean(path=target_src)
             File.copy(source=source_src, target=target_src)
-    
+
     @classmethod
     def tearDownClass(cls):
         TnsRunTest.tearDownClass()

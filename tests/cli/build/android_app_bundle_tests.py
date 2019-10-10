@@ -1,13 +1,10 @@
 import os
-import unittest
 
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
-from core.enums.os_type import OSType
 from core.settings import Settings
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
 from core.utils.device.adb import Adb
 from core.utils.file_utils import Folder, File
-from core.utils.os_utils import OSUtils
 from core.utils.run import run
 from core.utils.docker import Docker
 from data.templates import Template

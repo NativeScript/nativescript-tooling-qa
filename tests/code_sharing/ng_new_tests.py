@@ -14,7 +14,6 @@ from core.enums.styling_type import StylingType
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
-from core.utils.os_utils import OSUtils
 from data.apps import Apps
 from data.const import Colors
 from products.angular.ng import NG, NS_SCHEMATICS
