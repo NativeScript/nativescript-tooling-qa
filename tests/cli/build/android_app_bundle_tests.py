@@ -94,8 +94,6 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         # Verify app looks correct inside emulator
         self.emu.wait_for_text(text='TAP')
 
-    @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, "Skip on Windows")
-    @unittest.skipIf(OSUtils.is_catalina(), 'snapshot not working on Catalina')
     def test_205_build_android_app_bundle_env_snapshot(self):
         """Build app with android app bundle option with --bundle and optimisations for snapshot.
            Verify the output(app.aab) and use bundletool to deploy on device."""

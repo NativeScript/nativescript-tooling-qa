@@ -178,10 +178,8 @@ class NGNewTests(TnsRunTest):
 
     @staticmethod
     def build_release():
-        # Do not build with snapshot on macOS Catalina due to known issue.
-        snapshot = not OSUtils.is_catalina()
         Tns.build(app_name=NGNewTests.app_name, platform=Platform.ANDROID, release=True,
-                  bundle=True, aot=True, uglify=True, snapshot=snapshot)
+                  bundle=True, aot=True, uglify=True, snapshot=True)
         if Settings.HOST_OS is OSType.OSX:
             Tns.build(app_name=NGNewTests.app_name, platform=Platform.IOS, release=True, for_device=True,
                       bundle=True, aot=True, uglify=True)
