@@ -1,3 +1,4 @@
+import os
 from core.utils.process import Process
 from core.utils.run import run
 from core.utils.os_utils import OSUtils
@@ -11,9 +12,15 @@ class Docker(object):
     @staticmethod
     def start():
         if Settings.HOST_OS == OSType.WINDOWS:
-            cmd = r'"C:\Program Files\Docker\Docker\Docker Desktop.exe"'
-            run(cmd=cmd, wait=False)
-            Log.info('Starting docker!')
+            docker = os.environ.get("DOCKER_HOME")
+            if docker is not None:
+                cmd = '"' + os.path.join(docker, 'Docker Desktop.exe') + '"'
+                run(cmd=cmd, wait=False)
+                Log.info('Starting docker!')
+            else:
+                cmd = r'"C:\Program Files\Docker\Docker\Docker Desktop.exe"'
+                run(cmd=cmd, wait=False)
+                Log.info('Starting docker!')
         if OSUtils.is_catalina():
             cmd = 'open --background -a Docker'
             run(cmd=cmd, wait=False)
