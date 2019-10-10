@@ -8,7 +8,6 @@ from core.settings.Settings import TEST_RUN_HOME
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
 from core.utils.docker import Docker
-
 from core.utils.run import run
 from data.templates import Template
 from products.nativescript.tns import Tns
@@ -17,7 +16,6 @@ from products.nativescript.tns_paths import TnsPaths
 
 
 class BuildTests(TnsTest):
-
     app_name = Settings.AppName.DEFAULT
     app_name_with_space = Settings.AppName.WITH_SPACE
     app_path = TnsPaths.get_app_path(app_name=app_name)
@@ -126,11 +124,11 @@ class BuildTests(TnsTest):
         file_name = os.path.basename(Settings.Android.ANDROID_KEYSTORE_PATH)
         cert_with_space_path = os.path.join("with space", file_name)
         File.copy(Settings.Android.ANDROID_KEYSTORE_PATH, cert_with_space_path)
-    
+
         Tns.build_android(app_name='"' + self.app_name_with_space + '"', release=True)
         output = File.read(os.path.join(self.app_name_with_space, "package.json"))
         assert self.app_identifier in output.lower()
-    
+
         output = File.read(os.path.join(TnsPaths.get_platforms_android_src_main_path(self.app_name_with_space),
                                         'AndroidManifest.xml'))
         assert self.app_identifier in output.lower()
@@ -192,7 +190,7 @@ class BuildTests(TnsTest):
         Folder.copy(source_app, target_app)
 
         result = Tns.exec_command(command='resources update', path=self.app_name)
-    
+
         assert "Successfully updated your project's application resources '/Android' directory structure" in \
                result.output
         assert "The previous version of your Android application resources has been renamed to '/Android-Pre-v4'" in \
