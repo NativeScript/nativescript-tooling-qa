@@ -127,7 +127,7 @@ class TnsLogs(object):
                                 'the production mode.')
 
         # Add message for snapshot
-        if snapshot and release and Settings.HOST_OS != OSType.WINDOWS:
+        if snapshot and release:
             logs.append('Successfully generated snapshots')
             logs.append('Snapshot enabled')
 

@@ -60,6 +60,7 @@ class DeviceTests(TnsTest):
 
     @unittest.skipIf(Settings.HOST_OS is not OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_002_simulator(self):
+        DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
         assert DeviceManager.Simulator.is_available(Settings.Simulators.DEFAULT)
 
     def test_100_detect_available_emulators(self):

@@ -27,6 +27,7 @@ class AndroidServiceTests(TnsTest):
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        Adb.run_adb_as_root(cls.emulator.id)
 
     def tearDown(self):
         TnsTest.tearDown(self)
@@ -63,12 +64,12 @@ class AndroidServiceTests(TnsTest):
         assert test_result, "OnCreate foreground service log not found! Logs: " + File.read(log.log_file)
 
         service_name = "com.nativescript.location.BackgroundService"
-        service_info = Adb.get_active_services(self.emulator.id, service_name)
+        service_info = Adb.get_active_services(self.emulator.id)
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
 
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
         Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
-        services = Adb.get_active_services(self.emulator.id)
+        services = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name in services, "{0} service not found! Logs: {1}".format(service_name, services)
 
         service_info = Adb.get_active_services(self.emulator.id, service_name)
@@ -108,8 +109,6 @@ class AndroidServiceTests(TnsTest):
 
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
         Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
-        services = Adb.get_active_services(self.emulator.id)
-        assert service_name not in services, "{0} service found! Logs: {1}".format(service_name, services)
 
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
@@ -148,8 +147,6 @@ class AndroidServiceTests(TnsTest):
 
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
         Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
-        services = Adb.get_active_services(self.emulator.id)
-        assert service_name not in services, "{0} service found! Logs: {1}".format(service_name, services)
 
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
@@ -181,7 +178,32 @@ class AndroidServiceTests(TnsTest):
                                  period=5)
         assert test_result, "Intent service is not working! Missing Log! Logs: " + File.read(log.log_file)
 
-    def test_204_test_foreground__intent_service_without_oncreate_method_is_working_api28(self):
+    def test_204_test_background_worker_support(self):
+        """
+         https://github.com/NativeScript/android-runtime/issues/1488
+        """
+        Adb.clear_logcat(self.emulator.id)
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                               'android-runtime-1488', 'app.js'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'app.js'), True)
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                               'android-runtime-1488', 'main-view-model.js'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js'), True)
+        File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                               'android-runtime-1488', 'app.gradle'),
+                  os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle'), True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        strings = ['Successfully synced application', 'on device', self.emulator.id]
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240,
+                                 period=5)
+        assert test_result, "App not build correctly ! Logs: " + File.read(log.log_file)
+        Device.click(self.emulator, text="TAP", case_sensitive=True)
+        time.sleep(5)
+        device_log = Adb.get_logcat(self.emulator.id)
+        error_message = "Background worker not working as expected. Logs: "+device_log
+        assert "WM-WorkerWrapper: Worker result SUCCESS for Work" in device_log, error_message
+
+    def test_205_test_foreground__intent_service_without_oncreate_method_is_working_api28(self):
         """
          https://github.com/NativeScript/android-runtime/issues/1426
         """
@@ -207,5 +229,3 @@ class AndroidServiceTests(TnsTest):
         test_result = Wait.until(lambda: "Intent Handled!" in File.read(log.log_file), timeout=30,
                                  period=5)
         assert test_result, "Intent service is not working! Missing Log! Logs: " + File.read(log.log_file)
-        DeviceManager.Emulator.stop()
-        self.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
