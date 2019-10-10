@@ -1,7 +1,5 @@
 from core.base_test.tns_run_ios_test import TnsRunIOSTest
 
-from core.utils.device.simctl import Simctl
-
 
 class SimAutoTests(TnsRunIOSTest):
     apk_path = None
