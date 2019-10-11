@@ -11,6 +11,7 @@ from core.settings import Settings
 from core.utils.file_utils import File, Folder
 from core.utils.perf_utils import PerfUtils
 from core.utils.run import run
+from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
@@ -23,6 +24,7 @@ class AppSizeTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
+        Docker.start()
 
         # Create JS app and copy to temp data folder
         Tns.create(app_name=cls.js_app, template=Template.HELLO_WORLD_JS.local_package, update=True)
@@ -42,6 +44,11 @@ class AppSizeTests(TnsTest):
         if Settings.HOST_OS == OSType.OSX:
             Tns.build_ios(cls.js_app, release=True, bundle=True, aot=True, uglify=True, for_device=True)
             Tns.build_ios(cls.ng_app, release=True, bundle=True, aot=True, uglify=True, for_device=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()
+        Docker.stop()
 
     def test_001_js_app_app_resources(self):
         folder = os.path.join(TnsPaths.get_app_path(app_name=self.js_app), 'app')
