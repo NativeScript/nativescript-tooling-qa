@@ -21,7 +21,7 @@ class Docker(object):
                 cmd = r'"C:\Program Files\Docker\Docker\Docker Desktop.exe"'
                 run(cmd=cmd, wait=False)
                 Log.info('Starting docker!')
-        if OSUtils.is_catalina():
+        elif OSUtils.is_catalina():
             cmd = 'open --background -a Docker'
             run(cmd=cmd, wait=False)
             Log.info('Starting docker!')
