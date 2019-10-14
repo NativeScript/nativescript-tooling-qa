@@ -40,7 +40,6 @@ class NGNewTests(TnsRunTest):
 
     def tearDown(self):
         NG.kill()
-        Docker.stop()
         TnsRunTest.tearDown(self)
 
     @classmethod
