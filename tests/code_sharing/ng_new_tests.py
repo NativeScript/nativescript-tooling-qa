@@ -36,7 +36,6 @@ class NGNewTests(TnsRunTest):
     def setUp(self):
         TnsRunTest.setUp(self)
         NG.kill()
-        Docker.start()
         Folder.clean(self.app_path)
 
     def tearDown(self):
