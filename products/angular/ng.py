@@ -16,9 +16,11 @@ DEFAULT_WEB_URL = 'http://localhost:' + str(DEFAULT_PORT)
 
 
 class NG(object):
-
     @staticmethod
-    def exec_command(command, cwd=Settings.TEST_RUN_HOME, wait=True, verify=True):
+    def exec_command(command,
+                     cwd=Settings.TEST_RUN_HOME,
+                     wait=True,
+                     verify=True):
         """
         Execute tns command.
         :param command: NG cli command.
@@ -35,8 +37,15 @@ class NG(object):
         return result
 
     @staticmethod
-    def new(collection=NS_SCHEMATICS, project=Settings.AppName.DEFAULT, shared=False, sample=False, prefix=None,
-            source_dir=None, theme=True, style=None, webpack=True):
+    def new(collection=NS_SCHEMATICS,
+            project=Settings.AppName.DEFAULT,
+            shared=False,
+            sample=False,
+            prefix=None,
+            source_dir=None,
+            theme=True,
+            style=None,
+            webpack=True):
         """
         Execute `ng new`
         :param collection: Schematics collection.
@@ -88,7 +97,10 @@ class NG(object):
 
         # Manually run npm install if skip_install detected.
         # See https://github.com/NativeScript/nativescript-schematics/pull/220
-        Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='--save-dev --save-exact', folder=project_path)
+        Npm.install(
+            package=Settings.Packages.NS_SCHEMATICS,
+            option='--save-dev --save-exact',
+            folder=project_path)
         Npm.install(folder=project_path)
 
         # Return result
@@ -104,7 +116,10 @@ class NG(object):
         :rtype: core.utils.process_info.ProcessInfo
         """
         project_path = os.path.join(Settings.TEST_RUN_HOME, project)
-        result = NG.exec_command(command='add {0}'.format(schematics_package), cwd=project_path, wait=True)
+        result = NG.exec_command(
+            command='add {0}'.format(schematics_package),
+            cwd=project_path,
+            wait=True)
         return result
 
     @staticmethod
@@ -121,10 +136,13 @@ class NG(object):
         if prod:
             command = command + ' --prod'
         result = NG.exec_command(command=command, cwd=project_path, wait=False)
-        compiled = Wait.until(lambda: 'Compiled successfully' in File.read(result.log_file), timeout=180)
+        compiled = Wait.until(
+            lambda: 'Compiled successfully' in File.read(result.log_file),
+            timeout=180)
         if not compiled:
             Log.error('NG Serve failed to compile in 90 sec.')
-            Log.error('Logs:{0}{1}'.format(os.linesep, File.read(result.log_file)))
+            Log.error('Logs:{0}{1}'.format(os.linesep,
+                                           File.read(result.log_file)))
             NG.kill()
         assert compiled, 'Failed to compile NG app at {0}'.format(project)
         return result

@@ -12,7 +12,8 @@ class PerfUtils(object):
         """
         Log.info("Actual value: " + str(actual))
         Log.info("Expected value: " + str(expected))
-        return expected - (expected * tolerance) <= actual <= expected + (expected * tolerance)
+        return expected - (expected * tolerance) <= actual <= expected + (
+            expected * tolerance)
 
     @staticmethod
     def get_average_time(operation, retry_count=3, *args, **kwargs):

@@ -32,7 +32,8 @@ class Npm(object):
     @staticmethod
     def download(package, output_file):
         output = Npm.run_npm_command('view {0} dist.tarball'.format(package))
-        assert '.tgz' in output, 'Failed to find tarball of {0} package.'.format(package)
+        assert '.tgz' in output, 'Failed to find tarball of {0} package.'.format(
+            package)
         npm_package = output.split('/')[-1].split('\n')[0]
         src_file = os.path.join(Settings.TEST_SUT_HOME, npm_package)
         File.delete(path=output_file)
@@ -60,7 +61,8 @@ class Npm(object):
     def uninstall(package, option='', folder=Settings.TEST_RUN_HOME):
         if package is None or package == '':
             raise NameError('Package can not be None.')
-        return Npm.run_npm_command('un {0} {1}'.format(package, option), folder=folder)
+        return Npm.run_npm_command(
+            'un {0} {1}'.format(package, option), folder=folder)
 
     @staticmethod
     def get_version(package):

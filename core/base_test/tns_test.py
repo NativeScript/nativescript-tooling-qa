@@ -110,20 +110,25 @@ class TnsTest(unittest.TestCase):
     def get_screenshots():
         for device in TestContext.STARTED_DEVICES:
             try:
-                base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
+                base_path = os.path.join(Settings.TEST_OUT_IMAGES,
+                                         TestContext.CLASS_NAME,
+                                         TestContext.TEST_NAME)
                 png_path = os.path.join(base_path, device.name + '.png')
                 File.delete(png_path)
                 device.get_screen(png_path)
             except AssertionError:
-                Log.warning('Failed to take screenshot of {0}'.format(device.id))
+                Log.warning('Failed to take screenshot of {0}'.format(
+                    device.id))
 
     @staticmethod
     def archive_apps():
         if TestContext.TEST_APP_NAME is not None:
-            app_path = os.path.join(Settings.TEST_RUN_HOME, TestContext.TEST_APP_NAME)
+            app_path = os.path.join(Settings.TEST_RUN_HOME,
+                                    TestContext.TEST_APP_NAME)
             if Folder.exists(app_path):
-                archive_path = os.path.join(Settings.TEST_OUT_HOME, TestContext.CLASS_NAME, TestContext.TEST_NAME,
-                                            TestContext.TEST_APP_NAME)
+                archive_path = os.path.join(
+                    Settings.TEST_OUT_HOME, TestContext.CLASS_NAME,
+                    TestContext.TEST_NAME, TestContext.TEST_APP_NAME)
                 Log.info('Archive app under test at: {0}'.format(archive_path))
 
     @staticmethod
@@ -136,7 +141,8 @@ class TnsTest(unittest.TestCase):
         if TestContext.BACKUP_FILES:
             for file_path in TestContext.BACKUP_FILES:
                 file_name = TestContext.BACKUP_FILES[file_path]
-                file_temp_path = os.path.join(Settings.BACKUP_FOLDER, file_name)
+                file_temp_path = os.path.join(Settings.BACKUP_FOLDER,
+                                              file_name)
                 # delete file not from the original template
                 if not File.exists(file_temp_path):
                     File.delete(file_path)

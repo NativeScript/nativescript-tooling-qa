@@ -22,11 +22,29 @@ from products.nativescript.tns_paths import TnsPaths
 
 class Tns(object):
     @staticmethod
-    def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
-                     device=None, release=False, for_device=False, provision=None, bundle=True,
-                     hmr=True, aot=False, uglify=False, source_map=False, snapshot=False, log_trace=False,
-                     just_launch=False, sync_all_files=False, clean=False, aab=False,
-                     options=None, wait=True, timeout=600):
+    def exec_command(command,
+                     cwd=Settings.TEST_RUN_HOME,
+                     platform=Platform.NONE,
+                     emulator=False,
+                     path=None,
+                     device=None,
+                     release=False,
+                     for_device=False,
+                     provision=None,
+                     bundle=True,
+                     hmr=True,
+                     aot=False,
+                     uglify=False,
+                     source_map=False,
+                     snapshot=False,
+                     log_trace=False,
+                     just_launch=False,
+                     sync_all_files=False,
+                     clean=False,
+                     aab=False,
+                     options=None,
+                     wait=True,
+                     timeout=600):
         """
         Execute tns command.
         :param command: Tns command.
@@ -100,17 +118,31 @@ class Tns(object):
         if options:
             cmd += ' ' + options
 
-        result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
+        result = run(
+            cmd=cmd,
+            cwd=cwd,
+            wait=wait,
+            log_level=logging.INFO,
+            timeout=timeout)
 
         # Retry in case of connectivity issues
         if result.output is not None and 'Bad Gateway' in result.output:
-            Log.info('"Bad Gateway" issue detected! Will retry the command ...')
-            result = run(cmd=cmd, cwd=cwd, wait=wait, log_level=logging.INFO, timeout=timeout)
+            Log.info(
+                '"Bad Gateway" issue detected! Will retry the command ...')
+            result = run(
+                cmd=cmd,
+                cwd=cwd,
+                wait=wait,
+                log_level=logging.INFO,
+                timeout=timeout)
 
         return result
 
     @staticmethod
-    def create(app_name=Settings.AppName.DEFAULT, template=None, path=None, app_id=None,
+    def create(app_name=Settings.AppName.DEFAULT,
+               template=None,
+               path=None,
+               app_id=None,
                force=False,
                default=False,
                update=True,
@@ -168,22 +200,33 @@ class Tns(object):
             # In such cases pass correct path to TnsAssert.created()
             if path is None:
                 path = Settings.TEST_RUN_HOME
-            TnsAssert.created(app_name=app_name, output=result.output, app_data=app_data, path=path)
+            TnsAssert.created(
+                app_name=app_name,
+                output=result.output,
+                app_data=app_data,
+                path=path)
 
         return result
 
     @staticmethod
-    def platform_remove(app_name=Settings.AppName.DEFAULT, platform=Platform.NONE, verify=True,
+    def platform_remove(app_name=Settings.AppName.DEFAULT,
+                        platform=Platform.NONE,
+                        verify=True,
                         log_trace=False):
         command = 'platform remove ' + str(platform) + ' --path ' + app_name
         result = Tns.exec_command(command=command, log_trace=log_trace)
         if verify:
-            TnsAssert.platform_removed(app_name=app_name, platform=platform, output=result.output)
+            TnsAssert.platform_removed(
+                app_name=app_name, platform=platform, output=result.output)
         return result
 
     @staticmethod
-    def platform_add(app_name=Settings.AppName.DEFAULT, platform=Platform.NONE, framework_path=None, version=None,
-                     verify=True, log_trace=False):
+    def platform_add(app_name=Settings.AppName.DEFAULT,
+                     platform=Platform.NONE,
+                     framework_path=None,
+                     version=None,
+                     verify=True,
+                     log_trace=False):
         platform_add_string = str(platform)
         if version is not None:
             platform_add_string = platform_add_string + '@' + version
@@ -192,31 +235,58 @@ class Tns(object):
             command = command + ' --frameworkPath ' + framework_path
         result = Tns.exec_command(command=command, log_trace=log_trace)
         if verify:
-            TnsAssert.platform_added(app_name=app_name, platform=platform, output=result.output, version=version)
+            TnsAssert.platform_added(
+                app_name=app_name,
+                platform=platform,
+                output=result.output,
+                version=version)
         return result
 
     @staticmethod
-    def platform_add_android(app_name=Settings.AppName.DEFAULT, framework_path=None, version=None, verify=True,
+    def platform_add_android(app_name=Settings.AppName.DEFAULT,
+                             framework_path=None,
+                             version=None,
+                             verify=True,
                              log_trace=False):
-        return Tns.platform_add(app_name=app_name, platform=Platform.ANDROID, framework_path=framework_path,
-                                version=version, verify=verify, log_trace=log_trace)
+        return Tns.platform_add(
+            app_name=app_name,
+            platform=Platform.ANDROID,
+            framework_path=framework_path,
+            version=version,
+            verify=verify,
+            log_trace=log_trace)
 
     @staticmethod
-    def platform_add_ios(app_name=Settings.AppName.DEFAULT, framework_path=None, version=None, verify=True,
+    def platform_add_ios(app_name=Settings.AppName.DEFAULT,
+                         framework_path=None,
+                         version=None,
+                         verify=True,
                          log_trace=False):
-        return Tns.platform_add(app_name=app_name, platform=Platform.IOS, framework_path=framework_path,
-                                version=version, verify=verify, log_trace=log_trace)
+        return Tns.platform_add(
+            app_name=app_name,
+            platform=Platform.IOS,
+            framework_path=framework_path,
+            version=version,
+            verify=verify,
+            log_trace=log_trace)
 
     @staticmethod
-    def platform_update(app_name=Settings.AppName.DEFAULT, platform=Platform.NONE, version=None):
+    def platform_update(app_name=Settings.AppName.DEFAULT,
+                        platform=Platform.NONE,
+                        version=None):
         platform_add_string = str(platform)
         if version is not None:
             platform_add_string = platform_add_string + '@' + version
         command = 'platform update ' + platform_add_string
         result = Tns.exec_command(command=command, path=app_name)
-        TnsAssert.platform_added(app_name=app_name, platform=platform, version=version, output=result.output)
+        TnsAssert.platform_added(
+            app_name=app_name,
+            platform=platform,
+            version=version,
+            output=result.output)
         if version is not None:
-            assert 'Successfully updated to version  {0}'.format(version) in result.output
+            assert 'Successfully updated to version  {0}'.format(
+                version) in result.output
         else:
             assert 'Successfully updated to version' in result.output
 
@@ -226,16 +296,22 @@ class Tns(object):
         command = 'platform clean ' + platform_string
         result = Tns.exec_command(command=command, path=app_name)
         if verify:
-            assert "Platform {0} successfully removed".format(platform_string) in result.output
+            assert "Platform {0} successfully removed".format(
+                platform_string) in result.output
             assert "error" not in result.output
             if platform is Platform.ANDROID:
-                assert Folder.exists(TnsPaths.get_platforms_android_folder(app_name))
+                assert Folder.exists(
+                    TnsPaths.get_platforms_android_folder(app_name))
             if platform is Platform.IOS:
-                assert Folder.exists(TnsPaths.get_platforms_ios_folder(app_name))
-            assert "Platform {0} successfully added".format(platform_string) in result.output
-            package_json = os.path.join(TnsPaths.get_app_path(app_name), 'package.json')
+                assert Folder.exists(
+                    TnsPaths.get_platforms_ios_folder(app_name))
+            assert "Platform {0} successfully added".format(
+                platform_string) in result.output
+            package_json = os.path.join(
+                TnsPaths.get_app_path(app_name), 'package.json')
             json = JsonUtils.read(package_json)
-            assert json['nativescript']['tns-' + platform_string]['version'] is not None
+            assert json['nativescript']['tns-' +
+                                        platform_string]['version'] is not None
 
     @staticmethod
     def platform_list(app_name):
@@ -243,14 +319,20 @@ class Tns(object):
 
     @staticmethod
     def plugin_add(plugin_name, path=None, log_trace=False, verify=True):
-        result = Tns.exec_command(command="plugin add " + plugin_name, path=path, log_trace=log_trace)
+        result = Tns.exec_command(
+            command="plugin add " + plugin_name,
+            path=path,
+            log_trace=log_trace)
         if verify:
             # Verify output
             if "/src" in plugin_name:
-                short_name = plugin_name.rsplit('@', 1)[0].replace("/src", "").split(os.sep)[-1]
+                short_name = plugin_name.rsplit('@', 1)[0].replace(
+                    "/src", "").split(os.sep)[-1]
             else:
-                short_name = plugin_name.rsplit('@', 1)[0].replace(".tgz", "").split(os.sep)[-1]
-            assert "Successfully installed plugin {0}".format(short_name) in result.output
+                short_name = plugin_name.rsplit('@', 1)[0].replace(
+                    ".tgz", "").split(os.sep)[-1]
+            assert "Successfully installed plugin {0}".format(
+                short_name) in result.output
 
             # Verify package.json
             App.is_dependency(app_name=path, dependency=short_name)
@@ -258,13 +340,22 @@ class Tns(object):
 
     @staticmethod
     def plugin_remove(plugin_name, path=None, log_trace=False, verify=True):
-        result = Tns.exec_command(command="plugin remove " + plugin_name, path=path, log_trace=log_trace)
+        result = Tns.exec_command(
+            command="plugin remove " + plugin_name,
+            path=path,
+            log_trace=log_trace)
         if verify:
-            assert "Successfully removed plugin {0}".format(plugin_name.replace("@", "")) in result.output
+            assert "Successfully removed plugin {0}".format(
+                plugin_name.replace("@", "")) in result.output
         return result
 
     @staticmethod
-    def plugin_create(plugin_name, path=None, type_script=None, angular=None, log_trace=False, verify=True,
+    def plugin_create(plugin_name,
+                      path=None,
+                      type_script=None,
+                      angular=None,
+                      log_trace=False,
+                      verify=True,
                       template=None):
         command = "plugin create " + plugin_name
 
@@ -275,7 +366,8 @@ class Tns(object):
         if angular is not None:
             command = command + ' --includeAngularDemo=y '
 
-        result = Tns.exec_command(command=command, path=path, log_trace=log_trace)
+        result = Tns.exec_command(
+            command=command, path=path, log_trace=log_trace)
 
         if verify:
             # Verify command output
@@ -292,40 +384,100 @@ class Tns(object):
             demo = os.path.join(plugin_root, "demo")
             post_clone_script = os.path.join(src, "scripts", "postclone.js")
             assert File.exists(readme), 'README.md do not exists.'
-            assert not Folder.is_empty(src), 'src folder should exists and should not be empty.'
-            assert not Folder.is_empty(demo), 'demo folder should exists and should not be empty.'
-            assert not File.exists(post_clone_script), 'Post clone script should not exists in plugin src folder.'
+            assert not Folder.is_empty(
+                src), 'src folder should exists and should not be empty.'
+            assert not Folder.is_empty(
+                demo), 'demo folder should exists and should not be empty.'
+            assert not File.exists(
+                post_clone_script
+            ), 'Post clone script should not exists in plugin src folder.'
         return result.output
 
     @staticmethod
-    def prepare(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
-                log_trace=False, verify=True):
-        result = Tns.exec_command(command='prepare', path=app_name, platform=platform, release=release,
-                                  provision=provision, for_device=for_device, bundle=bundle, wait=True,
-                                  log_trace=log_trace)
+    def prepare(app_name,
+                platform,
+                release=False,
+                provision=Settings.IOS.PROVISIONING,
+                for_device=False,
+                bundle=True,
+                log_trace=False,
+                verify=True):
+        result = Tns.exec_command(
+            command='prepare',
+            path=app_name,
+            platform=platform,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            bundle=bundle,
+            wait=True,
+            log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'Prepare failed with non zero exit code.'
         return result
 
     @staticmethod
-    def prepare_android(app_name, release=False, log_trace=False, verify=True, bundle=True):
-        return Tns.prepare(app_name=app_name, platform=Platform.ANDROID, release=release, log_trace=log_trace,
-                           verify=verify, bundle=bundle)
+    def prepare_android(app_name,
+                        release=False,
+                        log_trace=False,
+                        verify=True,
+                        bundle=True):
+        return Tns.prepare(
+            app_name=app_name,
+            platform=Platform.ANDROID,
+            release=release,
+            log_trace=log_trace,
+            verify=verify,
+            bundle=bundle)
 
     @staticmethod
-    def prepare_ios(app_name, release=False, for_device=False, log_trace=False, verify=True,
-                    provision=Settings.IOS.PROVISIONING, bundle=True):
-        return Tns.prepare(app_name=app_name, platform=Platform.IOS, release=release, provision=provision,
-                           for_device=for_device, log_trace=log_trace, verify=verify, bundle=bundle)
+    def prepare_ios(app_name,
+                    release=False,
+                    for_device=False,
+                    log_trace=False,
+                    verify=True,
+                    provision=Settings.IOS.PROVISIONING,
+                    bundle=True):
+        return Tns.prepare(
+            app_name=app_name,
+            platform=Platform.IOS,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            log_trace=log_trace,
+            verify=verify,
+            bundle=bundle)
 
     @staticmethod
-    def build(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
-              aot=False, source_map=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None,
+    def build(app_name,
+              platform,
+              release=False,
+              provision=Settings.IOS.PROVISIONING,
+              for_device=False,
+              bundle=True,
+              aot=False,
+              source_map=False,
+              uglify=False,
+              snapshot=False,
+              log_trace=False,
+              verify=True,
+              app_data=None,
               aab=False):
-        result = Tns.exec_command(command='build', path=app_name, platform=platform, release=release,
-                                  provision=provision, for_device=for_device, bundle=bundle, aot=aot,
-                                  source_map=source_map, uglify=uglify, snapshot=snapshot, wait=True,
-                                  log_trace=log_trace, aab=aab)
+        result = Tns.exec_command(
+            command='build',
+            path=app_name,
+            platform=platform,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            bundle=bundle,
+            aot=aot,
+            source_map=source_map,
+            uglify=uglify,
+            snapshot=snapshot,
+            wait=True,
+            log_trace=log_trace,
+            aab=aab)
         if verify:
             # Verify output
             assert result.exit_code == 0, 'Build failed with non zero exit code.'
@@ -333,9 +485,11 @@ class Tns(object):
 
             # Verify apk, app or ipa produced
             if platform == Platform.ANDROID:
-                assert File.exists(TnsPaths.get_apk_path(app_name=app_name, release=release))
+                assert File.exists(
+                    TnsPaths.get_apk_path(app_name=app_name, release=release))
             if platform == Platform.IOS:
-                app_path = TnsPaths.get_ipa_path(app_name=app_name, release=release, for_device=for_device)
+                app_path = TnsPaths.get_ipa_path(
+                    app_name=app_name, release=release, for_device=for_device)
                 if for_device:
                     assert File.exists(app_path)
                 else:
@@ -348,25 +502,79 @@ class Tns(object):
         return result
 
     @staticmethod
-    def build_android(app_name, release=False, bundle=True, aot=False, source_map=False, uglify=False, snapshot=False,
-                      log_trace=False, verify=True, app_data=None, aab=False):
-        return Tns.build(app_name=app_name, platform=Platform.ANDROID, release=release, bundle=bundle, aot=aot,
-                         source_map=source_map, uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify,
-                         app_data=app_data, aab=aab)
+    def build_android(app_name,
+                      release=False,
+                      bundle=True,
+                      aot=False,
+                      source_map=False,
+                      uglify=False,
+                      snapshot=False,
+                      log_trace=False,
+                      verify=True,
+                      app_data=None,
+                      aab=False):
+        return Tns.build(
+            app_name=app_name,
+            platform=Platform.ANDROID,
+            release=release,
+            bundle=bundle,
+            aot=aot,
+            source_map=source_map,
+            uglify=uglify,
+            snapshot=snapshot,
+            log_trace=log_trace,
+            verify=verify,
+            app_data=app_data,
+            aab=aab)
 
     @staticmethod
-    def build_ios(app_name, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
-                  bundle=True, aot=False, uglify=False, log_trace=False, verify=True, app_data=None):
-        return Tns.build(app_name=app_name, platform=Platform.IOS, release=release, for_device=for_device,
-                         provision=provision, bundle=bundle, aot=aot, uglify=uglify, log_trace=log_trace, verify=verify,
-                         app_data=app_data)
+    def build_ios(app_name,
+                  release=False,
+                  provision=Settings.IOS.PROVISIONING,
+                  for_device=False,
+                  bundle=True,
+                  aot=False,
+                  uglify=False,
+                  log_trace=False,
+                  verify=True,
+                  app_data=None):
+        return Tns.build(
+            app_name=app_name,
+            platform=Platform.IOS,
+            release=release,
+            for_device=for_device,
+            provision=provision,
+            bundle=bundle,
+            aot=aot,
+            uglify=uglify,
+            log_trace=log_trace,
+            verify=verify,
+            app_data=app_data)
 
     @staticmethod
-    def deploy(app_name, platform, device=None, bundle=True, release=False, provision=Settings.IOS.PROVISIONING,
-               for_device=False, wait=False, just_launch=False, log_trace=False, verify=True):
-        result = Tns.exec_command(command='deploy', path=app_name, platform=platform, device=device, bundle=bundle,
-                                  release=release, provision=provision, for_device=for_device, wait=wait,
-                                  just_launch=just_launch, log_trace=log_trace)
+    def deploy(app_name,
+               platform,
+               device=None,
+               bundle=True,
+               release=False,
+               provision=Settings.IOS.PROVISIONING,
+               for_device=False,
+               wait=False,
+               just_launch=False,
+               log_trace=False,
+               verify=True):
+        result = Tns.exec_command(
+            command='deploy',
+            path=app_name,
+            platform=platform,
+            device=device,
+            bundle=bundle,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            wait=wait,
+            just_launch=just_launch,
+            log_trace=log_trace)
         if verify:
             assert result.exit_code == 0, 'tns run failed with non zero exit code.'
             assert 'successfully installed on device' in result.output.lower()
@@ -374,14 +582,45 @@ class Tns(object):
         return result
 
     @staticmethod
-    def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
-            for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, snapshot=False,
-            wait=False, log_trace=False, just_launch=False, sync_all_files=False, clean=False, verify=True):
-        result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
-                                  release=release, provision=provision, for_device=for_device, bundle=bundle,
-                                  hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
-                                  clean=clean, wait=wait, log_trace=log_trace, just_launch=just_launch,
-                                  sync_all_files=sync_all_files)
+    def run(app_name,
+            platform,
+            emulator=False,
+            device=None,
+            release=False,
+            provision=Settings.IOS.PROVISIONING,
+            for_device=False,
+            bundle=True,
+            hmr=True,
+            aot=False,
+            uglify=False,
+            source_map=False,
+            snapshot=False,
+            wait=False,
+            log_trace=False,
+            just_launch=False,
+            sync_all_files=False,
+            clean=False,
+            verify=True):
+        result = Tns.exec_command(
+            command='run',
+            path=app_name,
+            platform=platform,
+            emulator=emulator,
+            device=device,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            bundle=bundle,
+            hmr=hmr,
+            aot=aot,
+            uglify=uglify,
+            source_map=source_map,
+            snapshot=snapshot,
+            clean=clean,
+            wait=wait,
+            log_trace=log_trace,
+            just_launch=just_launch,
+            sync_all_files=sync_all_files)
         if verify:
             if wait:
                 assert result.exit_code == 0, 'tns run failed with non zero exit code.'
@@ -391,37 +630,117 @@ class Tns(object):
         return result
 
     @staticmethod
-    def run_android(app_name, emulator=False, device=None, release=False, bundle=True, hmr=True, aot=False,
-                    uglify=False, source_map=False, snapshot=False, wait=False, log_trace=False, just_launch=False,
-                    verify=True, clean=False):
-        return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
-                       bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
-                       wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify, clean=clean)
+    def run_android(app_name,
+                    emulator=False,
+                    device=None,
+                    release=False,
+                    bundle=True,
+                    hmr=True,
+                    aot=False,
+                    uglify=False,
+                    source_map=False,
+                    snapshot=False,
+                    wait=False,
+                    log_trace=False,
+                    just_launch=False,
+                    verify=True,
+                    clean=False):
+        return Tns.run(
+            app_name=app_name,
+            platform=Platform.ANDROID,
+            emulator=emulator,
+            device=device,
+            release=release,
+            bundle=bundle,
+            hmr=hmr,
+            aot=aot,
+            uglify=uglify,
+            source_map=source_map,
+            snapshot=snapshot,
+            wait=wait,
+            log_trace=log_trace,
+            just_launch=just_launch,
+            verify=verify,
+            clean=clean)
 
     @staticmethod
-    def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
-                for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, wait=False,
-                log_trace=False, just_launch=False, verify=True, clean=False):
-        return Tns.run(app_name=app_name, platform=Platform.IOS, emulator=emulator, device=device, release=release,
-                       provision=provision, for_device=for_device, bundle=bundle, hmr=hmr, aot=aot, uglify=uglify,
-                       source_map=source_map, wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify,
-                       clean=clean)
+    def run_ios(app_name,
+                emulator=False,
+                device=None,
+                release=False,
+                provision=Settings.IOS.PROVISIONING,
+                for_device=False,
+                bundle=True,
+                hmr=True,
+                aot=False,
+                uglify=False,
+                source_map=False,
+                wait=False,
+                log_trace=False,
+                just_launch=False,
+                verify=True,
+                clean=False):
+        return Tns.run(
+            app_name=app_name,
+            platform=Platform.IOS,
+            emulator=emulator,
+            device=device,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            bundle=bundle,
+            hmr=hmr,
+            aot=aot,
+            uglify=uglify,
+            source_map=source_map,
+            wait=wait,
+            log_trace=log_trace,
+            just_launch=just_launch,
+            verify=verify,
+            clean=clean)
 
     @staticmethod
-    def debug(app_name, platform, start=False, debug_brk=False, emulator=False, device=None, release=False,
-              provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True, hmr=True, aot=False, uglify=False,
-              wait=False, log_trace=False, verify=True):
+    def debug(app_name,
+              platform,
+              start=False,
+              debug_brk=False,
+              emulator=False,
+              device=None,
+              release=False,
+              provision=Settings.IOS.PROVISIONING,
+              for_device=False,
+              bundle=True,
+              hmr=True,
+              aot=False,
+              uglify=False,
+              wait=False,
+              log_trace=False,
+              verify=True):
         command = 'debug'
         if start:
             command += ' --start'
         if debug_brk:
             command += ' --debug-brk'
-        result = Tns.exec_command(command=command, path=app_name, platform=platform, emulator=emulator, device=device,
-                                  release=release, provision=provision, for_device=for_device,
-                                  bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, wait=wait, log_trace=log_trace)
+        result = Tns.exec_command(
+            command=command,
+            path=app_name,
+            platform=platform,
+            emulator=emulator,
+            device=device,
+            release=release,
+            provision=provision,
+            for_device=for_device,
+            bundle=bundle,
+            hmr=hmr,
+            aot=aot,
+            uglify=uglify,
+            wait=wait,
+            log_trace=log_trace)
         if verify:
-            strings = ['To start debugging, open the following URL in Chrome:',
-                       'chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:']
+            strings = [
+                'To start debugging, open the following URL in Chrome:',
+                'chrome-devtools://devtools/bundled/inspector.html?experiments=true&ws=localhost:'
+            ]
             if not start:
                 strings.append('Successfully synced application')
             else:
@@ -430,7 +749,8 @@ class Tns(object):
                 if hmr and platform == Platform.ANDROID:
                     strings.append('HMR: Hot Module Replacement Enabled.')
 
-            TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
+            TnsLogs.wait_for_log(
+                log_file=result.log_file, string_list=strings, timeout=300)
             logs = File.read(result.log_file)
             assert 'closed' not in logs
             assert 'detached' not in logs
@@ -438,7 +758,13 @@ class Tns(object):
         return result
 
     @staticmethod
-    def preview(app_name, bundle=True, hmr=True, log_trace=False, verify=True, timeout=120, options='--link'):
+    def preview(app_name,
+                bundle=True,
+                hmr=True,
+                log_trace=False,
+                verify=True,
+                timeout=120,
+                options='--link'):
         """
         Execute `tns preview` command.
         :param app_name: Pass --path <app_name>.
@@ -449,8 +775,15 @@ class Tns(object):
         :param timeout: Timeout in seconds.
         :return: Result of `tns preview` command.
         """
-        result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, wait=False,
-                                  log_trace=log_trace, timeout=timeout, options=options)
+        result = Tns.exec_command(
+            command='preview',
+            path=app_name,
+            bundle=bundle,
+            hmr=hmr,
+            wait=False,
+            log_trace=log_trace,
+            timeout=timeout,
+            options=options)
         if verify:
             strings = ['Generating qrcode for url']
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
@@ -470,14 +803,27 @@ class Tns(object):
         command = 'test init --framework {0}'.format(str(framework))
         result = Tns.exec_command(command=command, path=app_name, timeout=300)
         if verify:
-            TnsAssert.test_initialized(app_name=app_name, framework=framework, output=result.output)
+            TnsAssert.test_initialized(
+                app_name=app_name, framework=framework, output=result.output)
         if update:
-            Npm.uninstall(package='nativescript-unit-test-runner', option='--save', folder=app_path)
-            Npm.install(package='nativescript-unit-test-runner@next', option='--save --save-exact', folder=app_path)
+            Npm.uninstall(
+                package='nativescript-unit-test-runner',
+                option='--save',
+                folder=app_path)
+            Npm.install(
+                package='nativescript-unit-test-runner@next',
+                option='--save --save-exact',
+                folder=app_path)
         return result
 
     @staticmethod
-    def test(app_name, platform, emulator=True, device=None, just_launch=True, verify=True, wait=True):
+    def test(app_name,
+             platform,
+             emulator=True,
+             device=None,
+             just_launch=True,
+             verify=True,
+             wait=True):
         """
         Execute `tns test <platform>` command.
         :param app_name: App name (passed as --path <App name>)
@@ -489,8 +835,13 @@ class Tns(object):
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
-        result = Tns.exec_command(command=cmd, path=app_name, emulator=emulator, device=device, just_launch=just_launch,
-                                  wait=wait)
+        result = Tns.exec_command(
+            command=cmd,
+            path=app_name,
+            emulator=emulator,
+            device=device,
+            just_launch=just_launch,
+            wait=wait)
         if verify:
             if wait:
                 assert 'server started at' in result.output
@@ -501,11 +852,15 @@ class Tns(object):
                 assert 'TOTAL: 1 SUCCESS' in result.output \
                        or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
             else:
-                strings = ['server started at', 'Launching browser', 'Starting browser', 'Connected on socket',
-                           'Executed 1 of 1']
+                strings = [
+                    'server started at', 'Launching browser',
+                    'Starting browser', 'Connected on socket',
+                    'Executed 1 of 1'
+                ]
                 assert 'TOTAL: 1 SUCCESS' in result.output \
                        or 'Executed 1 of 1 SUCCESS' or 'Executed 1 of 1[32m SUCCESS' in result.output
-                TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
+                TnsLogs.wait_for_log(
+                    log_file=result.log_file, string_list=strings, timeout=120)
         return result
 
     @staticmethod
@@ -549,5 +904,6 @@ class Tns(object):
         if Settings.HOST_OS == OSType.WINDOWS:
             Process.kill(proc_name='node')
         else:
-            Process.kill(proc_name='node', proc_cmdline=Settings.Executables.TNS)
+            Process.kill(
+                proc_name='node', proc_cmdline=Settings.Executables.TNS)
             Process.kill_by_commandline(cmdline='webpack.js')

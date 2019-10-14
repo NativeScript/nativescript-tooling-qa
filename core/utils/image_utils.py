@@ -50,7 +50,8 @@ class ImageUtils(object):
                     expected_r = expected_pixel[0]
                     expected_g = expected_pixel[1]
                     expected_b = expected_pixel[2]
-                    if abs(actual_r + actual_g + actual_b - expected_r - expected_g - expected_b) > 30:
+                    if abs(actual_r + actual_g + actual_b - expected_r -
+                           expected_g - expected_b) > 30:
                         diff_pixels += 1
                         diff_image.load()[x, y] = (255, 0, 0)
 
@@ -79,7 +80,8 @@ class ImageUtils(object):
         :return: Count of pixels.
         """
         img = ImageUtils.read_image(image_path=image_path)
-        colors, counts = numpy.unique(img.reshape(-1, 3), axis=0, return_counts=True)
+        colors, counts = numpy.unique(
+            img.reshape(-1, 3), axis=0, return_counts=True)
         max_count = 0
         for n_color, count in zip(colors, counts):
             # noinspection PyUnresolvedReferences
@@ -94,7 +96,8 @@ class ImageUtils(object):
     @staticmethod
     def get_main_color(image_path):
         img = ImageUtils.read_image(image_path=image_path)
-        colors, counts = numpy.unique(img.reshape(-1, 3), axis=0, return_counts=True)
+        colors, counts = numpy.unique(
+            img.reshape(-1, 3), axis=0, return_counts=True)
         max_count = 0
         main_color = None
         for color, count in zip(colors, counts):
@@ -111,15 +114,19 @@ class ImageUtils(object):
         char_whitelist += string.ascii_uppercase
 
         image = Image.open(image_path).convert('LA')
-        row_text = pytesseract.image_to_string(image, lang='eng',
-                                               config="-c tessedit_char_whitelist=%s_-." % char_whitelist).strip()
+        row_text = pytesseract.image_to_string(
+            image,
+            lang='eng',
+            config="-c tessedit_char_whitelist=%s_-." %
+            char_whitelist).strip()
         text = "".join([s for s in row_text.splitlines(True) if s.strip()])
         text = text.encode(encoding='utf-8', errors='ignore')
 
         # Add extra text
         if use_cv2:
             img = cv2.imread(image_path)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # convert to grayscale
+            gray = cv2.cvtColor(img,
+                                cv2.COLOR_BGR2GRAY)  # convert to grayscale
             gray = cv2.medianBlur(gray, 5)  # smooth the image to avoid noises
             height, width, _ = img.shape
 
@@ -131,7 +138,8 @@ class ImageUtils(object):
             thresh = cv2.erode(thresh, None, iterations=3)
 
             # Find the contours
-            contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            contours, _ = cv2.findContours(thresh, cv2.RETR_TREE,
+                                           cv2.CHAIN_APPROX_SIMPLE)
 
             # For each contour, find the bounding rectangle and draw it
             for cnt in contours:
@@ -142,8 +150,10 @@ class ImageUtils(object):
                         .image_to_string(temp_image, lang='eng',
                                          config="-c tessedit_char_whitelist=%s_-." % char_whitelist) \
                         .strip()
-                    temp_text = "".join([s for s in temp_text.splitlines(True) if s.strip()])
-                    temp_text = temp_text.encode(encoding='utf-8', errors='ignore')
+                    temp_text = "".join(
+                        [s for s in temp_text.splitlines(True) if s.strip()])
+                    temp_text = temp_text.encode(
+                        encoding='utf-8', errors='ignore')
                     if temp_text not in text:
                         if Settings.PYTHON_VERSION < 3:
                             text = text + os.linesep + temp_text

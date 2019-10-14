@@ -20,29 +20,37 @@ if Settings.HOST_OS is OSType.OSX:
 
 
 class Preview(object):
-
     @staticmethod
     def get_app_packages():
         """Copy Preview App packages from Shares to local folder"""
-        File.copy(source=Settings.Packages.PREVIEW_APP_IOS, target=TEST_SUT_HOME)
-        File.copy(source=Settings.Packages.PREVIEW_APP_ANDROID, target=TEST_SUT_HOME)
-        File.copy(source=Settings.Packages.PLAYGROUND_APP_IOS, target=TEST_SUT_HOME)
-        File.copy(source=Settings.Packages.PLAYGROUND_APP_ANDROID, target=TEST_SUT_HOME)
+        File.copy(
+            source=Settings.Packages.PREVIEW_APP_IOS, target=TEST_SUT_HOME)
+        File.copy(
+            source=Settings.Packages.PREVIEW_APP_ANDROID, target=TEST_SUT_HOME)
+        File.copy(
+            source=Settings.Packages.PLAYGROUND_APP_IOS, target=TEST_SUT_HOME)
+        File.copy(
+            source=Settings.Packages.PLAYGROUND_APP_ANDROID,
+            target=TEST_SUT_HOME)
 
     @staticmethod
     def unpack_ios_simulator_packages():
         """Unpack the .tgz file to get the nsplaydev.app"""
-        File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
-        File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplay.tgz'), TEST_SUT_HOME)
+        File.unpack_tar(
+            os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
+        File.unpack_tar(
+            os.path.join(TEST_SUT_HOME, 'nsplay.tgz'), TEST_SUT_HOME)
 
     @staticmethod
     def install_preview_app(device_info, platform, timeout=60):
         """Installs Preview App on emulator and simulator"""
-        package_android = os.path.join(TEST_SUT_HOME, 'app-universal-release.apk')
+        package_android = os.path.join(TEST_SUT_HOME,
+                                       'app-universal-release.apk')
         package_ios = os.path.join(TEST_SUT_HOME, 'nsplaydev.app')
         if platform is Platform.IOS:
             # Unpack the .tgz file to get the nsplaydev.app
-            File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
+            File.unpack_tar(
+                os.path.join(TEST_SUT_HOME, 'nsplaydev.tgz'), TEST_SUT_HOME)
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
             Adb.install(package_android, device_info.id, timeout)
@@ -50,7 +58,8 @@ class Preview(object):
     @staticmethod
     def install_preview_app_no_unpack(device_info, platform, uninstall=True):
         """Installs Preview App on emulator and simulator"""
-        package_android = os.path.join(TEST_SUT_HOME, 'app-universal-release.apk')
+        package_android = os.path.join(TEST_SUT_HOME,
+                                       'app-universal-release.apk')
         package_ios = os.path.join(TEST_SUT_HOME, 'nsplaydev.app')
         if platform is Platform.IOS:
             if uninstall:
@@ -58,7 +67,8 @@ class Preview(object):
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
             if uninstall:
-                Adb.uninstall(Settings.Packages.PREVIEW_APP_ID, device_info.id, False)
+                Adb.uninstall(Settings.Packages.PREVIEW_APP_ID, device_info.id,
+                              False)
             Adb.install(package_android, device_info.id)
 
     @staticmethod
@@ -68,7 +78,8 @@ class Preview(object):
         package_ios = os.path.join(TEST_SUT_HOME, 'nsplay.app')
         if platform is Platform.IOS:
             # Unpack the .tgz file to get the nsplay.app
-            File.unpack_tar(os.path.join(TEST_SUT_HOME, 'nsplay.tgz'), TEST_SUT_HOME)
+            File.unpack_tar(
+                os.path.join(TEST_SUT_HOME, 'nsplay.tgz'), TEST_SUT_HOME)
             Simctl.install(device_info, package_ios)
         elif platform is Platform.ANDROID:
             Adb.install(package_android, device_info.id)
@@ -110,25 +121,36 @@ class Preview(object):
         # Run url
         Log.info('Open "{0}" on {1}.'.format(url, device.name))
         if device.type == DeviceType.EMU or device.type == DeviceType.ANDROID:
-            cmd = 'shell am start -a android.intent.action.VIEW -d "{0}" org.nativescript.preview'.format(url)
-            output = Adb.run_adb_command(command=cmd, device_id=device.id).output
+            cmd = 'shell am start -a android.intent.action.VIEW -d "{0}" org.nativescript.preview'.format(
+                url)
+            output = Adb.run_adb_command(
+                command=cmd, device_id=device.id).output
             assert 'error' not in output, 'Failed to open URL!' + os.linesep + 'Error:' + os.linesep + output
         elif device.type == DeviceType.SIM:
-            output = Simctl.run_simctl_command(command='openurl {0} {1}.'.format(device.id, url)).output
+            output = Simctl.run_simctl_command(
+                command='openurl {0} {1}.'.format(device.id, url)).output
             assert 'error' not in output, 'Failed to open URL!' + os.linesep + 'Error:' + os.linesep + output
         else:
-            raise NotImplementedError('Open url not implemented for real iOS devices.')
+            raise NotImplementedError(
+                'Open url not implemented for real iOS devices.')
 
     @staticmethod
     def dismiss_simulator_alert():
         """When preview url is loaded in simulator there is alert for confirmation.
            This method will dismiss it. It is implemented only for one instance of simulator for the moment"""
-        dismiss_sim_alert = os.path.join(TEST_RUN_HOME, 'assets', 'scripts', 'send_enter_to_simulator.scpt')
+        dismiss_sim_alert = os.path.join(TEST_RUN_HOME, 'assets', 'scripts',
+                                         'send_enter_to_simulator.scpt')
         command = "osascript " + dismiss_sim_alert
         run(command)
 
     @staticmethod
-    def run_app(app_name, platform, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
+    def run_app(app_name,
+                platform,
+                device,
+                bundle=True,
+                hmr=True,
+                instrumented=False,
+                click_open_alert=False):
         result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator
@@ -143,8 +165,13 @@ class Preview(object):
                     device.click("Open")
 
         # Verify logs
-        strings = TnsLogs.preview_initial_messages(platform=platform, hmr=hmr, bundle=bundle, instrumented=instrumented)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=100)
+        strings = TnsLogs.preview_initial_messages(
+            platform=platform,
+            hmr=hmr,
+            bundle=bundle,
+            instrumented=instrumented)
+        TnsLogs.wait_for_log(
+            log_file=result.log_file, string_list=strings, timeout=100)
         return result
 
     @staticmethod

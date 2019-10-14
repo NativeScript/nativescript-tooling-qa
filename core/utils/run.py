@@ -24,11 +24,17 @@ else:
     import subprocess
 
 
-def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False, register=True,
+def run(cmd,
+        cwd=Settings.TEST_RUN_HOME,
+        wait=True,
+        timeout=600,
+        fail_safe=False,
+        register=True,
         log_level=logging.DEBUG):
     # Init result values
     time_string = datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')
-    log_file = os.path.join(Settings.TEST_OUT_LOGS, 'command_{0}.txt'.format(time_string))
+    log_file = os.path.join(Settings.TEST_OUT_LOGS,
+                            'command_{0}.txt'.format(time_string))
     complete = False
     duration = None
     output = ''
@@ -52,9 +58,15 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
         start = time.time()
         with open(log_file, mode='w') as log:
             if Settings.HOST_OS == OSType.WINDOWS:
-                process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=log, stderr=log)
+                process = subprocess.Popen(
+                    cmd, cwd=cwd, shell=True, stdout=log, stderr=log)
             else:
-                process = subprocess.Popen(cmd, cwd=cwd, shell=True, stdout=subprocess.PIPE, stderr=log)
+                process = subprocess.Popen(
+                    cmd,
+                    cwd=cwd,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=log)
 
         # Wait until command complete
         try:
@@ -69,7 +81,8 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
         except subprocess.TimeoutExpired:
             process.kill()
             if fail_safe:
-                Log.error('Command "{0}" timeout after {1} seconds.'.format(cmd, timeout))
+                Log.error('Command "{0}" timeout after {1} seconds.'.format(
+                    cmd, timeout))
             else:
                 raise
 
@@ -87,7 +100,14 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
         end = time.time()
         duration = end - start
     else:
-        process = psutil.Popen(cmd, cwd=cwd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
+        process = psutil.Popen(
+            cmd,
+            cwd=cwd,
+            shell=True,
+            stdin=None,
+            stdout=None,
+            stderr=None,
+            close_fds=True)
 
     # Get result
     pid = process.pid
@@ -95,13 +115,21 @@ def run(cmd, cwd=Settings.TEST_RUN_HOME, wait=True, timeout=600, fail_safe=False
 
     # Log output of the process
     if wait:
-        Log.log(level=log_level, msg='OUTPUT: ' + os.linesep + output + os.linesep)
+        Log.log(
+            level=log_level, msg='OUTPUT: ' + os.linesep + output + os.linesep)
     else:
-        Log.log(level=log_level, msg='OUTPUT REDIRECTED: ' + log_file + os.linesep)
+        Log.log(
+            level=log_level, msg='OUTPUT REDIRECTED: ' + log_file + os.linesep)
 
     # Construct result
-    result = ProcessInfo(cmd=cmd, pid=pid, exit_code=exit_code, output=output, log_file=log_file, complete=complete,
-                         duration=duration)
+    result = ProcessInfo(
+        cmd=cmd,
+        pid=pid,
+        exit_code=exit_code,
+        output=output,
+        log_file=log_file,
+        complete=complete,
+        duration=duration)
 
     # Register in TestContext
     if psutil.pid_exists(result.pid) and register:

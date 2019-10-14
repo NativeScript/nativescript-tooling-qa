@@ -41,8 +41,11 @@ def __get_templates(branch=Settings.Packages.TEMPLATES_BRANCH):
     local_folder = os.path.join(Settings.TEST_SUT_HOME, 'templates')
     Git.clone(repo_url=Template.REPO, branch=branch, local_folder=local_folder)
 
-    apps = [Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS, Template.HELLO_WORLD_NG, Template.MASTER_DETAIL_NG,
-            Template.VUE_BLANK, Template.MASTER_DETAIL_VUE, Template.TAB_NAVIGATION_JS]
+    apps = [
+        Template.HELLO_WORLD_JS, Template.HELLO_WORLD_TS,
+        Template.HELLO_WORLD_NG, Template.MASTER_DETAIL_NG, Template.VUE_BLANK,
+        Template.MASTER_DETAIL_VUE, Template.TAB_NAVIGATION_JS
+    ]
     for app in apps:
         template_name = app.name
         template_folder = os.path.join(local_folder, 'packages', template_name)
@@ -51,7 +54,8 @@ def __get_templates(branch=Settings.Packages.TEMPLATES_BRANCH):
         if File.exists(out_file):
             app.path = out_file
         else:
-            raise IOError("Failed to clone and pack template: " + template_name)
+            raise IOError("Failed to clone and pack template: " +
+                          template_name)
 
 
 def __get_runtimes():
@@ -65,7 +69,8 @@ def __get_runtimes():
         File.copy(source=Settings.Packages.ANDROID, target=android_package)
         Settings.Packages.ANDROID = android_package
     else:
-        Npm.download(package=Settings.Packages.ANDROID, output_file=android_package)
+        Npm.download(
+            package=Settings.Packages.ANDROID, output_file=android_package)
 
     # Copy or download tns-ios
     if Settings.HOST_OS == OSType.OSX:
@@ -74,7 +79,8 @@ def __get_runtimes():
             File.copy(source=Settings.Packages.IOS, target=ios_package)
             Settings.Packages.IOS = ios_package
         else:
-            Npm.download(package=Settings.Packages.IOS, output_file=ios_package)
+            Npm.download(
+                package=Settings.Packages.IOS, output_file=ios_package)
 
 
 def __install_ns_cli():
@@ -89,7 +95,8 @@ def __install_ns_cli():
         Settings.Packages.NS_CLI = cli_package
 
     # Install NativeScript CLI
-    output = Npm.install(package=Settings.Packages.NS_CLI, folder=Settings.TEST_RUN_HOME)
+    output = Npm.install(
+        package=Settings.Packages.NS_CLI, folder=Settings.TEST_RUN_HOME)
 
     # Verify executable exists after install
     path = os.path.join(Settings.TEST_RUN_HOME, 'node_modules', '.bin', 'tns')
@@ -118,7 +125,9 @@ def __install_schematics():
     Npm.install(package=Settings.Packages.NS_SCHEMATICS, option='-g')
 
 
-def prepare(clone_templates=True, install_ng_cli=False, get_preivew_packages=False):
+def prepare(clone_templates=True,
+            install_ng_cli=False,
+            get_preivew_packages=False):
     Log.info('================== Prepare Test Run ==================')
     __cleanup()
     __install_ns_cli()

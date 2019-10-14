@@ -98,10 +98,14 @@ class Process(object):
             if proc_name == name:
                 if Settings.HOST_OS == OSType.WINDOWS:
                     cmdline = cmdline.replace('\\\\', '\\')
-                if (proc_cmdline is None) or (proc_cmdline is not None and proc_cmdline in cmdline):
+                if (proc_cmdline is None) or (proc_cmdline is not None
+                                              and proc_cmdline in cmdline):
                     try:
                         proc.kill()
-                        Log.log(level=logging.DEBUG, msg="Process {0} has been killed.".format(proc_name))
+                        Log.log(
+                            level=logging.DEBUG,
+                            msg="Process {0} has been killed.".format(
+                                proc_name))
                         result = True
                     except psutil.NoSuchProcess:
                         continue
@@ -119,7 +123,9 @@ class Process(object):
             if cmdline in cmd:
                 try:
                     proc.kill()
-                    Log.log(level=logging.DEBUG, msg="Process {0} has been killed.".format(cmdline))
+                    Log.log(
+                        level=logging.DEBUG,
+                        msg="Process {0} has been killed.".format(cmdline))
                     result = True
                 except psutil.NoSuchProcess:
                     continue
@@ -135,7 +141,9 @@ class Process(object):
                         if connection.laddr.port == port:
                             cmd = ''.join(proc.cmdline())
                             proc.kill()
-                            Log.info('Kill processes listening on port {0}.'.format(str(port)))
+                            Log.info(
+                                'Kill processes listening on port {0}.'.format(
+                                    str(port)))
                             Log.debug('Kill process: ' + cmd)
             except Exception:
                 pass
@@ -145,7 +153,10 @@ class Process(object):
         try:
             proc = psutil.Process(pid)
             proc.terminate()
-            Log.log(level=logging.DEBUG, msg="Process has been killed: {0}{1}".format(os.linesep, proc.cmdline()))
+            Log.log(
+                level=logging.DEBUG,
+                msg="Process has been killed: {0}{1}".format(
+                    os.linesep, proc.cmdline()))
         except Exception:
             pass
 
@@ -155,7 +166,8 @@ class Process(object):
             try:
                 for item in proc.open_files():
                     if file_path in item.path:
-                        Log.debug("{0} is locked by {1}".format(file_path, proc.name()))
+                        Log.debug("{0} is locked by {1}".format(
+                            file_path, proc.name()))
                         Log.debug("Proc cmd: {0}".format(proc.cmdline()))
                         proc.kill()
             except Exception:

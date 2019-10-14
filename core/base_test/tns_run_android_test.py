@@ -10,7 +10,8 @@ class TnsRunAndroidTest(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
+        cls.emu = DeviceManager.Emulator.ensure_available(
+            Settings.Emulators.DEFAULT)
 
     def setUp(self):
         TnsTest.setUp(self)

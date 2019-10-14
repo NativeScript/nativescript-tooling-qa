@@ -7,7 +7,6 @@ from core.settings import Settings
 
 
 class Log(object):
-
     @staticmethod
     def log(level, msg):
         # pylint: disable=superfluous-parens
@@ -37,13 +36,15 @@ class Log(object):
 
     @staticmethod
     def test_class_start(class_name):
-        Log.info('=============================================================')
+        Log.info(
+            '=============================================================')
         Log.info('TEST CLASS:  {0}'.format(class_name))
         Log.info('')
 
     @staticmethod
     def test_start(test_name):
-        Log.info('=============================================================')
+        Log.info(
+            '=============================================================')
         Log.info('START TEST:  {0}'.format(test_name))
         Log.info('')
 
@@ -52,14 +53,16 @@ class Log(object):
         Log.info('')
         Log.info('TEST COMPLETE:  {0}'.format(test_name))
         Log.info('OUTCOME:  {0}'.format(outcome))
-        Log.info('=============================================================')
+        Log.info(
+            '=============================================================')
         Log.info('')
 
     @staticmethod
     def test_class_end(class_name):
         Log.info('')
         Log.info('END CLASS:  {0}'.format(class_name))
-        Log.info('=============================================================')
+        Log.info(
+            '=============================================================')
         Log.info('')
 
     @staticmethod
@@ -97,13 +100,18 @@ class Log(object):
         Log.info('Ng: ' + str(Settings.Executables.NG))
         Log.info('================== Android Options ===================')
         Log.info('FRAMEWORK_PATH: ' + str(Settings.Android.FRAMEWORK_PATH))
-        Log.info('ANDROID_KEYSTORE_ALIAS_PASS: ' + str(Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS))
-        Log.info('ANDROID_KEYSTORE_ALIAS: ' + str(Settings.Android.ANDROID_KEYSTORE_ALIAS))
-        Log.info('ANDROID_KEYSTORE_PASS: ' + str(Settings.Android.ANDROID_KEYSTORE_PASS))
-        Log.info('ANDROID_KEYSTORE_PATH: ' + str(Settings.Android.ANDROID_KEYSTORE_PATH))
+        Log.info('ANDROID_KEYSTORE_ALIAS_PASS: ' +
+                 str(Settings.Android.ANDROID_KEYSTORE_ALIAS_PASS))
+        Log.info('ANDROID_KEYSTORE_ALIAS: ' +
+                 str(Settings.Android.ANDROID_KEYSTORE_ALIAS))
+        Log.info('ANDROID_KEYSTORE_PASS: ' +
+                 str(Settings.Android.ANDROID_KEYSTORE_PASS))
+        Log.info('ANDROID_KEYSTORE_PATH: ' +
+                 str(Settings.Android.ANDROID_KEYSTORE_PATH))
         Log.info('==================== iOS Options =====================')
         Log.info('FRAMEWORK_PATH: ' + str(Settings.IOS.FRAMEWORK_PATH))
         Log.info('DEVELOPMENT_TEAM: ' + str(Settings.IOS.DEVELOPMENT_TEAM))
         Log.info('PROVISIONING: ' + str(Settings.IOS.PROVISIONING))
-        Log.info('DISTRIBUTION_PROVISIONING: ' + str(Settings.IOS.DISTRIBUTION_PROVISIONING))
+        Log.info('DISTRIBUTION_PROVISIONING: ' +
+                 str(Settings.IOS.DISTRIBUTION_PROVISIONING))
         Log.info('======================================================')

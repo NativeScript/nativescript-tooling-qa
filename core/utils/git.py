@@ -26,8 +26,10 @@ class Git(object):
         """
         if Folder.exists(folder=local_folder):
             Folder.clean(folder=local_folder)
-        repo_url = get_repo_url(repo_url=repo_url, ssh_clone=Settings.SSH_CLONE)
-        command = 'git clone --depth 1 {0} -b {1} "{2}"'.format(repo_url, branch, str(local_folder))
+        repo_url = get_repo_url(
+            repo_url=repo_url, ssh_clone=Settings.SSH_CLONE)
+        command = 'git clone --depth 1 {0} -b {1} "{2}"'.format(
+            repo_url, branch, str(local_folder))
         Log.info(command)
         result = run(cmd=command)
         assert "fatal" not in result.output, "Failed to clone: " + repo_url

@@ -20,43 +20,83 @@ from products.nativescript.tns_paths import TnsPaths
 
 def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     # Execute tns command
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
-                                   hmr=hmr, app_type=AppType.VUE, transfer_all=True)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
+    result = Tns.run(
+        app_name=app_name,
+        platform=platform,
+        emulator=True,
+        wait=False,
+        bundle=bundle,
+        hmr=hmr)
+    strings = TnsLogs.run_messages(
+        app_name=app_name,
+        platform=platform,
+        run_type=RunType.FULL,
+        bundle=bundle,
+        hmr=hmr,
+        app_type=AppType.VUE,
+        transfer_all=True)
+    TnsLogs.wait_for_log(
+        log_file=result.log_file, string_list=strings, timeout=360)
 
     # start appium driver (need it on iOS only)
     appium = None
     if platform == Platform.IOS:
-        appium = AppiumDriver(platform=platform, device=device, bundle_id=TnsPaths.get_bundle_id(app_name))
+        appium = AppiumDriver(
+            platform=platform,
+            device=device,
+            bundle_id=TnsPaths.get_bundle_id(app_name))
 
     # Verify app home page looks properly
     device.wait_for_text(text="Ford KA")
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_TEMPLATE.old_text)
-    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name,
+                                 'initial_state.png')
     device.get_screen(path=initial_state)
 
     # Edit template in .vue file
-    Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_TEMPLATE)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
+    Sync.replace(
+        app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_TEMPLATE)
+    strings = TnsLogs.run_messages(
+        app_name=app_name,
+        platform=platform,
+        run_type=RunType.INCREMENTAL,
+        bundle=bundle,
+        hmr=hmr,
+        app_type=AppType.VUE,
+        file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_TEMPLATE.new_text)
 
     # Edit styling in .vue file
-    Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
+    Sync.replace(
+        app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
+    strings = TnsLogs.run_messages(
+        app_name=app_name,
+        platform=platform,
+        run_type=RunType.INCREMENTAL,
+        bundle=bundle,
+        hmr=hmr,
+        app_type=AppType.VUE,
+        file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED_DARK) > 200)
+    style_applied = Wait.until(lambda: device.get_pixels_by_color(
+        Colors.RED_DARK) > 200)
     assert style_applied, 'Failed to sync changes in style.'
 
     # Revert styling in .vue file
-    Sync.revert(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
+    Sync.revert(
+        app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
+    strings = TnsLogs.run_messages(
+        app_name=app_name,
+        platform=platform,
+        run_type=RunType.INCREMENTAL,
+        bundle=bundle,
+        hmr=hmr,
+        app_type=AppType.VUE,
+        file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.WHITE) > 200)
+    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.WHITE)
+                               > 200)
     assert style_applied, 'Failed to sync changes in style.'
 
     device.wait_for_text(text="Ford KA")
@@ -67,11 +107,20 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
         device.click(text="Ford KA")
     device.wait_for_text(text="Edit")
     device.wait_for_text(text="Price")
-    Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarDetails.vue')
+    Sync.replace(
+        app_name=app_name,
+        change_set=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE)
+    strings = TnsLogs.run_messages(
+        app_name=app_name,
+        platform=platform,
+        run_type=RunType.INCREMENTAL,
+        bundle=bundle,
+        hmr=hmr,
+        app_type=AppType.VUE,
+        file_name='CarDetails.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-    device.wait_for_text(text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)
+    device.wait_for_text(
+        text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)
 
     # Kill Appium
     if appium is not None:

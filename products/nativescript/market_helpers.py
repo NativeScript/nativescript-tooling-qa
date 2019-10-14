@@ -32,7 +32,6 @@ class FlavorStatus(object):
 
 
 class Market(object):
-
     @staticmethod
     def get_data_github():
         url = "https://raw.githubusercontent.com/NativeScript/code-samples/master/data/all.json"
@@ -107,7 +106,8 @@ class Market(object):
         original_index = None
 
         if preserved_data:
-            temp_sample_status = next((x for x in preserved_data if x["name"] == record_name), None)
+            temp_sample_status = next(
+                (x for x in preserved_data if x["name"] == record_name), None)
             if temp_sample_status is not None:
                 original_index = preserved_data.index(temp_sample_status)
         else:
@@ -122,13 +122,16 @@ class Market(object):
             }
 
         if record["flavor"] == "core":
-            temp_sample_status["core"] = Market.serialize(Market.get_flavor_status(record))
+            temp_sample_status["core"] = Market.serialize(
+                Market.get_flavor_status(record))
 
         if record["flavor"] == "angular":
-            temp_sample_status["angular"] = Market.serialize(Market.get_flavor_status(record))
+            temp_sample_status["angular"] = Market.serialize(
+                Market.get_flavor_status(record))
 
         if record["flavor"] == "vue":
-            temp_sample_status["vue"] = Market.serialize(Market.get_flavor_status(record))
+            temp_sample_status["vue"] = Market.serialize(
+                Market.get_flavor_status(record))
 
         if original_index is None:
             preserved_data.append(temp_sample_status)
@@ -147,7 +150,8 @@ class Market(object):
     @staticmethod
     def get_flavor_status(record):
         temp_flavor_status = FlavorStatus()
-        temp_flavor_status.set_android(Market.convert_to_bool(record["android"]))
+        temp_flavor_status.set_android(
+            Market.convert_to_bool(record["android"]))
         temp_flavor_status.set_ios(Market.convert_to_bool(record["ios"]))
         temp_flavor_status.set_slow(Market.convert_to_bool(record["slow"]))
 

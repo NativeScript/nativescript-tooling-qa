@@ -40,7 +40,8 @@ class Folder(object):
                         for name in dirs:
                             os.rmdir(os.path.join(root, name))
                     os.rmdir(folder)
-                    Log.error('Error: %s - %s.' % (error.filename, error.strerror))
+                    Log.error(
+                        'Error: %s - %s.' % (error.filename, error.strerror))
                 except Exception:
                     Log.info('Kill processes with handle to ' + folder)
                     Process.kill_by_handle(folder)
@@ -127,7 +128,9 @@ class File(object):
             with open(path, 'w+') as text_file:
                 text_file.write(text)
         else:
-            with open(path, 'w+', encoding='utf-8', errors='ignore') as text_file:
+            with open(
+                    path, 'w+', encoding='utf-8',
+                    errors='ignore') as text_file:
                 text_file.write(text)
 
     @staticmethod
@@ -136,17 +139,23 @@ class File(object):
             with open(path, 'a') as text_file:
                 text_file.write(text)
         else:
-            with open(path, 'a', encoding='utf-8', errors='ignore') as text_file:
+            with open(
+                    path, 'a', encoding='utf-8', errors='ignore') as text_file:
                 text_file.write(text)
 
     @staticmethod
-    def replace(path, old_string, new_string, fail_safe=False, backup_files=False):
+    def replace(path,
+                old_string,
+                new_string,
+                fail_safe=False,
+                backup_files=False):
         if backup_files:
             File.__back_up_files(path)
         content = File.read(path=path)
         old_text_exists = old_string in content
         if not fail_safe:
-            assert old_text_exists, 'Can not find "{0}" in {1}'.format(old_string, path)
+            assert old_text_exists, 'Can not find "{0}" in {1}'.format(
+                old_string, path)
         if old_text_exists:
             new_content = content.replace(old_string, new_string)
             File.write(path=path, text=new_content)
@@ -157,7 +166,8 @@ class File(object):
             Log.info("New String: {0}".format(new_string))
             Log.info("")
         else:
-            Log.debug('Skip replace. Text "{0}" do not exists in {1}.'.format(old_string, path))
+            Log.debug('Skip replace. Text "{0}" do not exists in {1}.'.format(
+                old_string, path))
 
     @staticmethod
     def exists(path):
@@ -178,7 +188,8 @@ class File(object):
             # change file name if exists in backup_folder
             if File.exists(os.path.join(Settings.BACKUP_FOLDER, source_name)):
                 source_name = source_name + "1"
-            shutil.copy(backup_file, os.path.join(Settings.BACKUP_FOLDER, source_name))
+            shutil.copy(backup_file,
+                        os.path.join(Settings.BACKUP_FOLDER, source_name))
         else:
             if Folder.exists(backup_file):
                 # if copy to folder is used add file name
@@ -193,7 +204,8 @@ class File(object):
         if backup_files:
             File.__back_up_files(target, source)
         shutil.copy(source, target)
-        Log.info('Copy {0} to {1}'.format(os.path.abspath(source), os.path.abspath(target)))
+        Log.info('Copy {0} to {1}'.format(
+            os.path.abspath(source), os.path.abspath(target)))
 
     @staticmethod
     def delete(path, backup_files=False):
@@ -265,7 +277,8 @@ class File(object):
         for root, dirs, files in os.walk(folder):
             for f in files:
                 if f.endswith(extension):
-                    Log.debug('File with {0} extension found: {1}'.format(extension, os.path.abspath(f)))
+                    Log.debug('File with {0} extension found: {1}'.format(
+                        extension, os.path.abspath(f)))
                     matches.append(os.path.join(root, f))
         return matches
 
@@ -294,7 +307,9 @@ class File(object):
             file_path = root.replace(path + "/", "")
             file_path = file_path.replace(path, "")
             for file_name in files:
-                ziph.write(os.path.join(root, file_name), os.path.join(file_path, file_name))
+                ziph.write(
+                    os.path.join(root, file_name),
+                    os.path.join(file_path, file_name))
 
     @staticmethod
     def zip(file_path, zip_dest_path, clean_zip_dest_path=True):
@@ -345,7 +360,8 @@ class File(object):
             import urllib.request
             urllib.request.urlretrieve(url, file_path)
         file_path = os.path.join(destination_dir, file_name)
-        assert File.exists(file_path), 'Failed to download {0} at {1}.'.format(url, file_path)
+        assert File.exists(file_path), 'Failed to download {0} at {1}.'.format(
+            url, file_path)
         Log.info('Downloaded {0} at {1}'.format(url, file_path))
 
     @staticmethod

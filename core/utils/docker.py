@@ -8,7 +8,6 @@ from core.enums.os_type import OSType
 
 
 class Docker(object):
-
     @staticmethod
     def start():
         if Settings.HOST_OS == OSType.WINDOWS:

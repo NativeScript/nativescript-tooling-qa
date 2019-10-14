@@ -8,7 +8,6 @@ from errno import ENOENT
 
 
 class JsonUtils(object):
-
     @staticmethod
     def __replace_value(json_data, k, v):
         """

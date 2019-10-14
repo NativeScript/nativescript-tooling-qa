@@ -13,9 +13,11 @@ class TnsRunTest(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        cls.emu = DeviceManager.Emulator.ensure_available(Settings.Emulators.DEFAULT)
+        cls.emu = DeviceManager.Emulator.ensure_available(
+            Settings.Emulators.DEFAULT)
         if Settings.HOST_OS is OSType.OSX:
-            cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+            cls.sim = DeviceManager.Simulator.ensure_available(
+                Settings.Simulators.DEFAULT)
             Simctl.uninstall_all(cls.sim)
 
     def setUp(self):

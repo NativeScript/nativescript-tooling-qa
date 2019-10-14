@@ -17,33 +17,59 @@ from products.nativescript.tns_logs import TnsLogs
 
 def __run_vue(app_name, platform, bundle, hmr):
     # Execute `tns run` and wait until logs are OK
-    return Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
+    return Tns.run(
+        app_name=app_name,
+        platform=platform,
+        emulator=True,
+        wait=False,
+        bundle=bundle,
+        hmr=hmr)
 
 
 def __preview_vue(app_name, platform, device, bundle, hmr):
     # Execute `tns run` and wait until logs are OK
-    return Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform, device=device,
-                           click_open_alert=True)
+    return Preview.run_app(
+        app_name=app_name,
+        bundle=bundle,
+        hmr=hmr,
+        platform=platform,
+        device=device,
+        click_open_alert=True)
 
 
 def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     # Execute tns command
     if preview:
-        result = __preview_vue(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
+        result = __preview_vue(
+            app_name=app_name,
+            platform=platform,
+            device=device,
+            bundle=bundle,
+            hmr=hmr)
     else:
-        result = __run_vue(app_name=app_name, platform=platform, bundle=bundle, hmr=hmr)
+        result = __run_vue(
+            app_name=app_name, platform=platform, bundle=bundle, hmr=hmr)
 
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
-                                       hmr=hmr, app_type=AppType.VUE)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.FULL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE)
+        TnsLogs.wait_for_log(
+            log_file=result.log_file, string_list=strings, timeout=240)
 
     # Verify it looks properly
-    device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text, timeout=120)
-    device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.old_text, timeout=120)
-    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
+    device.wait_for_text(
+        text=Changes.BlankVue.VUE_SCRIPT.old_text, timeout=120)
+    device.wait_for_text(
+        text=Changes.BlankVue.VUE_TEMPLATE.old_text, timeout=120)
+    initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name,
+                                 'initial_state.png')
     device.get_screen(path=initial_state)
 
     # Edit script in .vue file
@@ -51,8 +77,14 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                       bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.INCREMENTAL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE,
+            file_name='Home.vue')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.new_text)
 
@@ -61,8 +93,14 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                       bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.INCREMENTAL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE,
+            file_name='Home.vue')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.new_text)
 
@@ -71,10 +109,17 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                       bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.INCREMENTAL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE,
+            file_name='Home.vue')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED) > 100)
+    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED) >
+                               100)
     assert style_applied, 'Failed to sync changes in style.'
 
     # Revert script in .vue file
@@ -82,8 +127,14 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                       bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.INCREMENTAL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE,
+            file_name='Home.vue')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text)
 
@@ -92,8 +143,14 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                       bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.INCREMENTAL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE,
+            file_name='Home.vue')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
     device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.old_text)
 
@@ -102,24 +159,45 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     if preview:
         Log.info('Skip logs checks.')
     else:
-        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                       bundle=bundle,
-                                       hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
+        strings = TnsLogs.run_messages(
+            app_name=app_name,
+            platform=platform,
+            run_type=RunType.INCREMENTAL,
+            bundle=bundle,
+            hmr=hmr,
+            app_type=AppType.VUE,
+            file_name='Home.vue')
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     if hmr:
-        Log.info('Skip next steps because of https://github.com/nativescript-vue/nativescript-vue/issues/425')
+        Log.info(
+            'Skip next steps because of https://github.com/nativescript-vue/nativescript-vue/issues/425'
+        )
     else:
-        style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED) == 0)
+        style_applied = Wait.until(lambda: device.get_pixels_by_color(
+            Colors.RED) == 0)
         assert style_applied, 'Failed to sync changes in style.'
 
     # Assert final and initial states are same
-    device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
+    device.screen_match(
+        expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
 def sync_blank_vue(app_name, platform, device, bundle=True, hmr=True):
-    __workflow(preview=False, app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
+    __workflow(
+        preview=False,
+        app_name=app_name,
+        platform=platform,
+        device=device,
+        bundle=bundle,
+        hmr=hmr)
 
 
 def preview_blank_vue(app_name, platform, device, bundle=True, hmr=True):
-    __workflow(preview=True, app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr)
+    __workflow(
+        preview=True,
+        app_name=app_name,
+        platform=platform,
+        device=device,
+        bundle=bundle,
+        hmr=hmr)

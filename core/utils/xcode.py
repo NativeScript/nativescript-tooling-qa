@@ -19,5 +19,6 @@ class Xcode(object):
         Get Xcode version
         :return: Version as int.
         """
-        result = run(cmd='xcodebuild -version').output.splitlines()[0].replace(' ', '').replace('Xcode', '')
+        result = run(cmd='xcodebuild -version').output.splitlines()[0].replace(
+            ' ', '').replace('Xcode', '')
         return Version.get(result)

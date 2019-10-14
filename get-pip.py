@@ -34,8 +34,10 @@ PY3 = sys.version_info[0] == 3
 if PY3:
     iterbytes = iter
 else:
+
     def iterbytes(buf):
         return (ord(byte) for byte in buf)
+
 
 try:
     from base64 import b85decode
@@ -62,14 +64,13 @@ except ImportError:
                 for j, c in enumerate(iterbytes(chunk)):
                     if _b85dec[c] is None:
                         raise ValueError(
-                            'bad base85 character at position %d' % (i + j)
-                        )
+                            'bad base85 character at position %d' % (i + j))
                 raise
             try:
                 out.append(packI(acc))
             except struct.error:
-                raise ValueError('base85 overflow in hunk starting at byte %d'
-                                 % i)
+                raise ValueError(
+                    'base85 overflow in hunk starting at byte %d' % i)
 
         result = b''.join(out)
         if padding:
@@ -21355,7 +21356,6 @@ n1XLB!XVPa)$b1rasP)h*<6ay3h000O8aZyc9P=7HWL;?T+83h0UBme*a0000000000q=BUP698~&a4
 PTL0j)};gh0Mifv04e|g00000000000HlE;0TcjmX>c!Jc4cm4Z*nhpWnyJ+V{c?>ZfA2ZcwcpMWpZC
 +WoBt^Wn?aJc~DCQ1^@s605kzK0is_301pNf0000
 """
-
 
 if __name__ == "__main__":
     main()

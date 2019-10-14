@@ -11,7 +11,6 @@ from core.utils.run import run
 
 
 class Screen(object):
-
     @staticmethod
     def save_screen(path, log_level=logging.DEBUG):
         """
@@ -19,7 +18,9 @@ class Screen(object):
         :param path: Path where screen will be saved.
         :param log_level: Log level of the command.
         """
-        Log.log(level=log_level, msg='Save current host screen at {0}'.format(path))
+        Log.log(
+            level=log_level,
+            msg='Save current host screen at {0}'.format(path))
         if Settings.HOST_OS is OSType.LINUX:
             os.system("import -window root {0}".format(path))
         else:
@@ -39,7 +40,8 @@ class Screen(object):
         Get text of current screen of host machine.
         :return: All the text visible on screen as string
         """
-        actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES, "host_{0}.png".format(time.time()))
+        actual_image_path = os.path.join(Settings.TEST_OUT_IMAGES,
+                                         "host_{0}.png".format(time.time()))
         if File.exists(actual_image_path):
             File.delete(actual_image_path)
         Screen.save_screen(path=actual_image_path)

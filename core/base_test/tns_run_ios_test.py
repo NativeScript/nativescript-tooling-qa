@@ -8,7 +8,8 @@ class TnsRunIOSTest(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        cls.sim = DeviceManager.Simulator.ensure_available(Settings.Simulators.DEFAULT)
+        cls.sim = DeviceManager.Simulator.ensure_available(
+            Settings.Simulators.DEFAULT)
         Simctl.uninstall_all(cls.sim)
 
     def setUp(self):
