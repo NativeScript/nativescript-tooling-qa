@@ -14,6 +14,7 @@ from core.enums.styling_type import StylingType
 from core.settings import Settings
 from core.utils.file_utils import Folder
 from core.utils.json_utils import JsonUtils
+from core.utils.docker import Docker
 from data.apps import Apps
 from data.const import Colors
 from products.angular.ng import NG, NS_SCHEMATICS
@@ -28,6 +29,11 @@ class NGNewTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_path = TnsPaths.get_app_path(app_name=app_name)
 
+    @classmethod
+    def setUpClass(cls):
+        TnsRunTest.setUpClass()
+        Docker.start()
+
     def setUp(self):
         TnsRunTest.setUp(self)
         NG.kill()
@@ -36,6 +42,10 @@ class NGNewTests(TnsRunTest):
     def tearDown(self):
         NG.kill()
         TnsRunTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        Docker.stop()
 
     def test_001_simple(self):
         NGNewTests.create_and_run(shared=False)
