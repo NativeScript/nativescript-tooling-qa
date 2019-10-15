@@ -31,6 +31,7 @@ class NGNewTests(TnsRunTest):
 
     @classmethod
     def setUpClass(cls):
+        TnsRunTest.setUpClass()
         Docker.start()
 
     def setUp(self):
