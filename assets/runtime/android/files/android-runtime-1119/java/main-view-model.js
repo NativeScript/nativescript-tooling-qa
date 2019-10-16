@@ -15,6 +15,16 @@ function createViewModel() {
 
     viewModel.onTap = function() {
         console.log("### TEST START ###");
+         try {
+           var file = java.io.File.createTempFile("prefix");
+      } catch (error) {
+                        console.log("### CAUGHT MESSAGE:", error.message);
+                        console.log("### Stack Trace Start");
+                        console.log("### CAUGHT STACKTRACE:", error.stackTrace);
+                        console.log("### Stack Trace End");
+                        console.log("### CAUGHT Native Exception:", error.nativeException);
+                        console.log("### CAUGHT STACK:", error.stack);;
+      }
         var file = java.io.File.createTempFile("prefix");
         sleep(2000);
         console.log("### TEST SHOULD NOT CRASH ###");
