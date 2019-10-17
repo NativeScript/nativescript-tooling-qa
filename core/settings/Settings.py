@@ -125,7 +125,7 @@ class Packages(object):
     SASS = resolve_package(name='nativescript-dev-sass', variable='nativescript_dev_sass')
 
     # Templates branch
-    TEMPLATES_BRANCH = os.environ.get('templates_branch', 'master')
+    TEMPLATES_BRANCH = os.environ.get('templates_branch', 'release')
 
 
 # noinspection SpellCheckingInspection
