@@ -50,7 +50,7 @@ def run_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, ugl
     # Verify it looks properly
     device.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
     device.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+    blue_count = device.get_pixels_by_color(color=Colors.BLUE)
     assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
@@ -87,9 +87,9 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
                                    uglify=uglify, aot=aot, snapshot=snapshot, default_andr_sdk=default_andr_sdk)
 
     # Edit CSS file and verify changes are applied
-    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+    blue_count = device.get_pixels_by_color(color=Colors.BLUE)
     Sync.replace(app_name=app_name, change_set=css_change)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+    device.wait_for_color(color=Colors.BLUE, pixel_count=blue_count * 2, delta=25)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
@@ -127,7 +127,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
 
     Sync.revert(app_name=app_name, change_set=css_change)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
+    device.wait_for_color(color=Colors.BLUE, pixel_count=blue_count)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
@@ -158,7 +158,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     result = preview_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
                                        instrumented=instrumented, click_open_alert=click_open_alert)
 
-    blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+    blue_count = device.get_pixels_by_color(color=Colors.BLUE)
     # Set changes
     js_file = os.path.basename(Changes.JSHelloWord.JS.file_path)
     if app_type == AppType.JS:
@@ -185,7 +185,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
                              not_existing_string_list=not_existing_string_list)
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+    device.wait_for_color(color=Colors.BLUE, pixel_count=blue_count * 2, delta=25)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)

@@ -166,7 +166,7 @@ class NGNewTests(TnsRunTest):
             emu.wait_for_text(text=text, timeout=300)
             # Check if theme is really applied (only for non shared projects, shared is not good example to check)
             if not shared:
-                blue_pixels = emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+                blue_pixels = emu.get_pixels_by_color(color=Colors.BLUE)
                 if theme:
                     assert blue_pixels > 1000, 'Default {N} theme is NOT applied on Android.'
                 else:
@@ -179,7 +179,7 @@ class NGNewTests(TnsRunTest):
                 sim.wait_for_text(text=text, timeout=300)
                 # Check if theme is really applied (only for non shared projects, shared is not good example to check)
                 if not shared:
-                    blue_pixels = emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+                    blue_pixels = emu.get_pixels_by_color(color=Colors.BLUE)
                     if theme:
                         assert blue_pixels > 1000, 'Default {N} theme is NOT applied on iOS.'
                     else:

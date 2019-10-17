@@ -233,7 +233,7 @@ class TnsRunJSTests(TnsRunTest):
                              not_existing_string_list=not_existing_strings, timeout=120)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-        blue_count = self.emu.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+        blue_count = self.emu.get_pixels_by_color(color=Colors.BLUE)
         assert blue_count > 100, 'Failed to find blue color on {0}'.format(self.emu.name)
 
         Tns.kill()
@@ -246,7 +246,7 @@ class TnsRunJSTests(TnsRunTest):
         result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        self.emu.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+        self.emu.wait_for_color(color=Colors.BLUE, pixel_count=blue_count * 2, delta=25)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_110_tns_run_ios_release(self):
@@ -259,7 +259,7 @@ class TnsRunJSTests(TnsRunTest):
                              not_existing_string_list=not_existing_strings, timeout=120)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.old_text)
-        blue_count = self.sim.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+        blue_count = self.sim.get_pixels_by_color(color=Colors.BLUE)
         assert blue_count > 100, 'Failed to find blue color on {0}'.format(self.sim.name)
 
         Tns.kill()
@@ -272,7 +272,7 @@ class TnsRunJSTests(TnsRunTest):
         result = Tns.run_ios(app_name=self.app_name, release=True, verify=True, emulator=True)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        self.sim.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+        self.sim.wait_for_color(color=Colors.BLUE, pixel_count=blue_count * 2, delta=25)
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_115_tns_run_android_add_remove_files_and_folders(self):

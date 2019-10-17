@@ -10,7 +10,7 @@ class Colors(object):
     """
     WHITE = numpy.array([255, 255, 255])  # White color
     DARK = numpy.array([48, 48, 48])  # Dark of default theme (on NG hello-world app).
-    LIGHT_BLUE = numpy.array([255, 188, 48])  # Blue of TAP button on hello-world app.
+    BLUE = numpy.array([254, 90, 61])  # Blue of TAP button on hello-world app.
     ACCENT_DARK = numpy.array([255, 83, 58])  # Dark blue in pro templates.
     PINK = numpy.array([203, 192, 255])  # Pink (standard CSS color).
     RED = numpy.array([0, 0, 255])  # Red (standard CSS color).
