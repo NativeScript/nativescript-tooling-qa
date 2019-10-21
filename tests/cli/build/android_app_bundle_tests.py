@@ -77,7 +77,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
 
         # env.snapshot is applicable only in release build
         result = Tns.run_android(self.app_path, aab=True, release=True, snapshot=True,
-                                 uglify=True, verify=False, compileSnapshot=True)
+                                 uglify=True, verify=False, compile_snapshot=True)
         strings = ['Successfully generated snapshots',
                    'The build result is located at: {0}'.format(path_to_aab)]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
