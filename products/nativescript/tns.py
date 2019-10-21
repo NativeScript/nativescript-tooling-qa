@@ -379,7 +379,7 @@ class Tns(object):
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
             for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, snapshot=False,
             wait=False, log_trace=False, just_launch=False, sync_all_files=False, clean=False, verify=True,
-            compileSnapshot=False):
+            compileSnapshot=False, aab=False):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device, bundle=bundle,
                                   hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
@@ -396,11 +396,11 @@ class Tns(object):
     @staticmethod
     def run_android(app_name, emulator=False, device=None, release=False, bundle=True, hmr=True, aot=False,
                     uglify=False, source_map=False, snapshot=False, wait=False, log_trace=False, just_launch=False,
-                    verify=True, clean=False, compileSnapshot=False):
+                    verify=True, clean=False, compileSnapshot=False, aab=False):
         return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
                        bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
                        wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify, clean=clean,
-                       compileSnapshot=compileSnapshot)
+                       compileSnapshot=compileSnapshot, aab=aab)
 
     @staticmethod
     def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
