@@ -80,7 +80,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
                                    uglify=True, verify=False, compileSnapshot=True)
         strings = ['Successfully generated snapshots',
                    'The build result is located at: {0}'.format(path_to_aab)]
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
        
         # Verify app can be deployed on emulator via nativescript
         # Verify app looks correct inside emulator
