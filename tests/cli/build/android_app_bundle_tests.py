@@ -92,7 +92,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         File.unzip(os.path.join(self.app_name, 'apks', 'standalones', 'standalone-arm64_v8a_hdpi.apk'),
                    os.path.join(self.app_name, 'standalone-arm64'))
         assert File.exists(os.path.join(self.app_name, 'standalone-arm64', 'lib', 'arm64-v8a', 'libNativeScript.so'))
-        assert  not File.exists(os.path.join(self.app_name, 'standalone-arm64', 'assets', 'snapshots', 'x86_64',
+        assert not File.exists(os.path.join(self.app_name, 'standalone-arm64', 'assets', 'snapshots', 'x86_64',
                                              'snapshot.blob'))
 
     def test_200_build_android_app_bundle(self):
