@@ -8,6 +8,7 @@ from core.utils.run import run
 from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
+from products.nativescript.tns_logs import TnsLogs
 
 
 class AndroidAppBundleTests(TnsRunAndroidTest):
