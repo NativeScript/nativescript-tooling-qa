@@ -9,6 +9,7 @@ from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
+from products.nativescript.tns_paths import TnsPaths
 
 
 class AndroidAppBundleTests(TnsRunAndroidTest):
@@ -70,9 +71,9 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         """Run app on android with --aab option with optimisations for snapshot.
            Verify the output(app.aab)."""
 
-        path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build",
+        path_to_aab = os.path.join(TnsPaths.get_app_path(self.app_name), "platforms", "android", "app", "build",
                                    "outputs", "bundle", "release", "app-release.aab")
-        path_to_apks = os.path.join(self.app_name, "platforms", "android", "app", "build",
+        path_to_apks = os.path.join(TnsPaths.get_app_path(self.app_name), "platforms", "android", "app", "build",
                                     "outputs", "bundle", "release", "app-release.apks")
 
         # env.snapshot is applicable only in release build
