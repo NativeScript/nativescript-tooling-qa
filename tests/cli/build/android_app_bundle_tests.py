@@ -73,15 +73,15 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build",
                                    "outputs", "bundle", "release", "app-release.aab")
         path_to_apks = os.path.join(self.app_name, "platforms", "android", "app", "build",
-                                   "outputs", "bundle", "release", "app-release.apks")
+                                    "outputs", "bundle", "release", "app-release.apks")
 
         # env.snapshot is applicable only in release build
         result = Tns.run_android(self.app_path, aab=True, release=True, snapshot=True,
-                                   uglify=True, verify=False, compileSnapshot=True)
+                                 uglify=True, verify=False, compileSnapshot=True)
         strings = ['Successfully generated snapshots',
                    'The build result is located at: {0}'.format(path_to_aab)]
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
-       
+
         # Verify app can be deployed on emulator via nativescript
         # Verify app looks correct inside emulator
         self.emu.wait_for_text(text='TAP')
@@ -93,7 +93,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         assert File.exists(os.path.join(self.app_name, 'standalone-arm64', 'lib', 'arm64-v8a', 'libNativeScript.so'))
         assert  not File.exists(os.path.join(self.app_name, 'standalone-arm64', 'assets', 'snapshots', 'x86_64',
                                              'snapshot.blob'))
-    
+
     def test_200_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool
            to deploy on device."""
