@@ -1,5 +1,6 @@
 import os
 import unittest
+import time
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -90,6 +91,7 @@ class DebugNetworkTests(TnsRunTest):
         device.click(text=HOME_ADD_CHILD_BUTTON)
         self.dev_tools.doubleclick_line(text='StackLayout')
         self.dev_tools.doubleclick_line(text='ScrollView')
+        time.sleep(4)
         self.dev_tools.doubleclick_line(text='FlexboxLayout')
         if platform == Platform.ANDROID:
             assert self.dev_tools.wait_element_by_text(text='StackLayout id=') is not None

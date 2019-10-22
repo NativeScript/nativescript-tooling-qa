@@ -128,7 +128,7 @@ class DebugJSTests(TnsRunTest):
 
         # Update label in CDT and verify it is updated on device
         self.dev_tools.edit_text(old_text=self.xml_change.new_text, new_text=self.xml_change.old_text)
-        element = self.dev_tools.wait_element_by_text(text=self.xml_change.old_text)
+        element = self.dev_tools.wait_element_by_text(text=self.xml_change.old_text, timeout=90)
         assert element is not None, 'Failed to change text in elements tab.'
         device.wait_for_text(text=self.xml_change.old_text)
 
