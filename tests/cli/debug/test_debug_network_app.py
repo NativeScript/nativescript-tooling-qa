@@ -135,7 +135,7 @@ class DebugNetworkTests(TnsRunTest):
         self.dev_tools.load_source_file('network-page.ts')
         self.dev_tools.breakpoint(line=30)
         device.click(text=NET_GET_WITH_BODY)
-        self.dev_tools.wait_element_by_text(text='Paused on breakpoint', timeout=10)
+        self.dev_tools.wait_element_by_text(text='Paused on breakpoint', timeout=60)
         assert 'My custom Arbitrary Header value' not in File.read(result.log_file)
         self.dev_tools.continue_debug()
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=['My custom Arbitrary Header value'])
@@ -154,9 +154,9 @@ class DebugNetworkTests(TnsRunTest):
 
         # Request with body
         device.click(text=NET_GET_WITH_BODY)
-        assert self.dev_tools.wait_element_by_text(text='get') is not None
-        assert self.dev_tools.wait_element_by_text(text='200') is not None
-        assert self.dev_tools.wait_element_by_text(text=' B') is not None
+        assert self.dev_tools.wait_element_by_text(text='get', timeout=60) is not None
+        assert self.dev_tools.wait_element_by_text(text='200', timeout=50) is not None
+        assert self.dev_tools.wait_element_by_text(text=' B', timeout=50) is not None
         self.dev_tools.clean_network_tab()
 
         # TODO: Add tests for all requests
