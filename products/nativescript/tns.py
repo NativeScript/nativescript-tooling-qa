@@ -86,7 +86,7 @@ class Tns(object):
         if snapshot:
             cmd += ' --env.snapshot'
         if compile_snapshot:
-            cmd += ' --env.compile_snapshot'
+            cmd += ' --env.compileSnapshot'
         if source_map:
             cmd += ' --env.sourceMap'
         if just_launch:

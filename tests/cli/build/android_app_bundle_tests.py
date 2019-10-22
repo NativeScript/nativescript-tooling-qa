@@ -93,7 +93,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
                    os.path.join(self.app_name, 'standalone-arm64'))
         assert File.exists(os.path.join(self.app_name, 'standalone-arm64', 'lib', 'arm64-v8a', 'libNativeScript.so'))
         assert not File.exists(os.path.join(self.app_name, 'standalone-arm64', 'assets', 'snapshots', 'x86_64',
-                                             'snapshot.blob'))
+                                            'snapshot.blob'))
 
     def test_200_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool
