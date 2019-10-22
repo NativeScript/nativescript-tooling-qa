@@ -80,9 +80,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                                    file_name='app.css', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
-    orange_count = device.get_pixels_by_color(color=Colors.ORANGE)
-    assert orange_count > 1000, 'Failed to find orange color on {0}'.format(device.name)
-
+    device.wait_for_main_color(color=Colors.RED)
+    
     # Revert changes
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
@@ -105,8 +104,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                                    file_name='app.css', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
-    blue_count = device.get_pixels_by_color(color=Colors.BLUE)
-    assert blue_count > 1000, 'Failed to find blue color on {0}'.format(device.name)
+    device.wait_for_main_color(color=Colors.WHITE)
 
     # Assert final and initial states are same
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
