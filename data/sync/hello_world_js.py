@@ -85,6 +85,8 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     # Verify that application is not restarted on file changes when hmr=true
     if hmr:
         not_existing_string_list = ['Restarting application']
+    else:
+        not_existing_string_list=None
 
     # Execute `tns run` and wait until logs are OK
     result = run_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,

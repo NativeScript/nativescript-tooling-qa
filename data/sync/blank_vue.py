@@ -49,6 +49,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     # Verify that application is not restarted on file changes when hmr=true
     if hmr:
         not_existing_string_list = ['Restarting application']
+    else:
+        not_existing_string_list=None
     
     # Edit script in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.BlankVue.VUE_SCRIPT)

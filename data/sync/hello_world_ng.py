@@ -50,6 +50,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     # Verify that application is not restarted on file changes when hmr=true
     if hmr:
         not_existing_string_list = ['Restarting application']
+    else:
+        not_existing_string_list=None
 
     # Apply changes
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
@@ -141,6 +143,8 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
 
     if hmr:
         not_existing_string_list = ['Restarting application']
+    else:
+        not_existing_string_list=None
 
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
