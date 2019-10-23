@@ -65,7 +65,7 @@ class IOSRuntimeTests(TnsTest):
         # https://github.com/NativeScript/nativescript-cli/issues/4524
         strings = ['JavaScript stack trace',
                    'JS ERROR AssertionError: expected -1 to equal 1']
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
 
     def test_380_tns_run_ios_plugin_dependencies(self):
         """
@@ -267,7 +267,7 @@ class IOSRuntimeTests(TnsTest):
         Device.wait_for_text(self.sim, text='Tap the button')
 
         string = ['Internal class: UITableViewCellContentView']
-        result = Wait.until(lambda: all(st in File.read(log.log_file) for st in string), timeout=60,
+        result = Wait.until(lambda: all(st in File.read(log.log_file) for st in string), timeout=90,
                             period=5)
         assert result, 'NSStringFromClass function returns INCORRECT name of iOS internal class!'
 
