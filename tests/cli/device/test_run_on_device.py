@@ -79,7 +79,17 @@ class TnsRunOnDevices(TnsDeviceTest):
         file_name = os.path.basename(Changes.JSHelloWord.JS.file_path)
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=Platform.ANDROID, run_type=RunType.INCREMENTAL,
                                        file_name=file_name)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        for device in DeviceManager.get_devices(device_type=any):
+            strings.append(device.id)
+        strings.append(self.emu.id)
+        if Settings.HOST_OS is OSType.OSX:
+            strings.append(self.sim.id)
+        
+        # Verify that application is not restarted on file changes when hmr=true
+        not_existing_string_list = ['Restarting application']
+
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
 
         # Verify change is applied on all devices
         for device in DeviceManager.get_devices(device_type=any):

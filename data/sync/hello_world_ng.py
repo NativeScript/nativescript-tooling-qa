@@ -141,6 +141,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     result = preview_hello_world_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
                                     instrumented=instrumented, click_open_alert=click_open_alert)
 
+    # Verify that application is not restarted on file changes when hmr=true
     if hmr:
         not_existing_string_list = ['Restarting application']
     else:
