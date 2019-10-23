@@ -32,7 +32,7 @@ class AndroidRuntimeTests(TnsTest):
     @classmethod
     def setUpClass(cls):
         TnsTest.setUpClass()
-        cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULTч)
+        cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
         Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
