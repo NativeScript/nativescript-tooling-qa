@@ -1,5 +1,3 @@
-import os
-
 from parameterized import parameterized
 
 from core.base_test.tns_run_test import TnsRunTest
@@ -8,7 +6,6 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.simctl import Simctl
-from core.utils.file_utils import Folder
 from data.const import Colors
 from data.templates import Template
 from products.nativescript.app import App
@@ -83,5 +80,4 @@ class TemplateTests(TnsRunTest):
                 self.sim.wait_for_main_color(color=Colors.WHITE, timeout=60)
 
         # Cleanup
-        Folder.clean(os.path.join(Settings.TEST_RUN_HOME, app_name))
         TnsRunTest.tearDown(self)

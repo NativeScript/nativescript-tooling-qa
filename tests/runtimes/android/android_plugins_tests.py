@@ -30,7 +30,7 @@ class AndroidRuntimePluginTests(TnsTest):
         TnsTest.setUpClass()
         cls.emulator = DeviceManager.Emulator.ensure_available(Emulators.DEFAULT)
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
-        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package)
+        Tns.create(app_name=APP_NAME, template=Template.HELLO_WORLD_JS.local_package, update=True)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
     def tearDown(self):
@@ -336,8 +336,7 @@ class AndroidRuntimePluginTests(TnsTest):
         Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
-
-        # Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
+        Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
 
     @staticmethod
     def assert_kotlin_is_working(emulator):

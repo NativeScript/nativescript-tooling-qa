@@ -8,8 +8,6 @@ from core.utils.run import run
 from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
-from products.nativescript.tns_logs import TnsLogs
-from products.nativescript.tns_paths import TnsPaths
 
 
 class AndroidAppBundleTests(TnsRunAndroidTest):
@@ -67,37 +65,9 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
         assert "Error" not in result.output, "deploy of app failed"
         assert "The APKs have been extracted in the directory:" in result.output, "deploy of app failed"
 
-    def test_100_run_android_app_bundle_compile_snapshot(self):
-        """Run app on android with --aab option with optimisations for snapshot.
-           Verify the output(app.aab)."""
-
-        path_to_aab = os.path.join(TnsPaths.get_app_path(self.app_name), "platforms", "android", "app", "build",
-                                   "outputs", "bundle", "release", "app-release.aab")
-        path_to_apks = os.path.join(TnsPaths.get_app_path(self.app_name), "platforms", "android", "app", "build",
-                                    "outputs", "bundle", "release", "app-release.apks")
-
-        # env.snapshot is applicable only in release build
-        result = Tns.run_android(self.app_path, aab=True, release=True, snapshot=True,
-                                 uglify=True, verify=False, compile_snapshot=True)
-        strings = ['Successfully generated snapshots',
-                   'The build result is located at: {0}'.format(path_to_aab)]
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
-
-        # Verify app can be deployed on emulator via nativescript
-        # Verify app looks correct inside emulator
-        self.emu.wait_for_text(text='TAP')
-
-        # Verify that the correct .so file is included in the package
-        File.unzip(path_to_apks, os.path.join(self.app_name, 'apks'))
-        File.unzip(os.path.join(self.app_name, 'apks', 'standalones', 'standalone-arm64_v8a_hdpi.apk'),
-                   os.path.join(self.app_name, 'standalone-arm64'))
-        assert File.exists(os.path.join(self.app_name, 'standalone-arm64', 'lib', 'arm64-v8a', 'libNativeScript.so'))
-        assert not File.exists(os.path.join(self.app_name, 'standalone-arm64', 'assets', 'snapshots', 'x86_64',
-                                            'snapshot.blob'))
-
     def test_200_build_android_app_bundle(self):
         """Build app with android app bundle option. Verify the output(app.aab) and use bundletool
-           to deploy on device."""
+           to deploy on device"""
         path_to_aab = os.path.join(self.app_name, "platforms", "android", "app", "build", "outputs",
                                    "bundle", "debug", "app-debug.aab")
 
