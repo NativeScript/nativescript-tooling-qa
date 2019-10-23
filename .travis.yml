@@ -1,7 +1,7 @@
 branches:
   only:
     - master
-    - relase
+    - release
 language: python
 python:
   - "2.7"
