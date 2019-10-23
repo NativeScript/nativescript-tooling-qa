@@ -47,13 +47,18 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                         instrumented=True):
     result = run_hello_world_ng(app_name=app_name, platform=platform, device=device, uglify=uglify, aot=aot, hmr=hmr)
 
+    # Verify that application is not restarted on file changes when hmr=true
+    if hmr:
+        not_existing_string_list = ['Restarting application']
+
     # Apply changes
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='item.service.ts', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
 
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
     if platform == Platform.IOS:
@@ -66,7 +71,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='items.component.html', hmr=hmr, instrumented=instrumented,
                                    app_type=AppType.NG, aot=aot, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
 
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
     device.wait_for_main_color(color=Colors.DARK)
@@ -80,7 +86,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='app.css', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
 
     # Revert changes
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
@@ -88,7 +95,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='items.component.html', hmr=hmr, instrumented=instrumented,
                                    app_type=AppType.NG, aot=aot, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
 
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
@@ -96,7 +104,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='item.service.ts', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
 
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
     device.wait_for_main_color(color=Colors.WHITE)
@@ -104,7 +113,8 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='app.css', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
 
     # Assert final and initial states are same
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
@@ -129,18 +139,23 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     result = preview_hello_world_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
                                     instrumented=instrumented, click_open_alert=click_open_alert)
 
+    if hmr:
+        not_existing_string_list = ['Restarting application']
+
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                                     file_name='item.service.ts', hmr=hmr, instrumented=instrumented)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
 
     # Edit HTML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='items.component.html',
                                                     hmr=hmr, instrumented=instrumented)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
     if platform == Platform.IOS:
         for number in ["10", "1"]:
             device.wait_for_text(text=number)
@@ -153,7 +168,8 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='app.css',
                                                     hmr=hmr, instrumented=instrumented)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
+                         not_existing_string_list=not_existing_string_list)
     device.wait_for_main_color(color=Colors.DARK)
     if platform == Platform.IOS:
         for number in ["10", "1"]:

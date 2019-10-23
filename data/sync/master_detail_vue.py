@@ -36,18 +36,24 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
 
+    # Verify that application is not restarted on file changes when hmr=true
+    if hmr:
+        not_existing_string_list = ['Restarting application']
+
     # Edit template in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_TEMPLATE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_TEMPLATE.new_text)
 
     # Edit styling in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
     style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED_DARK) > 200)
     assert style_applied, 'Failed to sync changes in style.'
 
@@ -55,7 +61,8 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     Sync.revert(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
     style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.WHITE) > 200)
     assert style_applied, 'Failed to sync changes in style.'
 
@@ -70,7 +77,8 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarDetails.vue')
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)
 
     # Kill Appium
