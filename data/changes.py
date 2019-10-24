@@ -35,7 +35,8 @@ class Changes(object):
                        old_value='taps left', new_value='clicks left',
                        old_text='taps left', new_text='clicks left')
         CSS = ChangeSet(file_path=os.path.join('app', 'app.css'),
-                        old_value='font-size: 18', new_value='font-size: 50',
+                        old_value='font-size: 18',
+                        new_value='font-size: 18;\nbackground-color: pink;',
                         old_color=None, new_color=None)
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
@@ -66,8 +67,8 @@ class Changes(object):
                        old_text='Ter Stegen', new_text='Unknown')
         CSS = ChangeSet(file_path=os.path.join('src', 'app.css'),
                                       old_value='}',
-                                      new_value='}\nListView { background-color: red;}\n',
-                                      old_color=Colors.WHITE, new_color=Colors.RED)
+                                      new_value='}\nListView { background-color: pink;}\n',
+                                      old_color=Colors.WHITE, new_color=Colors.PINK)
         HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                          old_value='"item.name"', new_value='"item.id"',
                          old_text=None, new_text=None)

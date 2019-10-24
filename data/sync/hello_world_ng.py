@@ -80,7 +80,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                                    file_name='app.css', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
-    device.wait_for_main_color(color=Colors.RED)
+    device.wait_for_main_color(color=Colors.PINK)
     
     # Revert changes
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
