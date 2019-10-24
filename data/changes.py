@@ -36,7 +36,7 @@ class Changes(object):
                        old_text='taps left', new_text='clicks left')
         CSS = ChangeSet(file_path=os.path.join('app', 'app.css'),
                         old_value='font-size: 18',
-                        new_value='font-size: 18;\nbackground-color: pink;',
+                        new_value='font-size: 18;\nbackground-color: red;',
                         old_color=None, new_color=None)
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
