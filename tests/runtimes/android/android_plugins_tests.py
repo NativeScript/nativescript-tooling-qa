@@ -41,6 +41,14 @@ class AndroidRuntimePluginTests(TnsTest):
         TnsTest.tearDownClass()
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
 
+    @staticmethod
+    def assert_kotlin_is_working(emulator):
+        assert File.exists(APK_DEBUG_PATH)
+        assert File.is_file_in_zip(APK_DEBUG_PATH, os.path.join("kotlin")), "Kotlin is not working!"
+        Device.click(emulator, text="TAP", case_sensitive=True)
+        error_message = "Kotlin code is not executed correctly! Logs: "
+        assert "Kotlin is here!" in Adb.get_logcat(emulator.id), error_message + Adb.get_logcat(emulator.id)
+
     def test_308_native_package_in_plugin_include_gradle_with_compile(self):
         """
          Test native packages in plugin could be used with compile in include gradle
@@ -338,14 +346,6 @@ class AndroidRuntimePluginTests(TnsTest):
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
         Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
 
-    @staticmethod
-    def assert_kotlin_is_working(emulator):
-        assert File.exists(APK_DEBUG_PATH)
-        assert File.is_file_in_zip(APK_DEBUG_PATH, os.path.join("kotlin")), "Kotlin is not working!"
-        Device.click(emulator, text="TAP", case_sensitive=True)
-        error_message = "Kotlin code is not executed correctly! Logs: "
-        assert "Kotlin is here!" in Adb.get_logcat(emulator.id), error_message + Adb.get_logcat(emulator.id)
-
     def test_452_support_gradle_properties_for_enable_Kotlin_with_jar(self):
         """
         Support gradle.properties file for enable Kotlin
@@ -469,7 +469,7 @@ class AndroidRuntimePluginTests(TnsTest):
         self.assert_kotlin_is_working(self.emulator)
         with open(ANALYTICS_FILE, "r") as read_file:
             data = json.load(read_file)
-            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to False! Analytics is not correct!"
+            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to True! Analytics is not correct!"
             assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is True, error_message
             error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to True! Analytics is not correct!"
             assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is True, error_message
@@ -523,7 +523,7 @@ class AndroidRuntimePluginTests(TnsTest):
         error_message = "Analytics data should NOT be generated when gatherAnalyticsData is not set!"
         assert not File.exists(ANALYTICS_FILE), error_message
 
-    def test_456_analytics_working_corrext_when_property_is_set_without_Kotlin(self):
+    def test_456_analytics_working_correct_when_property_is_set_without_Kotlin(self):
         """
         Support gradle.properties file for enable Kotlin
         https://github.com/NativeScript/android-runtime/issues/1459
@@ -550,7 +550,7 @@ class AndroidRuntimePluginTests(TnsTest):
             data = json.load(read_file)
             error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to False! Analytics is not correct!"
             assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is False, error_message
-            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to True! Analytics is not correct!"
+            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to False! Analytics is not correct!"
             assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is False, error_message
 
     def test_457_gradle_hooks(self):
