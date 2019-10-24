@@ -77,27 +77,27 @@ class AndroidErrorActivityTests(TnsTest):
 
         if self.emulator.version < 10.0:
             regex_to_check = r"""System\.err: Error: Kill the app!
-System\.err: File: \(file:///app/app\.js:\d+:\d+\)
-System.err: StackTrace: 
-System\.err: 	\(file:///app/app.js:\d+:\d+\)
-System\.err: 	at \./app\.js\(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-System\.err: 	at __webpack_require__\(file:///app/webpack/bootstrap:\d+:\d+\)
-System\.err: 	at checkDeferredModules\(file:///app/webpack/bootstrap:\d+:\d+\)
-System\.err: 	at webpackJsonpCallback\(file:///app/webpack/bootstrap:\d+:\d+\)
-System\.err: 	at \(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-System\.err: 	at require\(:\d+:\d+\)""" # noqa: E501, E261, W291
+System\.err: File: \(file:\/\/\/app\/app\.js:\d+:\d+\)
+System\.err: StackTrace: 
+System\.err:.+\(file:\/\/\/app\/app.js:\d+:\d+\)
+System\.err:.+at \.\/app\.js\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+System\.err:.+at __webpack_require__\(file:\/\/\/app\/webpack\/bootstrap:\d+:\d+\)
+System\.err:.+at checkDeferredModules\(file:\/\/\/app\/webpack\/bootstrap:\d+:\d+\)
+System\.err:.+at webpackJsonpCallback\(file:\/\/\/app\/webpack\/bootstrap:\d+:\d+\)
+System\.err:.+at \(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+System\.err:.+at require\(:\d+:\d+\)""" # noqa: E501, E261, W291
         else:
             regex_to_check = r"""System\.err: Error: Kill the app!
-System\.err: File: \(file:///app/app\.js:\d+:\d+\)
-System.err: 
-System.err: StackTrace: 
-System\.err: 	\(file:///app/app.js:\d+:\d+\)
-System\.err: 	at \./app\.js\(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-System\.err: 	at __webpack_require__\(file:///app/webpack/bootstrap:\d+:\d+\)
-System\.err: 	at checkDeferredModules\(file:///app/webpack/bootstrap:\d+:\d+\)
-System\.err: 	at webpackJsonpCallback\(file:///app/webpack/bootstrap:\d+:\d+\)
-System\.err: 	at \(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-System\.err: 	at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
+System\.err: File: \(file:\/\/\/app\/app\.js:\d+:\d+\)
+System\.err:.+
+System\.err: StackTrace:.+
+System\.err:.+\(file:\/\/\/app\/app\.js:\d+:\d+\)
+System\.err:.+at \.\/app\.js\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+System\.err:.+at __webpack_require__\(file:\/\/\/app\/webpack\/bootstrap:\d+:\d+\)
+System\.err:.+at checkDeferredModules\(file:\/\/\/app\/webpack\/bootstrap:\d+:\d+\)
+System\.err:.+at webpackJsonpCallback\(file:\/\/\/app\/webpack\/bootstrap:\d+:\d+\)
+System\.err:.+at \(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+System\.err:.+at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
 
         Assert.assert_with_regex(File.read(result.log_file),
                                  regex_to_check)
@@ -143,16 +143,16 @@ System\.err: 	at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
             self.emulator.is_text_visible('Exception')
         else:
             regex_to_check = r"""System\.err: Error: Kill the app!
-.+System\.err: File: \(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-.+System\.err: 
-.+System\.err: StackTrace: 
-.+System\.err: 	\(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-.+System\.err: 	at \./app\.js\(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-.+System\.err: 	at __webpack_require__\(file:///data/data/org\.nativescript\.TestApp/files/app/runtime\.js:\d+:\d+\)
-.+System\.err: 	at checkDeferredModules\(file:///data/data/org.nativescript.TestApp/files/app/runtime.js:\d+:\d+\)
-.+System\.err: 	at webpackJsonpCallback\(file:///data/data/org.nativescript.TestApp/files/app/runtime.js:\d+:\d+\)
-.+System\.err: 	at \(file:///data/data/org\.nativescript\.TestApp/files/app/bundle\.js:\d+:\d+\)
-.+System\.err: 	at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
+.+System\.err: File: \(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+.+System\.err:.+
+.+System\.err: StackTrace:.+
+.+System\.err:.+\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+.+System\.err:.+at \.\/app\.js\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+.+System\.err:.+at __webpack_require__\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/runtime\.js:\d+:\d+\)
+.+System\.err:.+at checkDeferredModules\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/runtime\.js:\d+:\d+\)
+.+System\.err:.+at webpackJsonpCallback\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/runtime\.js:\d+:\d+\)
+.+System\.err:.+at \(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+.+System\.err:.+at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
             Wait.until(lambda: "Error: Kill the app!" in Adb.get_logcat(self.emulator.id), timeout=240,
                        period=5)
             Assert.assert_with_regex(Adb.get_logcat(self.emulator.id),
