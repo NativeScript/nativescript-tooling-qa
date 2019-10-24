@@ -25,7 +25,7 @@ class Tns(object):
     def exec_command(command, cwd=Settings.TEST_RUN_HOME, platform=Platform.NONE, emulator=False, path=None,
                      device=None, release=False, for_device=False, provision=None, bundle=True,
                      hmr=True, aot=False, uglify=False, source_map=False, snapshot=False, log_trace=False,
-                     just_launch=False, sync_all_files=False, clean=False, aab=False,
+                     just_launch=False, sync_all_files=False, clean=False, aab=False, compile_snapshot=False,
                      options=None, wait=True, timeout=600):
         """
         Execute tns command.
@@ -85,6 +85,8 @@ class Tns(object):
             cmd += ' --env.uglify'
         if snapshot:
             cmd += ' --env.snapshot'
+        if compile_snapshot:
+            cmd += ' --env.compileSnapshot'
         if source_map:
             cmd += ' --env.sourceMap'
         if just_launch:
@@ -321,11 +323,11 @@ class Tns(object):
     @staticmethod
     def build(app_name, platform, release=False, provision=Settings.IOS.PROVISIONING, for_device=False, bundle=True,
               aot=False, source_map=False, uglify=False, snapshot=False, log_trace=False, verify=True, app_data=None,
-              aab=False):
+              aab=False, compile_snapshot=False):
         result = Tns.exec_command(command='build', path=app_name, platform=platform, release=release,
                                   provision=provision, for_device=for_device, bundle=bundle, aot=aot,
                                   source_map=source_map, uglify=uglify, snapshot=snapshot, wait=True,
-                                  log_trace=log_trace, aab=aab)
+                                  log_trace=log_trace, aab=aab, compile_snapshot=compile_snapshot)
         if verify:
             # Verify output
             assert result.exit_code == 0, 'Build failed with non zero exit code.'
@@ -349,10 +351,10 @@ class Tns(object):
 
     @staticmethod
     def build_android(app_name, release=False, bundle=True, aot=False, source_map=False, uglify=False, snapshot=False,
-                      log_trace=False, verify=True, app_data=None, aab=False):
+                      log_trace=False, verify=True, app_data=None, aab=False, compile_snapshot=False):
         return Tns.build(app_name=app_name, platform=Platform.ANDROID, release=release, bundle=bundle, aot=aot,
                          source_map=source_map, uglify=uglify, snapshot=snapshot, log_trace=log_trace, verify=verify,
-                         app_data=app_data, aab=aab)
+                         app_data=app_data, aab=aab, compile_snapshot=compile_snapshot)
 
     @staticmethod
     def build_ios(app_name, release=False, provision=Settings.IOS.PROVISIONING, for_device=False,
@@ -376,12 +378,13 @@ class Tns(object):
     @staticmethod
     def run(app_name, platform, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,
             for_device=False, bundle=True, hmr=True, aot=False, uglify=False, source_map=False, snapshot=False,
-            wait=False, log_trace=False, just_launch=False, sync_all_files=False, clean=False, verify=True):
+            wait=False, log_trace=False, just_launch=False, sync_all_files=False, clean=False, verify=True,
+            compile_snapshot=False, aab=False):
         result = Tns.exec_command(command='run', path=app_name, platform=platform, emulator=emulator, device=device,
                                   release=release, provision=provision, for_device=for_device, bundle=bundle,
                                   hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
                                   clean=clean, wait=wait, log_trace=log_trace, just_launch=just_launch,
-                                  sync_all_files=sync_all_files)
+                                  sync_all_files=sync_all_files, compile_snapshot=compile_snapshot, aab=aab)
         if verify:
             if wait:
                 assert result.exit_code == 0, 'tns run failed with non zero exit code.'
@@ -393,10 +396,11 @@ class Tns(object):
     @staticmethod
     def run_android(app_name, emulator=False, device=None, release=False, bundle=True, hmr=True, aot=False,
                     uglify=False, source_map=False, snapshot=False, wait=False, log_trace=False, just_launch=False,
-                    verify=True, clean=False):
+                    verify=True, clean=False, compile_snapshot=False, aab=False):
         return Tns.run(app_name=app_name, platform=Platform.ANDROID, emulator=emulator, device=device, release=release,
                        bundle=bundle, hmr=hmr, aot=aot, uglify=uglify, source_map=source_map, snapshot=snapshot,
-                       wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify, clean=clean)
+                       wait=wait, log_trace=log_trace, just_launch=just_launch, verify=verify, clean=clean,
+                       compile_snapshot=compile_snapshot, aab=aab)
 
     @staticmethod
     def run_ios(app_name, emulator=False, device=None, release=False, provision=Settings.IOS.PROVISIONING,

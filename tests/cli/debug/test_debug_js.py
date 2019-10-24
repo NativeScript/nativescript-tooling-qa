@@ -128,7 +128,7 @@ class DebugJSTests(TnsRunTest):
 
         # Update label in CDT and verify it is updated on device
         self.dev_tools.edit_text(old_text=self.xml_change.new_text, new_text=self.xml_change.old_text)
-        element = self.dev_tools.wait_element_by_text(text=self.xml_change.old_text)
+        element = self.dev_tools.wait_element_by_text(text=self.xml_change.old_text, timeout=90)
         assert element is not None, 'Failed to change text in elements tab.'
         device.wait_for_text(text=self.xml_change.old_text)
 
@@ -142,7 +142,7 @@ class DebugJSTests(TnsRunTest):
 
         # TAP the button to trigger console log and ensure it is in device logs
         device.click(text='TAP', case_sensitive=True)
-        assert device.wait_for_log(text='Test Debug!'), 'Console logs not available in device logs.'
+        assert device.wait_for_log(text='Test Debug!', timeout=90), 'Console logs not available in device logs.'
 
         # Ensure logs are available in tns logs
         tns_logs = File.read(result.log_file)
@@ -190,7 +190,7 @@ class DebugJSTests(TnsRunTest):
 
         # Tap on TAP button in emulator and check it is hit
         device.click(text="TAP", case_sensitive=True)
-        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
+        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=40)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
 
         # Resume execution
@@ -223,7 +223,7 @@ class DebugJSTests(TnsRunTest):
 
         # Tap on TAP button in emulator and check it is hit
         device.click(text="TAP", case_sensitive=True)
-        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=10)
+        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=90)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
 
         # Test for https://github.com/NativeScript/nativescript-cli/issues/4227
@@ -256,7 +256,7 @@ class DebugJSTests(TnsRunTest):
 
         # Tap on TAP button in emulator and check it is hit
         device.click(text="TAP", case_sensitive=True)
-        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=30)
+        pause_element = self.dev_tools.wait_element_by_text(text="Paused on breakpoint", timeout=60)
         assert pause_element is not None, 'Failed to pause on breakpoint.'
 
         # Add watch expression

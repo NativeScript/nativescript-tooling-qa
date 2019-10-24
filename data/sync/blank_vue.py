@@ -46,6 +46,12 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
     device.get_screen(path=initial_state)
 
+    # Verify that application is not restarted on file changes when hmr=true
+    if hmr:
+        not_existing_string_list = ['Restarting application']
+    else:
+        not_existing_string_list = None
+
     # Edit script in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.BlankVue.VUE_SCRIPT)
     if preview:
@@ -53,7 +59,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     else:
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                        bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.new_text)
 
     # Edit template in .vue file
@@ -63,7 +70,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     else:
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                        bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.new_text)
 
     # Edit styling in .vue file
@@ -73,7 +81,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     else:
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                        bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
     style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED) > 100)
     assert style_applied, 'Failed to sync changes in style.'
 
@@ -84,7 +93,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     else:
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                        bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.BlankVue.VUE_SCRIPT.old_text)
 
     # Revert template in .vue file
@@ -94,7 +104,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     else:
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                        bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.BlankVue.VUE_TEMPLATE.old_text)
 
     # Revert styling in .vue file
@@ -105,7 +116,8 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
         strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
                                        bundle=bundle,
                                        hmr=hmr, app_type=AppType.VUE, file_name='Home.vue')
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                             not_existing_string_list=not_existing_string_list)
 
     if hmr:
         Log.info('Skip next steps because of https://github.com/nativescript-vue/nativescript-vue/issues/425')
