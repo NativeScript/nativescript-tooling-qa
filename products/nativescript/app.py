@@ -45,12 +45,15 @@ class App(object):
         Npm.install(package='{0}@{1}'.format(dependency, version), option='--save-dev --save-exact', folder=app_path)
 
     @staticmethod
-    def update(app_name, modules=True, angular=True, typescript=False, web_pack=True, vue=True):
+    def update(app_name, modules=True, angular=True, typescript=False, web_pack=True, vue=True, theme=True):
         app_path = os.path.join(Settings.TEST_RUN_HOME, app_name)
         modules_path = os.path.join(app_path, 'node_modules')
         if modules and App.is_dependency(app_name=app_name, dependency='tns-core-modules'):
             Npm.uninstall(package='tns-core-modules', option='--save', folder=app_path)
             Npm.install(package=Settings.Packages.MODULES, option='--save --save-exact', folder=app_path)
+        if theme and App.is_dependency(app_name=app_name, dependency='@nativescript/theme'):
+            Npm.uninstall(package='@nativescript/theme', option='--save', folder=app_path)
+            Npm.install(package='@nativescript/theme@next', option='--save --save-exact', folder=app_path)
         if angular and App.is_dependency(app_name=app_name, dependency='nativescript-angular'):
             Npm.uninstall(package='nativescript-angular', option='--save', folder=app_path)
             Npm.install(package=Settings.Packages.ANGULAR, option='--save --save-exact', folder=app_path)
