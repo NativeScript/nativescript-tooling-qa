@@ -40,7 +40,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     if hmr:
         not_existing_string_list = ['Restarting application']
     else:
-        not_existing_string_list=None
+        not_existing_string_list = None
 
     # Edit template in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_TEMPLATE)

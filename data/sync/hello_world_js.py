@@ -86,7 +86,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     if hmr:
         not_existing_string_list = ['Restarting application']
     else:
-        not_existing_string_list=None
+        not_existing_string_list = None
 
     # Execute `tns run` and wait until logs are OK
     result = run_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
@@ -100,14 +100,16 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name='app.css', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_string_list)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name=js_file, instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_string_list)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
 
     # Edit XML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=xml_change)
@@ -115,7 +117,8 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     device.wait_for_text(text=js_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name='main-page.xml', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_string_list)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
 
     # Revert all the changes
     Sync.revert(app_name=app_name, change_set=js_change)
@@ -123,14 +126,16 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     device.wait_for_text(text=xml_change.new_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name=js_file, instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_string_list)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
 
     Sync.revert(app_name=app_name, change_set=xml_change)
     device.wait_for_text(text=xml_change.old_text)
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name='main-page.xml', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_string_list)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
 
     Sync.revert(app_name=app_name, change_set=css_change)
     device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count)
@@ -138,7 +143,8 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     device.wait_for_text(text=js_change.old_text)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    hmr=hmr, file_name='app.css', instrumented=instrumented, device=device)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, not_existing_string_list=not_existing_string_list)
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
+                         not_existing_string_list=not_existing_string_list)
 
     # Assert final and initial states are same
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')

@@ -84,7 +84,7 @@ class TnsRunOnDevices(TnsDeviceTest):
         strings.append(self.emu.id)
         if Settings.HOST_OS is OSType.OSX:
             strings.append('Refreshing application on device {0}'.format(self.sim.id))
-        
+
         # Verify that application is not restarted on file changes when hmr=true
         not_existing_string_list = ['Restarting application']
 
