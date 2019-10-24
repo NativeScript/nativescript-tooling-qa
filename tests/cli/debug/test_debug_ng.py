@@ -1,4 +1,5 @@
 import unittest
+import time
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -77,6 +78,7 @@ class DebugNGTests(TnsRunTest):
         # Expand items
         self.dev_tools.doubleclick_line(text='ProxyViewContainer')
         self.dev_tools.doubleclick_line(text='GridLayout')
+        time.sleep(3)
         self.dev_tools.doubleclick_line(text='ListView')
         if platform == Platform.ANDROID:
             self.dev_tools.doubleclick_line(text='StackLayout')
