@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 
 from core.enums.app_type import AppType
 from core.enums.platform_type import Platform
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.appium.appium_driver import AppiumDriver
 from core.utils.wait import Wait
@@ -37,7 +38,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     device.get_screen(path=initial_state)
 
     # Verify that application is not restarted on file changes when hmr=true
-    if hmr:
+    if hmr and Settings.HOST_OS != OSType.WINDOWS:
         not_existing_string_list = ['Restarting application']
     else:
         not_existing_string_list = None

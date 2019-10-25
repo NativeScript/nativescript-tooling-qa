@@ -83,7 +83,7 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
         raise ValueError('Invalid app_type value.')
 
     # Verify that application is not restarted on file changes when hmr=true
-    if hmr:
+    if hmr and Settings.HOST_OS != OSType.WINDOWS:
         not_existing_string_list = ['Restarting application']
     else:
         not_existing_string_list = None
