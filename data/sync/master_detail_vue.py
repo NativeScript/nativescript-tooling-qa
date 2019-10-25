@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 
 from core.enums.app_type import AppType
 from core.enums.platform_type import Platform
+from core.enums.os_type import OSType
 from core.settings import Settings
 from core.utils.appium.appium_driver import AppiumDriver
 from core.utils.wait import Wait

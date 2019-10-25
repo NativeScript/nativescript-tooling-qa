@@ -7,6 +7,7 @@ import os
 from core.enums.app_type import AppType
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
+from core.enums.os_type import OSType
 from core.settings import Settings
 from data.changes import Changes, Sync
 from data.const import Colors

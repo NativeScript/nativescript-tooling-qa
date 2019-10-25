@@ -4,6 +4,7 @@ Sync changes on JS/TS project helper.
 import os
 
 from core.enums.app_type import AppType
+from core.enums.os_type import OSType
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.wait import Wait
