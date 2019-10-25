@@ -47,7 +47,7 @@ def __workflow(preview, app_name, platform, device, bundle=True, hmr=True):
     device.get_screen(path=initial_state)
 
     # Verify that application is not restarted on file changes when hmr=true
-    if hmr:
+    if hmr and Settings.HOST_OS != OSType.WINDOWS:
         not_existing_string_list = ['Restarting application']
     else:
         not_existing_string_list = None
