@@ -102,7 +102,6 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
 
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
-    device.wait_for_main_color(color=Colors.DARK)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
                                    file_name='item.service.ts', hmr=hmr, instrumented=instrumented, app_type=AppType.NG,
                                    device=device)
