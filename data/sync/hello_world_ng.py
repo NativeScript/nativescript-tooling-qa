@@ -7,6 +7,7 @@ import os
 from core.enums.app_type import AppType
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
+from core.enums.os_type import OSType
 from core.settings import Settings
 from data.changes import Changes, Sync
 from data.const import Colors
@@ -48,7 +49,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     result = run_hello_world_ng(app_name=app_name, platform=platform, device=device, uglify=uglify, aot=aot, hmr=hmr)
 
     # Verify that application is not restarted on file changes when hmr=true
-    if hmr:
+    if hmr and Settings.HOST_OS != OSType.WINDOWS:
         not_existing_string_list = ['Restarting application']
     else:
         not_existing_string_list = None
@@ -141,7 +142,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
                                     instrumented=instrumented, click_open_alert=click_open_alert)
 
     # Verify that application is not restarted on file changes when hmr=true
-    if hmr:
+    if hmr and Settings.HOST_OS != OSType.WINDOWS:
         not_existing_string_list = ['Restarting application']
     else:
         not_existing_string_list = None
