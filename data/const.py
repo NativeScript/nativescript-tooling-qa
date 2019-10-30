@@ -16,6 +16,7 @@ class Colors(object):
     RED = numpy.array([0, 0, 255])  # Red (standard CSS color).
     RED_DARK = numpy.array([5, 4, 229])  # A bit custom red (happens when apply red on master-detail template).
     PURPLE = numpy.array([128, 0, 128])  # Purple (standard CSS color).
+    PURPLE_CUSTOM = numpy.array([255, 48, 129])  # A bit custom purple (when apply purple on master-detail).
     YELLOW = numpy.array([0, 255, 255])  # Yellow (standard CSS color).
     YELLOW_ICON = numpy.array([0, 242, 255])  # Yellow of star.png
     GREEN_ICON = numpy.array([0, 128, 0])  # Green of background colour of resources generate images

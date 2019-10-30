@@ -55,7 +55,8 @@ class Changes(object):
                        old_value='taps left', new_value='clicks left',
                        old_text='taps left', new_text='clicks left')
         CSS = ChangeSet(file_path=os.path.join('app', 'app.css'),
-                        old_value='font-size: 18', new_value='font-size: 50',
+                        old_value='font-size: 18',
+                        new_value='font-size: 18;\nbackground-color: red;',
                         old_color=None, new_color=None)
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
@@ -91,33 +92,35 @@ class Changes(object):
 
         # This change should make title of cars pink
         SCSS_ROOT_COMMON = ChangeSet(file_path=os.path.join('src', '_app-common.scss'),
-                                     old_value='$accent-dark;', new_value='pink;',
+                                     old_value='font-weight: 900;',
+                                     new_value='font-weight: 900;\nbackground-color: pink;\n',
                                      old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
 
         # This change should add some red between list view items on home page
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('src', 'app.android.scss'),
                                       old_value='Android here',
-                                      new_value='Android here\n.page { background-color: red;}\n',
-                                      old_color=Colors.WHITE, new_color=Colors.RED_DARK)
+                                      new_value='Android here\nActionBar{ background-color: red; }\n',
+                                      old_color=Colors.WHITE, new_color=Colors.RED)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('src', 'app.ios.scss'),
                                   old_value='iOS here',
-                                  new_value='iOS here\n.page { padding: 30; background-color: red; }\n',
+                                  new_value='iOS here\nActionBar{ background-color: red; }\n',
                                   old_color=Colors.WHITE, new_color=Colors.RED)
 
         # This change should make background of items on home page purple
         SCSS_NESTED_COMMON = ChangeSet(file_path=os.path.join('src', 'app', 'cars', '_car-list.component.scss'),
-                                       old_value='$background-light;', new_value='purple;',
-                                       old_color=Colors.WHITE, new_color=Colors.PURPLE)
+                                       old_value='$background-color: background',
+                                       new_value='$background-color: purple',
+                                       old_color=Colors.WHITE, new_color=Colors.PURPLE_CUSTOM)
 
         # This change should make icons on home page yellow
         SCSS_NESTED_ANDROID = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.android.scss'),
                                         old_value='Android here',
-                                        new_value='Android here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
+                                        new_value='Android here\n.cars-list__item{ color: yellow; }\n',
                                         old_color=None, new_color=Colors.YELLOW)
 
         SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.ios.scss'),
                                     old_value='iOS here',
-                                    new_value='iOS here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
+                                    new_value='iOS here\n.cars-list__item{ color: yellow; }\n',
                                     old_color=None, new_color=Colors.YELLOW)
 
     class JSTabNavigation(object):
