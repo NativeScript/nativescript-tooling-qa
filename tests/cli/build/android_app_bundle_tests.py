@@ -85,7 +85,7 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
 
         # Verify app can be deployed on emulator via nativescript
         # Verify app looks correct inside emulator
-        self.emu.wait_for_text(text='TAP')
+        self.emu.wait_for_text(text='TAP', timeout=240)
 
         # Verify that the correct .so file is included in the package
         File.unzip(path_to_apks, os.path.join(self.app_name, 'apks'))
