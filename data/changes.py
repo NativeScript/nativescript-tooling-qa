@@ -69,7 +69,7 @@ class Changes(object):
         CSS = ChangeSet(file_path=os.path.join('src', 'app.css'),
                         old_value='}',
                         new_value='}\nListView { background-color: pink;}\n',
-                        old_color=Colors.WHITE, new_color=Colors.PINK)                    
+                        old_color=Colors.WHITE, new_color=Colors.PINK)            
         HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                          old_value='"item.name"', new_value='"item.id"',
                          old_text=None, new_text=None)
