@@ -99,11 +99,11 @@ class Changes(object):
         # This change should add some red between list view items on home page
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('src', 'app.android.scss'),
                                       old_value='Android here',
-                                      new_value='Android here\n.m-r-20{background-color:red;}\n',
+                                      new_value='Android here\n.m-r-20{ background-color: red; }\n',
                                       old_color=Colors.WHITE, new_color=Colors.RED)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('src', 'app.ios.scss'),
                                   old_value='iOS here',
-                                  new_value='iOS here\n.m-r-20{background-color:red;}\n',
+                                  new_value='iOS here\n.m-r-20{ background-color: red; }\n',
                                   old_color=Colors.WHITE, new_color=Colors.RED)
 
         # This change should make background of items on home page purple
@@ -131,16 +131,19 @@ class Changes(object):
                         old_value='Home', new_value='Test',
                         old_text='Home', new_text='Test')
 
-        # This change should make title of home red
-        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-variables.scss'),
-                                   old_value='#D7D7D7', new_value='red',
-                                   old_color='#D7D7D7', new_color=Colors.RED)
+        # This change should make background of home red
+        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-common.scss'),
+                                   old_value='Font icon class',
+                                   new_value='Font icon class\n.page__content{ background-color: red; }\n',
+                                   old_color=None, new_color=Colors.RED)
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('app', 'app.android.scss'),
-                                      old_value='$blue-dark;', new_value='pink;',
-                                      old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
+                                      old_value='Android here',
+                                      new_value='Android here\n.navigation__item{ background-color: yellow; }\n',
+                                      old_color=None, new_color=Colors.YELLOW)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('app', 'app.ios.scss'),
-                                  old_value='$item-active-color;', new_value='pink;',
-                                  old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
+                                  old_value='iOS here',
+                                  new_value='iOS here\n.navigation__item{ background-color: yellow; }\n',
+                                  old_color=None, new_color=Colors.YELLOW)
 
     class TSTabNavigation(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'home', 'home-items-view-model.ts'),
