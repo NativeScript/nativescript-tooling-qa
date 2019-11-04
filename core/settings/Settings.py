@@ -193,10 +193,10 @@ Emulators.DEFAULT = resolve_default_emulator("EMULATOR_API_VERSION", Emulators.E
 
 
 class Simulators(object):
-    SIM_IOS10 = SimulatorInfo(name=os.environ.get('SIM_IOS10', 'iPhone7_10'), device_type='iPhone 7', sdk=10.0)
-    SIM_IOS11 = SimulatorInfo(name=os.environ.get('SIM_IOS11', 'iPhone7_11'), device_type='iPhone 7', sdk=11.2)
-    SIM_IOS12 = SimulatorInfo(name=os.environ.get('SIM_IOS12', 'iPhoneXR_12'), device_type='iPhone XR', sdk=12.0)
-    SIM_IOS13 = SimulatorInfo(name=os.environ.get('SIM_IOS13', 'iPhoneXR_13'), device_type='iPhone XR', sdk=13.1)
+    SIM_IOS10 = SimulatorInfo(name=os.environ.get('SIM_IOS10', 'iPhone7_10'), device_type='iPhone 7', sdk=10)
+    SIM_IOS11 = SimulatorInfo(name=os.environ.get('SIM_IOS11', 'iPhone7_11'), device_type='iPhone 7', sdk=11)
+    SIM_IOS12 = SimulatorInfo(name=os.environ.get('SIM_IOS12', 'iPhoneXR_12'), device_type='iPhone XR', sdk=12)
+    SIM_IOS13 = SimulatorInfo(name=os.environ.get('SIM_IOS13', 'iPhoneXR_13'), device_type='iPhone XR', sdk=13)
     DEFAULT = SIM_IOS12
 
 
