@@ -41,7 +41,7 @@ class Simctl(object):
         # Get max runtime version
         exact_sdk_version = None
         for runtime in runtimes['runtimes']:
-            if str(version) in runtime['version']:
+            if str(version) in runtime['version'] and runtime['name'].startswith('iOS') and runtime['isAvailable']:
                 exact_sdk_version = runtime['version']
         if exact_sdk_version is None:
             raise Exception('Can not find iOS SDK {0}'.format(version))
