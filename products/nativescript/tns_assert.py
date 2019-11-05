@@ -48,7 +48,7 @@ class TnsAssert(object):
 
         # Verify {N} core theme is installed
         if theme:
-            assert Folder.exists(os.path.join(node_path, 'nativescript-theme-core')), '{N} theme do not exists.'
+            assert Folder.exists(os.path.join(node_path, '@nativescript', 'theme')), '{N} theme do not exists.'
 
         # Verify webpack is installed
         before_watch_hooks = os.path.join(app_path, 'hooks', 'before-watch')
