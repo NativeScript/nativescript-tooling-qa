@@ -3,6 +3,7 @@ Test for specific needs of Android runtime.
 """
 # pylint: disable=invalid-name
 import os
+import json
 
 from core.base_test.tns_test import TnsTest
 from core.utils.assertions import Assert
@@ -19,6 +20,7 @@ from products.nativescript.tns import Tns
 PLATFORM_ANDROID_APK_DEBUG_PATH = os.path.join('platforms', 'android', 'app', 'build', 'outputs', 'apk', 'debug')
 APP_NAME = AppName.DEFAULT
 APK_DEBUG_PATH = os.path.join(TEST_RUN_HOME, APP_NAME, PLATFORM_ANDROID_APK_DEBUG_PATH, "app-debug.apk")
+ANALYTICS_FILE = os.path.join(TEST_RUN_HOME, APP_NAME, 'platforms', 'android', 'analytics', 'build-statistics.json')
 
 
 class AndroidRuntimePluginTests(TnsTest):
@@ -38,6 +40,14 @@ class AndroidRuntimePluginTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
         Folder.clean(os.path.join(TEST_RUN_HOME, APP_NAME))
+
+    @staticmethod
+    def assert_kotlin_is_working(emulator):
+        assert File.exists(APK_DEBUG_PATH)
+        assert File.is_file_in_zip(APK_DEBUG_PATH, os.path.join("kotlin")), "Kotlin is not working!"
+        Device.click(emulator, text="TAP", case_sensitive=True)
+        error_message = "Kotlin code is not executed correctly! Logs: "
+        assert "Kotlin is here!" in Adb.get_logcat(emulator.id), error_message + Adb.get_logcat(emulator.id)
 
     def test_308_native_package_in_plugin_include_gradle_with_compile(self):
         """
@@ -334,16 +344,7 @@ class AndroidRuntimePluginTests(TnsTest):
         Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
 
         Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
-
         Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
-
-    @staticmethod
-    def assert_kotlin_is_working(emulator):
-        assert File.exists(APK_DEBUG_PATH)
-        assert File.is_file_in_zip(APK_DEBUG_PATH, os.path.join("kotlin")), "Kotlin is not working!"
-        Device.click(emulator, text="TAP", case_sensitive=True)
-        error_message = "Kotlin code is not executed correctly! Logs: "
-        assert "Kotlin is here!" in Adb.get_logcat(emulator.id), error_message + Adb.get_logcat(emulator.id)
 
     def test_452_support_gradle_properties_for_enable_Kotlin_with_jar(self):
         """
@@ -371,22 +372,75 @@ class AndroidRuntimePluginTests(TnsTest):
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.emulator.id,
                    'Successfully synced application']
-
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
         assert test_result, messages + File.read(log.log_file)
 
         self.assert_kotlin_is_working(self.emulator)
+        with open(ANALYTICS_FILE, "r") as read_file:
+            data = json.load(read_file)
+            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to True! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is True, error_message
+            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to True! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is True, error_message
 
-    def test_453_support_gradle_properties_for_enable_Kotlin_with_kotlin_file(self):
+    def test_453_support_Kotlin_with_jar_without_use_kotlin(self):
         """
         Support gradle.properties file for enable Kotlin
         https://github.com/NativeScript/android-runtime/issues/1459
         https://github.com/NativeScript/android-runtime/issues/1463
         """
-        Tns.platform_remove(APP_NAME, platform=Platform.ANDROID)
+
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'analytics', 'gradle.properties')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'test-jar-1.0-SNAPSHOT.jar')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'libs')
+        Folder.create(target_app_gradle)
+        Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True)
+
+        with open(ANALYTICS_FILE, "r") as read_file:
+            data = json.load(read_file)
+            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to False! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is False, error_message
+            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to False! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is False, error_message
+
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+        # Not working https://github.com/NativeScript/android-runtime/issues/1522
+        # Tns.build_android(os.path.join(TEST_RUN_HOME, APP_NAME), verify=True).output
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1463-1459',
+                                 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Successfully synced application org.nativescript.TestApp on device ']
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        assert test_result, messages + File.read(log.log_file)
+        self.assert_kotlin_is_working(self.emulator)
+        with open(ANALYTICS_FILE, "r") as read_file:
+            data = json.load(read_file)
+            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to True! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is True, error_message
+            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to False! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is False, error_message
+
+    def test_454_support_gradle_properties_for_enable_Kotlin_with_kotlin_file(self):
+        """
+        Support gradle.properties file for enable Kotlin
+        https://github.com/NativeScript/android-runtime/issues/1459
+        https://github.com/NativeScript/android-runtime/issues/1463
+        """
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
         Adb.clear_logcat(self.emulator.id)
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                          'android-runtime-1463-1459', 'gradle.properties')
@@ -413,15 +467,41 @@ class AndroidRuntimePluginTests(TnsTest):
         messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
         assert test_result, messages + File.read(log.log_file)
         self.assert_kotlin_is_working(self.emulator)
+        with open(ANALYTICS_FILE, "r") as read_file:
+            data = json.load(read_file)
+            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to True! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is True, error_message
+            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to True! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is True, error_message
 
-    def test_454_support_Kotlin_with_jar_without_use_kotlin(self):
+    def test_455_analytics_not_generated_when_not_set_as_property_for_enable_Kotlin_with_jar(self):
         """
         Support gradle.properties file for enable Kotlin
         https://github.com/NativeScript/android-runtime/issues/1459
         https://github.com/NativeScript/android-runtime/issues/1463
         """
-        Tns.plugin_remove("sample-plugin-2", verify=False, path=APP_NAME)
+        # caused by https://github.com/NativeScript/nativescript-cli/issues/5083
+        kotlin_file_in_src = os.path.join(TEST_RUN_HOME, APP_NAME, 'platforms', 'android', 'app', 'src', 'main', 'java',
+                                          'com',
+                                          'Test.kt')
+        kotlin_file_in_build = os.path.join(TEST_RUN_HOME, APP_NAME, 'platforms', 'android', 'app', 'build', 'tmp',
+                                            'kotlin-classes', 'debug', 'com',
+                                            'Test.class')
+        if File.exists(kotlin_file_in_src):
+            File.delete(kotlin_file_in_src)
+        if File.exists(kotlin_file_in_build):
+            File.delete(kotlin_file_in_build)
+        else:
+            assert False, "Temp gradle folder is missing for generated kotlin file!"
+
+        # bug ends here
+        if File.exists(ANALYTICS_FILE):
+            File.delete(ANALYTICS_FILE)
         Adb.clear_logcat(self.emulator.id)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'no-analytics', 'gradle.properties')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
         source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                          'android-runtime-1463-1459', 'test-jar-1.0-SNAPSHOT.jar')
         target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'libs')
@@ -436,14 +516,44 @@ class AndroidRuntimePluginTests(TnsTest):
         strings = ['Project successfully built',
                    'Successfully installed on device with identifier', self.emulator.id,
                    'Successfully synced application']
-
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
         messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
         assert test_result, messages + File.read(log.log_file)
-        self.assert_kotlin_is_working(self.emulator)
+        error_message = "Analytics data should NOT be generated when gatherAnalyticsData is not set!"
+        assert not File.exists(ANALYTICS_FILE), error_message
 
-    def test_455_gradle_hooks(self):
+    def test_456_analytics_working_correct_when_property_is_set_without_Kotlin(self):
+        """
+        Support gradle.properties file for enable Kotlin
+        https://github.com/NativeScript/android-runtime/issues/1459
+        https://github.com/NativeScript/android-runtime/issues/1463
+        """
+        Adb.clear_logcat(self.emulator.id)
+        source_app_gradle = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
+                                         'android-runtime-1463-1459', 'analytics', 'gradle.properties')
+        target_app_gradle = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+        File.copy(source=source_app_gradle, target=target_app_gradle, backup_files=True)
+
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built',
+                   'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application']
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        assert test_result, messages + File.read(log.log_file)
+        error_message = "Analytics data should be generated when gatherAnalyticsData is set!"
+        assert File.exists(ANALYTICS_FILE), error_message
+        with open(ANALYTICS_FILE, "r") as read_file:
+            data = json.load(read_file)
+            error_message = "kotlinUsage->hasKotlinRuntimeClasses is not set to False! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasKotlinRuntimeClasses"] is False, error_message
+            error_message = "kotlinUsage->hasUseKotlinPropertyInApp is not set to False! Analytics is not correct!"
+            assert data["kotlinUsage"]["hasUseKotlinPropertyInApp"] is False, error_message
+
+    def test_457_gradle_hooks(self):
         """
         Test gradle hooks works correctly
         https://docs.nativescript.org/core-concepts/android-runtime/advanced-topics/gradle-hooks
