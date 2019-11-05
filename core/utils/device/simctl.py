@@ -26,6 +26,39 @@ class Simctl(object):
             Log.error('Failed to parse json ' + os.linesep + result.output)
             return json.loads('{}')
 
+    # noinspection PyBroadException
+    @staticmethod
+    def get_max_runtime_version(version):
+        # Parse runtimes
+        result = Simctl.run_simctl_command(command='list --json runtimes')
+        runtimes = None
+        try:
+            runtimes = json.loads(result.output)
+        except ValueError:
+            Log.error('Failed to parse json ' + os.linesep + result.output)
+            return json.loads('{}')
+
+        # Get max runtime version
+        exact_sdk_version = None
+        for runtime in runtimes['runtimes']:
+            if str(version) in runtime['version'] and runtime['name'].startswith('iOS') and runtime['isAvailable']:
+                exact_sdk_version = runtime['version']
+        if exact_sdk_version is None:
+            raise Exception('Can not find iOS SDK {0}'.format(version))
+
+        return exact_sdk_version
+
+    @staticmethod
+    def __get_devices_by_version(version):
+        exact_sdk_version = Simctl.get_max_runtime_version(version)
+        devices = Simctl.__get_simulators()['devices']
+        placeholder = 'iOS {0}'
+        device_key = placeholder.format(exact_sdk_version)
+        if device_key not in devices:
+            placeholder_dash = placeholder.format(exact_sdk_version).replace(' ', '-').replace('.', '-')
+            device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
+        return devices[device_key]
+
     @staticmethod
     def __get_availability(sim):
         available = False
@@ -46,14 +79,7 @@ class Simctl(object):
 
     @staticmethod
     def is_running(simulator_info):
-        devices = Simctl.__get_simulators()['devices']
-        placeholder = 'iOS {0}'
-        device_key = placeholder.format(simulator_info.sdk)
-        if device_key not in devices:
-            placeholder_dash = placeholder.format(simulator_info.sdk).replace(' ', '-').replace('.', '-')
-            device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
-        sims = devices[device_key]
-        for sim in sims:
+        for sim in Simctl.__get_devices_by_version(simulator_info.sdk):
             if sim['name'] == simulator_info.name and sim['state'] == 'Booted':
                 # simctl returns Booted too early, so we will wait some untill service is started
                 simulator_info.id = str(sim['udid'])
@@ -85,14 +111,7 @@ class Simctl(object):
 
     @staticmethod
     def is_available(simulator_info):
-        devices = Simctl.__get_simulators()['devices']
-        placeholder = 'iOS {0}'
-        device_key = placeholder.format(simulator_info.sdk)
-        if device_key not in devices:
-            placeholder_dash = placeholder.format(simulator_info.sdk).replace(' ', '-').replace('.', '-')
-            device_key = 'com.apple.CoreSimulator.SimRuntime.{0}'.format(placeholder_dash)
-        sims = devices[device_key]
-        for sim in sims:
+        for sim in Simctl.__get_devices_by_version(simulator_info.sdk):
             if sim['name'] == simulator_info.name and Simctl.__get_availability(sim):
                 simulator_info.id = str(sim['udid'])
                 return simulator_info
