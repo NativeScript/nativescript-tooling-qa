@@ -5,7 +5,6 @@ from core.utils.file_utils import File
 from data.const import Colors
 
 
-# noinspection PyShadowingBuiltins
 class ChangeSet(object):
     def __init__(self, file_path, old_value, new_value, old_text=None, new_text=None, old_color=None, new_color=None):
         self.file_path = file_path
