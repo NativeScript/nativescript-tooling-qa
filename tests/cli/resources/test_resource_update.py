@@ -17,7 +17,7 @@ class ResourcesUpdateTests(TnsTest):
     def test_300_tns_resources_update(self):
         # Create nativescript@3 app
         result = Tns.create(app_name=APP_NAME, template='tns-template-hello-world@3.0', verify=False, update=False)
-        TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False)
+        TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False, theme=False)
 
         # Update resources
         out = Tns.exec_command(command='resources update', path=APP_NAME).output

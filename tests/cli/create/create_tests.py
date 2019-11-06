@@ -9,6 +9,8 @@ from data.apps import Apps
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
+# noinspection PyMethodMayBeStatic
+from products.nativescript.tns_assert import TnsAssert
 
 
 # noinspection PyMethodMayBeStatic
@@ -117,7 +119,8 @@ class CreateTests(TnsTest):
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
-        Tns.create(app_name=Settings.AppName.DEFAULT, template=template_source, update=False)
+        result = Tns.create(app_name=Settings.AppName.DEFAULT, template=template_source, update=False, verify=False)
+        TnsAssert.created(app_name=Settings.AppName.DEFAULT, output=result.output, theme=False)
 
     def test_201_create_project_with_local_directory_template(self):
         """--template should install all packages from package.json"""

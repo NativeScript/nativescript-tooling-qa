@@ -165,7 +165,7 @@ class Tns(object):
         TestContext.TEST_APP_NAME = app_name
 
         # Verify app is created properly
-        if verify is not False:
+        if verify:
             # Usually we do not pass path on tns create, which actually equals to cwd.
             # In such cases pass correct path to TnsAssert.created()
             if path is None:
