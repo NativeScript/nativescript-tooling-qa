@@ -185,6 +185,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     else:
         raise ValueError('Invalid app_type value.')
 
+    not_existing_string_list = None
     if hmr and instrumented:
         not_existing_string_list = ['QA: Application started']
 
