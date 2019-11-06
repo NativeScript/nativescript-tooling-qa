@@ -5,7 +5,6 @@ from core.utils.file_utils import File
 from data.const import Colors
 
 
-# noinspection PyShadowingBuiltins
 class ChangeSet(object):
     def __init__(self, file_path, old_value, new_value, old_text=None, new_text=None, old_color=None, new_color=None):
         self.file_path = file_path
@@ -35,7 +34,8 @@ class Changes(object):
                        old_value='taps left', new_value='clicks left',
                        old_text='taps left', new_text='clicks left')
         CSS = ChangeSet(file_path=os.path.join('app', 'app.css'),
-                        old_value='font-size: 18', new_value='font-size: 50',
+                        old_value='font-size: 18',
+                        new_value='font-size: 18;\nbackground-color: red;',
                         old_color=None, new_color=None)
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
@@ -54,7 +54,8 @@ class Changes(object):
                        old_value='taps left', new_value='clicks left',
                        old_text='taps left', new_text='clicks left')
         CSS = ChangeSet(file_path=os.path.join('app', 'app.css'),
-                        old_value='font-size: 18', new_value='font-size: 50',
+                        old_value='font-size: 18',
+                        new_value='font-size: 18;\nbackground-color: red;',
                         old_color=None, new_color=None)
         XML = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
                         old_value='TAP', new_value='HIT',
@@ -65,11 +66,10 @@ class Changes(object):
                        old_value='Ter Stegen', new_value='Unknown',
                        old_text='Ter Stegen', new_text='Unknown')
         CSS = ChangeSet(file_path=os.path.join('src', 'app.css'),
-                        old_value='light', new_value='dark',
-                        old_color=Colors.WHITE, new_color=Colors.DARK)
-        HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
-                         old_value='"item.name"', new_value='"item.id"',
-                         old_text=None, new_text=None)
+                        old_value='}', new_value='}\nListView { background-color: pink;}\n',
+                        old_color=Colors.WHITE, new_color=Colors.PINK)
+        HTML = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'), old_value='"item.name"',
+                         new_value='"item.id"', old_text=None, new_text=None)
         XML_ACTION_BAR = ChangeSet(file_path=os.path.join('src', 'app', 'item', 'items.component.html'),
                                    old_value='My App', new_value='TestApp',
                                    old_text='My App', new_text='TestApp')
@@ -89,33 +89,35 @@ class Changes(object):
 
         # This change should make title of cars pink
         SCSS_ROOT_COMMON = ChangeSet(file_path=os.path.join('src', '_app-common.scss'),
-                                     old_value='$accent-dark;', new_value='pink;',
+                                     old_value='font-weight: 900;',
+                                     new_value='font-weight: 900;\nbackground-color: pink;\n',
                                      old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
 
         # This change should add some red between list view items on home page
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('src', 'app.android.scss'),
                                       old_value='Android here',
-                                      new_value='Android here\n.page { background-color: red;}\n',
-                                      old_color=Colors.WHITE, new_color=Colors.RED_DARK)
+                                      new_value='Android here\n.m-r-20{ background-color: red; }\n',
+                                      old_color=Colors.WHITE, new_color=Colors.RED)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('src', 'app.ios.scss'),
                                   old_value='iOS here',
-                                  new_value='iOS here\n.page { padding: 30; background-color: red; }\n',
+                                  new_value='iOS here\n.m-r-20{ background-color: red; }\n',
                                   old_color=Colors.WHITE, new_color=Colors.RED)
 
         # This change should make background of items on home page purple
         SCSS_NESTED_COMMON = ChangeSet(file_path=os.path.join('src', 'app', 'cars', '_car-list.component.scss'),
-                                       old_value='$background-light;', new_value='purple;',
-                                       old_color=Colors.WHITE, new_color=Colors.PURPLE)
+                                       old_value='$background-color: background',
+                                       new_value='$background-color: purple',
+                                       old_color=Colors.WHITE, new_color=Colors.PURPLE_CUSTOM)
 
         # This change should make icons on home page yellow
         SCSS_NESTED_ANDROID = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.android.scss'),
                                         old_value='Android here',
-                                        new_value='Android here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
+                                        new_value='Android here\n.cars-list__item{ color: yellow; }\n',
                                         old_color=None, new_color=Colors.YELLOW)
 
         SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.ios.scss'),
                                     old_value='iOS here',
-                                    new_value='iOS here\n.list-group{.list-group-item{.fa{color:yellow;}}}\n',
+                                    new_value='iOS here\n.cars-list__item{ color: yellow; }\n',
                                     old_color=None, new_color=Colors.YELLOW)
 
     class JSTabNavigation(object):
@@ -126,16 +128,19 @@ class Changes(object):
                         old_value='Home', new_value='Test',
                         old_text='Home', new_text='Test')
 
-        # This change should make title of home red
-        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-variables.scss'),
-                                   old_value='#D7D7D7', new_value='red',
-                                   old_color='#D7D7D7', new_color=Colors.RED)
+        # This change should make background of home red
+        SCSS_VARIABLES = ChangeSet(file_path=os.path.join('app', '_app-common.scss'),
+                                   old_value='Font icon class',
+                                   new_value='Font icon class\n.page__content{ background-color: red; }\n',
+                                   old_color=None, new_color=Colors.RED)
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('app', 'app.android.scss'),
-                                      old_value='$blue-dark;', new_value='pink;',
-                                      old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
+                                      old_value='Android here',
+                                      new_value='Android here\n.navigation__item{ background-color: yellow; }\n',
+                                      old_color=None, new_color=Colors.YELLOW)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('app', 'app.ios.scss'),
-                                  old_value='$item-active-color;', new_value='pink;',
-                                  old_color=Colors.ACCENT_DARK, new_color=Colors.PINK)
+                                  old_value='iOS here',
+                                  new_value='iOS here\n.navigation__item{ background-color: yellow; }\n',
+                                  old_color=None, new_color=Colors.YELLOW)
 
     class TSTabNavigation(object):
         TS = ChangeSet(file_path=os.path.join('src', 'app', 'home', 'home-items-view-model.ts'),
@@ -194,15 +199,14 @@ class Changes(object):
                                              old_text='/day', new_text='/24h')
 
     class DateTimePicker(object):
-        COMMON_TS = ChangeSet(file_path=os.path.join(
-            Settings.TEST_SUT_HOME, 'nativescript-datetimepicker', 'src', 'ui', 'date-picker-field.common.ts'),
-                              old_value='name: "date",', new_value='name: "date", defaultValue: new Date(),')
-        ANDROID_TS = ChangeSet(file_path=os.path.join(
-            Settings.TEST_SUT_HOME, 'nativescript-datetimepicker', 'src', 'datetimepicker.android.ts'),
+        DATETIME_PICKER_PATH = os.path.join(Settings.TEST_SUT_HOME, 'nativescript-datetimepicker', 'src')
+        COMMON_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'ui', 'date-picker-field.common.ts'),
+                              old_value='name: "date",',
+                              new_value='name: "date", defaultValue: new Date(),')
+        ANDROID_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'datetimepicker.android.ts'),
                                old_value='datePicker.init(date.getFullYear(), date.getMonth(), date.getDate(), null);',
                                new_value='datePicker.init(2010, date.getMonth(), date.getDate(), null);')
-        IOS_TS = ChangeSet(file_path=os.path.join(
-            Settings.TEST_SUT_HOME, 'nativescript-datetimepicker', 'src', 'datetimepicker.ios.ts'),
+        IOS_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'datetimepicker.ios.ts'),
                            old_value='pickerView.date = date;',
                            new_value='date.setFullYear(2010); pickerView.date = date;')
 
