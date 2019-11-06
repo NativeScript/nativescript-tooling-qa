@@ -237,16 +237,17 @@ class TnsRunJSTests(TnsRunTest):
         assert blue_count > 100, 'Failed to find blue color on {0}'.format(self.emu.name)
 
         Tns.kill()
+
         # Make changes in js, css and xml files
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.JS)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.XML)
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.CSS)
 
         # Run with --release again and verify changes are deployed on device
-        result = Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
+        Tns.run_android(app_name=self.app_name, release=True, verify=True, emulator=True)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.emu.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        self.emu.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+        self.emu.wait_for_color(color=Colors.RED, pixel_count=blue_count, delta=25)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_110_tns_run_ios_release(self):
@@ -269,10 +270,10 @@ class TnsRunJSTests(TnsRunTest):
         Sync.replace(app_name=self.app_name, change_set=Changes.JSHelloWord.CSS)
 
         # Run with --release again and verify changes are deployed on device
-        result = Tns.run_ios(app_name=self.app_name, release=True, verify=True, emulator=True)
+        Tns.run_ios(app_name=self.app_name, release=True, verify=True, emulator=True)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.new_text)
         self.sim.wait_for_text(text=Changes.JSHelloWord.XML.new_text)
-        self.sim.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+        self.sim.wait_for_color(color=Colors.RED, pixel_count=blue_count, delta=25)
 
     @unittest.skipIf(Settings.HOST_OS == OSType.WINDOWS, 'skip on windows untill we fix wait_rof_log method')
     def test_115_tns_run_android_add_remove_files_and_folders(self):
@@ -425,8 +426,8 @@ class TnsRunJSTests(TnsRunTest):
         3. Incremental prepare is triggered if js, xml and css files are changed.
         """
         # Run app with --justlaunch and verify on device
-        result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
-        # On some machines it takes time for thr process to die
+        run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
+        # On some machines it takes time for the process to die
         time.sleep(5)
         assert not Process.is_running_by_commandline(Settings.Executables.TNS)
 
@@ -528,7 +529,7 @@ class TnsRunJSTests(TnsRunTest):
         If  set --clean rebuilds the native project
         """
         # Run the project once so it is build for the first time
-        result = run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
+        run_hello_world_js_ts(self.app_name, Platform.IOS, self.sim, just_launch=True)
 
         # Verify run --clean without changes rebuilds native project
         result = Tns.run_ios(app_name=self.app_name, verify=True, device=self.sim.id, clean=True, just_launch=True)
@@ -763,7 +764,7 @@ class TnsRunJSTests(TnsRunTest):
         https://github.com/NativeScript/nativescript-cli/issues/2170
         """
         # Deploy the app to make sure we have something at /data/data/org.nativescript.TestApp
-        result = run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
+        run_hello_world_js_ts(self.app_name, Platform.ANDROID, self.emu, just_launch=True)
 
         # Use all the disk space on emulator
         dest_file = '/data/data/' + TnsPaths.get_bundle_id(self.app_name)
