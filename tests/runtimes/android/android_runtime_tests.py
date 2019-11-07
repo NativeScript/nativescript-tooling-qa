@@ -654,10 +654,10 @@ JS:.+at ClickListenerImpl\.onClick\(file:\/\/\/node_modules\/@nativescript\/core
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        assert_result = Wait.until(lambda: "GMT-0700 (PDT)" in File.read(log.log_file), timeout=240, period=5)
+        assert_result = Wait.until(lambda: "GMT-0800 (PDT)" in File.read(log.log_file), timeout=240, period=5)
         assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
         # Generate regex for asserting date and time
-        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0700 \(PDT\)"
+        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0800 \(PDT\)"
         # Assert date time is correct
         assert_result = Wait.until(lambda: re.search(date_to_find_los_angeles, File.read(log.log_file)), timeout=20,
                                    period=5)
