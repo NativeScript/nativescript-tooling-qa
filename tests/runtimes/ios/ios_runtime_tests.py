@@ -10,23 +10,24 @@ from nose.tools import timed
 
 from core.base_test.tns_test import TnsTest
 from core.log.log import Log
-from core.utils.device.device import Device
-from core.utils.device.device_manager import DeviceManager
-from core.utils.wait import Wait
-from core.utils.npm import Npm
-from core.utils.file_utils import File, Folder
 from core.settings import Settings
 from core.settings.Settings import Simulators, IOS, TEST_RUN_HOME, AppName
+from core.utils.device.device import Device
+from core.utils.device.device_manager import DeviceManager
 from core.utils.device.simctl import Simctl
+from core.utils.file_utils import File, Folder
+from core.utils.npm import Npm
+from core.utils.wait import Wait
+from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
-from data.templates import Template
 
 APP_NAME = AppName.DEFAULT
 APP_PATH = os.path.join(Settings.TEST_RUN_HOME, APP_NAME)
 TAP_THE_BUTTON = 'Tap the button'
 
 
+# noinspection PyMethodMayBeStatic
 class IOSRuntimeTests(TnsTest):
     plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'plugins', 'sample-plugin', 'src')
 
@@ -147,7 +148,7 @@ class IOSRuntimeTests(TnsTest):
 
         log = Tns.run_ios(app_name=APP_NAME, emulator=True)
 
-        strings = ['CONSOLE LOG file:///app/app.js:47:0: The folder “not-existing-path” doesn’t exist.',
+        strings = ['The folder “not-existing-path” doesn’t exist.',
                    'JS:\ncontentsOfDirectoryAtPathError(file:///app/main-view-model.js:6:0)']
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
