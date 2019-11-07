@@ -3,16 +3,17 @@ import os
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.file_utils import Folder
 from core.utils.docker import Docker
+from core.utils.file_utils import Folder
 from data.sync.hello_world_js import sync_hello_world_js, run_hello_world_js_ts
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_paths import TnsPaths
 
 Settings.Emulators.DEFAULT = Settings.Emulators.EMU_API_28
 
 
-class TnsRunJSTests(TnsRunAndroidTest):
+class TnsRunJSTestsApi28(TnsRunAndroidTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = TnsPaths.get_app_path(app_name)
     target_project_dir = os.path.join(Settings.TEST_RUN_HOME, 'data', 'temp', app_name)
@@ -23,7 +24,8 @@ class TnsRunJSTests(TnsRunAndroidTest):
         Docker.start()
 
         # Create app
-        Tns.create(app_name=cls.app_name, template='tns-template-hello-world@6.0')
+        result = Tns.create(app_name=cls.app_name, template='tns-template-hello-world@6.0', verify=False)
+        TnsAssert.created(app_name=cls.app_name, output=result.output, path=Settings.TEST_RUN_HOME, theme=False)
 
         # Copy TestApp to data folder.
         Folder.copy(source=cls.source_project_dir, target=cls.target_project_dir)

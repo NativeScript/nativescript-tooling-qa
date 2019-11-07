@@ -90,7 +90,7 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
-    device.wait_for_main_color(color=Colors.PINK)
+    device.wait_for_main_color(color=Changes.NGHelloWorld.CSS.new_color)
 
     # Revert changes
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
@@ -175,7 +175,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
                                                     hmr=hmr, instrumented=instrumented)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
-    device.wait_for_main_color(color=Colors.DARK)
+    device.wait_for_main_color(color=Changes.NGHelloWorld.CSS.new_color)
     if platform == Platform.IOS:
         for number in ["10", "1"]:
             device.wait_for_text(text=number)

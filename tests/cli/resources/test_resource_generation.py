@@ -53,7 +53,7 @@ class ResourcesGenerateTests(TnsTest):
     def test_301_tns_resources_generate_icons_old_template_structure(self):
         # Create nativescript@4 app
         result = Tns.create(app_name=APP_NAME, template='tns-template-hello-world@4.0', verify=False)
-        TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False)
+        TnsAssert.created(app_name=APP_NAME, output=result.output, webpack=False, theme=False)
 
         # Generate icons with nativescript
         self.test_001_tns_resources_generate_icons()

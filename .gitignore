@@ -8,6 +8,7 @@
 package-lock.json
 nosetests.*
 node_modules
+Test App
 TestApp*
 out/*
 /data/temp
