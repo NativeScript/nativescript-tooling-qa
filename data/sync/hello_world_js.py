@@ -198,7 +198,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
                              not_existing_string_list=not_existing_string_list)
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
-    device.wait_for_color(color=Colors.RED, pixel_count=blue_count, delta=25)
+    device.wait_for_color(color=css_change.new_color, pixel_count=blue_count, delta=25)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
