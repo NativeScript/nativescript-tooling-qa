@@ -627,10 +627,10 @@ JS:.+at ClickListenerImpl\.onClick\(file:\/\/\/node_modules\/@nativescript\/core
                                      period=5)
             assert test_result, "Select time zone Button is missing on the device"
             Device.click(self.emulator, text="Select time zone")
-            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Pacific Daylight Time", True),
+            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Los Angeles", True),
                                      timeout=30, period=5)
-            assert test_result, "Pacific Daylight Time Button is missing on the device"
-            Device.click(self.emulator, text="Pacific Daylight Time")
+            assert test_result, "Los Angeles Button is missing on the device."
+            Device.click(self.emulator, text="Los Angeles")
 
         else:
             output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id,
