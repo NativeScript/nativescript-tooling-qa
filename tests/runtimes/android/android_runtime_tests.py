@@ -627,10 +627,10 @@ JS:.+at ClickListenerImpl\.onClick\(file:\/\/\/node_modules\/@nativescript\/core
                                      period=5)
             assert test_result, "Select time zone Button is missing on the device"
             Device.click(self.emulator, text="Select time zone")
-            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Pacific Daylight Time", True),
+            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Los Angeles", True),
                                      timeout=30, period=5)
-            assert test_result, "Pacific Daylight Time Button is missing on the device"
-            Device.click(self.emulator, text="Pacific Daylight Time")
+            assert test_result, "Los Angeles Button is missing on the device."
+            Device.click(self.emulator, text="Los Angeles")
 
         else:
             output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id,
@@ -654,10 +654,10 @@ JS:.+at ClickListenerImpl\.onClick\(file:\/\/\/node_modules\/@nativescript\/core
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        assert_result = Wait.until(lambda: "GMT-0700 (PDT)" in File.read(log.log_file), timeout=240, period=5)
+        assert_result = Wait.until(lambda: "GMT-0800 (PST)" in File.read(log.log_file), timeout=240, period=5)
         assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
         # Generate regex for asserting date and time
-        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0700 \(PDT\)"
+        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0800 \(PST\)"
         # Assert date time is correct
         assert_result = Wait.until(lambda: re.search(date_to_find_los_angeles, File.read(log.log_file)), timeout=20,
                                    period=5)
