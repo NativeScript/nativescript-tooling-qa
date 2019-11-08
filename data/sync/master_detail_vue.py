@@ -57,7 +57,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                          not_existing_string_list=not_existing_string_list)
-    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.RED_DARK) > 200)
+    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.LIGHT_BLUE) > 200)
     assert style_applied, 'Failed to sync changes in style.'
 
     # Revert styling in .vue file
@@ -66,7 +66,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
                                    bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                          not_existing_string_list=not_existing_string_list)
-    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.WHITE) > 200)
+    style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.LIGHT_BLUE) < 200)
     assert style_applied, 'Failed to sync changes in style.'
 
     device.wait_for_text(text="Ford KA")

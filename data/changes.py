@@ -191,8 +191,8 @@ class Changes(object):
                                  old_value='Car List', new_value='Master Detail',
                                  old_text='Car List', new_text='Master Detail')
         VUE_STYLE = ChangeSet(file_path=os.path.join('app', 'components', 'CarList.vue'),
-                              old_value='background-color: $background-light;',
-                              new_value='background-color: rgb(229, 4, 5);',
+                              old_value='background-color: background-alt-10)',
+                              new_value='background-color: accent)',
                               old_color=Colors.WHITE, new_color=Colors.RED_DARK)
         VUE_DETAIL_PAGE_TEMPLATE = ChangeSet(file_path=os.path.join('app', 'components', 'CarDetails.vue'),
                                              old_value='<Span text="/day" />', new_value='<Span text="/24h" />',
