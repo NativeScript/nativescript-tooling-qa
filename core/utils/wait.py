@@ -3,7 +3,7 @@ import time
 
 class Wait(object):
     @staticmethod
-    def until(condition, timeout=60, period=1, *args, **kwargs):
+    def until(condition, timeout=100, period=1, *args, **kwargs):
         """
         Wait until condition is satisfied.
         :rtype: bool
