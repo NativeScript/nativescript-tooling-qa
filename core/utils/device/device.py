@@ -21,18 +21,22 @@ if Settings.HOST_OS is OSType.OSX:
 
 class Device(object):
     # noinspection PyShadowingBuiltins
-    def __init__(self, id, name, type, version):
+    def __init__(self, id, name, type, model, version):
         self.id = id
         self.type = type
         self.version = version
+        self.model = model
 
         if type is DeviceType.IOS:
             type = run(cmd="ideviceinfo | grep ProductType").output
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
-        else:
+            self.model = type
+        if type is DeviceType.ANDROID:
             self.name = name
+            model = run(cmd="adb shell getprop ro.product.model").output
+            self.model= model
 
         if type is DeviceType.SIM:
             self.device_log_file = Simctl.get_log_file(self.id)

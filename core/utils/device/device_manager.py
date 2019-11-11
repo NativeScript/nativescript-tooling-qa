@@ -83,7 +83,8 @@ class DeviceManager(object):
             booted = Adb.wait_until_boot(device_id=emulator.emu_id)
             if booted:
                 Log.info('{0} is up and running!'.format(emulator.avd))
-                device = Device(id=emulator.emu_id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
+                device = Device(id=emulator.emu_id, model=emulator.model, name=emulator.avd, type=DeviceType.EMU,
+                                version=emulator.os_version)
                 TestContext.STARTED_DEVICES.append(device)
                 return device
             else:
@@ -169,7 +170,7 @@ class DeviceManager(object):
 
             # Return result
             device = Device(id=simulator_info.id, name=simulator_info.name, type=DeviceType.SIM,
-                            version=simulator_info.sdk)
+                            version=simulator_info.sdk, model=simulator_info.id)
             TestContext.STARTED_DEVICES.append(device)
             return device
 
