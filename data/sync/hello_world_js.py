@@ -13,8 +13,8 @@ from data.const import Colors
 from products.nativescript.preview_helpers import Preview
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
-from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_paths import TnsPaths
 
 
@@ -185,6 +185,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     else:
         raise ValueError('Invalid app_type value.')
 
+    not_existing_string_list = None
     if hmr and instrumented:
         not_existing_string_list = ['QA: Application started']
 
@@ -197,7 +198,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
                              not_existing_string_list=not_existing_string_list)
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
-    device.wait_for_color(color=Colors.LIGHT_BLUE, pixel_count=blue_count * 2, delta=25)
+    device.wait_for_color(color=css_change.new_color, pixel_count=blue_count, delta=25)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)

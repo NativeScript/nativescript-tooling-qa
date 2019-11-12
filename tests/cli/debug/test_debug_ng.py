@@ -1,5 +1,5 @@
-import unittest
 import time
+import unittest
 
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
@@ -82,7 +82,9 @@ class DebugNGTests(TnsRunTest):
         self.dev_tools.doubleclick_line(text='ListView')
         if platform == Platform.ANDROID:
             self.dev_tools.doubleclick_line(text='StackLayout')
-        self.dev_tools.wait_element_by_text(text='Label', timeout=10)
+            self.dev_tools.wait_element_by_text(text='Label', timeout=10)
+        if platform == Platform.IOS:
+            self.dev_tools.wait_element_by_text(text='StackLayout', timeout=10)
 
     def __debug_sources(self, platform, device):
         # Start debug and wait until app is deployed

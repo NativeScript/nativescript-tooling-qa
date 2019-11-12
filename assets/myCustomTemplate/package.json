@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "dependencies": {
     "lodash": "3.10.1",
-    "nativescript-theme-core": "~1.0.2"
+    "@nativescript/theme": "~2.2.0"
   },
   "devDependencies": {
     "minimist": "1.2.0",
-    "nativescript-dev-android-snapshot": "^0.*.*",
     "nativescript-dev-webpack": "^0.20.0"
   },
   "description": "dummy",

@@ -24,7 +24,8 @@ class NGGenerateNGTests(TnsTest):
 
         # Create app
         NG.new(collection=NS_SCHEMATICS, project=cls.app_name, shared=False)
-        TnsAssert.created(app_name=cls.app_name, app_data=None)
+        # TODO: Rollback theme=False when schematics use @nativescript/theme
+        TnsAssert.created(app_name=cls.app_name, app_data=None, theme=False)
 
     def setUp(self):
         TnsTest.setUpClass()

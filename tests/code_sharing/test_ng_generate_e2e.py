@@ -55,7 +55,8 @@ class NGGenE2ETestsNS(TnsRunTest):
         app_path = TnsPaths.get_app_path(app_name=app_name)
         Folder.clean(app_path)
         NG.new(collection=NS_SCHEMATICS, project=app_name, shared=shared)
-        TnsAssert.created(app_name=app_name, app_data=None)
+        # TODO: Rollback theme=False when schematics use @nativescript/theme
+        TnsAssert.created(app_name=app_name, app_data=None, theme=False)
 
         # Run app initially
         text = 'TAP'

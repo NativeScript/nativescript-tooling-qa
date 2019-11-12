@@ -9,6 +9,7 @@ from data.apps import Apps
 from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
+from products.nativescript.tns_assert import TnsAssert
 
 
 # noinspection PyMethodMayBeStatic
@@ -29,9 +30,7 @@ class CreateTests(TnsTest):
 
     def test_001_create_app_like_real_user(self):
         """Create app with no any params"""
-        # webpack - remove template after merge
-        Tns.create(app_name=Settings.AppName.DEFAULT, app_data=Apps.HELLO_WORLD_JS,
-                   template=Template.HELLO_WORLD_JS.local_package, update=False)
+        Tns.create(app_name=Settings.AppName.DEFAULT, app_data=Apps.HELLO_WORLD_JS, update=False)
 
     def test_002_create_app_template_js(self):
         """Create app with --template js project"""
@@ -117,7 +116,8 @@ class CreateTests(TnsTest):
     ])
     def test_200_create_project_with_template(self, template_source):
         """Create app should be possible with --template and npm packages, git repos and aliases"""
-        Tns.create(app_name=Settings.AppName.DEFAULT, template=template_source, update=False)
+        result = Tns.create(app_name=Settings.AppName.DEFAULT, template=template_source, update=False, verify=False)
+        TnsAssert.created(app_name=Settings.AppName.DEFAULT, output=result.output, theme=False)
 
     def test_201_create_project_with_local_directory_template(self):
         """--template should install all packages from package.json"""

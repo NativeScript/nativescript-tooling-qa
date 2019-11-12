@@ -25,8 +25,7 @@ class SampleAppsTests(TnsTest):
         ('nativescript-sdk-examples-ng', 'NativeScript', 'NativeScript Code Samples'),
         ('nativescript-sdk-examples-js', 'NativeScript', 'Cookbook'),
         ('sample-Groceries', 'NativeScript', 'Login'),
-        # ('nativescript-marketplace-demo', 'NativeScript', 'GET STARTED'),
-        # Ignored because of https://github.com/NativeScript/nativescript-marketplace-demo/issues/301
+        ('nativescript-marketplace-demo', 'NativeScript', 'GET STARTED'),
     ]
 
     @classmethod
