@@ -82,12 +82,12 @@ def sync_master_detail_ng(app_name, platform, device, bundle=True, hmr=True, ugl
 
     # Revert TS file and verify changes are applied
     Sync.revert(app_name=app_name, change_set=Changes.MasterDetailNG.TS)
-    device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text)
+    device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text, timeout=120)
     device.wait_for_text(text=Changes.MasterDetailNG.HTML.new_text)
 
     # Revert HTML file and verify changes are applied
     Sync.revert(app_name=app_name, change_set=Changes.MasterDetailNG.HTML)
-    device.wait_for_text(text=Changes.MasterDetailNG.HTML.old_text)
+    device.wait_for_text(text=Changes.MasterDetailNG.HTML.old_text, timeout=120)
     device.wait_for_text(text=Changes.MasterDetailNG.TS.old_text)
 
     # Revert common SCSS on root level
