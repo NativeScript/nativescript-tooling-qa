@@ -191,7 +191,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
 
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=css_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, device=device,
                                                     hmr=hmr, file_name='app.css', instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
@@ -202,7 +202,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, hmr=hmr,
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, hmr=hmr, device=device,
                                                     file_name=js_file, instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
@@ -213,7 +213,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
 
     # Edit XML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=xml_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
+    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, device=device,
                                                     hmr=hmr, file_name='main-page.xml', instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,

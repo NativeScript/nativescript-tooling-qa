@@ -31,7 +31,7 @@ class TnsPreviewJSTests(TnsRunTest):
         cls.emu_API24 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_24)
 
         # Download Preview and Playground packages
-        # Preview.get_app_packages()
+        Preview.get_app_packages()
 
         # Install Preview and Playground
         Preview.install_preview_app(cls.emu, Platform.ANDROID)

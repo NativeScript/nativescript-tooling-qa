@@ -26,17 +26,21 @@ class Device(object):
         self.type = type
         self.version = version
         self.model = model
+        self.name = name
 
         if type is DeviceType.IOS:
             type = run(cmd="ideviceinfo | grep ProductType").output
             type = type.replace(',', '')
             type = type.replace('ProductType:', '').strip(' ')
             self.name = type
-            self.model = type
-        if type is DeviceType.ANDROID:
-            self.name = name
-            model = run(cmd="adb shell getprop ro.product.model").output
+        if type is DeviceType.SIM:
+            self.model = name
+        if type is DeviceType.EMU:
+            cmd = 'shell getprop ro.product.model'
+            model = Adb.run_adb_command(command=cmd, wait=True).output
             self.model= model
+        else:
+            self.name = name
 
         if type is DeviceType.SIM:
             self.device_log_file = Simctl.get_log_file(self.id)
