@@ -139,7 +139,6 @@ class NGNewTests(TnsRunTest):
             assert 'app.android.scss' in result.output
             assert 'app.ios.scss' in result.output
             assert '_app-common.scss' in result.output
-            assert '_app-variables.scss' in result.output
 
         # Check webpack
         if webpack:
