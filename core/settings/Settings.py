@@ -105,10 +105,10 @@ class Packages(object):
     PREVIEW_APP_ID = "org.nativescript.preview"
     if os.name == 'nt':
         PREVIEW_PATH = os.environ.get('preview_folder_path',
-                                      os.path.join("\\telerik.com\distributions\DailyBuilds\NativeScript",
+                                      os.path.join("\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript",
                                                    "Playground","ns-play-dev", __default_preview_folder))
         PLAYGROUND_PATH = os.environ.get('playground_folder_path',
-                                          os.path.join("\\telerik.com\distributions\DailyBuilds\NativeScript",
+                                          os.path.join("\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript",
                                                        "Playground", "ns-play", __default_preview_folder))
     else:
         PREVIEW_PATH = os.environ.get('preview_folder_path', os.path.join("/tns-dist", "Playground",
