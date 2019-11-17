@@ -105,20 +105,20 @@ class Changes(object):
 
         # This change should make background of items on home page purple
         SCSS_NESTED_COMMON = ChangeSet(file_path=os.path.join('src', 'app', 'cars', '_car-list.component.scss'),
-                                       old_value='$background-color: background',
-                                       new_value='$background-color: purple',
-                                       old_color=Colors.WHITE, new_color=Colors.PURPLE_CUSTOM)
+                                       old_value='background-alt-10);',
+                                       new_value='background-alt-10);\nbackground-color: yellow;',
+                                       old_color=Colors.WHITE, new_color=Colors.YELLOW)
 
         # This change should make icons on home page yellow
         SCSS_NESTED_ANDROID = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.android.scss'),
                                         old_value='Android here',
-                                        new_value='Android here\n.cars-list__item{ color: yellow; }\n',
-                                        old_color=None, new_color=Colors.YELLOW)
+                                        new_value='Android here\n.cars-list__item-name{background-color: orange;}\n',
+                                        old_color=None, new_color=Colors.ORANGE)
 
         SCSS_NESTED_IOS = ChangeSet(file_path=os.path.join('src', 'app', 'cars', 'car-list.component.ios.scss'),
                                     old_value='iOS here',
-                                    new_value='iOS here\n.cars-list__item{ color: yellow; }\n',
-                                    old_color=None, new_color=Colors.YELLOW)
+                                    new_value='iOS here\n.cars-list__item-name{background-color: orange;}\n',
+                                    old_color=None, new_color=Colors.ORANGE)
 
     class JSTabNavigation(object):
         JS = ChangeSet(file_path=os.path.join('app', 'home', 'home-items-view-model.js'),
