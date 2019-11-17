@@ -8,7 +8,9 @@ from core.enums.app_type import AppType
 from core.enums.device_type import DeviceType
 from core.enums.platform_type import Platform
 from core.enums.os_type import OSType
+from core.log.log import Log
 from core.settings import Settings
+from core.utils.wait import Wait
 from data.changes import Changes, Sync
 from data.const import Colors
 from products.nativescript.preview_helpers import Preview
@@ -90,7 +92,9 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
-    device.wait_for_main_color(color=Changes.NGHelloWorld.CSS.new_color)
+    assert Wait.until(lambda: device.get_pixels_by_color(color=Changes.NGHelloWorld.CSS.new_color) > 100), \
+        'CSS on root level not applied!'
+    Log.info('CSS on root level applied successfully!')
 
     # Revert changes
     Sync.revert(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
@@ -116,7 +120,9 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
-    device.wait_for_main_color(color=Colors.WHITE)
+    assert Wait.until(lambda: device.get_pixels_by_color(color=Changes.NGHelloWorld.CSS.new_color) < 100), \
+        'CSS on root level not applied!'
+    Log.info('CSS on root level applied successfully!')
 
     # Assert final and initial states are same
     initial_state = os.path.join(Settings.TEST_OUT_IMAGES, device.name, 'initial_state.png')
