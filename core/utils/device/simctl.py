@@ -6,9 +6,9 @@ from core.log.log import Log
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
+from core.utils.version import Version
 
 
-# noinspection PyShadowingBuiltins
 class Simctl(object):
 
     @staticmethod
@@ -31,7 +31,6 @@ class Simctl(object):
     def get_max_runtime_version(version):
         # Parse runtimes
         result = Simctl.run_simctl_command(command='list --json runtimes')
-        runtimes = None
         try:
             runtimes = json.loads(result.output)
         except ValueError:
@@ -42,7 +41,7 @@ class Simctl(object):
         exact_sdk_version = None
         for runtime in runtimes['runtimes']:
             if str(version) in runtime['version'] and runtime['name'].startswith('iOS') and runtime['isAvailable']:
-                exact_sdk_version = runtime['version']
+                exact_sdk_version = Version.get(runtime['version'])
         if exact_sdk_version is None:
             raise Exception('Can not find iOS SDK {0}'.format(version))
 
