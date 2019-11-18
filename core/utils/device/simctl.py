@@ -6,9 +6,6 @@ from core.log.log import Log
 from core.utils.file_utils import File
 from core.utils.process import Process
 from core.utils.run import run
-
-
-# noinspection PyShadowingBuiltins
 from core.utils.version import Version
 
 
