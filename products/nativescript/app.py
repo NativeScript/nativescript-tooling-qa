@@ -2,10 +2,11 @@ import logging
 import os
 
 from core.settings import Settings
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.json_utils import JsonUtils
 from core.utils.npm import Npm
 from core.utils.run import run
+from core.enums.os_type import OSType
 
 
 class App(object):
@@ -84,3 +85,8 @@ class App(object):
         if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
             Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
             Npm.install(package='nativescript-vue@next', option='--save --save-exact', folder=app_path)
+        # on win when `npm i` is executed with path to .tgz it saves in package.json unix style path
+        # which cannot be resolved on win
+        if Settings.HOST_OS == OSType.WINDOWS:
+            packageJson =  os.path.join(Settings.TEST_RUN_HOME, app_name, 'package.json')
+            File.replace(packageJson, 'file://', 'file:\\\\')
