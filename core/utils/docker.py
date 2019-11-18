@@ -23,7 +23,7 @@ class Docker(object):
                     run(cmd=cmd, wait=False)
                     Log.info('Starting docker!')
         elif OSUtils.is_catalina():
-            if not Process.is_running_by_name('docker'):
+            if not Process.is_running_by_name('Docker'):
                 cmd = 'open --background -a Docker'
                 run(cmd=cmd, wait=False)
                 Log.info('Starting docker!')
