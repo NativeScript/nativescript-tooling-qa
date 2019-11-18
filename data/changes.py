@@ -203,12 +203,12 @@ class Changes(object):
         COMMON_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'ui', 'date-picker-field.common.ts'),
                               old_value='name: "date",',
                               new_value='name: "date", defaultValue: new Date(),')
-        ANDROID_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'datetimepicker.android.ts'),
-                               old_value='datePicker.init(date.getFullYear(), date.getMonth(), date.getDate(), null);',
-                               new_value='datePicker.init(2010, date.getMonth(), date.getDate(), null);')
-        IOS_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'datetimepicker.ios.ts'),
-                           old_value='pickerView.date = date;',
-                           new_value='date.setFullYear(2010); pickerView.date = date;')
+        ANDROID_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'ui', 'date-picker-field.android.ts'),
+                               old_value='this.nativeView.setFocusable(false);',
+                               new_value='this.nativeView.setFocusable(false); this.hint = "testMessage";')
+        IOS_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'ui', 'date-picker-field.ios.ts'),
+                           old_value='export class DatePickerField extends DatePickerFieldBase {',
+                           new_value='export class DatePickerField extends DatePickerFieldBase {initNativeView() {this.hint = "testMessage";}')
 
     class AppFileChanges(object):
         CHANGE_XML_INVALID_SYNTAX = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
