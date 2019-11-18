@@ -247,8 +247,8 @@ class TnsLogs(object):
 
     @staticmethod
     def preview_initial_messages(device, bundle=True, hmr=False, instrumented=False):
-        logs = ["Start sending initial files for device \'{0}\'".format(str(device.model)),
-                "Successfully sent initial files for device \'{0}\'".format(str(device.model))]
+        logs = ["Start sending initial files for device {0}".format(str(device.model)),
+                "Successfully sent initial files for device {0}".format(str(device.model))]
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
         if instrumented:
@@ -258,7 +258,7 @@ class TnsLogs(object):
     @staticmethod
     def preview_file_changed_messages(device, file_name, run_type=RunType.INCREMENTAL,
                                       bundle=True, hmr=True, instrumented=False):
-        logs = ["Start syncing changes for device \'{0}\'".format(str(device.model))]
+        logs = ["Start syncing changes for device {0}".format(str(device.model))]
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
             logs.append(file_name)

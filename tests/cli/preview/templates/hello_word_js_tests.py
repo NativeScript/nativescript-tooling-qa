@@ -31,7 +31,7 @@ class TnsPreviewJSTests(TnsRunTest):
         cls.emu_API24 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_24)
 
         # Download Preview and Playground packages
-        Preview.get_app_packages()
+        # Preview.get_app_packages()
 
         # Install Preview and Playground
         Preview.install_preview_app(cls.emu, Platform.ANDROID)
@@ -96,7 +96,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=self.emu)
-        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID)
+        strings = TnsLogs.preview_initial_messages(device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90)
 
@@ -107,7 +107,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         Preview.run_url(url=url, device=self.emu_API24)
         # Here use bundle=False because on consecutive preview build is not executed again
         # and no bundle messages are displayed in log
-        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID, bundle=False)
+        strings = TnsLogs.preview_initial_messages(device=self.emu, bundle=False)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -136,7 +136,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=self.emu)
-        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID)
+        strings = TnsLogs.preview_initial_messages(device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -145,7 +145,7 @@ class PreviewJSTests(TnsPreviewJSTests):
 
         # Preview on simulator
         Preview.run_url(url=url, device=self.sim)
-        strings = TnsLogs.preview_initial_messages(platform=Platform.IOS)
+        strings = TnsLogs.preview_initial_messages(device=self.sim)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
