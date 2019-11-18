@@ -495,7 +495,7 @@ class Tns(object):
         :param device: Pass `--device <value>` to command.
         :param just_launch: If true pass `--just_launch` to the command.
         :param verify: Verify command was executed successfully.
-        :param wait: Wait command to complete it `true`.     
+        :param wait: Wait command to complete it `true`.
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))
