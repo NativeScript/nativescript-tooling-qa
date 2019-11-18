@@ -30,9 +30,7 @@ EXPECTED_RESULTS = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
 class PrepareAndBuildPerfTests(TnsTest):
     TEST_DATA = [
-        ('hello-world-js', Template.HELLO_WORLD_JS.local_package, Changes.JSHelloWord.JS),
-        ('hello-world-ng', Template.HELLO_WORLD_NG.local_package, Changes.NGHelloWorld.TS),
-        ('master-detail-ng', Template.MASTER_DETAIL_NG.local_package, Changes.MasterDetailNG.TS),
+        ('master-detail-ng', Template.MASTER_DETAIL_NG.local_package, Changes.MasterDetailNG.TS)
     ]
 
     @classmethod
