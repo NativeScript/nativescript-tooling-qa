@@ -89,4 +89,4 @@ class App(object):
         # which cannot be resolved on win
         if Settings.HOST_OS == OSType.WINDOWS:
             package_json = os.path.join(Settings.TEST_RUN_HOME, app_name, 'package.json')
-            File.replace(package_json, 'file://', '\\\\\\\\')
+            File.replace(package_json, 'file://', '\\\\\\\\', fail_safe=True)
