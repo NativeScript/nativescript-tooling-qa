@@ -56,6 +56,7 @@ class Template(object):
     TAB_NAVIGATION_JS = gen_template_info(name='template-tab-navigation', app_type=AppType.JS, texts=tn_str)
     TAB_NAVIGATION_TS = gen_template_info(name='template-tab-navigation-ts', app_type=AppType.TS, texts=tn_str)
     TAB_NAVIGATION_NG = gen_template_info(name='template-tab-navigation-ng', app_type=AppType.NG, texts=tn_str)
+    TAB_NAVIGATION_VUE = gen_template_info(name='template-tab-navigation-vue', app_type=AppType.VUE, texts=tn_str)
 
     # Health templates
     HEALTH_SURVEY_NG = gen_template_info(name='template-health-survey-ng', app_type=AppType.NG, texts=login)

@@ -103,10 +103,18 @@ class Packages(object):
     if ENV == EnvironmentType.LIVE:
         __default_preview_folder = 'latest-official'
     PREVIEW_APP_ID = "org.nativescript.preview"
-    PREVIEW_PATH = os.environ.get('preview_folder_path', os.path.join("/tns-dist", "Playground",
-                                                                      "ns-play-dev", __default_preview_folder))
-    PLAYGROUND_PATH = os.environ.get('playground_folder_path', os.path.join("/tns-dist", "Playground",
-                                                                            "ns-play", __default_preview_folder))
+    if os.name == 'nt':
+        PREVIEW_PATH = os.environ.get('preview_folder_path',
+                                      os.path.join("\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript",
+                                                   "Playground", "ns-play-dev", __default_preview_folder))
+        PLAYGROUND_PATH = os.environ.get('playground_folder_path',
+                                         os.path.join("\\\\telerik.com\\distributions\\DailyBuilds\\NativeScript",
+                                                      "Playground", "ns-play", __default_preview_folder))
+    else:
+        PREVIEW_PATH = os.environ.get('preview_folder_path', os.path.join("/tns-dist", "Playground",
+                                                                          "ns-play-dev", __default_preview_folder))
+        PLAYGROUND_PATH = os.environ.get('playground_folder_path', os.path.join("/tns-dist", "Playground",
+                                                                                "ns-play", __default_preview_folder))
 
     PREVIEW_APP_IOS = os.path.join(PREVIEW_PATH, "nsplaydev.tgz")
     PREVIEW_APP_ANDROID = os.path.join(PREVIEW_PATH, "app-universal-release.apk")
