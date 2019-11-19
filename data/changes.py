@@ -208,7 +208,7 @@ class Changes(object):
                                new_value='this.nativeView.setFocusable(false); this.hint = "testMessage";')
         IOS_TS = ChangeSet(file_path=os.path.join(DATETIME_PICKER_PATH, 'ui', 'date-picker-field.ios.ts'),
                            old_value='export class DatePickerField extends DatePickerFieldBase {',
-                           new_value='export class DatePickerField extends DatePickerFieldBase {initNativeView() {this.hint = "testMessage";}')
+                           new_value='export class DatePickerField extends DatePickerFieldBase {initNativeView() {this.hint = "testMessage";}')  # noqa: E501 pylint: disable=line-too-long
 
     class AppFileChanges(object):
         CHANGE_XML_INVALID_SYNTAX = ChangeSet(file_path=os.path.join('app', 'main-page.xml'),
