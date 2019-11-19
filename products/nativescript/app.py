@@ -88,5 +88,5 @@ class App(object):
         # on win when `npm i` is executed with path to .tgz it saves in package.json unix style path
         # which cannot be resolved on win
         if Settings.HOST_OS == OSType.WINDOWS:
-            packageJson =  os.path.join(Settings.TEST_RUN_HOME, app_name, 'package.json')
-            File.replace(packageJson, 'file://', 'file:\\\\')
+            packageJson = os.path.join(Settings.TEST_RUN_HOME, app_name, 'package.json')
+            File.replace(packageJson, 'file://', '\\\\\\\\')
