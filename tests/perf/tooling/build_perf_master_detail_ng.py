@@ -1,8 +1,6 @@
 # pylint: disable=unused-argument
 # pylint: disable=undefined-variable
 
-import json
-import os
 import unittest
 
 from parameterized import parameterized
@@ -11,16 +9,10 @@ from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
-from core.utils.file_utils import Folder, File
-from core.utils.gradle import Gradle
-from core.utils.json_utils import JsonUtils
-from core.utils.npm import Npm
 from core.utils.perf_utils import PerfUtils
-from core.utils.xcode import Xcode
-from data.changes import Changes, Sync
+from data.changes import Changes
 from data.templates import Template
 from products.nativescript.perf_helpers import Helpers
-from products.nativescript.tns import Tns
 
 TOLERANCE = 0.20
 
