@@ -11,9 +11,9 @@ from data.changes import Sync
 from products.nativescript.tns import Tns
 
 RETRY_COUNT = 3
-# TOLERANCE = 0.20
 APP_NAME = Settings.AppName.DEFAULT
 EXPECTED_RESULTS = JsonUtils.read(os.path.join(Settings.TEST_RUN_HOME, 'tests', 'perf', 'data.json'))
+
 
 class PrepareBuildInfo(object):
     prepare_initial = 0
