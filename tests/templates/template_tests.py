@@ -33,7 +33,6 @@ class TemplateTests(TnsRunTest):
         [Template.DRAWER_NAVIGATION_TS.name, Template.DRAWER_NAVIGATION_TS],
         [Template.DRAWER_NAVIGATION_NG.name, Template.DRAWER_NAVIGATION_NG],
         [Template.DRAWER_NAVIGATION_VUE.name, Template.DRAWER_NAVIGATION_VUE],
-        [Template.HEALTH_SURVEY_NG.name, Template.HEALTH_SURVEY_NG],
         [Template.HELLO_WORLD_JS.name, Template.HELLO_WORLD_JS],
         [Template.HELLO_WORLD_TS.name, Template.HELLO_WORLD_TS],
         [Template.HELLO_WORLD_NG.name, Template.HELLO_WORLD_NG],
@@ -44,10 +43,10 @@ class TemplateTests(TnsRunTest):
         [Template.MASTER_DETAIL_TS.name, Template.MASTER_DETAIL_TS],
         [Template.MASTER_DETAIL_NG.name, Template.MASTER_DETAIL_NG],
         [Template.MASTER_DETAIL_VUE.name, Template.MASTER_DETAIL_VUE],
-        [Template.PATIENT_CARE_NG.name, Template.PATIENT_CARE_NG],
         [Template.TAB_NAVIGATION_JS.name, Template.TAB_NAVIGATION_JS],
         [Template.TAB_NAVIGATION_TS.name, Template.TAB_NAVIGATION_TS],
-        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG]
+        [Template.TAB_NAVIGATION_NG.name, Template.TAB_NAVIGATION_NG],
+        [Template.TAB_NAVIGATION_VUE.name, Template.TAB_NAVIGATION_VUE]
     ]
 
     @parameterized.expand(test_data)
