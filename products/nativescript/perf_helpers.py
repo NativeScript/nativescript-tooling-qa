@@ -83,12 +83,12 @@ class Helpers(object):
         return EXPECTED_RESULTS[template][platform][entry]
 
     @staticmethod
-    def prepare_data(template, template_package, change_set):
+    def prepare_data(template, change_set):
         android_result_file = Helpers.get_result_file_name(template, Platform.ANDROID)
         ios_result_file = Helpers.get_result_file_name(template, Platform.IOS)
-        Helpers.prepare_and_build(template=template_package, platform=Platform.ANDROID,
+        Helpers.prepare_and_build(template=template, platform=Platform.ANDROID,
                                   change_set=change_set, result_file=android_result_file)
-        Helpers.prepare_and_build(template=template_package, platform=Platform.IOS,
+        Helpers.prepare_and_build(template=template, platform=Platform.IOS,
                                   change_set=change_set, result_file=ios_result_file)
 
     @staticmethod

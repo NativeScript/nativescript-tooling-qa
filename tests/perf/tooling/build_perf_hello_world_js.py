@@ -3,8 +3,6 @@
 
 import unittest
 
-from parameterized import parameterized
-
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
@@ -15,9 +13,8 @@ from products.nativescript.perf_helpers import Helpers
 
 # noinspection PyMethodMayBeStatic,PyUnusedLocal
 class PrepareAndBuildPerfTests(TnsTest):
-    TEST_DATA = [
-        ('hello-world-js', Template.HELLO_WORLD_JS.local_package, Changes.JSHelloWord.JS)
-    ]
+    template = Template.HELLO_WORLD_JS.local_package
+    change_set = Changes.JSHelloWord.JS
 
     @classmethod
     def setUpClass(cls):
@@ -30,33 +27,26 @@ class PrepareAndBuildPerfTests(TnsTest):
     def tearDownClass(cls):
         TnsTest.tearDownClass()
 
-    @parameterized.expand(TEST_DATA)
-    def test_001_prepare_data(self, template, template_package, change_set):
-        Helpers.prepare_data(template, template_package, change_set)
+    def test_001_prepare_data(self):
+        Helpers.prepare_data(self.template, self.change_set)
 
-    @parameterized.expand(TEST_DATA)
-    def test_200_prepare_android_initial(self, template, template_package, change_set):
-        Helpers.prepare_android_initial(template)
+    def test_200_prepare_android_initial(self):
+        Helpers.prepare_android_initial(self.template)
 
-    @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_201_prepare_ios_initial(self, template, template_package, change_set):
-        Helpers.prepare_ios_initial(template)
+    def test_201_prepare_ios_initial(self):
+        Helpers.prepare_ios_initial(self.template)
 
-    @parameterized.expand(TEST_DATA)
-    def test_300_build_android_initial(self, template, template_package, change_set):
-        Helpers.build_android_initial(template)
+    def test_300_build_android_initial(self):
+        Helpers.build_android_initial(self.template)
 
-    @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_301_build_ios_initial(self, template, template_package, change_set):
-        Helpers.build_ios_initial(template)
+    def test_301_build_ios_initial(self):
+        Helpers.build_ios_initial(self.template)
 
-    @parameterized.expand(TEST_DATA)
-    def test_310_build_android_incremental(self, template, template_package, change_set):
-        Helpers.build_android_incremental(template)
+    def test_310_build_android_incremental(self):
+        Helpers.build_android_incremental(self.template)
 
-    @parameterized.expand(TEST_DATA)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
-    def test_311_build_ios_incremental(self, template, template_package, change_set):
-        Helpers.build_ios_incremental(template)
+    def test_311_build_ios_incremental(self):
+        Helpers.build_ios_incremental(self.template)
