@@ -131,7 +131,7 @@ class DeviceManager(object):
         def create(simulator_info):
             exact_sdk_verson = Simctl.get_max_runtime_version(simulator_info.sdk)
             cmd = 'xcrun simctl create {0} "{1}" com.apple.CoreSimulator.SimRuntime.iOS-{2}' \
-                .format(simulator_info.name, simulator_info.device_type, exact_sdk_verson.replace('.', '-'))
+                .format(simulator_info.name, simulator_info.device_type, str(exact_sdk_verson).replace('.', '-'))
             result = run(cmd=cmd, timeout=60)
             assert result.exit_code == 0, 'Failed to create iOS Simulator with name {0}'.format(simulator_info.name)
             assert '-' in result.output, 'Failed to create iOS Simulator with name {0}'.format(simulator_info.name)
