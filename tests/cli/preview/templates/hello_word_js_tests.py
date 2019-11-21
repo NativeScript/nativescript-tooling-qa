@@ -104,12 +104,11 @@ class PreviewJSTests(TnsPreviewJSTests):
         # Click on TAP button on emulator
         Adb.click_element_by_text(self.emu.id, 'TAP', case_sensitive=True)
 
-        time.sleep(2)
         # Preview on second emulator
         Preview.run_url(url=url, device=self.emu_API24)
         # Here use bundle=False because on consecutive preview build is not executed again
         # and no bundle messages are displayed in log
-        strings = TnsLogs.preview_initial_messages(device=self.emu, platform=Platform.ANDROID)
+        strings = TnsLogs.preview_initial_messages(device=self.emu, platform=Platform.ANDROID, bundle=False)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
