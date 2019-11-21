@@ -128,7 +128,7 @@ class Preview(object):
         run(command)
 
     @staticmethod
-    def run_app(app_name, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
+    def run_app(app_name, platform, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
         result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator
@@ -143,7 +143,7 @@ class Preview(object):
                     device.click("Open")
 
         # Verify logs
-        strings = TnsLogs.preview_initial_messages(device=device, hmr=hmr, bundle=bundle,
+        strings = TnsLogs.preview_initial_messages(platform=platform, device=device, hmr=hmr, bundle=bundle,
                                                    instrumented=instrumented)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=200)
         return result

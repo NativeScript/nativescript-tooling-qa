@@ -1,4 +1,5 @@
 import os
+import time
 import unittest
 
 from core.base_test.tns_run_test import TnsRunTest
@@ -31,7 +32,7 @@ class TnsPreviewJSTests(TnsRunTest):
         cls.emu_API24 = DeviceManager.Emulator.ensure_available(Settings.Emulators.EMU_API_24)
 
         # Download Preview and Playground packages
-        # Preview.get_app_packages()
+        Preview.get_app_packages()
 
         # Install Preview and Playground
         Preview.install_preview_app(cls.emu, Platform.ANDROID)
@@ -96,19 +97,20 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=self.emu)
-        strings = TnsLogs.preview_initial_messages(device=self.emu)
+        strings = TnsLogs.preview_initial_messages(device=self.emu, platform=Platform.ANDROID)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90)
+        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=120)
 
         # Click on TAP button on emulator
         Adb.click_element_by_text(self.emu.id, 'TAP', case_sensitive=True)
 
+        time.sleep(2)
         # Preview on second emulator
         Preview.run_url(url=url, device=self.emu_API24)
         # Here use bundle=False because on consecutive preview build is not executed again
         # and no bundle messages are displayed in log
-        strings = TnsLogs.preview_initial_messages(device=self.emu, bundle=False)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        strings = TnsLogs.preview_initial_messages(device=self.emu, platform=Platform.ANDROID)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Verify first emulator is not refreshed, state of app is preserved
@@ -136,7 +138,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=self.emu)
-        strings = TnsLogs.preview_initial_messages(device=self.emu)
+        strings = TnsLogs.preview_initial_messages(device=self.emu, platform=Platform.ANDROID)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -145,7 +147,7 @@ class PreviewJSTests(TnsPreviewJSTests):
 
         # Preview on simulator
         Preview.run_url(url=url, device=self.sim)
-        strings = TnsLogs.preview_initial_messages(device=self.sim)
+        strings = TnsLogs.preview_initial_messages(device=self.sim, platform=Platform.IOS)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -162,8 +164,8 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         log = File.extract_part_of_text(log, '[VERIFIED]')
         # Verify files are synced once
-        TnsAssert.file_is_synced_once(log, Platform.ANDROID, 'main-view-model.js')
-        TnsAssert.file_is_synced_once(log, Platform.IOS, 'main-view-model.js')
+        TnsAssert.file_is_synced_once(log, device=self.emu, file_name='main-view-model.js')
+        TnsAssert.file_is_synced_once(log, device=self.sim, file_name='main-view-model.js')
         # Mark that part of the log as verified before next sync
         File.append(result.log_file, '[VERIFIED]')
 
@@ -177,8 +179,8 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         log = File.extract_part_of_text(log, '[VERIFIED]')
         # Verify files are synced once
-        TnsAssert.file_is_synced_once(log, Platform.ANDROID, 'main-page.xml')
-        TnsAssert.file_is_synced_once(log, Platform.IOS, 'main-page.xml')
+        TnsAssert.file_is_synced_once(log, device=self.emu, file_name='main-page.xml')
+        TnsAssert.file_is_synced_once(log, device=self.sim, file_name='main-page.xml')
 
     def test_240_tns_preview_android_verify_plugin_warnings(self):
         """

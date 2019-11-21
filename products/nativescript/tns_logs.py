@@ -246,7 +246,7 @@ class TnsLogs(object):
                 'Webpack build done!']
 
     @staticmethod
-    def preview_initial_messages(device, bundle=True, hmr=False, instrumented=False):
+    def preview_initial_messages(platform, device, bundle=True, hmr=False, instrumented=False):
         logs = ["Start sending initial files for device {0}".format(str(device.model)),
                 "Successfully sent initial files for device {0}".format(str(device.model))]
         if bundle or hmr:
@@ -256,7 +256,7 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def preview_file_changed_messages(device, file_name, run_type=RunType.INCREMENTAL,
+    def preview_file_changed_messages(device, platform, file_name, run_type=RunType.INCREMENTAL,
                                       bundle=True, hmr=True, instrumented=False):
         logs = ["Start syncing changes for device {0}".format(str(device.model))]
         if bundle or hmr:

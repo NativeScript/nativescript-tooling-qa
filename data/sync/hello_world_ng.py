@@ -156,7 +156,8 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
-                                                    file_name='item.service.ts', hmr=hmr, instrumented=instrumented)
+                                                    file_name='item.service.ts', hmr=hmr, instrumented=instrumented,
+                                                    device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
@@ -164,7 +165,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     # Edit HTML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='items.component.html',
-                                                    hmr=hmr, instrumented=instrumented)
+                                                    hmr=hmr, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
     if platform == Platform.IOS:
@@ -178,7 +179,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
     strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='app.css',
-                                                    hmr=hmr, instrumented=instrumented)
+                                                    hmr=hmr, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
     device.wait_for_main_color(color=Changes.NGHelloWorld.CSS.new_color)
