@@ -10,6 +10,7 @@ from data.templates import Template
 from products.nativescript.app import App
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_paths import TnsPaths
 
 
 # noinspection PyMethodMayBeStatic
@@ -123,10 +124,11 @@ class CreateTests(TnsTest):
         """--template should install all packages from package.json"""
         template_path = os.path.join(Settings.TEST_RUN_HOME, 'assets', 'myCustomTemplate')
         Tns.create(app_name=Settings.AppName.DEFAULT, template=template_path, update=False)
-        assert not Folder.is_empty(os.path.join(Settings.AppName.DEFAULT, 'node_modules', 'lodash'))
-        assert not Folder.is_empty(os.path.join(Settings.AppName.DEFAULT, 'node_modules', 'minimist'))
-        assert not Folder.is_empty(os.path.join(Settings.AppName.DEFAULT, 'node_modules', 'tns-core-modules'))
-        assert not Folder.is_empty(os.path.join(Settings.AppName.DEFAULT, 'node_modules', 'tns-core-modules-widgets'))
+        node_modules = TnsPaths.get_app_node_modules_path(app_name=Settings.AppName.DEFAULT)
+        assert not Folder.is_empty(os.path.join(node_modules, 'lodash'))
+        assert not Folder.is_empty(os.path.join(node_modules, 'minimist'))
+        assert not Folder.is_empty(os.path.join(node_modules, 'tns-core-modules'))
+        assert not Folder.is_empty(os.path.join(node_modules, 'tns-core-modules-widgets'))
 
     def test_400_create_project_with_wrong_template_path(self):
         """--template should not create project if value is no npm installable"""

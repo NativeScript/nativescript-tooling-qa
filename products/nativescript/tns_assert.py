@@ -35,6 +35,7 @@ class TnsAssert(object):
 
         # Assert output
         if output is not None:
+            assert 'Error:' not in output
             assert 'Now you can navigate to your project with $ cd' in output
             assert 'After that you can preview it on device by executing $ tns preview' in output
             assert 'After that you can run it on device/emulator by executing $ tns run <platform>' not in output
