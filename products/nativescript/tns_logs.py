@@ -246,7 +246,7 @@ class TnsLogs(object):
                 'Webpack build done!']
 
     @staticmethod
-    def preview_initial_messages(platform, device, bundle=True, hmr=False, instrumented=False):
+    def preview_initial_messages(device, platform, bundle=True, hmr=False, instrumented=False):
         logs = ["Start sending initial files for device {0}".format(str(device.model)),
                 "Successfully sent initial files for device {0}".format(str(device.model))]
         if bundle or hmr:

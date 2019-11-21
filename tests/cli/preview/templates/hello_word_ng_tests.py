@@ -2,7 +2,6 @@ import os
 import unittest
 from core.base_test.tns_test import TnsTest
 from core.base_test.tns_run_test import TnsRunTest
-from core.enums.app_type import AppType
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings

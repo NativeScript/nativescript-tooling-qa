@@ -1,5 +1,4 @@
 import os
-import time
 import unittest
 
 from core.base_test.tns_run_test import TnsRunTest
