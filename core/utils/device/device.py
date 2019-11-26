@@ -37,8 +37,8 @@ class Device(object):
             self.model = name
         if type is DeviceType.EMU:
             cmd = 'shell getprop ro.product.model'
-            model = Adb.run_adb_command(command=cmd, wait=True).output
-            self.model = model
+            model = Adb.run_adb_command(command=cmd, wait=True, device_id=self.id).output
+            self.model = model.strip('\n\r')
         else:
             self.name = name
 
