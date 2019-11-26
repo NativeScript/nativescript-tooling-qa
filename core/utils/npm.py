@@ -31,7 +31,7 @@ class Npm(object):
 
     @staticmethod
     def download(package, output_file):
-        output = Npm.run_npm_command('view {0} dist.tarball'.format(package))
+        output = Npm.run_npm_command('view {0} dist.tarball -s'.format(package))
         assert '.tgz' in output, 'Failed to find tarball of {0} package.'.format(package)
         npm_package = output.split('/')[-1].split('\n')[0]
         src_file = os.path.join(Settings.TEST_SUT_HOME, npm_package)
