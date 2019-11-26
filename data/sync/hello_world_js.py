@@ -172,6 +172,11 @@ def preview_sync_hello_world_js_ts(app_type, app_name, device, bundle=True, hmr=
                                        instrumented=instrumented, click_open_alert=click_open_alert)
 
     blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+
+    # due to implementation when app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change
+    time.sleep(5)
+
     # Set changes
     js_file = os.path.basename(Changes.JSHelloWord.JS.file_path)
     if app_type == AppType.JS:

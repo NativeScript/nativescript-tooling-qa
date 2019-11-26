@@ -154,6 +154,10 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     else:
         not_existing_string_list = None
 
+    # due to implementation when app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change
+    time.sleep(5)
+
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
     strings = TnsLogs.preview_file_changed_messages(run_type=RunType.INCREMENTAL, bundle=bundle,
