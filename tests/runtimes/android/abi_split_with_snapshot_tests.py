@@ -37,7 +37,7 @@ class AbiSplitTests(TnsTest):
             device_id = device
         if device_id is not None:
             cls.device = Device(id=device_id, name=device_id, type=DeviceType.ANDROID,
-                                version=Adb.get_version(device_id))
+                                version=Adb.get_version(device_id), model=None)
         Adb.uninstall(cls.app_id, device_id, assert_success=False)
         Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
 
