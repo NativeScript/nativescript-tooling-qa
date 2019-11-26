@@ -128,7 +128,7 @@ class Preview(object):
         run(command)
 
     @staticmethod
-    def run_app(app_name, platform, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
+    def run_app(app_name, device, bundle=True, hmr=True, instrumented=False, click_open_alert=False):
         result = Tns.preview(app_name=app_name, bundle=bundle, hmr=hmr)
 
         # Read the log and extract the url to load the app on emulator

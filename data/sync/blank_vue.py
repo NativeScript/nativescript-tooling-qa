@@ -21,15 +21,15 @@ def __run_vue(app_name, platform, hmr):
     return Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, hmr=hmr)
 
 
-def __preview_vue(app_name, platform, device, hmr):
+def __preview_vue(app_name, device, hmr):
     # Execute `tns run` and wait until logs are OK
-    return Preview.run_app(app_name=app_name, hmr=hmr, platform=platform, device=device, click_open_alert=True)
+    return Preview.run_app(app_name=app_name, hmr=hmr, device=device, click_open_alert=True)
 
 
 def __workflow(preview, app_name, platform, device, hmr=True):
     # Execute tns command
     if preview:
-        result = __preview_vue(app_name=app_name, platform=platform, device=device, hmr=hmr)
+        result = __preview_vue(app_name=app_name, device=device, hmr=hmr)
     else:
         result = __run_vue(app_name=app_name, platform=platform, hmr=hmr)
 

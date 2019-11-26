@@ -129,10 +129,10 @@ def sync_hello_world_ng(app_name, platform, device, bundle=True, uglify=False, a
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, instrumented=False,
+def preview_hello_world_ng(app_name, device, bundle=False, hmr=False, instrumented=False,
                            click_open_alert=False):
-    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
-                             device=device, instrumented=instrumented, click_open_alert=click_open_alert)
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, device=device,
+                             instrumented=instrumented, click_open_alert=click_open_alert)
 
     # Verify app looks properly
     device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
@@ -144,7 +144,7 @@ def preview_hello_world_ng(app_name, platform, device, bundle=False, hmr=False, 
 
 def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=True, instrumented=False,
                                 click_open_alert=False):
-    result = preview_hello_world_ng(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+    result = preview_hello_world_ng(app_name=app_name, device=device, bundle=bundle, hmr=hmr,
                                     instrumented=instrumented, click_open_alert=click_open_alert)
 
     # Verify that application is not restarted on file changes when hmr=true
@@ -155,7 +155,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
 
     # Edit TS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.TS)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, run_type=RunType.INCREMENTAL, bundle=bundle,
+    strings = TnsLogs.preview_file_changed_messages(run_type=RunType.INCREMENTAL, bundle=bundle,
                                                     file_name='item.service.ts', hmr=hmr, instrumented=instrumented,
                                                     device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
@@ -164,7 +164,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
 
     # Edit HTML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='items.component.html',
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, file_name='items.component.html',
                                                     hmr=hmr, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
@@ -178,7 +178,7 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
 
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, file_name='app.css',
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, file_name='app.css',
                                                     hmr=hmr, instrumented=instrumented, device=device)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)

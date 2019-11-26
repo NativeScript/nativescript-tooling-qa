@@ -151,10 +151,10 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, instrumented=False,
+def preview_hello_world_js_ts(app_name, device, bundle=True, hmr=True, instrumented=False,
                               click_open_alert=False):
-    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
-                             device=device, instrumented=instrumented, click_open_alert=click_open_alert)
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, device=device,
+                             instrumented=instrumented, click_open_alert=click_open_alert)
 
     # Verify app looks properly
     device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90, retry_delay=5)
@@ -165,9 +165,9 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True,
     return result
 
 
-def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, hmr=True, instrumented=False,
+def preview_sync_hello_world_js_ts(app_type, app_name, device, bundle=True, hmr=True, instrumented=False,
                                    click_open_alert=False):
-    result = preview_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+    result = preview_hello_world_js_ts(app_name=app_name, device=device, bundle=bundle, hmr=hmr,
                                        instrumented=instrumented, click_open_alert=click_open_alert)
 
     blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
@@ -191,7 +191,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
 
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=css_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, device=device, hmr=hmr,
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, device=device, hmr=hmr,
                                                     file_name='app.css', instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
@@ -203,7 +203,7 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
     strings = TnsLogs.preview_file_changed_messages(bundle=bundle, hmr=hmr, device=device, file_name=js_file,
-                                                    instrumented=instrumented, platform=platform)
+                                                    instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
@@ -213,8 +213,8 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
 
     # Edit XML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=xml_change)
-    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, device=device, platform=platform,
-                                                    hmr=hmr, file_name='main-page.xml', instrumented=instrumented)
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, device=device, hmr=hmr,
+                                                    file_name='main-page.xml', instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
