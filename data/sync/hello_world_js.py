@@ -3,6 +3,7 @@ Sync changes on JS/TS project helper.
 """
 
 import os
+import time
 
 from core.enums.app_type import AppType
 from core.enums.os_type import OSType
@@ -199,6 +200,10 @@ def preview_sync_hello_world_js_ts(app_type, app_name, device, bundle=True, hmr=
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
     device.wait_for_color(color=css_change.new_color, pixel_count=blue_count, delta=25)
+    # due to implementation when no hmr app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change when in no hmr situation
+    if not hmr:
+        time.sleep(5)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
@@ -210,6 +215,10 @@ def preview_sync_hello_world_js_ts(app_type, app_name, device, bundle=True, hmr=
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
     device.wait_for_text(text=js_change.new_text)
+    # due to implementation when no hmr app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change when in no hmr situation
+    if not hmr:
+        time.sleep(5)
 
     # Edit XML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=xml_change)

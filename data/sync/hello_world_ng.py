@@ -3,6 +3,7 @@ Sync changes on NG project helper.
 """
 
 import os
+import time
 
 from core.enums.app_type import AppType
 from core.enums.device_type import DeviceType
@@ -161,6 +162,10 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180,
                          not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.NGHelloWorld.TS.new_text)
+    # due to implementation when no hmr app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change when in no hmr situation
+    if not hmr:
+        time.sleep(5)
 
     # Edit HTML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.HTML)
@@ -175,6 +180,10 @@ def preview_sync_hello_world_ng(app_name, platform, device, bundle=True, hmr=Tru
         for number in ["8", "9"]:
             device.wait_for_text(text=number)
     assert not device.is_text_visible(text=Changes.NGHelloWorld.TS.new_text)
+    # due to implementation when no hmr app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change when in no hmr situation
+    if not hmr:
+        time.sleep(5)
 
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=Changes.NGHelloWorld.CSS)
