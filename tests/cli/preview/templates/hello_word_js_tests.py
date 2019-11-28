@@ -64,24 +64,24 @@ class PreviewJSTests(TnsPreviewJSTests):
 
     def test_100_preview_android(self):
         """Preview project on emulator. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name,
                                        device=self.emu, instrumented=True)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_100_preview_ios(self):
         """Preview project on simulator. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name,
                                        device=self.sim, click_open_alert=True)
 
     def test_205_preview_android_no_hmr(self):
         """Preview project on emulator with --no-hmr. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.ANDROID,
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name,
                                        device=self.emu, hmr=False)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_205_preview_ios_no_hmr(self):
         """Preview project on simulator with --no-hmr. Make valid changes in JS, CSS and XML"""
-        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name, platform=Platform.IOS,
+        preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name,
                                        device=self.sim, hmr=False)
 
     def test_210_tns_preview_android_livesync_on_two_emulators(self):
@@ -96,9 +96,9 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=self.emu)
-        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID)
+        strings = TnsLogs.preview_initial_messages(device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
-        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90)
+        self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=120)
 
         # Click on TAP button on emulator
         Adb.click_element_by_text(self.emu.id, 'TAP', case_sensitive=True)
@@ -107,8 +107,8 @@ class PreviewJSTests(TnsPreviewJSTests):
         Preview.run_url(url=url, device=self.emu_API24)
         # Here use bundle=False because on consecutive preview build is not executed again
         # and no bundle messages are displayed in log
-        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID, bundle=False)
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
+        strings = TnsLogs.preview_initial_messages(device=self.emu, bundle=False)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=120)
         self.emu_API24.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
         # Verify first emulator is not refreshed, state of app is preserved
@@ -136,7 +136,7 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         url = Preview.get_url(log)
         Preview.run_url(url=url, device=self.emu)
-        strings = TnsLogs.preview_initial_messages(platform=Platform.ANDROID)
+        strings = TnsLogs.preview_initial_messages(device=self.emu)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.emu.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -145,7 +145,7 @@ class PreviewJSTests(TnsPreviewJSTests):
 
         # Preview on simulator
         Preview.run_url(url=url, device=self.sim)
-        strings = TnsLogs.preview_initial_messages(platform=Platform.IOS)
+        strings = TnsLogs.preview_initial_messages(device=self.sim)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings)
         self.sim.wait_for_text(text=Changes.JSHelloWord.JS.old_text)
 
@@ -162,8 +162,8 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         log = File.extract_part_of_text(log, '[VERIFIED]')
         # Verify files are synced once
-        TnsAssert.file_is_synced_once(log, Platform.ANDROID, 'main-view-model.js')
-        TnsAssert.file_is_synced_once(log, Platform.IOS, 'main-view-model.js')
+        TnsAssert.file_is_synced_once(log, device=self.emu, file_name='main-view-model.js')
+        TnsAssert.file_is_synced_once(log, device=self.sim, file_name='main-view-model.js')
         # Mark that part of the log as verified before next sync
         File.append(result.log_file, '[VERIFIED]')
 
@@ -177,8 +177,8 @@ class PreviewJSTests(TnsPreviewJSTests):
         log = File.read(result.log_file)
         log = File.extract_part_of_text(log, '[VERIFIED]')
         # Verify files are synced once
-        TnsAssert.file_is_synced_once(log, Platform.ANDROID, 'main-page.xml')
-        TnsAssert.file_is_synced_once(log, Platform.IOS, 'main-page.xml')
+        TnsAssert.file_is_synced_once(log, device=self.emu, file_name='main-page.xml')
+        TnsAssert.file_is_synced_once(log, device=self.sim, file_name='main-page.xml')
 
     def test_240_tns_preview_android_verify_plugin_warnings(self):
         """

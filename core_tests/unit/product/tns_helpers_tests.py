@@ -29,7 +29,7 @@ class SyncMessagesTests(unittest.TestCase):
                                     platform=Platform.ANDROID,
                                     run_type=RunType.FIRST_TIME,
                                     file_name=None,
-                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=6.0))
+                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=6.0, model=None))
         assert 'Skipping prepare.' not in logs
         assert 'Preparing project...' in logs
         assert 'Project successfully prepared (android)' in logs
@@ -52,7 +52,7 @@ class SyncMessagesTests(unittest.TestCase):
                                     file_name='main-view-model.js',
                                     bundle=False,
                                     hmr=False,
-                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=8.0))
+                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=8.0, model=None))
         assert 'Successfully transferred main-view-model.js' in logs
         assert 'Restarting application on device' in logs
         assert 'Successfully synced application org.nativescript.TestApp on device' in logs
@@ -84,7 +84,7 @@ class SyncMessagesTests(unittest.TestCase):
                                     bundle=True,
                                     uglify=True,
                                     hmr=False,
-                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=4.4))
+                                    device=Device(id='123', name='Emu', type=DeviceType.EMU, version=4.4, model=None))
         assert 'Skipping prepare.' not in logs
         assert 'File change detected.' in logs
         assert 'main-view-model.js' in logs

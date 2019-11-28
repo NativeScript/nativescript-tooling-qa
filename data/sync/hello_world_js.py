@@ -3,6 +3,7 @@ Sync changes on JS/TS project helper.
 """
 
 import os
+import time
 
 from core.enums.app_type import AppType
 from core.enums.os_type import OSType
@@ -151,10 +152,10 @@ def __sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, 
     device.screen_match(expected_image=initial_state, tolerance=1.0, timeout=30)
 
 
-def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True, instrumented=False,
+def preview_hello_world_js_ts(app_name, device, bundle=True, hmr=True, instrumented=False,
                               click_open_alert=False):
-    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, platform=platform,
-                             device=device, instrumented=instrumented, click_open_alert=click_open_alert)
+    result = Preview.run_app(app_name=app_name, bundle=bundle, hmr=hmr, device=device,
+                             instrumented=instrumented, click_open_alert=click_open_alert)
 
     # Verify app looks properly
     device.wait_for_text(text=Changes.JSHelloWord.JS.old_text, timeout=90, retry_delay=5)
@@ -165,12 +166,17 @@ def preview_hello_world_js_ts(app_name, platform, device, bundle=True, hmr=True,
     return result
 
 
-def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=True, hmr=True, instrumented=False,
+def preview_sync_hello_world_js_ts(app_type, app_name, device, bundle=True, hmr=True, instrumented=False,
                                    click_open_alert=False):
-    result = preview_hello_world_js_ts(app_name=app_name, platform=platform, device=device, bundle=bundle, hmr=hmr,
+    result = preview_hello_world_js_ts(app_name=app_name, device=device, bundle=bundle, hmr=hmr,
                                        instrumented=instrumented, click_open_alert=click_open_alert)
 
     blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
+
+    # due to implementation when app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change
+    time.sleep(5)
+
     # Set changes
     js_file = os.path.basename(Changes.JSHelloWord.JS.file_path)
     if app_type == AppType.JS:
@@ -191,30 +197,38 @@ def preview_sync_hello_world_js_ts(app_type, app_name, platform, device, bundle=
 
     # Edit CSS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=css_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
-                                                    hmr=hmr, file_name='app.css', instrumented=instrumented)
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, device=device, hmr=hmr,
+                                                    file_name='app.css', instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
     device.wait_for_color(color=css_change.new_color, pixel_count=blue_count, delta=25)
+    # due to implementation when no hmr app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change when in no hmr situation
+    if not hmr:
+        time.sleep(5)
 
     # Edit JS file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=js_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle, hmr=hmr,
-                                                    file_name=js_file, instrumented=instrumented)
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, hmr=hmr, device=device, file_name=js_file,
+                                                    instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)
     else:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=90)
     device.wait_for_text(text=js_change.new_text)
+    # due to implementation when no hmr app restarts and if changes are made too quickly device is stated as
+    # not connected during the restart. Workaround is to wait some seconds before next change when in no hmr situation
+    if not hmr:
+        time.sleep(5)
 
     # Edit XML file and verify changes are applied
     Sync.replace(app_name=app_name, change_set=xml_change)
-    strings = TnsLogs.preview_file_changed_messages(platform=platform, bundle=bundle,
-                                                    hmr=hmr, file_name='main-page.xml', instrumented=instrumented)
+    strings = TnsLogs.preview_file_changed_messages(bundle=bundle, device=device, hmr=hmr,
+                                                    file_name='main-page.xml', instrumented=instrumented)
     if hmr and instrumented and Settings.HOST_OS != OSType.WINDOWS:
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                              not_existing_string_list=not_existing_string_list)

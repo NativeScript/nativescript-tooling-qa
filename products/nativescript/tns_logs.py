@@ -246,9 +246,9 @@ class TnsLogs(object):
                 'Webpack build done!']
 
     @staticmethod
-    def preview_initial_messages(platform, bundle=True, hmr=False, instrumented=False):
-        logs = ['Start sending initial files for platform {0}'.format(str(platform)),
-                'Successfully sent initial files for platform {0}'.format(str(platform))]
+    def preview_initial_messages(device, bundle=True, hmr=False, instrumented=False):
+        logs = ["Start sending initial files for device {0}".format(str(device.model)),
+                "Successfully sent initial files for device {0}".format(str(device.model))]
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
         if instrumented:
@@ -256,15 +256,15 @@ class TnsLogs(object):
         return logs
 
     @staticmethod
-    def preview_file_changed_messages(platform, file_name, run_type=RunType.INCREMENTAL,
+    def preview_file_changed_messages(device, file_name, run_type=RunType.INCREMENTAL,
                                       bundle=True, hmr=True, instrumented=False):
-        logs = ['Start syncing changes for platform {0}'.format(str(platform))]
+        logs = ["Start syncing changes for device {0}".format(str(device.model))]
         if bundle or hmr:
             logs.extend(TnsLogs.__webpack_messages())
             logs.append(file_name)
         else:
             logs.append('Successfully synced')
-            logs.append('{0} for platform {1}'.format(file_name.replace('.ts', '.js'), str(platform)))
+            logs.append('{0} for device {1}'.format(file_name.replace('.ts', '.js'), str(device.model)))
         if hmr:
             logs.append('hot-update.json')
             logs.append('HMR: Checking for updates to the bundle with hmr hash')

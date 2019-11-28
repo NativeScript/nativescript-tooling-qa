@@ -21,12 +21,12 @@ class DeviceManager(object):
         if device_type is DeviceType.ANDROID or device_type is any:
             for device_id in Adb.get_ids(include_emulators=False):
                 version = Adb.get_version(device_id=device_id)
-                device = Device(id=device_id, name=device_id, type=DeviceType.ANDROID, version=version)
+                device = Device(id=device_id, name=device_id, type=DeviceType.ANDROID, version=version, model=None)
                 devices.append(device)
         # Get iOS devices
         if device_type is DeviceType.IOS or device_type is any:
             for device_id in IDevice.get_devices():
-                device = Device(id=device_id, name=device_id, type=DeviceType.IOS, version=None)
+                device = Device(id=device_id, name=device_id, type=DeviceType.IOS, version=None, model=None)
                 devices.append(device)
 
         for device in devices:
@@ -83,7 +83,8 @@ class DeviceManager(object):
             booted = Adb.wait_until_boot(device_id=emulator.emu_id)
             if booted:
                 Log.info('{0} is up and running!'.format(emulator.avd))
-                device = Device(id=emulator.emu_id, name=emulator.avd, type=DeviceType.EMU, version=emulator.os_version)
+                device = Device(id=emulator.emu_id, model=emulator.model, name=emulator.avd, type=DeviceType.EMU,
+                                version=emulator.os_version)
                 TestContext.STARTED_DEVICES.append(device)
                 return device
             else:
@@ -169,7 +170,7 @@ class DeviceManager(object):
 
             # Return result
             device = Device(id=simulator_info.id, name=simulator_info.name, type=DeviceType.SIM,
-                            version=simulator_info.sdk)
+                            version=simulator_info.sdk, model=simulator_info.id)
             TestContext.STARTED_DEVICES.append(device)
             return device
 
@@ -187,7 +188,8 @@ class DeviceManager(object):
                 return Device(id=simulator_info.id,
                               name=simulator_info.name,
                               type=DeviceType.SIM,
-                              version=simulator_info.sdk)
+                              version=simulator_info.sdk,
+                              model=None)
             elif DeviceManager.Simulator.is_available(simulator_info=simulator_info):
                 return DeviceManager.Simulator.start(simulator_info)
             else:
