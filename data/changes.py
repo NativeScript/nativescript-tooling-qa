@@ -100,7 +100,7 @@ class Changes(object):
                                       old_color=Colors.WHITE, new_color=Colors.RED)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('src', 'app.ios.scss'),
                                   old_value='iOS here',
-                                  new_value='iOS here\n.m-r-20{ background-color: red; stretch: aspectFit}\n',
+                                  new_value='iOS here\n.m-r-20{ background-color: red; stretch: aspectFit; width:50;}\n',
                                   old_color=Colors.WHITE, new_color=Colors.RED)
 
         # This change should make background of items on home page purple
