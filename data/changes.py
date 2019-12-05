@@ -96,11 +96,11 @@ class Changes(object):
         # This change should add some red between list view items on home page
         SCSS_ROOT_ANDROID = ChangeSet(file_path=os.path.join('src', 'app.android.scss'),
                                       old_value='Android here',
-                                      new_value='Android here\n.m-r-20{ background-color: red; stretch: aspectFit}\n',
+                                      new_value='Android here\n.m-r-5{background-color: red;}\n',
                                       old_color=Colors.WHITE, new_color=Colors.RED)
         SCSS_ROOT_IOS = ChangeSet(file_path=os.path.join('src', 'app.ios.scss'),
                                   old_value='iOS here',
-                                  new_value='iOS here\n.m-r-20{ background-color: red; stretch: aspectFit; width:50;}\n',
+                                  new_value='iOS here\n.m-r-5{background-color: red;}\n',
                                   old_color=Colors.WHITE, new_color=Colors.RED)
 
         # This change should make background of items on home page purple
