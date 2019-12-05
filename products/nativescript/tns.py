@@ -435,7 +435,7 @@ class Tns(object):
             else:
                 if platform == Platform.ANDROID:
                     strings.append('ActivityManager: Start proc')
-                if hmr and platform == Platform.ANDROID:
+                if hmr and platform == Platform.ANDROID and start is False:
                     strings.append('HMR: Hot Module Replacement Enabled.')
 
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
