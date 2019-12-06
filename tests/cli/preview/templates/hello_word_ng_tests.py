@@ -1,15 +1,18 @@
 import os
 import unittest
-from core.base_test.tns_test import TnsTest
+
+from flaky import flaky
+
 from core.base_test.tns_run_test import TnsRunTest
+from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
 from data.sync.hello_world_ng import preview_sync_hello_world_ng
 from data.templates import Template
-from products.nativescript.tns import Tns
 from products.nativescript.preview_helpers import Preview
+from products.nativescript.tns import Tns
 
 
 class TnsPreviewNGTests(TnsRunTest):
@@ -65,11 +68,13 @@ class PreviewNGTests(TnsPreviewNGTests):
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.IOS,
                                     device=self.sim, instrumented=True)
 
+    @flaky(max_runs=3)
     def test_205_preview_android_no_hmr(self):
         """Preview project on emulator with --hmr. Make valid changes in TS, CSS and HTML"""
         preview_sync_hello_world_ng(app_name=self.app_name, platform=Platform.ANDROID,
                                     device=self.emu, hmr=False)
 
+    @flaky(max_runs=3)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_205_preview_ios_no_hmr(self):
         """Preview project on simulator with --hmr. Make valid changes in TS, CSS and HTML"""
