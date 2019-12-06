@@ -74,7 +74,7 @@ class AppSizeTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(lib), expected=51992248, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(res), expected=796627, tolerance=0.05)
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=1210914, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=10621384, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=16023484, tolerance=0.05)
 
         # Verify final apk size
         assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=24304589, tolerance=0.03)
@@ -103,7 +103,7 @@ class AppSizeTests(TnsTest):
 
         # No asserts for lib and res, since it is same as JS project
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_app), expected=1991318, tolerance=0.05)
-        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=21822104, tolerance=0.05)
+        assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=27041144, tolerance=0.05)
 
         # Verify final apk size
         assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=26988067, tolerance=0.03)
