@@ -115,7 +115,7 @@ class TnsTest(unittest.TestCase):
         try:
             png_path = os.path.join(base_path, 'host.png')
             pyautogui.screenshot().save(png_path)
-        except (IOError, ValueError, KeyError):
+        except Exception:
             Log.warning('Failed to take screenshot of host os.')
 
         # get device screenshots
