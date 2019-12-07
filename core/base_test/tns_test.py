@@ -108,9 +108,18 @@ class TnsTest(unittest.TestCase):
 
     @staticmethod
     def get_screenshots():
+        # get host snapshot
+        base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
+        try:
+            import pyautogui
+            png_path = os.path.join(base_path, 'host.png')
+            pyautogui.screenshot().save(png_path)
+        except Exception:
+            Log.warning('Failed to take screenshot of host os.')
+
+        # get device screenshots
         for device in TestContext.STARTED_DEVICES:
             try:
-                base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
                 png_path = os.path.join(base_path, device.name + '.png')
                 File.delete(png_path)
                 device.get_screen(png_path)

@@ -6,8 +6,8 @@ import os
 from selenium.webdriver.common.by import By
 
 from core.enums.app_type import AppType
-from core.enums.platform_type import Platform
 from core.enums.os_type import OSType
+from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.appium.appium_driver import AppiumDriver
 from core.utils.wait import Wait
@@ -19,11 +19,15 @@ from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_paths import TnsPaths
 
 
-def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
+def sync_master_detail_vue(app_name, platform, device):
     # Execute tns command
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False, bundle=bundle, hmr=hmr)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, bundle=bundle,
-                                   hmr=hmr, app_type=AppType.VUE, transfer_all=True)
+    log_trace = False
+    if platform == Platform.IOS:
+        # Temporary add log trace on iOS to debug an issue
+        log_trace = True
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, log_trace=log_trace, wait=False)
+    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, app_type=AppType.VUE,
+                                   transfer_all=True)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
 
     # start appium driver (need it on iOS only)
@@ -38,7 +42,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     device.get_screen(path=initial_state)
 
     # Verify that application is not restarted on file changes when hmr=true
-    if hmr and Settings.HOST_OS != OSType.WINDOWS:
+    if Settings.HOST_OS != OSType.WINDOWS:
         not_existing_string_list = ['Restarting application']
     else:
         not_existing_string_list = None
@@ -46,7 +50,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     # Edit template in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_TEMPLATE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
+                                   app_type=AppType.VUE, file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                          not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_TEMPLATE.new_text)
@@ -54,7 +58,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     # Edit styling in .vue file
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
+                                   app_type=AppType.VUE, file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                          not_existing_string_list=not_existing_string_list)
     style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.LIGHT_BLUE) > 200)
@@ -63,7 +67,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     # Revert styling in .vue file
     Sync.revert(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_STYLE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarList.vue')
+                                   app_type=AppType.VUE, file_name='CarList.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                          not_existing_string_list=not_existing_string_list)
     style_applied = Wait.until(lambda: device.get_pixels_by_color(Colors.LIGHT_BLUE) < 200)
@@ -79,7 +83,7 @@ def sync_master_detail_vue(app_name, platform, device, bundle=True, hmr=True):
     device.wait_for_text(text="Price")
     Sync.replace(app_name=app_name, change_set=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
-                                   bundle=bundle, hmr=hmr, app_type=AppType.VUE, file_name='CarDetails.vue')
+                                   app_type=AppType.VUE, file_name='CarDetails.vue')
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings,
                          not_existing_string_list=not_existing_string_list)
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)

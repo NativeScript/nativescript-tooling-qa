@@ -18,3 +18,4 @@ requests>=2.21.0
 pytz>=2018.9
 Appium-Python-Client>=0.28
 pyautogui==0.9.39
+python-xlib==0.25

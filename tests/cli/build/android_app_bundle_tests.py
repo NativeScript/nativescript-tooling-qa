@@ -3,9 +3,9 @@ import os
 from core.base_test.tns_run_android_test import TnsRunAndroidTest
 from core.settings.Settings import TEST_SUT_HOME, TEST_RUN_HOME, AppName, Android
 from core.utils.device.adb import Adb
+from core.utils.docker import Docker
 from core.utils.file_utils import Folder, File
 from core.utils.run import run
-from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_logs import TnsLogs
@@ -60,9 +60,9 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
 
     @staticmethod
     def bundletool_deploy(bundletool_path, path_to_apks, device_id):
-        deploy_command = ('java -jar {0} install-apks --apks="{1}" --device-id={2}').format(bundletool_path,
-                                                                                            path_to_apks,
-                                                                                            device_id)
+        deploy_command = 'java -jar {0} install-apks --apks="{1}" --device-id={2}'.format(bundletool_path,
+                                                                                          path_to_apks,
+                                                                                          device_id)
         result = run(deploy_command)
         assert "Error" not in result.output, "deploy of app failed"
         assert "The APKs have been extracted in the directory:" in result.output, "deploy of app failed"
@@ -81,11 +81,11 @@ class AndroidAppBundleTests(TnsRunAndroidTest):
                                  uglify=True, verify=False, compile_snapshot=True)
         strings = ['Successfully generated snapshots',
                    'The build result is located at: {0}'.format(path_to_aab)]
-        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=180)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
 
         # Verify app can be deployed on emulator via nativescript
         # Verify app looks correct inside emulator
-        self.emu.wait_for_text(text='TAP', timeout=240)
+        self.emu.wait_for_text(text='TAP', timeout=60)
 
         # Verify that the correct .so file is included in the package
         File.unzip(path_to_apks, os.path.join(self.app_name, 'apks'))

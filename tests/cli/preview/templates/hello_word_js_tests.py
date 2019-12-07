@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from flaky import flaky
+
 from core.base_test.tns_run_test import TnsRunTest
 from core.base_test.tns_test import TnsTest
 from core.enums.app_type import AppType
@@ -15,8 +17,8 @@ from data.sync.hello_world_js import preview_sync_hello_world_js_ts
 from data.templates import Template
 from products.nativescript.preview_helpers import Preview
 from products.nativescript.tns import Tns
-from products.nativescript.tns_logs import TnsLogs
 from products.nativescript.tns_assert import TnsAssert
+from products.nativescript.tns_logs import TnsLogs
 
 
 class TnsPreviewJSTests(TnsRunTest):
@@ -73,11 +75,13 @@ class PreviewJSTests(TnsPreviewJSTests):
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name,
                                        device=self.sim, click_open_alert=True)
 
+    @flaky(max_runs=3)
     def test_205_preview_android_no_hmr(self):
         """Preview project on emulator with --no-hmr. Make valid changes in JS, CSS and XML"""
         preview_sync_hello_world_js_ts(app_type=AppType.JS, app_name=self.app_name,
                                        device=self.emu, hmr=False)
 
+    @flaky(max_runs=3)
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_205_preview_ios_no_hmr(self):
         """Preview project on simulator with --no-hmr. Make valid changes in JS, CSS and XML"""
