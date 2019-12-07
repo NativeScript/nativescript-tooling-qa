@@ -2,6 +2,7 @@ import os
 import unittest
 
 from core.base_test.test_context import TestContext
+from core.base_test.tns_test import TnsTest
 from core.settings import Settings
 from core.utils.file_utils import File, Folder
 
