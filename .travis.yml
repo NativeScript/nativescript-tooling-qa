@@ -6,6 +6,7 @@ language: python
 python:
   - "2.7"
 before_install:
+  - export DISPLAY=:0
   - sudo apt-get install  python-xlib -y
   - pip install -U pip
 install:
