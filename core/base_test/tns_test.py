@@ -3,6 +3,8 @@ import inspect
 import os
 import unittest
 
+import pyautogui
+
 from core.base_test.test_context import TestContext
 from core.enums.os_type import OSType
 from core.log.log import Log
@@ -108,9 +110,17 @@ class TnsTest(unittest.TestCase):
 
     @staticmethod
     def get_screenshots():
+        # get host snapshot
+        base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
+        try:
+            png_path = os.path.join(base_path, 'host.png')
+            pyautogui.screenshot().save(png_path)
+        except (IOError, ValueError):
+            Log.warning('Failed to take screenshot of host os.')
+
+        # get device screenshots
         for device in TestContext.STARTED_DEVICES:
             try:
-                base_path = os.path.join(Settings.TEST_OUT_IMAGES, TestContext.CLASS_NAME, TestContext.TEST_NAME)
                 png_path = os.path.join(base_path, device.name + '.png')
                 File.delete(png_path)
                 device.get_screen(png_path)

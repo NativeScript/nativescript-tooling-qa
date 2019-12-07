@@ -8,10 +8,10 @@ import unittest
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.settings import Settings
+from core.utils.docker import Docker
 from core.utils.file_utils import File, Folder
 from core.utils.perf_utils import PerfUtils
 from core.utils.run import run
-from core.utils.docker import Docker
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_paths import TnsPaths
@@ -77,7 +77,7 @@ class AppSizeTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=16023484, tolerance=0.05)
 
         # Verify final apk size
-        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=24304589, tolerance=0.03)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=25826703, tolerance=0.03)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_js_app_ipa(self):
@@ -106,7 +106,7 @@ class AppSizeTests(TnsTest):
         assert PerfUtils.is_value_in_range(actual=Folder.get_size(assets_snapshots), expected=27041144, tolerance=0.05)
 
         # Verify final apk size
-        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=26988067, tolerance=0.03)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(apk), expected=28482168, tolerance=0.03)
 
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_ng_app_ipa(self):

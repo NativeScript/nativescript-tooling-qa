@@ -21,7 +21,11 @@ from products.nativescript.tns_paths import TnsPaths
 
 def sync_master_detail_vue(app_name, platform, device):
     # Execute tns command
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False)
+    log_trace = False
+    if platform == Platform.IOS:
+        # Temporary add log trace on iOS to debug an issue
+        log_trace = True
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, log_trace=log_trace, wait=False)
     strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, app_type=AppType.VUE,
                                    transfer_all=True)
     TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
