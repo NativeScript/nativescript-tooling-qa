@@ -128,9 +128,9 @@ class NGNewTests(TnsRunTest):
 
         # Check theme
         if theme:
-            assert App.is_dependency(app_name=NGNewTests.app_name, dependency='nativescript-theme-core')
+            assert App.is_dependency(app_name=NGNewTests.app_name, dependency='@nativescript/theme')
         else:
-            assert not App.is_dependency(app_name=NGNewTests.app_name, dependency='nativescript-theme-core')
+            assert not App.is_dependency(app_name=NGNewTests.app_name, dependency='@nativescript/theme')
 
         # Check styling
         if style is None or style is StylingType.CSS:
@@ -139,7 +139,6 @@ class NGNewTests(TnsRunTest):
             assert 'app.android.scss' in result.output
             assert 'app.ios.scss' in result.output
             assert '_app-common.scss' in result.output
-            assert '_app-variables.scss' in result.output
 
         # Check webpack
         if webpack:

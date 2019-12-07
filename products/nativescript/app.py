@@ -84,7 +84,7 @@ class App(object):
 
         if vue and App.is_dependency(app_name=app_name, dependency='nativescript-vue'):
             Npm.uninstall(package='nativescript-vue', option='--save', folder=app_path)
-            Npm.install(package='nativescript-vue@next', option='--save --save-exact', folder=app_path)
+            Npm.install(package='nativescript-vue', option='--save --save-exact', folder=app_path)
         # on win when `npm i` is executed with path to .tgz it saves in package.json unix style path
         # which cannot be resolved on win
         if Settings.HOST_OS == OSType.WINDOWS:

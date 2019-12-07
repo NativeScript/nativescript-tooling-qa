@@ -35,6 +35,7 @@ class TnsAssert(object):
 
         # Assert output
         if output is not None:
+            assert 'Error:' not in output
             assert 'Now you can navigate to your project with $ cd' in output
             assert 'After that you can preview it on device by executing $ tns preview' in output
             assert 'After that you can run it on device/emulator by executing $ tns run <platform>' not in output
@@ -180,21 +181,17 @@ class TnsAssert(object):
             assert 'Run your tests using the' in output
 
     @staticmethod
-    def file_is_synced_once(log, platform, file_name):
+    def file_is_synced_once(log, device, file_name):
         """
         Assert file is synced once on livesync.
         :param log: log or part of log you want to check
         :param platform: The platform you are syncing on.
         :param file_name: name of the file you are syncing.
         """
-        if platform == Platform.ANDROID:
-            assert log.count('Start syncing changes for platform android') == 1, "File is synced more than once!"
-            assert log.count('hot-update.json for platform android') == 1, "File is synced more than once!"
-            assert file_name in log
-        else:
-            assert log.count('Start syncing changes for platform ios') == 1, "File is synced more than once!"
-            assert log.count('hot-update.json for platform ios') == 1, "File is synced more than once!"
-            assert file_name in log
+        assert log.count('Start syncing changes for device {0}'.format(str(device.model))) == 1, \
+            "File is synced more than once!"
+        # assert log.count('hot-update.json for device') == 1, "File is synced more than once!"
+        assert file_name in log
 
     @staticmethod
     def snapshot_skipped(snapshot, result, release):

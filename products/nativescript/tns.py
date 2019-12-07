@@ -10,10 +10,10 @@ from core.enums.platform_type import Platform
 from core.log.log import Log
 from core.settings import Settings
 from core.utils.file_utils import Folder, File
+from core.utils.json_utils import JsonUtils
 from core.utils.npm import Npm
 from core.utils.process import Process
 from core.utils.run import run
-from core.utils.json_utils import JsonUtils
 from products.nativescript.app import App
 from products.nativescript.tns_assert import TnsAssert
 from products.nativescript.tns_logs import TnsLogs
@@ -47,6 +47,8 @@ class Tns(object):
         :param log_trace: If not None pass `--log <level>` to command.
         :param just_launch: If true pass `--justlaunch` to command.
         :param sync_all_files:  If true pass `--syncAllFiles` to command.
+        :param aab:  If true pass `--aab` to command.
+        :param compile_snapshot:  If true pass `--env.compileSnapshot` to command.
         :param clean:  If true pass `--clean` to command.
         :param options: Pass additional options as string.
         :param wait: If true it will wait until command is complete.
@@ -166,6 +168,8 @@ class Tns(object):
 
         # Verify app is created properly
         if verify:
+            # Verify exit code
+            assert result.exit_code == 0, "Exit code of tns create is not 0."
             # Usually we do not pass path on tns create, which actually equals to cwd.
             # In such cases pass correct path to TnsAssert.created()
             if path is None:
@@ -431,7 +435,7 @@ class Tns(object):
             else:
                 if platform == Platform.ANDROID:
                     strings.append('ActivityManager: Start proc')
-                if hmr and platform == Platform.ANDROID:
+                if hmr and platform == Platform.ANDROID and start is False:
                     strings.append('HMR: Hot Module Replacement Enabled.')
 
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
@@ -451,6 +455,7 @@ class Tns(object):
         :param log_trace: If true pass --log trace.
         :param verify: If true verify some logs.
         :param timeout: Timeout in seconds.
+        :param options: Pass additional options.
         :return: Result of `tns preview` command.
         """
         result = Tns.exec_command(command='preview', path=app_name, bundle=bundle, hmr=hmr, wait=False,
@@ -490,6 +495,7 @@ class Tns(object):
         :param device: Pass `--device <value>` to command.
         :param just_launch: If true pass `--just_launch` to the command.
         :param verify: Verify command was executed successfully.
+        :param wait: Wait command to complete it `true`.
         :return: Result of `tns test` command.
         """
         cmd = 'test {0}'.format(str(platform))

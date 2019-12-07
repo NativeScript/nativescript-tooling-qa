@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from flaky import flaky
+
 from core.base_test.tns_run_test import TnsRunTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
@@ -12,6 +14,7 @@ from products.nativescript.preview_helpers import Preview
 from products.nativescript.tns import Tns
 
 
+@flaky(max_runs=3)
 class VueJSPreviewTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     source_project_dir = os.path.join(Settings.TEST_RUN_HOME, app_name)
