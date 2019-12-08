@@ -17,7 +17,7 @@ from core.utils.xcode import Xcode
 from products.nativescript.tns import Tns
 
 
-# noinspection PyBroadException
+# noinspection PyBroadException,PyUnresolvedReferences
 class TnsTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -72,20 +72,21 @@ class TnsTest(unittest.TestCase):
         Gradle.kill()
         Process.kill_all_in_context()
         TnsTest.restore_files()
-        # Analise test result
-        if Settings.PYTHON_VERSION < 3:
-            # noinspection PyUnresolvedReferences
-            result = self._resultForDoCleanups
-        else:
-            # noinspection PyUnresolvedReferences
-            result = self._outcome.result
 
-        outcome = 'FAILED'
-        if result.errors == [] and result.failures == []:
-            outcome = 'PASSED'
-        else:
+        # Get outcome
+        if hasattr(self, '_outcome'):  # Python 3.4+
+            result = self.defaultTestResult()  # these 2 methods have no side effects
+            self._feedErrorsToResult(result, self._outcome.errors)
+        else:  # Python 3.2 - 3.3 or 3.0 - 3.1 and 2.7
+            result = getattr(self, '_outcomeForDoCleanups', self._resultForDoCleanups)
+
+        # Take screen on test fail
+        if result.errors or result.failures:
             self.get_screenshots()
             self.archive_apps()
+            outcome = 'FAILED'
+        else:
+            outcome = 'PASSED'
         Log.test_end(test_name=TestContext.TEST_NAME, outcome=outcome)
 
     @classmethod
@@ -113,8 +114,11 @@ class TnsTest(unittest.TestCase):
         try:
             import pyautogui
             png_path = os.path.join(base_path, 'host.png')
+            File.delete(png_path)
+            Folder.create(folder=os.path.dirname(png_path))
             pyautogui.screenshot().save(png_path)
-        except Exception:
+            Log.info("Saved host os screen at {0}".format(png_path))
+        except Exception as e:
             Log.warning('Failed to take screenshot of host os.')
 
         # get device screenshots
