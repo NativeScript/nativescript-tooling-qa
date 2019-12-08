@@ -118,7 +118,7 @@ class TnsTest(unittest.TestCase):
             Folder.create(folder=os.path.dirname(png_path))
             pyautogui.screenshot().save(png_path)
             Log.info("Saved host os screen at {0}".format(png_path))
-        except Exception as e:
+        except Exception:
             Log.warning('Failed to take screenshot of host os.')
 
         # get device screenshots
