@@ -113,6 +113,8 @@ class TnsTest(unittest.TestCase):
         try:
             import pyautogui
             png_path = os.path.join(base_path, 'host.png')
+            File.delete(png_path)
+            Folder.create(folder=os.path.dirname(png_path))
             pyautogui.screenshot().save(png_path)
         except Exception:
             Log.warning('Failed to take screenshot of host os.')
