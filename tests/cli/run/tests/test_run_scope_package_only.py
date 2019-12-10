@@ -7,7 +7,6 @@ from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.npm import Npm
 from data.changes import Changes
-from data.const import Colors
 from data.templates import Template
 from products.nativescript.run_type import RunType
 from products.nativescript.tns import Tns
@@ -17,12 +16,13 @@ from products.nativescript.tns_logs import TnsLogs
 class TestRunWithScopePackageOnly(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_path = os.path.join(Settings.TEST_RUN_HOME, Settings.AppName.DEFAULT)
+
     @classmethod
     def setUpClass(cls):
         TnsRunTest.setUpClass()
 
         # Create app
-        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_TS.local_package, update=True)
+        Tns.create(app_name=cls.app_name, template=Template.HELLO_WORLD_NG.local_package, update=True)
         Npm.uninstall(package='tns-core-modules', option='--save', folder=cls.app_path)
         Npm.install(package=Settings.Packages.NATIVESCRIPT_CORE, option='--save --save-exact', folder=cls.app_path)
         Tns.platform_add_android(app_name=cls.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
@@ -48,9 +48,4 @@ class TestRunWithScopePackageOnly(TnsRunTest):
         strings = TnsLogs.run_messages(app_name=self.app_name, platform=platform, run_type=RunType.UNKNOWN,
                                        device=device)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=240)
-
-        # Verify it looks properly
-        device.wait_for_text(text=Changes.TSHelloWord.TS.old_text)
-        device.wait_for_text(text=Changes.TSHelloWord.XML.old_text)
-        blue_count = device.get_pixels_by_color(color=Colors.LIGHT_BLUE)
-        assert blue_count > 100, 'Failed to find blue color on {0}'.format(device.name)
+        device.wait_for_text(text=Changes.NGHelloWorld.TS.old_text)
