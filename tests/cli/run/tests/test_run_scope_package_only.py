@@ -11,7 +11,7 @@ from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
 from core.settings import Settings
 from core.utils.device.simctl import Simctl
-from core.utils.file_utils import Folder
+from core.utils.file_utils import Folder, File
 from core.utils.npm import Npm
 from data.templates import Template
 from products.nativescript.run_type import RunType
@@ -24,11 +24,9 @@ from products.nativescript.tns_logs import TnsLogs
 class TestRunWithScopedPackages(TnsRunTest):
     test_data = [
         [Template.HELLO_WORLD_JS.name.replace('template-', ''), Template.HELLO_WORLD_JS],
-        # Skip TS projects because on TS projects we need to update all requires in the app in order to make it work.
-        # [Template.HELLO_WORLD_TS.name.replace('template-', ''), Template.HELLO_WORLD_TS],
+        [Template.HELLO_WORLD_TS.name.replace('template-', ''), Template.HELLO_WORLD_TS],
         [Template.HELLO_WORLD_NG.name.replace('template-', ''), Template.HELLO_WORLD_NG],
-        # Skip MasterDetailNG, it fails, need to be investigated.
-        # [Template.MASTER_DETAIL_NG.name.replace('template-', ''), Template.MASTER_DETAIL_NG],
+        [Template.MASTER_DETAIL_NG.name.replace('template-', ''), Template.MASTER_DETAIL_NG],
     ]
 
     @parameterized.expand(test_data)
@@ -40,6 +38,17 @@ class TestRunWithScopedPackages(TnsRunTest):
         Tns.create(app_name=app_name, template=template_info.local_package, update=True)
         Npm.uninstall(package='tns-core-modules', option='--save', folder=app_path)
         Npm.install(package=Settings.Packages.NATIVESCRIPT_CORE, option='--save --save-exact', folder=app_path)
+
+        # Replace imports
+        if template_info == Template.HELLO_WORLD_TS:
+            files = File.find_by_extension(folder=os.path.join(app_path, 'app'), extension='ts')
+            for file in files:
+                File.replace(path=file, old_string='tns-core-modules', new_string='@nativescript/core', fail_safe=True)
+        if template_info == Template.MASTER_DETAIL_NG:
+            files = File.find_by_extension(folder=os.path.join(app_path, 'src'), extension='ts')
+            for file in files:
+                File.replace(path=file, old_string='tns-core-modules', new_string='@nativescript/core', fail_safe=True)
+
         Tns.platform_add_android(app_name=app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS is OSType.OSX:
             Tns.platform_add_ios(app_name=app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
