@@ -1,3 +1,4 @@
+# pylint: disable=redefined-builtin
 """
 Tests for tns run on project without tns-core-modules package.
 See https://github.com/NativeScript/nativescript-dev-webpack/issues/1089
