@@ -1,14 +1,17 @@
 import os
 import unittest
+
 from core.base_test.tns_test import TnsTest
 from core.enums.os_type import OSType
 from core.enums.platform_type import Platform
+from core.log.log import Log
 from core.settings import Settings
 from core.settings.Settings import TEST_RUN_HOME
+from core.utils.docker import Docker
 from core.utils.file_utils import File, Folder
 from core.utils.npm import Npm
-from core.utils.docker import Docker
 from core.utils.run import run
+from core.utils.xcode import Xcode
 from data.templates import Template
 from products.nativescript.tns import Tns
 from products.nativescript.tns_assert import TnsAssert
@@ -240,7 +243,11 @@ class BuildTests(TnsTest):
         assert Settings.IOS.DEVELOPMENT_TEAM in result.output
 
         # Build with correct distribution provision
-        Tns.build_ios(self.app_name, provision=Settings.IOS.DISTRIBUTION_PROVISIONING, for_device=True, release=True)
+        if Xcode.get_version() < 11:
+            Log.info("Skip this check because we use new type of certificated that require Xcode 11.")
+        else:
+            Tns.build_ios(self.app_name, provision=Settings.IOS.DISTRIBUTION_PROVISIONING, for_device=True,
+                          release=True)
 
         # Verify that passing wrong provision shows user friendly error
         result = Tns.build_ios(self.app_name, provision="fake", verify=False)
