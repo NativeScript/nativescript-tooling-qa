@@ -20,20 +20,28 @@ from products.nativescript.tns_paths import TnsPaths
 
 
 def sync_master_detail_vue(app_name, platform, device):
-    # Execute tns command
-    log_trace = False
+    # workaraund for appium restarting application when attaching
     if platform == Platform.IOS:
-        # Temporary add log trace on iOS to debug an issue
-        log_trace = True
-    result = Tns.run(app_name=app_name, platform=platform, emulator=True, log_trace=log_trace, wait=False)
-    strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL, app_type=AppType.VUE,
-                                   transfer_all=True)
-    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
-
-    # start appium driver (need it on iOS only)
-    appium = None
-    if platform == Platform.IOS:
+        result = Tns.run(app_name=app_name, emulator=True, platform=platform, just_launch=True)
+        strings = TnsLogs.run_messages(app_name=app_name, platform=platform,
+                                       run_type=RunType.JUST_LAUNCH, device=device, just_launch=True)
+        TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
+        device.wait_for_text(text="Ford KA")
+        # start appium driver (need it on iOS only)
         appium = AppiumDriver(platform=platform, device=device, bundle_id=TnsPaths.get_bundle_id(app_name))
+
+    result = Tns.run(app_name=app_name, platform=platform, emulator=True, wait=False)
+    if platform == Platform.IOS:
+        # because of workaround for appium this run is not first run on ios
+        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.INCREMENTAL,
+                                       app_type=AppType.VUE, transfer_all=True)
+        strings.remove('Refreshing application on device')
+        strings.append('Restarting application on device')
+    else:
+        strings = TnsLogs.run_messages(app_name=app_name, platform=platform, run_type=RunType.FULL,
+                                       app_type=AppType.VUE, transfer_all=True)
+
+    TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=360)
 
     # Verify app home page looks properly
     device.wait_for_text(text="Ford KA")
@@ -89,5 +97,7 @@ def sync_master_detail_vue(app_name, platform, device):
     device.wait_for_text(text=Changes.MasterDetailVUE.VUE_DETAIL_PAGE_TEMPLATE.new_text)
 
     # Kill Appium
-    if appium is not None:
-        appium.stop()
+    if platform == Platform.IOS:
+        # Kill Appium
+        if appium is not None:
+            appium.stop()
