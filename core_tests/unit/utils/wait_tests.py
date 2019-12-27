@@ -21,7 +21,7 @@ class WaitTests(unittest.TestCase):
     @timed(5)
     def test_20_get_average_time(self):
         ls_time = PerfUtils.get_average_time(lambda: run(cmd='ifconfig'), retry_count=5)
-        assert 0.005 <= ls_time <= 0.05, "Command not executed in acceptable time. Actual value: " + str(ls_time)
+        assert 0.004 <= ls_time <= 0.05, "Command not executed in acceptable time. Actual value: " + str(ls_time)
 
     @staticmethod
     def seconds_are_odd():
