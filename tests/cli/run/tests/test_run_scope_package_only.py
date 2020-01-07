@@ -1,7 +1,9 @@
 # pylint: disable=redefined-builtin
 """
 Tests for tns run on project without tns-core-modules package.
-See https://github.com/NativeScript/nativescript-dev-webpack/issues/1089
+See:
+https://github.com/NativeScript/nativescript-dev-webpack/issues/1089
+https://github.com/NativeScript/nativescript-angular/issues/2058
 """
 import os
 
@@ -55,7 +57,7 @@ class TestRunWithScopedPackages(TnsRunTest):
             Tns.platform_add_ios(app_name=app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
         # Run Android
-        result = Tns.run_android(app_name=app_name, device=self.emu.id)
+        result = Tns.run_android(app_name=app_name, device=self.emu.id, aot=True, uglify=True)
         strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.UNKNOWN, platform=Platform.ANDROID)
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
         for text in template_info.texts:
@@ -65,7 +67,7 @@ class TestRunWithScopedPackages(TnsRunTest):
         Tns.kill()
         if Settings.HOST_OS is OSType.OSX:
             Simctl.uninstall_all(simulator_info=self.sim)
-            result = Tns.run_ios(app_name=app_name, device=self.sim.id)
+            result = Tns.run_ios(app_name=app_name, device=self.sim.id, aot=True, uglify=True)
             strings = TnsLogs.run_messages(app_name=app_name, run_type=RunType.UNKNOWN, platform=Platform.IOS)
             TnsLogs.wait_for_log(log_file=result.log_file, string_list=strings, timeout=300)
             for text in template_info.texts:
