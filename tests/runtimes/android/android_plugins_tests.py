@@ -598,3 +598,86 @@ Test variable is set to true in plugin app\.gradle"""  # noqa: E501
         Assert.assert_with_regex(result, log_regex)
 
         Tns.plugin_remove("sample-plugin", verify=False, path=APP_NAME)
+
+    def test_458_test_filtering_with_usage_flag(self):
+        """
+         Test api filtering functionality with usage flag set to true
+        """
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'android',
+                                 'with_usage', 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'android',
+                                 'with_usage', 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'plugin',
+                                 'android', 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src',
+                                 'platforms', 'android', 'native-api-usage.json')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src')
+        output = Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
+        assert "Successfully installed plugin mylib" in output.output, "mylib plugin not installed correctly!"
+
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application', 'List created!', 'Array List created!', 'Date created!',
+                   'java.util.Timer is not a constructor',
+                   'java.lang.NullPointerException: Attempt to invoke virtual method']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Filtering feature is not working correctly! Log:' + File.read(log.log_file)
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+
+    def test_459_test_filtering_without_usage_flag(self):
+        """
+         Test api filtering functionality with usage flag set to true
+        """
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+        Tns.platform_remove(app_name=APP_NAME, platform=Platform.ANDROID)
+        Tns.platform_add_android(APP_NAME, framework_path=Android.FRAMEWORK_PATH)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'android',
+                                 'without_usage', 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'android',
+                                 'without_usage', 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'plugin',
+                                 'android', 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src',
+                                 'platforms', 'android', 'native-api-usage.json')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src')
+        output = Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
+        assert "Successfully installed plugin mylib" in output.output, "mylib plugin not installed correctly!"
+
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.emulator.id,
+                   'Successfully synced application', 'List created!', 'Array List created!', 'Date created!',
+                   'java.util.Timer is not a constructor',
+                   'Failed resolving constructor for class \'android.appwidget.AppWidgetHost\' with 2 parameters. ']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Filtering feature is not working correctly! Log:' + File.read(log.log_file)
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)

@@ -1,0 +1,36 @@
+{
+    "whitelist-plugins-usages": false,
+     "whitelist": [
+               "java.util:List",
+               "java.util:ArrayList",
+               "java.util:Date",
+                    "java.lang:*",
+        "java.lang.reflect:*",
+        "java.io:*",
+        "java.nio:*",
+        "java.util:*",
+        "com.tns*:*",
+        "org.nativescript*:*",
+        "android.content*:*",
+        "android.app*:*",
+        "android.os*:*",
+        "android.view*:*",
+        "android.net*:*",
+        "android.graphics*:*",
+        "android.util*:*",
+        "android.media*:*",
+        "android.widget*:*",
+        "android.animation*:*",
+        "android.provider*:*",
+        "android.text*:*",
+        "android.webkit*:*",
+        "androidx.appcompat*:*",
+        "androidx.core*:*",
+        "androidx.viewpager.widget*:*",
+        "androidx.fragment*:*",
+        "androidx.transition*:*"
+     ],
+     "blacklist": [
+        "java.util:Timer"
+     ]
+ }
