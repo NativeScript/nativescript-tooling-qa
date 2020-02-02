@@ -1,0 +1,11 @@
+{
+    "whitelist-plugins-usages": true,
+     "whitelist": [
+               "java.util:List",
+               "java.util:ArrayList",
+               "java.util:Date"
+     ],
+     "blacklist": [
+        "java.util:Timer"
+     ]
+ }

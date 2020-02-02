@@ -313,7 +313,85 @@ class IOSRuntimeTests(TnsTest):
         # Verify app is running on device
         Device.wait_for_text(self.sim, text='Tap the button')
 
-    def test_398_tns_run_ios_console_time(self):
+    def test_400_test_filtering_with_usage_flag(self):
+        """
+         Test api filtering functionality with usage flag set to true
+        """
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'ios',
+                                 'with_usage', 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'ios',
+                                 'with_usage', 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'iOS')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'plugin', 'ios',
+                                 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src',
+                                 'platforms', 'ios', 'native-api-usage.json')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src')
+        output = Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
+        assert "Successfully installed plugin mylib" in output.output, "mylib plugin not installed correctly!"
+
+        log = Tns.run_ios(APP_NAME, emulator=True, wait=False, verify=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier',
+                   'Successfully synced application', 'CFNumberCreate created!', 'CFArrayCreate created!',
+                   'CFCalendarCopyCurrent created!', 'Can\'t find variable: CFUUIDCreate',
+                   'CFTimeZoneCreateWithName created! Value: null']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Filtering feature is not working correctly! Log:' + File.read(log.log_file)
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+
+    def test_401_test_filtering_without_usage_flag(self):
+        """
+         Test api filtering functionality with usage flag set to true
+        """
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'ios',
+                                 'without_usage', 'main-view-model.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-view-model.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'ios',
+                                 'without_usage', 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'iOS')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'plugin', 'ios',
+                                 'native-api-usage.json')
+        target_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src',
+                                 'platforms', 'ios', 'native-api-usage.json')
+
+        File.copy(source=source_js, target=target_js, backup_files=True)
+
+        plugin_path = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'filtering', 'src')
+        output = Tns.plugin_add(plugin_path, path=APP_NAME, verify=False)
+        assert "Successfully installed plugin mylib" in output.output, "mylib plugin not installed correctly!"
+
+        log = Tns.run_ios(APP_NAME, emulator=True, wait=False, verify=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier',
+                   'Successfully synced application', 'CFNumberCreate created!', 'CFArrayCreate created!',
+                   'CFCalendarCopyCurrent created!', 'Can\'t find variable: CFUUIDCreate',
+                   'Can\'t find variable: CFTimeZoneCreateWithName']
+
+        test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
+                                 period=5)
+        assert test_result, 'Filtering feature is not working correctly! Log:' + File.read(log.log_file)
+        Tns.plugin_remove("mylib", verify=False, path=APP_NAME)
+
+    def test_500_tns_run_ios_console_time(self):
         # Delete src folder from the previous test till Folder copy strt to backup folders too
         Folder.clean(os.path.join(APP_PATH, 'app', 'App_Resources', 'iOS', 'src'))
 
@@ -342,7 +420,7 @@ class IOSRuntimeTests(TnsTest):
         console_time = ['CONSOLE INFO startup:']
         TnsLogs.wait_for_log(log_file=result.log_file, string_list=console_time)
 
-    def test_399_tns_run_ios_console_dir(self):
+    def test_501_tns_run_ios_console_dir(self):
         # NOTE: This test depends on creation of app in test_391_tns_run_ios_console_time
         # Replace app.component.ts to use console.time() and console.timeEnd()
 

@@ -1,0 +1,31 @@
+{
+    "whitelist-plugins-usages": false,
+     "whitelist": [
+               "CoreFoundation.CFArray:*",
+               "CoreFoundation.CFAttributedString:*",
+               "CoreFoundation.CFCalendar:*",
+              "CoreFoundation.CFError:*",
+    "CoreFoundation.CFNumber:*",
+    "CoreFoundation.CFRunLoop:*",
+    "CoreGraphics.*:*",
+    "CoreText.CTFontManager:*",
+    "Darwin.C.math:*",
+    "Darwin.POSIX.sys.socket:*",
+    "Foundation.*:*",
+    "MaterialComponents.MDCTabBar:*",
+    "NativeScriptEmbedder:*",
+    "Photos.PHImageManager:*",
+    "QuartzCore.*:*",
+    "SystemConfiguration.SCNetworkReachability:*",
+    "UIKit.*:*",
+    "WebKit.WKNavigationDelegate:*",
+    "WebKit.WKUserContentController:*",
+    "WebKit.WKUserScript:*",
+    "WebKit.WKWebView:*",
+    "WebKit.WKWebViewConfiguration:*",
+    "TNSWidgets*:*"
+     ],
+     "blacklist": [
+       "CoreFoundation.CFUUID:*"
+     ]
+ }

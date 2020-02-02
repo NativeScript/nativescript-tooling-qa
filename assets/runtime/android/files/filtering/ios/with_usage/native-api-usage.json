@@ -1,0 +1,11 @@
+{
+    "whitelist-plugins-usages": true,
+     "whitelist": [
+               "CoreFoundation.CFArray:*",
+               "CoreFoundation.CFAttributedString:*",
+               "CoreFoundation.CFCalendar:*"
+     ],
+     "blacklist": [
+       "CoreFoundation.CFUUID:*"
+     ]
+ }
