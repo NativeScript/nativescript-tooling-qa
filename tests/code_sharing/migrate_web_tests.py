@@ -20,6 +20,7 @@ from products.nativescript.tns import Tns
 
 
 # noinspection PyMethodMayBeStatic
+@unittest.skip("No support for Angular 9.")
 class MigrateWebToMobileTests(TnsRunTest):
     app_name = Settings.AppName.DEFAULT
     app_folder = os.path.join(Settings.TEST_RUN_HOME, app_name)
