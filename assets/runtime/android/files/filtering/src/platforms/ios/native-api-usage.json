@@ -1,0 +1,8 @@
+{
+    "uses": [
+               "CoreFoundation.CFArray:*",
+               "CoreFoundation.CFAttributedString:*",
+               "CoreFoundation.CFUUID:*",
+               "CoreFoundation.CFTimeZone:*"
+    ]
+}
