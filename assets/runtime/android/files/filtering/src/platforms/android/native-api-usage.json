@@ -1,0 +1,8 @@
+{
+    "uses": [
+      "java.util:List",
+      "java.util:ArrayList",
+      "java.util:Timer",
+      "android.appwidget.AppWidgetHost"
+    ]
+}
