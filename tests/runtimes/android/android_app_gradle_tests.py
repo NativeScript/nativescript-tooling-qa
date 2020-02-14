@@ -252,3 +252,27 @@ class AndroidRuntimeAppGradleTests(TnsTest):
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=320,
                                  period=5)
         assert test_result, 'Static binding generator did not generated code! Logs: ' + File.read(log.log_file)
+
+    def test_453_native_package_with_kotlin_are_working(self):
+        """
+         Test native packages with kotlin are working
+         https://github.com/NativeScript/android-runtime/issues/1571
+        """
+        # Change main-page.js so it contains only logging information
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1571',
+                                 'main-page.js')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'main-page.js')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        # Change app app.gradle so it contains the dependencies to androidx.core:core-ktx:1.0.2
+        source_js = os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files', 'android-runtime-1571',
+                                 'app.gradle')
+        target_js = os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'app.gradle')
+        File.copy(source=source_js, target=target_js, backup_files=True)
+        log = Tns.run_android(APP_NAME, device=self.emulator.id, wait=False, verify=False)
+
+        strings = ['Project successfully built', 'Successfully installed on device with identifier', self.emulator.id]
+
+        Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=240, period=5)
+
+        test_result = Wait.until(lambda: "###TEST PASSED###" in File.read(log.log_file), timeout=100, period=5)
+        assert test_result, 'Native packages with kotlin are not working! Logs:' + File.read(log.log_file)

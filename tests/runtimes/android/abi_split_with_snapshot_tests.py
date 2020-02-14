@@ -54,12 +54,12 @@ class AbiSplitTests(TnsTest):
             new_string = "webpackConfig: config,\
                         targetArchs: [ \"arm\", \"arm64\", \"ia32\", \"ia64\" ],\
                         useLibs: true,\
-                        androidNdkPath: \"/tns-official/NDK/android-ndk-r19c-linux/\","
+                        androidNdkPath: \"/tns-official/NDK/android-ndk-r21-linux/\","
         elif platform == "darwin":
             new_string = "webpackConfig: config,\
                         targetArchs: [ \"arm\", \"arm64\", \"ia32\", \"ia64\" ],\
                         useLibs: true,\
-                        androidNdkPath: \"/tns-official/NDK/android-ndk-r19c-mac/\","
+                        androidNdkPath: \"/tns-official/NDK/android-ndk-r21-mac/\","
 
         target_file = os.path.join(TEST_RUN_HOME, APP_NAME, 'webpack.config.js')
         File.replace(target_file, old_string, new_string)

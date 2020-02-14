@@ -1,0 +1,15 @@
+android {
+  defaultConfig {
+    generatedDensities = []
+    applicationId = "org.nativescript.TestApp"
+  }
+  aaptOptions {
+    additionalParameters "--no-version-vectors"
+  }
+dependencies {
+    implementation 'androidx.core:core-ktx:1.0.2'
+}
+repositories{
+maven { url "https://jitpack.io" }
+}
+} 
