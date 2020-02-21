@@ -14,7 +14,7 @@ class PackageManagerTests(TnsTest):
 
     def setUp(self):
         Tns.exec_command(command='package-manager set npm')
-        
+
     def test_001_package_manager_get(self):
         result = Tns.exec_command(command='package-manager get')
         assert result.exit_code == 0, 'tns package-manager get exit with non zero exit code.'
