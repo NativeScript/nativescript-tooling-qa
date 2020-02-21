@@ -17,4 +17,4 @@ class PackageManagerTests(TnsTest):
         result = Tns.exec_command(command='package-manager set fake')
         assert result.exit_code != 0, 'tns package-manager should exit with non zero exit code on fails.'
         assert 'fake is not a valid package manager.' in result.output, 'Wrong package manager not detected.'
-        assert 'Only yarn or npm are supported.' in result.output, 'No message for supported managers.'
+        assert 'Supported values are: npm, pnpm, yarn.' in result.output, 'No message for supported managers.'
