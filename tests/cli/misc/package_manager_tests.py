@@ -67,5 +67,5 @@ class PackageManagerTests(TnsTest):
             Tns.platform_add_ios(app_name=self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
 
         Tns.build_android(self.app_name)
-        if Settings.HOST_OS != OSType.OSX:
+        if Settings.HOST_OS == OSType.OSX:
             Tns.build_ios(self.app_name)
