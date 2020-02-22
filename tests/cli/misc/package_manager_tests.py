@@ -61,7 +61,7 @@ class PackageManagerTests(TnsTest):
         assert 'Supported values are: npm, pnpm, yarn.' in result.output, 'No message for supported managers.'
 
     def __create_and_build_app(self):
-        Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=True)
+        Tns.create(app_name=self.app_name, template=Template.HELLO_WORLD_JS.local_package, update=False)
         Tns.platform_add_android(app_name=self.app_name, framework_path=Settings.Android.FRAMEWORK_PATH)
         if Settings.HOST_OS == OSType.OSX:
             Tns.platform_add_ios(app_name=self.app_name, framework_path=Settings.IOS.FRAMEWORK_PATH)
