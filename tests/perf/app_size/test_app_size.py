@@ -82,7 +82,7 @@ class AppSizeTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_js_app_ipa(self):
         ipa = TnsPaths.get_ipa_path(app_name=self.js_app, release=True, for_device=True)
-        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=14465180, tolerance=0.02)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=14771400, tolerance=0.02)
 
     def test_100_ng_app_app_resources(self):
         app_folder = os.path.join(TnsPaths.get_app_path(app_name=self.ng_app), 'App_Resources')
@@ -111,4 +111,4 @@ class AppSizeTests(TnsTest):
     @unittest.skipIf(Settings.HOST_OS != OSType.OSX, 'iOS tests can be executed only on macOS.')
     def test_102_ng_app_ipa(self):
         ipa = TnsPaths.get_ipa_path(app_name=self.ng_app, release=True, for_device=True)
-        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=14672899, tolerance=0.02)
+        assert PerfUtils.is_value_in_range(actual=File.get_size(ipa), expected=14992306, tolerance=0.02)
