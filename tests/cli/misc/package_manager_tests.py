@@ -12,8 +12,21 @@ from products.nativescript.tns import Tns
 class PackageManagerTests(TnsTest):
     app_name = Settings.AppName.DEFAULT
 
+    @classmethod
+    def setUpClass(cls):
+        TnsTest.setUpClass()
+
     def setUp(self):
+        TnsTest.setUp(self)
         Tns.exec_command(command='package-manager set npm')
+
+    def tearDown(self):
+        Tns.exec_command(command='package-manager set npm')
+        TnsTest.tearDown(self)
+
+    @classmethod
+    def tearDownClass(cls):
+        TnsTest.tearDownClass()
 
     def test_001_package_manager_get(self):
         result = Tns.exec_command(command='package-manager get')
