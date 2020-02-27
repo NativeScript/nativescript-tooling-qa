@@ -143,7 +143,7 @@ System\.err:.+at require\(:\d+:\d+\)"""  # noqa: E501, E261, W291
             self.emulator.is_text_visible('Exception')
         else:
             regex_to_check = r"""System\.err: Error: Kill the app!
-.+System\.err: File: \(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
+.+System\.err: File: \(file:\/\/\/]data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
 .+System\.err:.+
 .+System\.err: StackTrace:.+
 .+System\.err:.+\(file:\/\/\/data\/data\/org\.nativescript\.TestApp\/files\/app\/bundle\.js:\d+:\d+\)
