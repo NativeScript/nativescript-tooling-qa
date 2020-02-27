@@ -24,6 +24,11 @@ class DoctorTests(TnsTest):
         os.environ['ANDROID_HOME'] = self.ANDROID_HOME
         os.environ['JAVA_HOME'] = self.JAVA_HOME
 
+    def tearDown(self):
+        os.environ['ANDROID_HOME'] = self.ANDROID_HOME
+        os.environ['JAVA_HOME'] = self.JAVA_HOME
+        TnsTest.tearDown(self)
+
     @classmethod
     def tearDownClass(cls):
         TnsTest.tearDownClass()
