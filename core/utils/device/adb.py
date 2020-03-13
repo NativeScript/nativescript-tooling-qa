@@ -118,7 +118,7 @@ class Adb(object):
         return bool('mSurface=Surface' in result.output)
 
     @staticmethod
-    def wait_until_boot(device_id, timeout=180, check_interval=3):
+    def wait_until_boot(device_id, timeout=250, check_interval=3):
         """
         Wait android device/emulator is up and running.
         :param device_id: Device identifier.
@@ -412,6 +412,19 @@ class Adb(object):
             wait=True, device_id=device_id)
         assert result.output == "", "Process {0} not killed! Logs:{1}".format(process_name, result.output)
         time.sleep(5)
+
+    @staticmethod
+    def kill_application(device_id, app_id, process_id):
+        """
+        Stop application
+        :param device_id: Device identifier
+        :param app_id: Bundle identifier (example: org.nativescript.TestApp)
+        :param process_id: The id of the process
+        """
+        Adb.run_adb_command(command='shell run-as {0} kill {1}'.format(app_id, process_id),
+                            device_id=device_id, wait=True)
+        # wait application to be killed
+        time.sleep(2)
 
     @staticmethod
     def run_adb_as_root(device_id):

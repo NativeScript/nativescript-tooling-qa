@@ -68,7 +68,9 @@ class AndroidServiceTests(TnsTest):
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
 
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
-        Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
+        Adb.kill_application(self.emulator.id, "org.nativescript.TestApp", pid)
+        service_info = Adb.get_active_services(self.emulator.id)
+        assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
         services = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name in services, "{0} service not found! Logs: {1}".format(service_name, services)
 
@@ -81,6 +83,7 @@ class AndroidServiceTests(TnsTest):
         """
          https://github.com/NativeScript/android-runtime/issues/1347
         """
+        Adb.stop_application(self.emulator.id, "org.nativescript.TestApp")
         File.copy(os.path.join(TEST_RUN_HOME, 'assets', 'runtime', 'android', 'files',
                                'android-runtime-1347', 'AndroidManifest.xml'),
                   os.path.join(TEST_RUN_HOME, APP_NAME, 'app', 'App_Resources', 'Android', 'src', 'main',
@@ -108,8 +111,7 @@ class AndroidServiceTests(TnsTest):
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
 
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
-        Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
-
+        Adb.kill_application(self.emulator.id, "org.nativescript.TestApp", pid)
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
         assert pid not in service_info, "{0} service with id {1} found! Logs: {2}".format(service_name, pid,
@@ -146,7 +148,7 @@ class AndroidServiceTests(TnsTest):
         assert service_name in service_info, "{0} service not found! Logs: {1}".format(service_name, service_info)
 
         pid = Adb.get_process_pid(self.emulator.id, "org.nativescript.TestApp")
-        Adb.kill_process(self.emulator.id, "org.nativescript.TestApp")
+        Adb.kill_application(self.emulator.id, "org.nativescript.TestApp", pid)
 
         service_info = Adb.get_active_services(self.emulator.id, service_name)
         assert service_name not in service_info, "{0} service found! Logs: {1}".format(service_name, service_info)
