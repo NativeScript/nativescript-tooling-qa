@@ -173,14 +173,14 @@ JS:.+### CAUGHT STACK: Error: New Error!
 JS:.+at Observable\.viewModel\.onTap \(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at Button\.push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify \(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at Button\.push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit \(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at Object\.ClickListenerImpl\.onClick \(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at Object\.ClickListenerImpl\.onClick \(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS:.+### UNCAUGHT MESSAGE: Calling js method onClick failed
 JS:.+Error: New Error!
 JS:.+### Stack Trace Start
 JS:.+### UNCAUGHT STACKTRACE:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS:.+at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS:.+at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
 JS:.+at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
@@ -203,7 +203,7 @@ JS:.+Error: New Error!
 JS:.+### UNCAUGHT STACK:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 """  # noqa: E501
         else:
             stack_trace = r"""JS:.+### CAUGHT MESSAGE: New Error!
@@ -215,14 +215,14 @@ JS:.+### CAUGHT STACK: Error: New Error!
 JS:.+at Observable\.viewModel\.onTap \(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at Button\.push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify \(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at Button\.push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit \(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at Object\.ClickListenerImpl\.onClick \(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at Object\.ClickListenerImpl\.onClick \(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS:.+### UNCAUGHT MESSAGE: Calling js method onClick failed
 JS:.+Error: New Error!
 JS:.+### Stack Trace Start
 JS:.+### UNCAUGHT STACKTRACE:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS:.+at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS:.+at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
 JS:.+at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
@@ -247,7 +247,7 @@ JS:.+Error: New Error!
 JS:.+### UNCAUGHT STACK:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 """  # noqa: E501
 
         strings = ["Error: New Error!", "UNCAUGHT STACKTRACE:"]
@@ -300,7 +300,7 @@ JS:.+### Stack Trace Start
 JS:.+### CAUGHT STACKTRACE:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS:.+com\.tns\.Runtime\.resolveMethodOverload\(Runtime\.java:\d+\)
 JS:.+com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS:.+com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
@@ -323,14 +323,14 @@ JS:.+### CAUGHT Native Exception:.+java\.lang\.Exception: Failed resolving metho
 JS:.+### CAUGHT STACK:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS: ### UNCAUGHT MESSAGE: Calling js method onClick failed
 JS:.+Error: java\.lang\.Exception: Failed resolving method createTempFile on class java\.io\.File
 JS:.+### Stack Trace Start
 JS:.+### UNCAUGHT STACKTRACE:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS: .+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS: .+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS: .+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS: .+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS: .+at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS: .+at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
 JS: .+at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
@@ -356,7 +356,7 @@ JS:.+Error: java\.lang\.Exception: Failed resolving method createTempFile on cla
 JS:.+### UNCAUGHT STACK:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 """  # noqa: E501
         else:
             stack_trace = r"""
@@ -365,7 +365,7 @@ JS:.+### Stack Trace Start
 JS:.+### CAUGHT STACKTRACE:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS:.+com\.tns\.Runtime\.resolveMethodOverload\(Runtime\.java:\d+\)
 JS:.+com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS:.+com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
@@ -390,14 +390,14 @@ JS:.+### CAUGHT Native Exception:.+java\.lang\.Exception: Failed resolving metho
 JS:.+### CAUGHT STACK:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS: ### UNCAUGHT MESSAGE: Calling js method onClick failed
 JS:.+Error: java\.lang\.Exception: Failed resolving method createTempFile on class java\.io\.File
 JS:.+### Stack Trace Start
 JS:.+### UNCAUGHT STACKTRACE:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS: .+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS: .+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS: .+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS: .+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 JS: .+at com\.tns\.Runtime\.callJSMethodNative\(Native Method\)
 JS: .+at com\.tns\.Runtime\.dispatchCallJSMethodNative\(Runtime\.java:\d+\)
 JS: .+at com\.tns\.Runtime\.callJSMethodImpl\(Runtime\.java:\d+\)
@@ -425,7 +425,7 @@ JS:.+Error: java\.lang\.Exception: Failed resolving method createTempFile on cla
 JS:.+### UNCAUGHT STACK:.+viewModel\.onTap\(file: app\/main-view-model\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\.notify\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
 JS:.+at push\.\.\.\/node_modules\/@nativescript\/core\/data\/observable\/observable\.js\.Observable\._emit\(file: node_modules\/@nativescript\/core\/data\/observable\/observable\.js:\d+:\d+\)
-JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.js:\d+:\d+\)
+JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\/button\/button\.android\.js:\d+:\d+\)
 """  # noqa: E501
         strings = ["Error: java.lang.Exception: Failed resolving method createTempFile on class java.io.File",
                    "Caused by: java.lang.Exception: Failed resolving method createTempFile on class java.io.File"]
@@ -627,10 +627,10 @@ JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\
                                      period=5)
             assert test_result, "Select time zone Button is missing on the device"
             Device.click(self.emulator, text="Select time zone")
-            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Los Angeles", True),
+            test_result = Wait.until(lambda: Device.is_text_visible(self.emulator, "Tijuana", True),
                                      timeout=30, period=5)
             assert test_result, "Los Angeles Button is missing on the device."
-            Device.click(self.emulator, text="Los Angeles")
+            Device.click(self.emulator, text="Tijuana")
 
         else:
             output = Adb.run_adb_command("shell am start -a android.settings.DATE_SETTINGS", self.emulator.id,
@@ -654,10 +654,10 @@ JS:.+at ClickListenerImpl\.onClick\(file: node_modules\/@nativescript\/core\/ui\
                                  period=5)
         assert test_result, "TAP Button is missing on the device"
         Device.click(self.emulator, text="TAP", case_sensitive=True)
-        assert_result = Wait.until(lambda: "GMT-0800 (PST)" in File.read(log.log_file), timeout=240, period=5)
+        assert_result = Wait.until(lambda: "GMT-0700 (PDT)" in File.read(log.log_file), timeout=240, period=5)
         assert assert_result, "Missing log for time! Logs: " + File.read(log.log_file)
         # Generate regex for asserting date and time
-        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0800 \(PST\)"
+        date_to_find_los_angeles = los_angeles_time.strftime(r'%a %b %d %Y %H:.{2}:.{2}') + r" GMT\-0700 \(PDT\)"
         # Assert date time is correct
         assert_result = Wait.until(lambda: re.search(date_to_find_los_angeles, File.read(log.log_file)), timeout=20,
                                    period=5)

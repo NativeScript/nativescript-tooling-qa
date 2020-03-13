@@ -422,7 +422,7 @@ class AndroidRuntimePluginTests(TnsTest):
         strings = ['Successfully synced application org.nativescript.TestApp on device ']
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
-        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: " + File.read(log.log_file)
         assert test_result, messages + File.read(log.log_file)
         self.assert_kotlin_is_working(self.emulator)
         with open(ANALYTICS_FILE, "r") as read_file:
@@ -464,7 +464,7 @@ class AndroidRuntimePluginTests(TnsTest):
 
         test_result = Wait.until(lambda: all(string in File.read(log.log_file) for string in strings), timeout=300,
                                  period=5)
-        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: "
+        messages = "App with Kotlin enabled and kotlin jar not build correctly! Logs: " + File.read(log.log_file)
         assert test_result, messages + File.read(log.log_file)
         self.assert_kotlin_is_working(self.emulator)
         with open(ANALYTICS_FILE, "r") as read_file:
