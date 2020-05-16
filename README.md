@@ -38,7 +38,7 @@ export PYTHONIOENCODING=utf-8
 ```
 Notes: 
 - `PYTHONUNBUFFERED` is required to get logging on Jenkins CI working properly.
-- `PYTHONIOENCODING` helps to get command execution more stable.
+- `PYTHONIOENCODING` helps to get a stable command execution.
 
 **Setup Machine**
  
@@ -48,7 +48,7 @@ Please setup your system as per [Setup](SETUP.md) document.
 
 Test run is controlled by set of environment variables.
 
-Please read [Settings](SETTINGS.md) document. 
+Please read [Settings](SETTINGS.md) document for details. 
 
 ## Run Tests
 
@@ -77,4 +77,4 @@ Once you are ready with our changes, please run:
 
 ## Hints, Tips and Tricks
 
-Please see [Hints, Tips and Tricks](HINTS.md) document.
+Please see [Hints, Tips and Tricks](HINTS.md) document for more related information.
